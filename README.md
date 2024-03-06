@@ -282,8 +282,8 @@ protected override IEnumerable<Assembly> SelectAssemblies()
     5)  파일 전송 및 장문 메시지 전송 중 타 메시지 전송 기능 제공  
     6)  Packet Format  
         
-    ![메시지 포멧 이미지(alt)](/Ironwall.Libraries.Tcp.Packets/Pictures/Format.png "메시지 포멧")  
-    ![메시지 속성 이미지(alt)](/Ironwall.Libraries.Tcp.Packets/Pictures/Property.png "메시지 속성")  
+    ![메시지 포멧 이미지(alt)](./Ironwall.Libraries.Tcp.Packets/Pictures/Format.png "메시지 포멧")  
+    ![메시지 속성 이미지(alt)](./Ironwall.Libraries.Tcp.Packets/Pictures/Property.png "메시지 속성")  
 
 <hr>
 
