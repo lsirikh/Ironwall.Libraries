@@ -1,0 +1,147 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{2C610548-379E-4BC9-B24B-9B05A8C8453C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Ironwall.Libraries.Client</RootNamespace>
+    <AssemblyName>Ironwall.Libraries.Client</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Ironwall.Libraries.Account.Common">
+      <HintPath>..\Ironwall.Libraries.Account.Common\bin\Debug\Ironwall.Libraries.Account.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Ironwall.Libraries.Tcp.Client">
+      <HintPath>..\Ironwall.Libraries.Tcp.Client\bin\Debug\Ironwall.Libraries.Tcp.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\Ironwall.Monitoring.Client\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="Sensorway.Broker.SeoIncheon, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\ClientService.cs" />
+    <Compile Include="Services\IClientService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Ironwall.Framework\Ironwall.Framework.csproj">
+      <Project>{cc34c433-38a8-4092-b172-d89db0e632be}</Project>
+      <Name>Ironwall.Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ironwall.Libraries.Account.Client\Ironwall.Libraries.Account.Client.csproj">
+      <Project>{240A11B9-761C-4693-9331-67868C4730B8}</Project>
+      <Name>Ironwall.Libraries.Account.Client</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ironwall.Libraries.Base\Ironwall.Libraries.Base.csproj">
+      <Project>{9d2531fc-7a97-478b-9303-9b0a3d223551}</Project>
+      <Name>Ironwall.Libraries.Base</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ironwall.Libraries.Common\Ironwall.Libraries.Common.csproj">
+      <Project>{93E4883C-0365-485F-A9B9-C04E204AEC65}</Project>
+      <Name>Ironwall.Libraries.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ironwall.Libraries.Devices\Ironwall.Libraries.Devices.csproj">
+      <Project>{af906809-40d8-4e3c-822f-2ad5989f4ae6}</Project>
+      <Name>Ironwall.Libraries.Devices</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ironwall.Libraries.Enums\Ironwall.Libraries.Enums.csproj">
+      <Project>{848ae203-d3b4-4e73-8ef0-1a18d88a040c}</Project>
+      <Name>Ironwall.Libraries.Enums</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ironwall.Libraries.Event.UI\Ironwall.Libraries.Event.UI.csproj">
+      <Project>{e14bc097-bec3-4799-a037-52b0df857ee5}</Project>
+      <Name>Ironwall.Libraries.Event.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ironwall.Libraries.Events\Ironwall.Libraries.Events.csproj">
+      <Project>{80684F6B-FDE3-4816-9F27-9CD47C326402}</Project>
+      <Name>Ironwall.Libraries.Events</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ironwall.Libraries.Map.Common\Ironwall.Libraries.Map.Common.csproj">
+      <Project>{F02F8DFD-C744-4C57-BF1B-FEEC7B4C8418}</Project>
+      <Name>Ironwall.Libraries.Map.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ironwall.Libraries.Tcp.Common\Ironwall.Libraries.Tcp.Common.csproj">
+      <Project>{5C2E0347-DCB2-4B47-B2E0-4CD3E1C7537D}</Project>
+      <Name>Ironwall.Libraries.Tcp.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ironwall.Libraries.Utils\Ironwall.Libraries.Utils.csproj">
+      <Project>{14220279-9b26-4383-bf1e-a0da31726758}</Project>
+      <Name>Ironwall.Libraries.Utils</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

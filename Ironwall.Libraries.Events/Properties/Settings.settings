@@ -1,0 +1,36 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Ironwall.Libraries.Events.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="TableDetection" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">detection_events</Value>
+    </Setting>
+    <Setting Name="TableMalfunction" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">malfunction_events</Value>
+    </Setting>
+    <Setting Name="TableAction" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">action_events</Value>
+    </Setting>
+    <Setting Name="TableConnection" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">connection_events</Value>
+    </Setting>
+    <Setting Name="EventCardMapChange" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="EventMapChange" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="LengthMaxEventPrev" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">100</Value>
+    </Setting>
+    <Setting Name="LengthMinEventPrev" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">10</Value>
+    </Setting>
+    <Setting Name="IsEventAutoDiscard" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="EventTimeExpiration" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">10</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

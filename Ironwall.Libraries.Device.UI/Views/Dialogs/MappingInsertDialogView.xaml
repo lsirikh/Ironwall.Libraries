@@ -1,0 +1,337 @@
+﻿<UserControl x:Class="Ironwall.Libraries.Device.UI.Views.Dialogs.MappingInsertDialogView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Ironwall.Libraries.Device.UI.Views.Dialogs"
+			 xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+			 xmlns:utils="clr-namespace:Ironwall.Libraries.Utils;assembly=Ironwall.Libraries.Utils"
+             xmlns:enums="clr-namespace:Ironwall.Libraries.Enums;assembly=Ironwall.Libraries.Enums"
+             mc:Ignorable="d" 
+             d:DesignHeight="650" d:DesignWidth="800">
+	
+	<md:DialogHost Identifier="MultipleRegisterDialog"
+                   DialogTheme="Dark"
+                   x:Name="DialogHost">
+
+		<md:Card x:Name="CardContents"
+                 md:ThemeAssist.Theme="Inherit"
+                 VerticalAlignment="Stretch"
+                 Opacity="0.95"
+                 MinWidth="350"
+                 MinHeight="500"
+                 Width="450"
+                 Height="600"
+                 Padding="15 10"
+                 UniformCornerRadius="10">
+			<Grid>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="150" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+				</Grid.RowDefinitions>
+				<StackPanel Grid.Row="0"
+                            Orientation="Vertical">
+					<StackPanel Orientation="Horizontal"
+                                VerticalAlignment="Center">
+						<md:PackIcon Kind="Add"
+                                     Width="25"
+                                     Height="25"
+                                     VerticalAlignment="Center" />
+						<TextBlock Margin="16 0 0 0"
+                                   FontSize="18"
+                                   FontWeight="Bold"
+                                   VerticalAlignment="Center"
+                                   Text="Preset Mapping Dialog">
+						</TextBlock>
+					</StackPanel>
+				</StackPanel>
+				
+				<Separator Grid.Row="1"
+                           Margin="0 10"
+                           VerticalAlignment="Center"
+                           Style="{StaticResource MaterialDesignLightSeparator}" />
+
+				<Border Grid.Row="2"
+                        BorderBrush="White"
+                        CornerRadius="10"
+                        BorderThickness="1"
+                        Margin="5">
+					<Grid Margin="20 0">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="*" />
+							<ColumnDefinition Width="*" />
+							<ColumnDefinition Width="*" />
+						</Grid.ColumnDefinitions>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="1*" />
+							<RowDefinition Height="1*" />
+							<RowDefinition Height="1.5*" />
+						</Grid.RowDefinitions>
+
+						<TextBlock Grid.Row="0"
+                                   Grid.Column="0"
+                                   Grid.ColumnSpan="3"
+                                   VerticalAlignment="Center"
+                                   FontSize="15"
+                                   Foreground="White"
+                                   Text="Preset Mapping Number" />
+						<TextBox Grid.Row="1"
+                                 Grid.Column="0"
+                                 md:HintAssist.Hint="Count"
+                                 md:TextFieldAssist.RippleOnFocusEnabled="False"
+                                 VerticalAlignment="Center"
+                                 TextAlignment="Center"
+                                 FontSize="15"
+                                 Margin="5 0"
+                                 Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                 Text="{Binding ItemCount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+						<TextBox Grid.Row="1"
+                                 Grid.Column="1"
+                                 md:HintAssist.Hint="Tick Frequency"
+                                 md:TextFieldAssist.RippleOnFocusEnabled="False"
+                                 VerticalAlignment="Center"
+                                 TextAlignment="Center"
+                                 FontSize="15"
+                                 Margin="5 0"
+                                 Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                 Text="{Binding TickFrequency, UpdateSourceTrigger=PropertyChanged}" />
+						<TextBox Grid.Row="1"
+                                 Grid.Column="2"
+                                 md:HintAssist.Hint="Maximum"
+                                 IsReadOnly="True"
+                                 md:TextFieldAssist.RippleOnFocusEnabled="False"
+                                 VerticalAlignment="Center"
+                                 TextAlignment="Center"
+                                 FontSize="15"
+                                 Margin="5 0"
+                                 Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                 Text="{Binding Maximum, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+						<Slider Grid.Row="2"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="3"
+                                VerticalAlignment="Center"
+                                Value="{Binding ItemCount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                x:Name="Slider"
+                                Minimum="0"
+                                Maximum="{Binding Maximum, UpdateSourceTrigger=PropertyChanged}"
+                                Style="{StaticResource MaterialDesignDiscreteSlider}"
+                                TickFrequency="{Binding TickFrequency, UpdateSourceTrigger=PropertyChanged}"
+                                TickPlacement="BottomRight" />
+					</Grid>
+				</Border>
+				<Border Grid.Row="3"
+                        BorderBrush="White"
+                        CornerRadius="10"
+                        BorderThickness="1"
+                        Margin="5">
+
+					<StackPanel Orientation="Vertical">
+						<TextBlock Margin="20 15 0 0"
+                                   FontSize="15"
+                                   VerticalAlignment="Center"
+                                   Foreground="White"
+                                   Text="Preset Property" />
+						<ScrollViewer Height="220"
+                                      Margin="5"
+                                      VerticalScrollBarVisibility="Auto">
+
+							<Grid VerticalAlignment="Stretch"
+                                  Margin="20 10 10 10">
+								<Grid.RowDefinitions>
+									<RowDefinition Height="1*" />
+									<RowDefinition Height="1*" />
+									<RowDefinition Height="1*" />
+									<RowDefinition Height="1*" />
+									<RowDefinition Height="1*" />
+									<RowDefinition Height="1*" />
+									<RowDefinition Height="1*" />
+									<RowDefinition Height="1*" />
+									<RowDefinition Height="1*" />
+									<RowDefinition Height="1*" />
+									<RowDefinition Height="1*" />
+								</Grid.RowDefinitions>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="1*" />
+									<ColumnDefinition Width="1*" />
+									<ColumnDefinition Width="1*" />
+								</Grid.ColumnDefinitions>
+
+								<!-- Group -->
+								<TextBlock Grid.Row="0"
+                                           Grid.Column="0"
+                                           FontSize="15"
+                                           VerticalAlignment="Center"
+                                           Margin="0 5"
+                                           Text="Group" />
+								<TextBox Grid.Row="0"
+                                         Grid.Column="1"
+                                         Grid.ColumnSpan="2"
+                                         FontSize="15"
+                                         VerticalAlignment="Center"
+                                         Margin="0 5"
+                                         md:HintAssist.Hint="Group"
+                                         md:HintAssist.IsFloating="True"
+                                         Text="{Binding Group, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, FallbackValue=0}" />
+
+								<!-- Starting Sensor Point -->
+								<TextBlock Grid.Row="2"
+                                           Grid.Column="0"
+                                           FontSize="15"
+                                           VerticalAlignment="Center"
+                                           Margin="0 5"
+                                           Text="Sensor" />
+								<ComboBox Grid.Row="2"
+                                          Grid.Column="1"
+                                          Grid.ColumnSpan="2"
+                                          FontSize="15"
+                                          VerticalAlignment="Center"
+                                          Margin="0 5"
+                                          md:HintAssist.Hint="Sensor"
+                                          md:HintAssist.IsFloating="True"
+                                          ItemsSource="{Binding SensorProvider.CollectionEntity}"
+                                          SelectedItem="{Binding SensorDeviceViewModel, Mode=TwoWay, UpdateSourceTrigger=LostFocus}">
+
+									<ComboBox.ItemsPanel>
+										<ItemsPanelTemplate>
+											<VirtualizingStackPanel />
+										</ItemsPanelTemplate>
+									</ComboBox.ItemsPanel>
+									<ComboBox.ItemTemplate>
+										<DataTemplate>
+											<StackPanel Orientation="Horizontal">
+												<TextBlock Text="{Binding Id, StringFormat={}ID:{0}}" Margin="10 0"/>
+												<TextBlock Text="{Binding Controller.DeviceName, StringFormat={}Controller:{0}}" Margin="10 0"/>
+												<TextBlock Text="{Binding DeviceName, StringFormat={}Sensor:{0}}" Margin="10 0"/>
+											</StackPanel>
+										</DataTemplate>
+									</ComboBox.ItemTemplate>
+									<ComboBox.ItemContainerStyle>
+										<Style TargetType="{x:Type ComboBoxItem}"/>
+									</ComboBox.ItemContainerStyle>
+								</ComboBox>
+
+								<!-- First Preset -->
+								<TextBlock Grid.Row="3"
+                                           Grid.Column="0"
+                                           FontSize="15"
+                                           VerticalAlignment="Center"
+                                           Margin="0 5"
+                                           Text="First Preset" />
+								<ComboBox Grid.Row="3"
+                                          Grid.Column="1"
+                                          Grid.ColumnSpan="2"
+                                          FontSize="15"
+                                          VerticalAlignment="Center"
+                                          Margin="0 5"
+                                          md:HintAssist.Hint="First Preset"
+                                          md:HintAssist.IsFloating="True"
+                                          ItemsSource="{Binding PresetProvider.CollectionEntity}"
+                                          SelectedItem="{Binding SelectedFirstPreset, Mode=TwoWay, UpdateSourceTrigger=LostFocus}">
+
+									<ComboBox.ItemsPanel>
+										<ItemsPanelTemplate>
+											<VirtualizingStackPanel />
+										</ItemsPanelTemplate>
+									</ComboBox.ItemsPanel>
+									<ComboBox.ItemTemplate>
+										<DataTemplate>
+											<StackPanel Orientation="Horizontal">
+												<TextBlock Text="{Binding Id, StringFormat={}ID:{0}}" Margin="10 0"/>
+												<TextBlock Text="{Binding ReferenceId, StringFormat={}Camera:{0}}" Margin="10 0"/>
+												<TextBlock Text="{Binding PresetName, StringFormat={}Preset:{0}}" Margin="10 0" />
+											</StackPanel>
+										</DataTemplate>
+									</ComboBox.ItemTemplate>
+									<ComboBox.ItemContainerStyle>
+										<Style TargetType="{x:Type ComboBoxItem}"/>
+									</ComboBox.ItemContainerStyle>
+								</ComboBox>
+
+								<!-- Second Preset -->
+								<TextBlock Grid.Row="4"
+                                           Grid.Column="0"
+                                           FontSize="15"
+                                           VerticalAlignment="Center"
+                                           Margin="0 5"
+                                           Text="Second Preset" />
+								<ComboBox Grid.Row="4"
+                                          Grid.Column="1"
+                                          Grid.ColumnSpan="2"
+                                          FontSize="15"
+                                          VerticalAlignment="Center"
+                                          Margin="0 5"
+                                          md:HintAssist.Hint="Second Preset"
+                                          md:HintAssist.IsFloating="True"
+                                          ItemsSource="{Binding PresetProvider.CollectionEntity}"
+                                          SelectedItem="{Binding SelectedSecondPreset, Mode=TwoWay, UpdateSourceTrigger=LostFocus}">
+
+									<ComboBox.ItemsPanel>
+										<ItemsPanelTemplate>
+											<VirtualizingStackPanel />
+										</ItemsPanelTemplate>
+									</ComboBox.ItemsPanel>
+									<ComboBox.ItemTemplate>
+										<DataTemplate>
+											<StackPanel Orientation="Horizontal">
+												<TextBlock Text="{Binding Id, StringFormat={}ID:{0}}" Margin="10 0"/>
+												<TextBlock Text="{Binding ReferenceId, StringFormat={}Camera:{0}}" Margin="10 0"/>
+												<TextBlock Text="{Binding PresetName, StringFormat={}Preset:{0}}" Margin="10 0" />
+											</StackPanel>
+										</DataTemplate>
+									</ComboBox.ItemTemplate>
+									<ComboBox.ItemContainerStyle>
+										<Style TargetType="{x:Type ComboBoxItem}"/>
+									</ComboBox.ItemContainerStyle>
+								</ComboBox>
+
+								
+								
+							</Grid>
+
+						</ScrollViewer>
+					</StackPanel>
+
+				</Border>
+
+				<Separator Margin="0 10"
+                           Grid.Row="4"
+                           Style="{StaticResource MaterialDesignLightSeparator}" />
+
+				<!-- Button Group -->
+				<Grid Grid.Row="5"
+                      VerticalAlignment="Center">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="5*" />
+						<ColumnDefinition Width="5*" />
+					</Grid.ColumnDefinitions>
+					<Button Grid.Column="0"
+                            x:Name="ClickOkAsync"
+                            Margin="10 0"
+                            BorderBrush="{DynamicResource PrimaryHueDarkBrush}"
+                            Style="{StaticResource MaterialDesignFlatDarkBgButton}"
+                            VerticalAlignment="Center">
+						<Button.Content>
+							<TextBlock Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
+                                       Text="확인" />
+						</Button.Content>
+					</Button>
+					<Button Grid.Column="1"
+                            x:Name="ClickCancelAsync"
+                            Margin="10 0"
+                            BorderBrush="{DynamicResource PrimaryHueDarkBrush}"
+                            Style="{StaticResource MaterialDesignFlatDarkBgButton}"
+                            VerticalAlignment="Center">
+						<Button.Content>
+							<TextBlock Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
+                                       Text="취소" />
+						</Button.Content>
+					</Button>
+				</Grid>
+			</Grid>
+		</md:Card>
+	</md:DialogHost>
+</UserControl>

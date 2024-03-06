@@ -1,0 +1,340 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\Ironwall.Monitoring.Solution_KET_Ulsan\packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('..\..\Ironwall.Monitoring.Solution_KET_Ulsan\packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <LangVersion>8.0</LangVersion>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{FF44365E-2CD4-4982-B517-DA7A9393D099}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Wpf.AxisAudio.Client.UI</RootNamespace>
+    <AssemblyName>Wpf.AxisAudio.Client.UI</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>8.0</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>8.0</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>8.0</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>8.0</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Autofac, Version=7.1.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\..\Ironwall.Monitoring.Solution_KET_Ulsan\packages\Autofac.7.1.0\lib\netstandard2.0\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Caliburn.Micro.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
+      <HintPath>..\..\..\source\repos\Wpf.AudioStreamer.Tester\packages\Caliburn.Micro.Core.4.0.212\lib\netstandard2.0\Caliburn.Micro.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Caliburn.Micro.Platform, Version=4.0.0.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
+      <HintPath>..\..\Ironwall.Monitoring.Solution_KET_Ulsan\packages\Caliburn.Micro.4.0.212\lib\net462\Caliburn.Micro.Platform.dll</HintPath>
+    </Reference>
+    <Reference Include="Caliburn.Micro.Platform.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
+      <HintPath>..\..\Ironwall.Monitoring.Solution_KET_Ulsan\packages\Caliburn.Micro.4.0.212\lib\net462\Caliburn.Micro.Platform.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Dapper, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\Ironwall.Monitoring.Solution_KET_Ulsan\packages\Dapper.2.1.11\lib\net461\Dapper.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\..\Ironwall.Monitoring.Solution_KET_Ulsan\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\..\Ironwall.Monitoring.Solution_KET_Ulsan\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="MaterialDesignColors, Version=2.1.4.0, Culture=neutral, PublicKeyToken=df2a72020bd7962a, processorArchitecture=MSIL">
+      <HintPath>..\..\Ironwall.Monitoring.Solution_KET_Ulsan\packages\MaterialDesignColors.2.1.4\lib\net462\MaterialDesignColors.dll</HintPath>
+    </Reference>
+    <Reference Include="MaterialDesignThemes.Wpf, Version=4.9.0.0, Culture=neutral, PublicKeyToken=df2a72020bd7962a, processorArchitecture=MSIL">
+      <HintPath>..\..\Ironwall.Monitoring.Solution_KET_Ulsan\packages\MaterialDesignThemes.4.9.0\lib\net462\MaterialDesignThemes.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=7.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\Ironwall.Monitoring.Solution_KET_Ulsan\packages\Microsoft.Bcl.AsyncInterfaces.7.0.0\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Xaml.Behaviors, Version=1.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\Ironwall.Monitoring.Solution_KET_Ulsan\packages\Microsoft.Xaml.Behaviors.Wpf.1.1.39\lib\net45\Microsoft.Xaml.Behaviors.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\..\source\repos\Wpf.AudioStreamer.Tester\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\..\source\repos\Wpf.AudioStreamer.Tester\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.SQLite, Version=1.0.118.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\..\Ironwall.Monitoring.Solution_KET_Ulsan\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.118.0\lib\net46\System.Data.SQLite.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.SQLite.EF6, Version=1.0.118.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\..\Ironwall.Monitoring.Solution_KET_Ulsan\packages\System.Data.SQLite.EF6.1.0.118.0\lib\net46\System.Data.SQLite.EF6.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.SQLite.Linq, Version=1.0.118.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\..\Ironwall.Monitoring.Solution_KET_Ulsan\packages\System.Data.SQLite.Linq.1.0.118.0\lib\net46\System.Data.SQLite.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Diagnostics.DiagnosticSource, Version=4.0.5.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\..\source\repos\Wpf.AudioStreamer.Tester\packages\System.Diagnostics.DiagnosticSource.4.7.1\lib\net46\System.Diagnostics.DiagnosticSource.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\..\source\repos\Wpf.AudioStreamer.Tester\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\..\source\repos\Wpf.AudioStreamer.Tester\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\..\source\repos\Wpf.AudioStreamer.Tester\packages\System.Runtime.CompilerServices.Unsafe.4.5.3\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Runtime.Serialization.Primitives, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\..\source\repos\Wpf.AudioStreamer.Tester\packages\System.Runtime.Serialization.Primitives.4.3.0\lib\net46\System.Runtime.Serialization.Primitives.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\Ironwall.Monitoring.Solution_KET_Ulsan\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Models\AudioGroupModel.cs" />
+    <Compile Include="Models\AudioMapperModel.cs" />
+    <Compile Include="Models\AudioMultiGroupModel.cs" />
+    <Compile Include="Models\AudioSensorMapperModel.cs" />
+    <Compile Include="Models\AudioSetupModel.cs" />
+    <Compile Include="Models\AudioSymbolModel.cs" />
+    <Compile Include="Models\AudioVisualLookupModel.cs" />
+    <Compile Include="Models\IAudioGroupModel.cs" />
+    <Compile Include="Models\IAudioMapperModel.cs" />
+    <Compile Include="Models\IAudioMultiGroupModel.cs" />
+    <Compile Include="Models\Messages.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Providers\AudioDomainDataProvider.cs" />
+    <Compile Include="Providers\Models\AudioGroupProvider.cs" />
+    <Compile Include="Models\AudioLookupModel.cs" />
+    <Compile Include="Providers\Models\AudioMultiGroupProvider.cs" />
+    <Compile Include="Providers\Models\AudioProvider.cs" />
+    <Compile Include="Providers\Models\AudioSensorProvider.cs" />
+    <Compile Include="Providers\Models\AudioSymbolProvider.cs" />
+    <Compile Include="Providers\ViewModels\AudioGroupViewModelProvider.cs" />
+    <Compile Include="Providers\ViewModels\AudioSensorViewModelProvider.cs" />
+    <Compile Include="Providers\ViewModels\AudioSymbolViewModelProvider.cs" />
+    <Compile Include="Providers\ViewModels\AudioViewModelProvider.cs" />
+    <Compile Include="Services\AudioDbService.cs" />
+    <Compile Include="Services\AxisApiService.cs" />
+    <Compile Include="Utils\AxisAudioEnumValueConverter.cs" />
+    <Compile Include="ViewModels\AudioBaseViewModel.cs" />
+    <Compile Include="ViewModels\AudioGroupViewModel.cs" />
+    <Compile Include="ViewModels\AudioSensorViewModel.cs" />
+    <Compile Include="ViewModels\AudioSymbolViewModel.cs" />
+    <Compile Include="ViewModels\AudioViewModel.cs" />
+    <Compile Include="ViewModels\Dialogs\AudioClipPlayViewModel.cs" />
+    <Compile Include="ViewModels\Dialogs\AudioGroupingViewModel.cs" />
+    <Compile Include="ViewModels\Dialogs\AudioPlayViewModel.cs" />
+    <Compile Include="ViewModels\Dialogs\AudioSensorMappingViewModel.cs" />
+    <Compile Include="ViewModels\Dialogs\MicStreamingViewModel.cs" />
+    <Compile Include="ViewModels\IAudioBaseViewModel.cs" />
+    <Compile Include="ViewModels\Panels\AudioSetupPanelViewModel.cs" />
+    <Compile Include="ViewModels\Panels\SetupPanels\AudioDeviceSetupViewModel.cs" />
+    <Compile Include="ViewModels\Panels\SetupPanels\AudioGroupSetupViewModel.cs" />
+    <Compile Include="ViewModels\Panels\SetupPanels\AudioSensorSetupViewModel.cs" />
+    <Compile Include="Views\AudioSymbolView.xaml.cs">
+      <DependentUpon>AudioSymbolView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\AudioClipPlayView.xaml.cs">
+      <DependentUpon>AudioClipPlayView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\AudioGroupingView.xaml.cs">
+      <DependentUpon>AudioGroupingView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\AudioPlayView.xaml.cs">
+      <DependentUpon>AudioPlayView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\AudioSensorMappingView.xaml.cs">
+      <DependentUpon>AudioSensorMappingView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\MicStreamingView.xaml.cs">
+      <DependentUpon>MicStreamingView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Panels\AudioSetupPanelView.xaml.cs">
+      <DependentUpon>AudioSetupPanelView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Panels\SetupPanels\AudioGroupSetupView.xaml.cs">
+      <DependentUpon>AudioGroupSetupView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Panels\SetupPanels\AudioDeviceSetupView.xaml.cs">
+      <DependentUpon>AudioDeviceSetupView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Panels\SetupPanels\AudioSensorSetupView.xaml.cs">
+      <DependentUpon>AudioSensorSetupView.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\megaphone.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <None Include="app.config" />
+    <Content Include="Monikers.imagemanifest">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Modules\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Ironwall.Framework\Ironwall.Framework.csproj">
+      <Project>{cc34c433-38a8-4092-b172-d89db0e632be}</Project>
+      <Name>Ironwall.Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ironwall.Libraries.Api.Client\Ironwall.Libraries.Api.Client.csproj">
+      <Project>{8937e8ab-6402-4ac3-affc-ac5b76813a9d}</Project>
+      <Name>Ironwall.Libraries.Api.Client</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ironwall.Libraries.Api.Common\Ironwall.Libraries.Api.Common.csproj">
+      <Project>{a6f3508f-2685-47fc-87b7-6fe3c92fda50}</Project>
+      <Name>Ironwall.Libraries.Api.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ironwall.Libraries.Base\Ironwall.Libraries.Base.csproj">
+      <Project>{9D2531FC-7A97-478B-9303-9B0A3D223551}</Project>
+      <Name>Ironwall.Libraries.Base</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ironwall.Libraries.Enums\Ironwall.Libraries.Enums.csproj">
+      <Project>{848ae203-d3b4-4e73-8ef0-1a18d88a040c}</Project>
+      <Name>Ironwall.Libraries.Enums</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ironwall.Libraries.Utils\Ironwall.Libraries.Utils.csproj">
+      <Project>{14220279-9b26-4383-bf1e-a0da31726758}</Project>
+      <Name>Ironwall.Libraries.Utils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Wpf.AxisAudio.Common\Wpf.AxisAudio.Common.csproj">
+      <Project>{E5D9319F-3D45-4A15-A4C1-2104ACCC8C56}</Project>
+      <Name>Wpf.AxisAudio.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Views\AudioSymbolView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Dialogs\AudioClipPlayView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Dialogs\AudioGroupingView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Dialogs\AudioPlayView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Dialogs\AudioSensorMappingView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Dialogs\MicStreamingView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Panels\AudioSetupPanelView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Panels\SetupPanels\AudioGroupSetupView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Panels\SetupPanels\AudioDeviceSetupView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Panels\SetupPanels\AudioSensorSetupView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\Ironwall.Monitoring.Solution_KET_Ulsan\packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\Ironwall.Monitoring.Solution_KET_Ulsan\packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('..\..\Ironwall.Monitoring.Solution_KET_Ulsan\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\Ironwall.Monitoring.Solution_KET_Ulsan\packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
+    <Error Condition="!Exists('..\..\Ironwall.Monitoring.Solution_KET_Ulsan\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.118.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\Ironwall.Monitoring.Solution_KET_Ulsan\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.118.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets'))" />
+    <Error Condition="!Exists('..\..\Ironwall.Monitoring.Solution_KET_Ulsan\packages\MaterialDesignThemes.4.9.0\build\MaterialDesignThemes.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\Ironwall.Monitoring.Solution_KET_Ulsan\packages\MaterialDesignThemes.4.9.0\build\MaterialDesignThemes.targets'))" />
+  </Target>
+  <Import Project="..\..\Ironwall.Monitoring.Solution_KET_Ulsan\packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('..\..\Ironwall.Monitoring.Solution_KET_Ulsan\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
+  <Import Project="..\..\Ironwall.Monitoring.Solution_KET_Ulsan\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.118.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets" Condition="Exists('..\..\Ironwall.Monitoring.Solution_KET_Ulsan\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.118.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets')" />
+  <Import Project="..\..\Ironwall.Monitoring.Solution_KET_Ulsan\packages\MaterialDesignThemes.4.9.0\build\MaterialDesignThemes.targets" Condition="Exists('..\..\Ironwall.Monitoring.Solution_KET_Ulsan\packages\MaterialDesignThemes.4.9.0\build\MaterialDesignThemes.targets')" />
+</Project>

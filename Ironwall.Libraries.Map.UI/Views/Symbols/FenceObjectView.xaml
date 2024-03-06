@@ -1,0 +1,235 @@
+﻿<UserControl x:Class="Ironwall.Libraries.Map.UI.Views.Symbols.FenceObjectView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Ironwall.Libraries.Map.UI.Views.Symbols"
+             xmlns:cal="http://caliburnmicro.com"
+			 xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+			 xmlns:units="clr-namespace:Ironwall.Libraries.Map.UI.UI.Units"
+			 xmlns:utils="clr-namespace:Ironwall.Libraries.Utils;assembly=Ironwall.Libraries.Utils"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+
+	<UserControl.Resources>
+		<utils:BindingProxy x:Key="DataProxy"
+                            Data="{Binding}" />
+	</UserControl.Resources>
+	<units:CustomControl Canvas.Left="{Binding X, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+						 Canvas.Top="{Binding Y, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+						 Width="{Binding Width, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+						 Height="{Binding Height, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+						 OnEditable="{Binding OnEditable, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+						 IsEditable="{Binding IsEditable, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+						 Visibility="{Binding IsVisible, Mode=TwoWay, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}"
+						 cal:Message.Attach="[Event Loaded]=[Action OnLoaded($source, $eventArgs)];
+											 [Event MouseDown]=[Action OnClickSelect($source, $eventArgs)];"
+						 x:Name="FenceSymbol"
+						 Style="{StaticResource CustomItemAdornerStyle}">
+
+		<units:CustomControl.ContextMenu>
+			<ContextMenu Opacity="0.89">
+				<MenuItem Header="도형편집"
+						  Visibility="{Binding OnEditable, Converter={StaticResource BooleanToVisibilityConverter}}"
+						  IsEnabled="{Binding IsEditable, Converter={StaticResource InvertBooleanConverter}, UpdateSourceTrigger=PropertyChanged}"
+						  DataContext="{Binding }">
+					<MenuItem.Icon>
+						<md:PackIcon Kind="EditBoxOutline" />
+					</MenuItem.Icon>
+					<cal:Message.Attach>
+						[Event Click] = [Action OnClickEdit($source, $eventArgs)]
+					</cal:Message.Attach>
+				</MenuItem>
+				<MenuItem Header="Exit"
+						  Visibility="{Binding OnEditable, Converter={StaticResource BooleanToVisibilityConverter}}"
+						  IsEnabled="{Binding IsEditable, UpdateSourceTrigger=PropertyChanged}">
+					<MenuItem.Icon>
+						<md:PackIcon Kind="EmergencyExit" />
+					</MenuItem.Icon>
+					<cal:Message.Attach>
+						[Event Click] = [Action OnClickExit($source, $eventArgs)]
+					</cal:Message.Attach>
+				</MenuItem>
+				<MenuItem Header="Copy"
+						  Visibility="{Binding OnEditable, Converter={StaticResource BooleanToVisibilityConverter}}">
+					<MenuItem.Icon>
+						<md:PackIcon Kind="ContentCopy" />
+					</MenuItem.Icon>
+					<cal:Message.Attach>
+						[Event Click] = [Action OnClickCopy($source, $eventArgs)]
+					</cal:Message.Attach>
+				</MenuItem>
+				<MenuItem Header="Delete"
+						  Visibility="{Binding OnEditable, Converter={StaticResource BooleanToVisibilityConverter}}"
+						  >
+					<MenuItem.Icon>
+						<md:PackIcon Kind="Delete" />
+					</MenuItem.Icon>
+					<cal:Message.Attach>
+						[Event Click] = [Action OnClickDelete($source, $eventArgs)]
+					</cal:Message.Attach>
+				</MenuItem>
+			</ContextMenu>
+		</units:CustomControl.ContextMenu>
+
+		<Viewbox Width="{Binding Width}"
+				 Height="{Binding Height}">
+			<Grid>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="*"/>
+					<RowDefinition Height="Auto"/>
+				</Grid.RowDefinitions>
+
+				<Polyline Grid.Row="0"
+						  IsHitTestVisible="{Binding IsEditable, Converter={StaticResource InvertBooleanConverter}}"
+						  StrokeThickness="{Binding ShapeStrokeThick}"
+						  StrokeEndLineCap="Triangle"
+						  StrokeStartLineCap="Triangle"
+						  Points="{Binding Points, UpdateSourceTrigger=PropertyChanged}">
+
+					<!--<Polyline.Stroke>
+						<SolidColorBrush Color="{Binding ShapeStroke, Converter={StaticResource StringToColorConverter}}"/>
+					</Polyline.Stroke>-->
+					<Polyline.Fill>
+						<SolidColorBrush Color="{Binding ShapeFill, Converter={StaticResource StringToColorConverter}}"/>
+					</Polyline.Fill>
+					
+					<Polyline.Style>
+						<Style TargetType="Polyline">
+							<!--<Setter Property="Stroke">
+								<Setter.Value>
+									<SolidColorBrush Color="{Binding ShapeStroke, Converter={StaticResource StringToColorConverter}}"/>
+								</Setter.Value>
+							</Setter>-->
+							<Style.Triggers>
+								<DataTrigger Binding="{Binding IsAlarming,  UpdateSourceTrigger=PropertyChanged}" Value="TRUE">
+									<Setter Property="Stroke">
+										<Setter.Value>
+											<SolidColorBrush Color="Red"/>
+										</Setter.Value>
+									</Setter>
+								</DataTrigger>
+								<DataTrigger Binding="{Binding IsAlarming, UpdateSourceTrigger=PropertyChanged}" Value="FALSE">
+									<Setter Property="Stroke">
+										<Setter.Value>
+											<SolidColorBrush Color="{Binding Path=Data.ShapeStroke, Source={StaticResource DataProxy}, Converter={StaticResource StringToColorConverter}}"/>
+										</Setter.Value>
+									</Setter>
+								</DataTrigger>
+								<!--<DataTrigger Binding="{Binding IsFault,  UpdateSourceTrigger=PropertyChanged}" Value="TRUE">
+									<Setter Property="Stroke">
+										<Setter.Value>
+											<SolidColorBrush Color="#88000000"/>
+										</Setter.Value>
+									</Setter>
+								</DataTrigger>
+								<DataTrigger Binding="{Binding IsFault, UpdateSourceTrigger=PropertyChanged}" Value="FALSE">
+									<Setter Property="Stroke">
+										<Setter.Value>
+											<SolidColorBrush Color="{Binding Path=Data.ShapeStroke, Source={StaticResource DataProxy}, Converter={StaticResource StringToColorConverter}}"/>
+										</Setter.Value>
+									</Setter>
+								</DataTrigger>-->
+							</Style.Triggers>
+						</Style>
+					</Polyline.Style>
+				</Polyline>
+				
+				<Viewbox Grid.Row="1">
+					<TextBlock x:Name="LableName"
+							   IsHitTestVisible="{Binding IsEditable, Converter={StaticResource InvertBooleanConverter}}"
+							   VerticalAlignment="Center"
+							   TextAlignment="Center"
+							   HorizontalAlignment="Center"
+							   FontSize="{Binding FontSize}"
+							   Visibility="{Binding IsShowLable, Converter={StaticResource BooleanToVisibilityConverter}}"
+							   Text="{Binding Lable, FallbackValue=테스트}">
+						<TextBlock.Foreground>
+							<SolidColorBrush Color="{Binding FontColor, Converter={StaticResource StringToColorConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+						</TextBlock.Foreground>
+						<TextBlock.Effect>
+							<DropShadowEffect
+										ShadowDepth="1"
+										Direction="270"
+										Color="Black"
+										Opacity="1"
+										BlurRadius="2"/>
+						</TextBlock.Effect>
+					</TextBlock>
+				</Viewbox>
+			</Grid>
+		</Viewbox>
+
+
+		<!--<Viewbox Grid.Row="1" x:Name="LableName">
+					<TextBlock IsHitTestVisible="{Binding IsEditable, Converter={StaticResource InvertBooleanConverter}}"
+							   VerticalAlignment="Center"
+							   TextAlignment="Center"
+							   HorizontalAlignment="Center"
+							   Margin="5 0 5 2"
+							   Visibility="{Binding IsShowLable, Converter={StaticResource BooleanToVisibilityConverter}}"
+							   Text="{Binding Lable, FallbackValue=테스트}">
+						<TextBlock.Foreground>
+							<SolidColorBrush Color="{Binding FontColor, Converter={StaticResource StringToColorConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+						</TextBlock.Foreground>
+						<TextBlock.Effect>
+							<DropShadowEffect
+									ShadowDepth="1"
+									Direction="270"
+									Color="Black"
+									Opacity="1"
+									BlurRadius="2"/>
+						</TextBlock.Effect>
+					</TextBlock>
+				</Viewbox>-->
+
+
+		<!--<Polyline 
+						  cal:Message.Attach="[Event SizeChanged] = [Action OnSizeChanged($source, $eventArgs)]"
+						  IsHitTestVisible="{Binding IsEditable, Converter={StaticResource InvertBooleanConverter}}"
+						  StrokeThickness="{Binding ShapeStrokeThick}"
+						  Points="{Binding Points, UpdateSourceTrigger=PropertyChanged}">
+			<Polyline.Width>
+				<MultiBinding Converter="{StaticResource ShapeSizeWithLableConverter}" ConverterParameter="Width" UpdateSourceTrigger="PropertyChanged">
+					<Binding Path="Width" />
+				</MultiBinding>
+			</Polyline.Width>
+			<Polyline.Height>
+				<MultiBinding Converter="{StaticResource ShapeSizeWithLableConverter}" ConverterParameter="Height" UpdateSourceTrigger="PropertyChanged">
+					<Binding Path="Height"/>
+					<Binding Path="ActualHeight" ElementName="LableName"/>
+				</MultiBinding>
+			</Polyline.Height>
+			<Polyline.Stroke>
+				<SolidColorBrush Color="{Binding ShapeStroke, Converter={StaticResource StringToColorConverter}}"/>
+			</Polyline.Stroke>
+			<Polyline.Fill>
+				<SolidColorBrush Color="{Binding ShapeFill, Converter={StaticResource StringToColorConverter}}"/>
+			</Polyline.Fill>
+		</Polyline>
+		<TextBlock Grid.Row="1" x:Name="LableName"
+						   IsHitTestVisible="{Binding IsEditable, Converter={StaticResource InvertBooleanConverter}}"
+							   VerticalAlignment="Center"
+							   TextAlignment="Center"
+							   HorizontalAlignment="Center"
+							   Margin="2"
+							   Visibility="{Binding IsShowLable, Converter={StaticResource BooleanToVisibilityConverter}}"
+							   Text="{Binding Lable, FallbackValue=테스트}">
+			<TextBlock.Foreground>
+				<SolidColorBrush Color="{Binding FontColor, Converter={StaticResource StringToColorConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+			</TextBlock.Foreground>
+			<TextBlock.Effect>
+				<DropShadowEffect
+									ShadowDepth="1"
+									Direction="270"
+									Color="Black"
+									Opacity="1"
+									BlurRadius="2"/>
+			</TextBlock.Effect>
+		</TextBlock>-->
+
+		<units:CustomControl.RenderTransform>
+			<RotateTransform Angle="{Binding Angle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+		</units:CustomControl.RenderTransform>
+	</units:CustomControl>
+</UserControl>

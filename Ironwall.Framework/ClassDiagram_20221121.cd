@@ -1,0 +1,1939 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Comment CommentText="Event Mapper Model">
+    <Position X="117" Y="49.75" Height="0.318" Width="1.7" />
+  </Comment>
+  <Comment CommentText="Event Model">
+    <Position X="69.701" Y="50.048" Height="0.318" Width="1.7" />
+  </Comment>
+  <Comment CommentText="Device View Model">
+    <Position X="92.391" Y="36.504" Height="0.318" Width="1.7" />
+  </Comment>
+  <Comment CommentText="Event View Model">
+    <Position X="93.607" Y="49.797" Height="0.318" Width="1.7" />
+  </Comment>
+  <Comment CommentText="서비스 모델">
+    <Position X="89.837" Y="1.495" Height="0.318" Width="1.7" />
+  </Comment>
+  <Comment CommentText="Account Request Model">
+    <Position X="21.376" Y="36.861" Height="0.318" Width="1.7" />
+  </Comment>
+  <Comment CommentText="Event Request Model">
+    <Position X="6.26" Y="52.742" Height="0.318" Width="1.7" />
+  </Comment>
+  <Comment CommentText="Response Model">
+    <Position X="24.518" Y="55.189" Height="0.318" Width="1.7" />
+  </Comment>
+  <Comment CommentText="Device Data Request">
+    <Position X="0.941" Y="42.266" Height="0.318" Width="1.7" />
+  </Comment>
+  <Comment CommentText="Device Mapper Model&#xD;&#xA;">
+    <Position X="115.944" Y="36.976" Height="0.318" Width="1.7" />
+  </Comment>
+  <Comment CommentText="Device Model">
+    <Position X="70.023" Y="36.847" Height="0.318" Width="1.7" />
+  </Comment>
+  <Comment CommentText="Interface For Request Message">
+    <Position X="1.925" Y="17.43" Height="0.34" Width="2.312" />
+  </Comment>
+  <Comment CommentText="Factory Class">
+    <Position X="69.969" Y="14.498" Height="0.318" Width="1.7" />
+  </Comment>
+  <Comment CommentText="Interface For Response Message">
+    <Position X="34.844" Y="16.521" Height="0.34" Width="2.312" />
+  </Comment>
+  <Comment CommentText="Detail Model">
+    <Position X="2.24" Y="27.689" Height="0.318" Width="1.7" />
+  </Comment>
+  <Class Name="Ironwall.Framework.DataProviders.EntityCollectionProvider&lt;T&gt;" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="70.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAABIAAAAABARAAAAACAAEAAAAAABAAAA=</HashCode>
+      <FileName>DataProviders\EntityCollectionProvider.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Ironwall.Framework.DataProviders.EntityViewModelFactory" Collapsed="true">
+    <Position X="76" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DataProviders\EntityViewModelFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ironwall.Framework.DataProviders.InstanceFactory" Collapsed="true">
+    <Position X="70" Y="15.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DataProviders\InstanceFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ironwall.Framework.Events.EventHelper" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="69" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Events\EventHelper.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Ironwall.Framework.Helpers.EnumHelper" Collapsed="true">
+    <Position X="77.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\EnumHelper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ironwall.Framework.Helpers.FileManager" Collapsed="true">
+    <Position X="76" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAACAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\FileManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ironwall.Framework.Helpers.IdCodeGenerator" Collapsed="true">
+    <Position X="77.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\IdCodeGenerator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ironwall.Framework.ParentBootstrapper&lt;T&gt;" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="77.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>oAAAAAQAACAAQIAAAABAACIABAAQAABAIAAAACAAAAA=</HashCode>
+      <FileName>ParentBootstrapper.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Accounts.LoginSessionModel" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="14" Y="11" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAAAAAAAgAAAAAAABAAAAAAAAAAAABAAA=</HashCode>
+      <FileName>Models\Accounts\LoginSessionModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Accounts.LoginUserModel" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="16" Y="11" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAoAAAAAEgAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Accounts\LoginUserModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Accounts.UserModel" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="19" Y="11" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAkAAQAAAAAAgAAAAAAAAECAAABACAAAAJAAAAAA=</HashCode>
+      <FileName>Models\Accounts\UserModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Communications.Accounts.AccountDeleteRequestModel" Collapsed="true">
+    <Position X="39.75" Y="38" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAAAAAAAAAAAgAAABAAAAAAAAAAAABAAA=</HashCode>
+      <FileName>Models\Communications\Accounts\AccountDeleteRequestModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Communications.Accounts.AccountDeleteResponseModel" Collapsed="true">
+    <Position X="32" Y="60.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Accounts\AccountDeleteResponseModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Communications.Accounts.AccountDetailModel" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="34.25" Y="40.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAACAkAASAAAAAAgAAAAAAQAECAAABADAAAAJAAAAEA=</HashCode>
+      <FileName>Models\Communications\Accounts\AccountDetailModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Communications.Accounts.AccountEditRequestModel" Collapsed="true">
+    <Position X="34.25" Y="38" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAACAABAAAAAAAAAAAAAAAAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Accounts\AccountEditRequestModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Communications.Accounts.AccountEditResponseModel" Collapsed="true">
+    <Position X="34.75" Y="62.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Accounts\AccountEditResponseModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Communications.Accounts.AccountInfoRequestModel" Collapsed="true">
+    <Position X="37" Y="38" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAACAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Accounts\AccountInfoRequestModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Communications.Accounts.AccountInfoResponseModel" Collapsed="true">
+    <Position X="34.75" Y="60.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Accounts\AccountInfoResponseModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Communications.Accounts.AccountRegisterRequestModel" Collapsed="true">
+    <Position X="31.5" Y="38" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAkAASAAAAAAgAAAAAAQAECAAABADAAAAJAAAAEA=</HashCode>
+      <FileName>Models\Communications\Accounts\AccountRegisterRequestModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Communications.Accounts.AccountRegisterResponseModel" Collapsed="true">
+    <Position X="29.25" Y="60.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Accounts\AccountRegisterResponseModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Communications.Accounts.KeepAliveRequestModel" Collapsed="true">
+    <Position X="29" Y="38" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAA=</HashCode>
+      <FileName>Models\Communications\Accounts\KeepAliveRequestModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Communications.Accounts.KeepAliveResponseModel" Collapsed="true">
+    <Position X="27" Y="57" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Accounts\KeepAliveResponseModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Communications.Accounts.LoginRequestModel" Collapsed="true">
+    <Position X="24" Y="38" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAABAAAAAAAAAAAgAAABAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Accounts\LoginRequestModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Communications.Accounts.LoginResponseModel" Collapsed="true">
+    <Position X="24.5" Y="57" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Accounts\LoginResponseModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Communications.Accounts.LoginResultModel" Collapsed="true">
+    <Position X="24.5" Y="59.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAgABAAAAwAgAAAgAAAAAAAAAAAAAAAABAgA=</HashCode>
+      <FileName>Models\Communications\Accounts\LoginResultModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Communications.Accounts.LogoutRequestModel" Collapsed="true">
+    <Position X="26.5" Y="38" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAABAAA=</HashCode>
+      <FileName>Models\Communications\Accounts\LogoutRequestModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Communications.Accounts.LogoutResponseModel" Collapsed="true">
+    <Position X="29.75" Y="57" Width="2" />
+    <InheritanceLine Type="Ironwall.Framework.Models.Communications.ResponseModel" FixedToPoint="true">
+      <Path>
+        <Point X="50.5" Y="54.941" />
+        <Point X="50.5" Y="56.625" />
+        <Point X="35.958" Y="56.625" Type="JumpStart" />
+        <Point X="35.792" Y="56.625" Type="JumpEnd" />
+        <Point X="33.333" Y="56.625" Type="JumpStart" />
+        <Point X="33.167" Y="56.625" Type="JumpEnd" />
+        <Point X="30.75" Y="56.625" />
+        <Point X="30.75" Y="57" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Accounts\LogoutResponseModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Communications.BaseEventMessageModel" Collapsed="true">
+    <Position X="15" Y="53.25" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAEAAAQAAAAAAAAAAAAAAAAAABAQAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\BaseEventMessageModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Communications.BaseMessageModel" Collapsed="true">
+    <Position X="30" Y="35" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\BaseMessageModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Communications.RequestFactory" Collapsed="true">
+    <Position X="74.75" Y="15.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAQAAAAAAAAQAAAAAAAAAAgAEAAACAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\RequestFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Communications.ResponseFactory" Collapsed="true">
+    <Position X="77.75" Y="15.25" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\ResponseFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Communications.ResponseModel" Collapsed="true">
+    <Position X="49.25" Y="54.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAAAAAAAAgAAAAAgAAAAAAAAAAIAAAAAA=</HashCode>
+      <FileName>Models\Communications\ResponseModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Communications.UserSessionBaseRequestModel" Collapsed="true">
+    <Position X="4.25" Y="43.5" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAQAgAAAgAAABAAAAAAAAAAAABAAA=</HashCode>
+      <FileName>Models\Communications\UserSessionBaseRequestModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Communications.Devices.CameraDataRequestModel" Collapsed="true">
+    <Position X="8.25" Y="49.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Devices\CameraDataRequestModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.237" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Communications.Devices.CameraDataResponseModel" Collapsed="true">
+    <Position X="49" Y="62.5" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Devices\CameraDataResponseModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Communications.Devices.ControllerDataRequestModel" Collapsed="true">
+    <Position X="0.75" Y="49.25" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Devices\ControllerDataRequestModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Communications.Devices.ControllerDataResponseModel" Collapsed="true">
+    <Position X="43" Y="62.5" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Devices\ControllerDataResponseModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Communications.Devices.DeviceDataRequestModel" Collapsed="true">
+    <Position X="6.25" Y="47.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Devices\DeviceDataRequestModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Communications.Devices.DeviceDataResponseModel" Collapsed="true">
+    <Position X="46.5" Y="57.75" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAAAIAAAAAAAEAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Devices\DeviceDataResponseModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Communications.Devices.DeviceDetailModel" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="43" Y="59.75" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Devices\DeviceDetailModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Communications.Devices.DeviceInfoRequestModel" Collapsed="true">
+    <Position X="2.25" Y="47.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Devices\DeviceInfoRequestModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Communications.Devices.DeviceInfoResponseModel" Collapsed="true">
+    <Position X="43" Y="57.75" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAA=</HashCode>
+      <FileName>Models\Communications\Devices\DeviceInfoResponseModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Communications.Devices.SensorDataRequestModel" Collapsed="true">
+    <Position X="4.5" Y="49.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Devices\SensorDataRequestModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Communications.Devices.SensorDataResponseModel" Collapsed="true">
+    <Position X="46.5" Y="62.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Devices\SensorDataResponseModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Communications.Events.ActionRequestMalfunctionModel" Collapsed="true">
+    <Position X="18.75" Y="65" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAA=</HashCode>
+      <FileName>Models\Communications\Events\ActionRequestMalfunctionModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Communications.Events.ActionRequestModel" Collapsed="true">
+    <Position X="18.75" Y="62.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAABAEAgAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Events\ActionRequestModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Communications.Events.ActionResponseModel" Collapsed="true">
+    <Position X="54" Y="60" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Events\ActionResponseModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Communications.Events.ConnectionRequestModel" Collapsed="true">
+    <Position X="8.75" Y="57.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Events\ConnectionRequestModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Communications.Events.ConnectionResponseModel" Collapsed="true">
+    <Position X="56" Y="57.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Events\ConnectionResponseModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Communications.Events.DetectionDetailModel" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="12" Y="59.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Events\DetectionDetailModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Communications.Events.DetectionRequestModel" Collapsed="true">
+    <Position X="12" Y="57.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAA=</HashCode>
+      <FileName>Models\Communications\Events\DetectionRequestModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Communications.Events.DetectionResponseModel" Collapsed="true">
+    <Position X="58.5" Y="57.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Events\DetectionResponseModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Communications.Events.MalfunctionDetailModel" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="15.25" Y="59.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAACAAUAAIAAAAAAAAAAAAABAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Events\MalfunctionDetailModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Communications.Events.MalfunctionRequestModel" Collapsed="true">
+    <Position X="15.25" Y="57.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAA=</HashCode>
+      <FileName>Models\Communications\Events\MalfunctionRequestModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Communications.Events.MalfunctionResponseModel" Collapsed="true">
+    <Position X="61" Y="57.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Events\MalfunctionResponseModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Devices.BaseDeviceModel" Collapsed="true">
+    <Position X="72.5" Y="37.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>IAACAAAEAAAIAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAA=</HashCode>
+      <FileName>Models\Devices\BaseDeviceModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Devices.CameraDeviceModel" Collapsed="true">
+    <Position X="70.25" Y="40.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAACAAAAACAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Devices\CameraDeviceModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Devices.ControllerDeviceModel" Collapsed="true">
+    <Position X="72.75" Y="40.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAACAAAAACAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Devices\ControllerDeviceModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Devices.SensorDeviceModel" Collapsed="true">
+    <Position X="75.25" Y="40.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Devices\SensorDeviceModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.DeviceTypeModel" Collapsed="true">
+    <Position X="81.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\DeviceTypeModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ironwall.Framework.Models.EntityShapeTypeModel" Collapsed="true">
+    <Position X="72.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\EntityShapeTypeModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ironwall.Framework.Models.EventArgsModel&lt;T&gt;" Collapsed="true">
+    <Position X="79.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Models\EventArgsModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ironwall.Framework.Models.EventMessageModel&lt;T&gt;" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="70.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAABgAAAAYAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Models\EventMessageModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.EventModel" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="72.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\EventModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.ModelFactory" Collapsed="true">
+    <Position X="72" Y="15.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\ModelFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ironwall.Framework.Models.SelectableItemModel" Collapsed="true">
+    <Position X="72.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQAAAAEAAAAAAAAAQAAAAEAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\SelectableItemModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Events.EventFactory" Collapsed="true">
+    <Position X="72" Y="16.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Events\EventFactoryClass.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Mappers.CameraTableMapper" Collapsed="true">
+    <Position X="121.75" Y="40.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAACAAAAACAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Mappers\Devices\CameraTableMapper.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Mappers.ControllerTableMapper" Collapsed="true">
+    <Position X="116.75" Y="40.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAACAAAAACAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Mappers\Devices\ControllerTableMapper.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Mappers.DeviceMapperBase" Collapsed="true">
+    <Position X="119.25" Y="37.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAEAAAIAAAAAAAAAAAAAAAAAAAAEAAIAAAAAAA=</HashCode>
+      <FileName>Models\Mappers\Devices\DeviceMapperBase.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Mappers.SensorTableMapper" Collapsed="true">
+    <Position X="119.25" Y="40.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Mappers\Devices\SensorTableMapper.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Mappers.DetectionEventMapper">
+    <Position X="123" Y="58.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Mappers\Events\DetectionEventMapper.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Mappers.EventMapperBase">
+    <Position X="120.75" Y="51" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAgAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Mappers\Events\EventMapperBase.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Mappers.MalfunctionEventMapper">
+    <Position X="116.25" Y="58.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACAAUAAIAAAAAAAAAAAAABAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Mappers\Events\MalfunctionEventMapper.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Mappers.MetaEventMapper">
+    <Position X="119.75" Y="53.75" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEAAEAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Mappers\Events\MetaEventMapper.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Mappers.ReportEventMapper">
+    <Position X="123" Y="53.75" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAgAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>Models\Mappers\Events\ReportEventMapper.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Mappers.Events.ActionDetectionEventMapper">
+    <Position X="123" Y="56.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Mappers\Events\ActionDetectionEventMapper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Mappers.Events.ActionMalfunctionEventMapper">
+    <Position X="125.75" Y="56.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Mappers\Events\ActionMalfunctionEventMapper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Messages.CloseAllMessageModel" Collapsed="true">
+    <Position X="76" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Messages\CloseAllMessageModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Messages.CloseDialogMessageModel" Collapsed="true">
+    <Position X="77.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Messages\CloseDialogMessageModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Messages.ClosePanelMessageModel" Collapsed="true">
+    <Position X="79.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Messages\ClosePanelMessageModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Messages.ClosePopupMessageModel" Collapsed="true">
+    <Position X="81.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Messages\ClosePopupMessageModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Messages.CommonMessageModel" Collapsed="true">
+    <Position X="117.25" Y="3.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAIAAAEADAAAAAAAABAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Messages\Common\CommonMessageModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Messages.OpenConfirmPopupMessageModel" Collapsed="true">
+    <Position X="115.25" Y="9" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Messages\OpenConfirmPopupMessageModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Messages.OpenInfoPopupMessageModel" Collapsed="true">
+    <Position X="118.5" Y="9" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Messages\OpenInfoPopupMessageModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Messages.OpenProgressPopupMessageModel" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="76" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Messages\OpenProgressPopupMessageModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Ironwall.Framework.Modules.DBConnectionModule" Collapsed="true">
+    <Position X="76" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAA=</HashCode>
+      <FileName>Modules\DBConnectionModule.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ironwall.Framework.Modules.RedisModule" Collapsed="true">
+    <Position X="81.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAIBAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Modules\RedisModules.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ironwall.Framework.Services.DispatcherService" Collapsed="true">
+    <Position X="69" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Services\DispatcherService.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ironwall.Framework.Services.IccsService" Collapsed="true">
+    <Position X="90.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAEAAAAAAgghAAAQAAACAAAAAAAAIAAAAAAAAAA=</HashCode>
+      <FileName>Services\IccsService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Services.MessageService" Collapsed="true">
+    <Position X="93" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAIAAAAAAAAgACAAAAAAAAAAAAAAaAAAAAAAAAA=</HashCode>
+      <FileName>Services\MessageService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Services.TaskService" Collapsed="true">
+    <Position X="92" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAIAAAAAAAAEA=</HashCode>
+      <FileName>Services\TaskService.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ironwall.Framework.Services.TokenGeneration" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="76" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQQAQAEAEAAACQAAEAAQAAAAAAAAgAAgAAACAEARAAI=</HashCode>
+      <FileName>Services\TokenGeneration.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Ironwall.Framework.Services.TrulyObservableCollection&lt;T&gt;" Collapsed="true">
+    <Position X="77.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAgAAEAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Services\TrulyObservableCollection.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ironwall.Framework.ViewModels.Account.UserBasePanelViewModel" Collapsed="true">
+    <Position X="106.5" Y="3.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAkAASAgAAAAgAAEAAAQAFCAAEBADAAgAJABBAEA=</HashCode>
+      <FileName>ViewModels\Account\UserBasePanelViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ironwall.Framework.ViewModels.Account.UserBaseViewModel" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="79.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAkACSAAAAAAgAAEAAAQAECAAEBADAAgAJABBAEA=</HashCode>
+      <FileName>ViewModels\Account\UserBaseViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Ironwall.Framework.ViewModels.BaseDataGridViewModel&lt;T&gt;" Collapsed="true">
+    <Position X="108.75" Y="3.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AFAECCAACGCAQAAAAAAAACAAIQAAAAAAABAAAAAAAgA=</HashCode>
+      <FileName>ViewModels\BaseDataGridViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ironwall.Framework.ViewModels.BaseShellViewModel" Collapsed="true">
+    <Position X="72.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEADAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\BaseShellViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ironwall.Framework.ViewModels.CanvasEntityViewModel&lt;T&gt;" Collapsed="true">
+    <Position X="74.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAABAAAA=</HashCode>
+      <FileName>ViewModels\CanvasEntityViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ironwall.Framework.ViewModels.EntityViewModel" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="74.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AGACAAAARDAAAAEAAAADAEAQQIABAIAAEEAAgAEAAEA=</HashCode>
+      <FileName>ViewModels\EntityViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Ironwall.Framework.ViewModels.EventShellViewModel&lt;T1, T2&gt;" Collapsed="true">
+    <Position X="74.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAA=</HashCode>
+      <FileName>ViewModels\EventShellViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ironwall.Framework.ViewModels.EventTimerViewModel" Collapsed="true">
+    <Position X="114" Y="3.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAQAAgAAQgEAAACAAAAAAAAAQAAAABAEAQAEA=</HashCode>
+      <FileName>ViewModels\EventTimerViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.ViewModels.EventViewModel" Collapsed="true">
+    <Position X="120.75" Y="3.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>EAACAAAAAAAAAAAAEAAAAAAAAAAAAAQAAAABAEAAAEA=</HashCode>
+      <FileName>ViewModels\EventViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.ViewModels.NotifierPropertyChanged" Collapsed="true">
+    <Position X="117.25" Y="1.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAAAIAAAAAAAgAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\NotifierPropertyChanged.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.ViewModels.PropertyNotifyEventArgs" Collapsed="true">
+    <Position X="79.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAA=</HashCode>
+      <FileName>ViewModels\PropertyNotifyEventArgs.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ironwall.Framework.ViewModels.SelectableItemViewModel" Collapsed="true">
+    <Position X="74.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAEAAAAAAAAAQAAAAABAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\SelectableItemViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ironwall.Framework.ViewModels.ValueNotifyEventArgs&lt;T&gt;" Collapsed="true">
+    <Position X="69" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>ViewModels\ValueNotifyEventArgs.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ironwall.Framework.ViewModels.ViewModelFactory" Collapsed="true">
+    <Position X="77.75" Y="16.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\ViewModelFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ironwall.Framework.ViewModels.ConductorViewModels.BaseViewModel" Collapsed="true">
+    <Position X="108" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACIIACAgAABABBAAFCAAQAAAAAAAAAAAAAAAABCAA=</HashCode>
+      <FileName>ViewModels\ConductorViewModels\BaseViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.ViewModels.ConductorViewModels.ConductorAllViewModel" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="69" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACYAACAgAAFABBAAFAAAQAAAAAAAAAAAAAIAABCAA=</HashCode>
+      <FileName>ViewModels\ConductorViewModels\ConductorAllViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Ironwall.Framework.ViewModels.ConductorViewModels.ConductorOneViewModel" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="70.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIACYAACAgAAFABBAAFAAAQAAAAAAAAAAAAAIAABCAA=</HashCode>
+      <FileName>ViewModels\ConductorViewModels\ConductorOneViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Ironwall.Framework.ViewModels.Devices.BaseDeviceViewModel" Collapsed="true">
+    <Position X="95.5" Y="37" Width="2" />
+    <TypeIdentifier>
+      <HashCode>IEACAAAGSAAIJAAAAABAAAAAAAAAAAAAAAAIAAAAAAA=</HashCode>
+      <FileName>ViewModels\Devices\BaseDeviceViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.ViewModels.Devices.ControllerDeviceViewModel" Collapsed="true">
+    <Position X="93" Y="41.75" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAAAAAAgAAACAAAAACAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\Devices\ControllerDeviceViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.ViewModels.Devices.SensorDeviceViewModel" Collapsed="true">
+    <Position X="96.75" Y="41.75" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAA=</HashCode>
+      <FileName>ViewModels\Devices\SensorDeviceViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.ViewModels.Events.ActionEventViewModel">
+    <Position X="100.75" Y="53.75" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAABAAACBgAAAAABAAAAAAAAAAAAAIAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\Events\ActionEventViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.ViewModels.Events.BaseEventViewModel">
+    <Position X="97" Y="50.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAACAAASAAAAAAAAAABAAAAAAAAAAAQAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\Events\BaseEventViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.ViewModels.Events.DetectionEventViewModel">
+    <Position X="94.75" Y="59.75" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAACAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\Events\DetectionEventViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.ViewModels.Events.MalfunctionEventViewModel">
+    <Position X="99.25" Y="58" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACAAUEAIAAAAAIAAAAAAABAgAAACACIAAAAA=</HashCode>
+      <FileName>ViewModels\Events\MalfunctionEventViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.ViewModels.Events.MetaEventViewModel">
+    <Position X="98" Y="53.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAGEAAEAgAAAAAAIAAAAAAAgAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\Events\MetaEventViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Events.ActionDetectionEventModel">
+    <Position X="76.75" Y="56" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Events\ActionDetectionEventModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Events.ActionEventModel">
+    <Position X="78.5" Y="53" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAABAAACAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Events\ActionEventModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Events.ActionMalfunctionEventModel">
+    <Position X="79.5" Y="56" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACAAUAAIAAAAAAAAAAAAABAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Events\ActionMalfunctionEventModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Events.BaseEventModel" Collapsed="true">
+    <Position X="75" Y="50.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Events\BaseEventModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Events.ConnectionEventModel">
+    <Position X="69.75" Y="56" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Events\ConnectionEventModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Events.DetectionEventModel">
+    <Position X="73.5" Y="56" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Events\DetectionEventModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Events.MetaEventModel">
+    <Position X="72" Y="53" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEAAEAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Events\MetaEventModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Events.MalfunctionEventModel">
+    <Position X="73.25" Y="58.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACAAUAAIAAAAAAAAAAAAABAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Events\MalfunctionEventModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Communications.Events.ContactRequestModel" Collapsed="true">
+    <Position X="19" Y="57.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAA=</HashCode>
+      <FileName>Models\Communications\Events\ContactRequestModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Communications.Events.ModeWindyRequestModel" Collapsed="true">
+    <Position X="11.25" Y="53.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Events\ModeWindyRequestModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Events.ContactEventModel">
+    <Position X="69.5" Y="58.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAACBAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Events\ContactEventModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Events.ModeWindyEventModel">
+    <Position X="74.5" Y="53" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Events\ModeWindyEventModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Mappers.ContactEventMapper">
+    <Position X="119.75" Y="58.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAACBAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Mappers\Events\ContactEventMapper.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Mappers.ModeWindyEventMapper">
+    <Position X="116.5" Y="53.75" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Mappers\Events\ModeWindyEventMapper.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.ViewModels.Events.ContactEventViewModel">
+    <Position X="99.25" Y="62.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AEAACBAAAAAAAAAAAQAAAAAAAAAAAgAQAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\Events\ContactEventViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Communications.Events.ContactResponseModel" Collapsed="true">
+    <Position X="57" Y="60" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Events\ContactResponseModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Mappers.ConnectionEventMapper">
+    <Position X="116.25" Y="56.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Mappers\Events\ConnectionEventMapper.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.ViewModels.Events.ConnectionEventViewModel">
+    <Position X="94.75" Y="58" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\Events\ConnectionEventViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.ViewModels.Events.ModeWindyEventViewModel">
+    <Position X="94.5" Y="53.75" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>CAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\Events\ModeWindyEventViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Helpers.ModelTypeHelper" Collapsed="true">
+    <Position X="64.25" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAACAA=</HashCode>
+      <FileName>Helpers\ModelTypeHelper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Communications.Events.ContactDetailModel" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="19" Y="59.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAACBAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Events\ContactDetailModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Communications.Events.ModeWindyResponseModel" Collapsed="true">
+    <Position X="59.25" Y="60" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Events\ModeWindyResponseModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Mappers.MapperFactory" Collapsed="true">
+    <Position X="74.75" Y="16.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Mappers\MapperFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ironwall.Framework.ViewModels.Devices.CameraDeviceViewModel" Collapsed="true">
+    <Position X="93" Y="44.75" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAAAAAAgAAACAAAAACAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\Devices\CameraDeviceViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Accounts.AccountBaseModel" Collapsed="true">
+    <Position X="17.75" Y="6" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Accounts\AccountBaseModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Accounts.LoginBaseModel" Collapsed="true">
+    <Position X="16.5" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAQAAAAAgAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Accounts\LoginBaseModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ironwall.Framework.Models.Accounts.UserBaseModel" Collapsed="true">
+    <Position X="19.25" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACAAAAAAAAAAAAAQAAAAAAAADAAAAAAAAAEA=</HashCode>
+      <FileName>Models\Accounts\UserBaseModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="Ironwall.Framework.DataProviders.ICollector&lt;T&gt;" Collapsed="true">
+    <Position X="72.5" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAAAAAAAABARAAAAAAAAAAAAAAABAAAA=</HashCode>
+      <FileName>DataProviders\ICollector.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Events.IEventHelper" Collapsed="true">
+    <Position X="72.5" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Events\IEventHelper.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.IParentBootstrapper" Collapsed="true">
+    <Position X="69" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAA=</HashCode>
+      <FileName>IParentBootstrapper.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Accounts.ILoginSessionModel" Collapsed="true">
+    <Position X="22.75" Y="11" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAgAAAAAAABAAAAAAAAAAAABAAA=</HashCode>
+      <FileName>Models\Accounts\ILoginSessionModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Accounts.ILoginUserModel" Collapsed="true">
+    <Position X="24.75" Y="11" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAoAAAAAEgAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Accounts\ILoginUserModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Accounts.IUserBaseModel" Collapsed="true">
+    <Position X="26.75" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACAAAAAAAAAAAAAQAAAAAAAADAAAAAAAAAEA=</HashCode>
+      <FileName>Models\Accounts\IUserBaseModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Accounts.IUserModel" Collapsed="true">
+    <Position X="26.75" Y="11" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAQAAAAAAgAAAAAAAAECAAABACAAAAJAAAAAA=</HashCode>
+      <FileName>Models\Accounts\IUserModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Communications.Accounts.ILoginRequestModel" Collapsed="true">
+    <Position X="24.5" Y="19" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAABAAAAAAAAAAAgAAABAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Accounts\ILoginRequestModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Communications.IBaseEventMessageModel" Collapsed="true">
+    <Position X="6.75" Y="18.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAACAEAAAQAAAAAAAAAAAAAAAAAABAQAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\IBaseEventMessageModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Communications.IBaseMessageModel" Collapsed="true">
+    <Position X="38.5" Y="16.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\IBaseMessageModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Communications.IDetailModel" Collapsed="true">
+    <Position X="6.5" Y="28.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\IDetailModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Communications.IResponseModel" Collapsed="true">
+    <Position X="38.5" Y="18.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAgAAAAAgAAAAAAAAAAIAAAAAA=</HashCode>
+      <FileName>Models\Communications\IResponseModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Communications.IUserSessionBaseRequestModel" Collapsed="true">
+    <Position X="12.25" Y="18.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAQAgAAAgAAABAAAAAAAAAAAABAAA=</HashCode>
+      <FileName>Models\Communications\IUserSessionBaseRequestModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Communications.Devices.ICameraDataRequestModel" Collapsed="true">
+    <Position X="17.5" Y="22.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Devices\ICameraDataRequestModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Communications.Devices.ICameraDataResponseModel" Collapsed="true">
+    <Position X="41" Y="23.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Devices\ICameraDataResponseModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Communications.Devices.IControllerDataRequestModel" Collapsed="true">
+    <Position X="12.25" Y="22.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Devices\IControllerDataRequestModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Communications.Devices.IControllerDataResponseModel" Collapsed="true">
+    <Position X="35.5" Y="23.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Devices\IControllerDataResponseModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Communications.Devices.IDeviceDataRequestModel" Collapsed="true">
+    <Position X="17.25" Y="18.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Devices\IDeviceDataRequestModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Communications.Devices.IDeviceDataResponseModel" Collapsed="true">
+    <Position X="39.75" Y="21" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAAAIAAAAAAAEAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Devices\IDeviceDataResponseModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Communications.Devices.IDeviceDetailModel" Collapsed="true">
+    <Position X="10.5" Y="30.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Devices\IDeviceDetailModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Communications.Devices.IDeviceInfoRequestModel" Collapsed="true">
+    <Position X="15" Y="18.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Devices\IDeviceInfoRequestModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Communications.Devices.IDeviceInfoResponseModel" Collapsed="true">
+    <Position X="36.75" Y="21" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAA=</HashCode>
+      <FileName>Models\Communications\Devices\IDeviceInfoResponseModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Communications.Devices.ISensorDataRequestModel" Collapsed="true">
+    <Position X="15" Y="22.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Devices\ISensorDataRequestModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Communications.Devices.ISensorDataResponseModel" Collapsed="true">
+    <Position X="38.25" Y="23.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Devices\ISensorDataResponseModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Communications.Events.IActionRequestModel" Collapsed="true">
+    <Position X="6.75" Y="23.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAgAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Events\IActionRequestModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Communications.Events.IDetectionRequestModel" Collapsed="true">
+    <Position X="6.75" Y="21.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAA=</HashCode>
+      <FileName>Models\Communications\Events\IDetectionRequestModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Communications.Events.IMalfunctionRequestModel" Collapsed="true">
+    <Position X="9.25" Y="21.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAA=</HashCode>
+      <FileName>Models\Communications\Events\IMalfunctionRequestModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Devices.IBaseDeviceModel" Collapsed="true">
+    <Position X="81" Y="37.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>IAACAAAEAAAIAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAA=</HashCode>
+      <FileName>Models\Devices\IBaseDeviceModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Devices.ICameraDeviceModel" Collapsed="true">
+    <Position X="78.75" Y="40.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAACAAAAACAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Devices\ICameraDeviceModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Devices.IControllerDeviceModel" Collapsed="true">
+    <Position X="81" Y="40.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAACAAAAACAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Devices\IControllerDeviceModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Devices.ISensorDeviceModel" Collapsed="true">
+    <Position X="83.25" Y="40.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Devices\ISensorDeviceModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.IEntityModel" Collapsed="true">
+    <Position X="69" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEACAAAARBAAAAEAAAADAEAAQIABAIAAEEAAgAAAAEA=</HashCode>
+      <FileName>Models\IEntityModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.IEventMessageModel&lt;T&gt;" Collapsed="true">
+    <Position X="74.25" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Models\IEventMessageModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.IEventModel" Collapsed="true">
+    <Position X="76" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\IEventModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Events.IActionEventModel">
+    <Position X="89.5" Y="53.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAABAAACAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Events\IActionEventModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Events.IBaseEventModel">
+    <Position X="86.75" Y="51.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Events\IBaseEventModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Events.IDetectionEventModel">
+    <Position X="85" Y="56" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Events\IDetectionEventModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Events.IMalfunctionEventModel">
+    <Position X="87" Y="56" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACAAUAAIAAAAAAAAAAAAABAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Events\IMalfunctionEventModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Events.IMetaEventModel">
+    <Position X="85" Y="53.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEAAEAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Events\IMetaEventModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Mappers.IControllerTableMapper" Collapsed="true">
+    <Position X="124.5" Y="40.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAACAAAAACAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Mappers\Devices\IControllerTableMapper.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Mappers.IDeviceMapperBase" Collapsed="true">
+    <Position X="126.75" Y="37.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAEAAAIAAAAAAAAAAAAAAAAAAAAEAAIAAAAAAA=</HashCode>
+      <FileName>Models\Mappers\Devices\IDeviceMapperBase.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Mappers.ISensorTableMapper" Collapsed="true">
+    <Position X="126.75" Y="40.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Mappers\Devices\ISensorTableMapper.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Mappers.IDetectionEventMapper">
+    <Position X="132" Y="56.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Mappers\Events\IDetectionEventMapper.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Mappers.IEventMapperBase">
+    <Position X="132.25" Y="51.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAgAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Mappers\Events\IEventMapperBase.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Mappers.IMalfunctionEventMapper">
+    <Position X="134.25" Y="56.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACAAUAAIAAAAAAAAAAAAABAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Mappers\Events\IMalfunctionEventMapper.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Mappers.IMetaEventMapper">
+    <Position X="131.25" Y="53.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEAAEAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Mappers\Events\IMetaEventMapper.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Mappers.IReportEventMapper">
+    <Position X="133.5" Y="53.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAgAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>Models\Mappers\Events\IReportEventMapper.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Messages.ICommonMessageModel" Collapsed="true">
+    <Position X="102.75" Y="3.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAEACAAAAAAAABAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Messages\Common\ICommonMessageModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Messages.IMessageModel" Collapsed="true">
+    <Position X="102.75" Y="2.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Messages\IMessageModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Services.IDataProviderService" Collapsed="true">
+    <Position X="95.5" Y="4.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Services\IDataProviderService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Services.IIccsService" Collapsed="true">
+    <Position X="97.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAEAAAAAAAABAAAAAAACAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Services\IIccsService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Services.IMessageService" Collapsed="true">
+    <Position X="100" Y="4.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>Services\IMessageService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Services.IService" Collapsed="true">
+    <Position X="97.75" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAEA=</HashCode>
+      <FileName>Services\IService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Services.ITokenGeneration" Collapsed="true">
+    <Position X="72.5" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAEAEAAAAQAAAAAQAAAAAAAAgAAAAAACAAABAAI=</HashCode>
+      <FileName>Services\ITokenGeneration.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.ViewModels.Account.IUserBaseViewModel" Collapsed="true">
+    <Position X="74.25" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAkAASAAAAAAgAAAAAAQAECAAEBADAAgAJABAAEA=</HashCode>
+      <FileName>ViewModels\Account\IUserBaseViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.ViewModels.IEntityViewModel" Collapsed="true">
+    <Position X="70.75" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEACAAAARBAAAAEAAAADAEAAQIABAIAAEEAAgAAAAEA=</HashCode>
+      <FileName>ViewModels\IEntityViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.ViewModels.IEventViewModel" Collapsed="true">
+    <Position X="77.75" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAEAAAEA=</HashCode>
+      <FileName>ViewModels\IEventViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.ViewModels.ConductorViewModels.IBaseViewModel" Collapsed="true">
+    <Position X="69" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAgAAAAAAAAAAAAQAAAAAAAAAAAAAAAAACAA=</HashCode>
+      <FileName>ViewModels\ConductorViewModels\IBaseViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.ViewModels.ConductorViewModels.IConductorViewModel" Collapsed="true">
+    <Position X="74.25" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAgAAEABAAAAAAAQAAAAAAAAAAAAAAAAACAA=</HashCode>
+      <FileName>ViewModels\ConductorViewModels\IConductorViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.ViewModels.Devices.IBaseDeviceViewModel" Collapsed="true">
+    <Position X="102.5" Y="37.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>IAACAAAEAAAIAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAA=</HashCode>
+      <FileName>ViewModels\Devices\IBaseDeviceViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.ViewModels.Devices.IControllerDeviceViewModel" Collapsed="true">
+    <Position X="101" Y="41.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAACAAAAACAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\Devices\IControllerDeviceViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.ViewModels.Devices.ISensorDeviceViewModel" Collapsed="true">
+    <Position X="103.75" Y="41.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\Devices\ISensorDeviceViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.ViewModels.Events.IActionEventViewModel">
+    <Position X="109.25" Y="53.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAABAAACAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\Events\IActionEventViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.ViewModels.Events.IBaseEventViewModel">
+    <Position X="106.75" Y="51.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAACAAACAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\Events\IBaseEventViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.ViewModels.Events.IDetectionEventViewModel">
+    <Position X="108.25" Y="58" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\Events\IDetectionEventViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.ViewModels.Events.IMalfunctionEventViewModel">
+    <Position X="105.25" Y="59.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACAAUAAIAAAAAAAAAAAAABAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\Events\IMalfunctionEventViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.ViewModels.Events.IMetaEventViewModel">
+    <Position X="106.75" Y="53.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEEAAEAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\Events\IMetaEventViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Events.IConnectionEventModel">
+    <Position X="82.75" Y="56" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Events\IConnectionEventModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Communications.Events.IConnectionRequestModel" Collapsed="true">
+    <Position X="4.25" Y="21.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Events\IConnectionRequestModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Mappers.ICameraTableMapper" Collapsed="true">
+    <Position X="129.25" Y="40.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAACAAAAACAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Mappers\Devices\ICameraTableMapper.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Communications.Events.IActionResponseModel" Collapsed="true">
+    <Position X="46.5" Y="22.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Events\IActionResponseModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Communications.Events.IDetectionResponseModel" Collapsed="true">
+    <Position X="48" Y="21" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Events\IDetectionResponseModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Communications.Events.IMalfunctionResponseModel" Collapsed="true">
+    <Position X="50.5" Y="21" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Events\IMalfunctionResponseModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Communications.Accounts.ILogoutRequestModel" Collapsed="true">
+    <Position X="26.75" Y="19" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAABAAA=</HashCode>
+      <FileName>Models\Communications\Accounts\ILogoutRequestModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Communications.Accounts.IAccountDeleteRequestModel" Collapsed="true">
+    <Position X="29" Y="22" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAgAAABAAAAAAAAAAAABAAA=</HashCode>
+      <FileName>Models\Communications\Accounts\IAccountDeleteRequestModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Communications.Accounts.IAccountEditRequestModel" Collapsed="true">
+    <Position X="26.5" Y="22" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACAABAAAAAAAAAAAAAAAAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Accounts\IAccountEditRequestModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Communications.Accounts.IAccountInfoRequestModel" Collapsed="true">
+    <Position X="24" Y="22" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Accounts\IAccountInfoRequestModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Communications.Accounts.IAccountRegisterRequestModel" Collapsed="true">
+    <Position X="21.25" Y="22" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Accounts\IAccountRegisterRequestModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Communications.Accounts.IKeepAliveRequestModel" Collapsed="true">
+    <Position X="28.75" Y="19" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAA=</HashCode>
+      <FileName>Models\Communications\Accounts\IKeepAliveRequestModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Communications.Events.IModeWindyRequestModel" Collapsed="true">
+    <Position X="4.25" Y="18.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Events\IModeWindyRequestModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Communications.Events.IContactRequestModel" Collapsed="true">
+    <Position X="4.25" Y="23.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAA=</HashCode>
+      <FileName>Models\Communications\Events\IContactRequestModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Events.IContactEventModel">
+    <Position X="89.75" Y="56" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAACBAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Events\IContactEventModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Events.IModeWindyEventModel">
+    <Position X="87" Y="53.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Events\IModeWindyEventModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Mappers.IContactEventMapper">
+    <Position X="136.5" Y="56.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAACBAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Mappers\Events\IContactEventMapper.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Mappers.IModeWindyEventMapper" Collapsed="true">
+    <Position X="64.25" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Mappers\Events\IModeWindyEventMapper.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.ViewModels.Events.IContactEventViewModel">
+    <Position X="108.25" Y="59.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAACBAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\Events\IContactEventViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Communications.Events.IContactResponseModel" Collapsed="true">
+    <Position X="49.25" Y="22.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Events\IContactResponseModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Communications.Events.IConnectionResponseModel" Collapsed="true">
+    <Position X="45" Y="21" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Events\IConnectionResponseModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Mappers.IConnectionEventMapper">
+    <Position X="129.75" Y="56.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Mappers\Events\IConnectionEventMapper.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.ViewModels.Events.IModeWindyEventViewModel">
+    <Position X="104.25" Y="53.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\Events\IModeWindyEventViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.ViewModels.Events.IConnectionEventViewModel">
+    <Position X="105.25" Y="58" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\Events\IConnectionEventViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Communications.Events.IModeWindyResponseModel" Collapsed="true">
+    <Position X="53.25" Y="21" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Events\IModeWindyResponseModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.ViewModels.Devices.ICameraDeviceViewModel" Collapsed="true">
+    <Position X="101" Y="44.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAACAAAAACAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\Devices\ICameraDeviceViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Communications.Events.IActionRequestMalfunctionModel" Collapsed="true">
+    <Position X="6.5" Y="25.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Events\IActionRequestMalfunctionModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Communications.Events.IContactDetailModel" Collapsed="true">
+    <Position X="8.5" Y="30.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAACBAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Events\IContactDetailModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Communications.Events.IDetectionDetailModel" Collapsed="true">
+    <Position X="3.75" Y="30.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Events\IDetectionDetailModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Communications.Events.IMalfunctionDetailModel" Collapsed="true">
+    <Position X="6.25" Y="30.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACAAUAAIAAAAAAAAAAAAABAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Events\IMalfunctionDetailModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Accounts.IAccountBaseModel" Collapsed="true">
+    <Position X="25.5" Y="6" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Accounts\IAccountBaseModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Accounts.ILoginBaseModel" Collapsed="true">
+    <Position X="24.75" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAQAAAAAgAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Accounts\ILoginBaseModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Communications.Accounts.IAccountDeleteResponseModel">
+    <Position X="64.5" Y="23" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Accounts\IAccountDeleteResponseModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Communications.Accounts.IAccountEditResponseModel">
+    <Position X="61.75" Y="24.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Accounts\IAccountEditResponseModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Communications.Accounts.IAccountInfoResponseModel">
+    <Position X="61.75" Y="23" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Accounts\IAccountInfoResponseModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Communications.Accounts.IAccountRegisterResponseModel">
+    <Position X="58.75" Y="23" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Accounts\IAccountRegisterResponseModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Communications.Accounts.IKeepAliveResponseModel">
+    <Position X="63" Y="21" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Accounts\IKeepAliveResponseModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Communications.Accounts.ILoginResponseModel">
+    <Position X="57.75" Y="21" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Accounts\ILoginResponseModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Communications.Accounts.ILoginResultModel">
+    <Position X="56.5" Y="23" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgABAAAAwAgAAAgAAAAAAAAAAAAAAAABAgA=</HashCode>
+      <FileName>Models\Communications\Accounts\ILoginResultModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ironwall.Framework.Models.Communications.Accounts.ILogoutResponseModel">
+    <Position X="60.25" Y="21" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Communications\Accounts\ILogoutResponseModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Malgun Gothic" Size="9" />
+</ClassDiagram>

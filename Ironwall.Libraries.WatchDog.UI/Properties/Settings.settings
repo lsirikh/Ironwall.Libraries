@@ -1,0 +1,12 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Ironwall.Libraries.WatchDog.UI.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="IsAutoWatchdog" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="WatchdogProcess" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Ironwall.Libraries.WatchDog</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

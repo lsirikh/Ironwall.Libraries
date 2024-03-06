@@ -1,0 +1,295 @@
+﻿<UserControl x:Class="Ironwall.Libraries.Map.UI.Views.CanvasLayoutView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Ironwall.Libraries.Map.UI.Views"
+			 xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+			 xmlns:map="clr-namespace:Ironwall.Libraries.Map.UI.ViewModels"
+             xmlns:cal="http://www.caliburnproject.org"
+			 xmlns:design ="clr-namespace:Ironwall.Libraries.Map.UI.Views.DesignComponents"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+	<UserControl.Resources>
+		<Style x:Key="TrayButtonStyle" TargetType="ToggleButton" BasedOn="{StaticResource MaterialDesignFlatPrimaryToggleButton}">
+			<Setter Property="Margin" Value="10 0"/>
+			<Setter Property="Height" Value="38"/>
+			<Setter Property="Width" Value="38"/>
+			<Setter Property="VerticalAlignment" Value="Center"/>
+			<Setter Property="VerticalContentAlignment" Value="Center"/>
+			<Setter Property="HorizontalAlignment" Value="Center"/>
+			<Setter Property="HorizontalContentAlignment" Value="Center"/>
+		</Style>
+	</UserControl.Resources>
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="*"/>
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*"/>
+			<ColumnDefinition Width="Auto" Tag="Splitter"/>
+			<ColumnDefinition MinWidth="300" Width="Auto"/>
+		</Grid.ColumnDefinitions>
+		<Grid.Background>
+			<ImageBrush x:Name="ImageMap"
+						ImageSource="/Ironwall.Libraries.Map.UI;component/Resources/Images/sensorway_background.png"
+						Opacity="0.5"
+						TileMode="Tile" Viewport="0,0,0.032,0.05" ViewportUnits="RelativeToBoundingBox" />
+		</Grid.Background>
+
+		<ContentControl Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="3"  x:Name="CanvasViewModel"/>
+
+
+		<!-- Editing Menu Bar -->
+		<md:TransitioningContent Grid.Row="0"
+								 Grid.Column="0"
+								 Grid.ColumnSpan="3"
+								 Visibility="{Binding IsOnEditable, UpdateSourceTrigger=PropertyChanged,
+											  Converter={StaticResource BooleanToVisibilityConverter}}">
+			<md:TransitioningContent.OpeningEffects>
+				<md:TransitionEffect Kind="SlideInFromTop"
+                                     Duration="0:0:2.0" />
+				<md:TransitionEffect Kind="FadeIn"
+                                     Duration="0:0:2.0" />
+			</md:TransitioningContent.OpeningEffects>
+			<Menu Margin="50 0 0 0"
+				  Background="#88000000"
+				  Style="{StaticResource MaterialDesignMenu}">
+				<MenuItem Header="맵 메뉴" Margin="0">
+					<MenuItem Header="새 맵 추가" x:Name= "OnMapAdd" />
+					<MenuItem Header="맵 저장" x:Name= "OnMapDbSave" />
+					<MenuItem Header="현재 맵 삭제" x:Name= "OnMapDelete" />
+					<MenuItem Header="맵 초기화" x:Name= "OnMapSymbolClear"/>
+					<Separator />
+					<MenuItem Header="편집종료" x:Name="OnEditorExit" />
+				</MenuItem>
+				<MenuItem Header="편집" Margin="0">
+					<MenuItem Header="심볼저장" x:Name= "OnSymbolDbSave" />
+					<MenuItem Header="불러오기" x:Name= "OnSymbolDbLoad" />
+				</MenuItem>
+				<ToolBarTray VerticalAlignment="Center"
+							 HorizontalAlignment="Stretch">
+					<ToolBar ClipToBounds="True" 
+							 Background="Transparent"
+							 md:ThemeAssist.Theme="Inherit" 
+							 VerticalAlignment="Center" 
+							 Height="43">
+
+						<!--<ToggleButton ToolTip="Push">
+							<ToggleButton.Style>
+								<Style TargetType="ToggleButton">
+									<Setter Property="Content">
+										<Setter.Value>
+											<md:PackIcon Kind="ArrowUpBold"/>
+										</Setter.Value>
+									</Setter>
+									<Style.Triggers>
+										<Trigger Property="IsChecked" Value="True">
+											<Setter Property="Content">
+												<Setter.Value>
+													<md:PackIcon Kind="ArrowDownBold"/>
+												</Setter.Value>
+											</Setter>
+										</Trigger>
+									</Style.Triggers>
+								</Style>
+							</ToggleButton.Style>
+							<ToggleButton.Content>
+								<md:PackIcon Kind="ArrowDownBold" Width="30" Height="30"/>
+							</ToggleButton.Content>
+						</ToggleButton>-->
+
+						<ToggleButton x:Name="IsOnAddController" ToolTip="Add Controller Symbol"
+									  Style="{StaticResource TrayButtonStyle}">
+							<ToggleButton.Content>
+								<md:PackIcon Kind="ServerPlus" Width="25" Height="25" />
+							</ToggleButton.Content>
+						</ToggleButton>
+
+						<ToggleButton x:Name="IsOnAddMultisensor" ToolTip="Add Multi-Sensor Symbol"
+								Style="{StaticResource TrayButtonStyle}">
+							<ToggleButton.Content>
+								<md:PackIcon Kind="SmokeDetector " Width="25" Height="25"/>
+							</ToggleButton.Content>
+						</ToggleButton>
+						<ToggleButton x:Name="IsOnAddGroupLine" ToolTip="Add Group Line Symbol"
+							Style="{StaticResource TrayButtonStyle}">
+							<ToggleButton.Content>
+								<md:PackIcon Kind="MapMarkerPath " Width="25" Height="25"/>
+							</ToggleButton.Content>
+						</ToggleButton>
+						<ToggleButton x:Name="IsOnAddCamera" ToolTip="Add Camera Symbol"
+							Style="{StaticResource TrayButtonStyle}">
+							<ToggleButton.Content>
+								<md:PackIcon Kind="Cctv" Width="25" Height="25"/>
+							</ToggleButton.Content>
+						</ToggleButton>
+						<Separator />
+						<ToggleButton x:Name="IsOnAddEllipse" ToolTip="Add Ellipse Symbol"
+							Style="{StaticResource TrayButtonStyle}">
+							<ToggleButton.Content>
+								<md:PackIcon Kind="CircleOutline" Width="25" Height="25"/>
+							</ToggleButton.Content>
+						</ToggleButton>
+						<ToggleButton x:Name="IsOnAddRectangle" ToolTip="Add Rectangle Symbol"
+								Style="{StaticResource TrayButtonStyle}">
+							<ToggleButton.Content>
+								<md:PackIcon Kind="RectangleOutline" Width="25" Height="25"/>
+							</ToggleButton.Content>
+						</ToggleButton>
+						<ToggleButton x:Name="IsOnAddTriangle" ToolTip="Add Triangle Symbol"
+									Style="{StaticResource TrayButtonStyle}">
+							<ToggleButton.Content>
+								<md:PackIcon Kind="TriangleOutline" Width="25" Height="25"/>
+							</ToggleButton.Content>
+						</ToggleButton>
+						<ToggleButton x:Name="IsOnAddLine" ToolTip="Add Line Symbol"
+									Style="{StaticResource TrayButtonStyle}">
+							<ToggleButton.Content>
+								<md:PackIcon Kind="Vectorline" Width="25" Height="25"/>
+							</ToggleButton.Content>
+						</ToggleButton>
+						<ToggleButton x:Name="IsOnAddPolyLine" ToolTip="Add PolyLine Symbol"
+									Style="{StaticResource TrayButtonStyle}">
+							<ToggleButton.Content>
+								<md:PackIcon Kind="VectorPolyline" Width="25" Height="25"/>
+							</ToggleButton.Content>
+						</ToggleButton>
+						<ToggleButton x:Name="IsOnAddText" ToolTip="Add Text Symbol"
+									Style="{StaticResource TrayButtonStyle}">
+							<ToggleButton.Content>
+								<md:PackIcon Kind="Abc" Width="25" Height="25"/>
+							</ToggleButton.Content>
+						</ToggleButton>
+					</ToolBar>
+				</ToolBarTray>
+			</Menu>
+		</md:TransitioningContent>
+
+		<!-- Symbol Property Panel -->
+		<md:TransitioningContent Grid.Column="3"
+								 Grid.Row="1"
+								 Visibility="{Binding SymbolPropertyPanelViewModel.IsOnEditable, 
+												UpdateSourceTrigger=PropertyChanged, 
+												Converter={StaticResource BooleanToVisibilityConverter}}">
+
+			<md:TransitioningContent.OpeningEffects>
+				<md:TransitionEffect Kind="SlideInFromRight" Duration="0:0:2.0" />
+				<md:TransitionEffect Kind="FadeIn" Duration="0:0:2.0" />
+			</md:TransitioningContent.OpeningEffects>
+
+			<ContentControl x:Name="SymbolPropertyPanelViewModel"/>
+		</md:TransitioningContent>
+
+		<ContentControl Grid.Row="1" 
+						Grid.Column="0"
+						Grid.ColumnSpan="3"
+						cal:View.Model="{Binding MapStatusViewModel,  UpdateSourceTrigger=PropertyChanged}">
+		</ContentControl>
+
+		<!-- Map Selection Drawer -->
+		<md:DrawerHost x:Name="DrawerHost"
+					   Grid.Row="1"
+					   Grid.Column="0"
+					   Grid.ColumnSpan="3"
+                       BorderThickness="2"
+                       TopDrawerCornerRadius="0 0 20 20"
+                       TopDrawerBackground="#88000000"
+                       >
+			<md:DrawerHost.TopDrawerContent>
+				<Viewbox MinHeight="80"
+                         MaxHeight="100"
+                         HorizontalAlignment="Stretch">
+
+					<ItemsControl ItemsSource="{Binding MapViewModelProvider.CollectionEntity}"
+                                  Grid.IsSharedSizeScope="True">
+						<ItemsControl.ItemsPanel>
+							<ItemsPanelTemplate>
+								<StackPanel 
+                                    HorizontalAlignment="Stretch"
+                                    Orientation="Horizontal" />
+							</ItemsPanelTemplate>
+						</ItemsControl.ItemsPanel>
+						<ItemsControl.ItemTemplate>
+							<DataTemplate DataType="{x:Type map:MapViewModel}">
+								<Button Grid.Column="1"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        x:Name="ClickBaseMap"
+                                        cal:Message.Attach="[Event Click]=[Action OnClickLoadMap($source, $eventArgs)]"
+                                        Command="{x:Static md:DrawerHost.CloseDrawerCommand}"
+                                        CommandParameter="{x:Static Dock.Top}"
+                                        Height="120"
+                                        Margin="30 0"
+                                        Style="{StaticResource MaterialDesignFlatButton}">
+									<Button.Content>
+										<Border CornerRadius="10"
+												Margin="2"
+                                                Background="#66DDDDDD">
+											<StackPanel Orientation="Vertical">
+												<Image Source="{Binding Url, Converter={StaticResource MapImageConverter}}"
+                                                       Width="150"
+                                                       Margin="5 5 5 -5"
+                                                       HorizontalAlignment="Center"
+                                                       Stretch="Fill"
+                                                       />
+												<TextBlock Margin="10 0"
+                                                           VerticalAlignment="Center"
+                                                           HorizontalAlignment="Center"
+                                                           Foreground="White"
+                                                           Style="{StaticResource InnerText}"
+                                                           Text="{Binding MapName}" />
+											</StackPanel>
+										</Border>
+									</Button.Content>
+								</Button>
+
+							</DataTemplate>
+						</ItemsControl.ItemTemplate>
+					</ItemsControl>
+				</Viewbox>
+			</md:DrawerHost.TopDrawerContent>
+			<Grid >
+				<StackPanel VerticalAlignment="Top"
+                            Margin="50 10 10 10"
+                            Background="Transparent"
+                            Orientation="Horizontal"
+                            Visibility="{Binding SymbolPropertyPanelViewModel.IsOnEditable, 
+												UpdateSourceTrigger=PropertyChanged, 
+												Converter={StaticResource BooleanToVisibilityConverter}}">
+					<TextBlock Text="X: "
+                               Margin="10 0" />
+					<TextBlock x:Name="X" />
+					<TextBlock Text="Y: "
+                               Margin="10 0" />
+					<TextBlock x:Name="Y" />
+				</StackPanel>
+				<Button Command="{x:Static md:DrawerHost.OpenDrawerCommand}"
+                        CommandParameter="{x:Static Dock.Top}"
+						IsEnabled="{Binding IsOnEditable, Converter={StaticResource InverseBooleanConverter}}"
+                        BorderBrush="Transparent"
+                        BorderThickness="1"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        Margin="110 30 0 0"
+                        Width="50"
+                        Height="50"
+                        ToolTip="맵"
+                        Style="{DynamicResource MaterialDesignFloatingActionButton}">
+					<Button.Content>
+						<md:PackIcon Width="30"
+                                     Height="30"
+                                     Kind="Map" />
+					</Button.Content>
+				</Button>
+
+				
+				<ContentControl x:Name="CanvasOverlayViewModel" 
+								Margin="800 0 0 8"
+								VerticalAlignment="Bottom" 
+								/>
+			</Grid>
+		</md:DrawerHost>
+	</Grid>
+</UserControl>

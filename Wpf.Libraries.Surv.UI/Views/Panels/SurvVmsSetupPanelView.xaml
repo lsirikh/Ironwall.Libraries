@@ -1,0 +1,129 @@
+﻿<UserControl x:Class="Wpf.Libraries.Surv.UI.Views.Panels.SurvVmsSetupPanelView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Wpf.Libraries.Surv.UI.Views.Panels"
+             xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+			 xmlns:cal="http://caliburnmicro.com"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+	<TabControl HorizontalContentAlignment="Stretch"
+				VerticalContentAlignment="Top"
+				Background="Transparent"
+				Style="{StaticResource MaterialDesignNavigationRailTabControl}"
+				cal:Message.Attach="[Event SelectionChanged] = [Action OnActiveTab($source, $eventArgs)]"
+				TabStripPlacement="Top"
+				VerticalAlignment="Top"
+				>
+		<!-- SurvMappingSetupViewModel -->
+		<TabItem>
+			<TabItem.Header>
+				<StackPanel>
+					<md:PackIcon 
+									Width="40"
+									Height="40"
+									VerticalAlignment="Center"
+									HorizontalAlignment="Center"
+									Kind="LinkBoxVariantOutline" />
+					<Viewbox Stretch="UniformToFill"
+								VerticalAlignment="Center"
+								HorizontalAlignment="Center"
+								Margin="0 2">
+						<TextBlock VerticalAlignment="Center"
+										HorizontalAlignment="Center"
+										Width="100"
+										TextAlignment="Center"
+										TextWrapping="Wrap"
+										Text="Mapping" />
+					</Viewbox>
+				</StackPanel>
+			</TabItem.Header>
+			<!-- Content -->
+			<ContentControl  x:Name="SurvMappingSetupViewModel" />
+		</TabItem>
+
+		<!-- SurvSensorSetupViewModel -->
+		<TabItem>
+			<TabItem.Header>
+				<StackPanel>
+					<md:PackIcon 
+									Width="40"
+									Height="40"
+									VerticalAlignment="Center"
+									HorizontalAlignment="Center"
+									Kind="CircleBoxOutline" />
+					<Viewbox Stretch="UniformToFill"
+								VerticalAlignment="Center"
+								HorizontalAlignment="Center"
+								Margin="0 2">
+						<TextBlock VerticalAlignment="Center"
+										HorizontalAlignment="Center"
+										Width="100"
+										TextAlignment="Center"
+										TextWrapping="Wrap"
+										Text="Sensors" />
+					</Viewbox>
+				</StackPanel>
+			</TabItem.Header>
+			<!-- Content -->
+			<ContentControl  x:Name="SurvSensorSetupViewModel" />
+		</TabItem>
+		
+		<!-- SurvApiSetupViewModel -->
+		<TabItem>
+			<TabItem.Header>
+				<StackPanel>
+					<md:PackIcon 
+									Width="40"
+									Height="40"
+									VerticalAlignment="Center"
+									HorizontalAlignment="Center"
+									Kind="Server"  />
+					<Viewbox Stretch="UniformToFill"
+										 VerticalAlignment="Center"
+										 HorizontalAlignment="Center"
+										 Margin="0 2">
+						<TextBlock VerticalAlignment="Center"
+											   HorizontalAlignment="Center"
+											   Width="100"
+											   TextAlignment="Center"
+											   TextWrapping="Wrap"
+											   Text="ApiServer" />
+					</Viewbox>
+				</StackPanel>
+			</TabItem.Header>
+			<!-- Content -->
+			<ContentControl x:Name="SurvApiSetupViewModel"/>
+		</TabItem>
+
+		<!-- SurvEventSetupViewModel -->
+		<TabItem>
+			<TabItem.Header>
+				<StackPanel>
+					<md:PackIcon 
+									Width="40"
+									Height="40"
+									VerticalAlignment="Center"
+									HorizontalAlignment="Center"
+									Kind="HumanRunFast" />
+					<Viewbox Stretch="UniformToFill"
+								VerticalAlignment="Center"
+								HorizontalAlignment="Center"
+								Margin="0 2">
+						<TextBlock VerticalAlignment="Center"
+										HorizontalAlignment="Center"
+										Width="100"
+										TextAlignment="Center"
+										TextWrapping="Wrap"
+										Text="Event" />
+					</Viewbox>
+				</StackPanel>
+			</TabItem.Header>
+			<!-- Content -->
+			<ContentControl  x:Name="SurvEventSetupViewModel" />
+		</TabItem>
+
+		
+	</TabControl>
+</UserControl>

@@ -1,0 +1,399 @@
+﻿<UserControl x:Class="Ironwall.Libraries.Device.UI.Views.Setups.CameraPresetSetupView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+			 xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:cal="http://www.caliburnproject.org"
+             xmlns:utils="clr-namespace:Ironwall.Libraries.Utils;assembly=Ironwall.Libraries.Utils"
+             xmlns:enums="clr-namespace:Ironwall.Libraries.Enums;assembly=Ironwall.Libraries.Enums"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+	<UserControl.Resources>
+		<utils:EnumCameraModeToValueConverter x:Key="EnumCameraModeToValueConverter" />
+		<utils:EnumCameraModeToTextConverter x:Key="EnumCameraModeToTextConverter" />
+		<utils:EnumCameraTypeToValueConverter x:Key="EnumCameraTypeToValueConverter" />
+		<utils:EnumCameraTypeToTextConverter x:Key="EnumCameraTypeToTextConverter" />
+		<utils:BindingProxy x:Key="CameraPresetProxy" Data="{Binding}" />
+
+			<Style TargetType="{x:Type DataGridColumnHeader}" x:Key= "TemplateHeader"
+				   BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
+				<Setter Property="HorizontalAlignment" Value="Center" />
+				<Setter Property="VerticalContentAlignment" Value="Center" />
+				<Setter Property="MinWidth" Value="50"/>
+			</Style>
+			<Style TargetType="{x:Type DataGridCell}"  x:Key="TemplateCell"
+				   BasedOn="{StaticResource MahApps.Styles.DataGridCell}">
+				<Setter Property="HorizontalAlignment" Value="Center" />
+				<Setter Property="VerticalContentAlignment" Value="Center" />
+				<Setter Property="MinWidth" Value="50"/>
+				
+			</Style>
+	</UserControl.Resources>
+	<Grid Height="340">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="50" />
+			<RowDefinition Height="1*" />
+			<RowDefinition Height="40" />
+		</Grid.RowDefinitions>
+
+		<Grid Grid.Row="0"
+              Margin="10 10">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="30" />
+			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="2*" />
+				<ColumnDefinition Width="2*" />
+				<ColumnDefinition Width="1*" />
+				<ColumnDefinition Width="1*" />
+				<ColumnDefinition Width="1*" />
+				<ColumnDefinition Width="1*" />
+				<ColumnDefinition Width="1*" />
+			</Grid.ColumnDefinitions>
+			<TextBlock Grid.Column="0"
+                       Grid.ColumnSpan="2"
+                       VerticalAlignment="Center"
+                       Foreground="White"
+                       FontWeight="Bold"
+                       Style="{StaticResource BodyTextBlockStyle}"
+                       Text="{DynamicResource Preset_DataGridTitle}" />
+
+			<Button Grid.Column="3"
+                    VerticalAlignment="Center"
+                    Style="{StaticResource MaterialDesignFlatAccentButton}"
+                    ToolTip="{DynamicResource Preset_Add}"
+                    md:RippleAssist.IsCentered="True">
+				<cal:Message.Attach>
+					[Event Click] = [Action OnClickInsertButton($source, $eventArgs]
+				</cal:Message.Attach>
+				<md:PackIcon Width="20"
+                             Height="20"
+                             Kind="AddBox" />
+			</Button>
+			<Button Grid.Column="4"
+                    VerticalAlignment="Center"
+                    Style="{StaticResource MaterialDesignFlatAccentButton}"
+                    ToolTip="{DynamicResource Preset_Remove}"
+                    md:RippleAssist.IsCentered="True">
+				<cal:Message.Attach>
+					[Event Click] = [Action OnClickDeleteButton($source, $eventArgs]
+				</cal:Message.Attach>
+				<md:PackIcon Width="20"
+                             Height="20"
+                             Kind="MinusBox" />
+			</Button>
+			<Button Grid.Column="5"
+                    VerticalAlignment="Center"
+                    Style="{StaticResource MaterialDesignFlatAccentButton}"
+                    ToolTip="{DynamicResource Refresh}"
+                    md:RippleAssist.IsCentered="True">
+				<cal:Message.Attach>
+					[Event Click] = [Action OnClickReloadButton($source, $eventArgs)]
+				</cal:Message.Attach>
+				<md:PackIcon Width="20"
+                             Height="20"
+                             Kind="CircleArrows" />
+			</Button>
+			<Button Grid.Column="6"
+                    VerticalAlignment="Center"
+                    Style="{StaticResource MaterialDesignFlatAccentButton}"
+                    ToolTip="{DynamicResource Save}"
+                    md:RippleAssist.IsCentered="True">
+				<cal:Message.Attach>
+					[Event Click] = [Action OnClickSaveButton($source, $eventArgs]
+				</cal:Message.Attach>
+				<md:PackIcon Width="20"
+                             Height="20"
+                             Kind="FloppyDisc" />
+			</Button>
+
+		</Grid>
+		<Grid Height ="300"
+			  Grid.Row="1">
+			<ProgressBar Width="50"
+								 Height="50"
+								 Margin="16"
+								 Visibility="{Binding IsVisible, Converter={StaticResource BoolToInverseVisibleConverter}}"
+								 Style="{DynamicResource MaterialDesignCircularProgressBar}"
+								 IsIndeterminate="True"
+								 Value="44" />
+		</Grid>
+		<DataGrid Grid.Row="1"
+				  Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
+                  ItemsSource="{Binding ViewModelProvider}"
+                  AlternationCount="{Binding Items.Count, RelativeSource={RelativeSource Self}}"
+                  Style="{StaticResource MaterialDesignDataGrid }"
+                  AutoGenerateColumns="False"
+                  EnableRowVirtualization="True"
+                  CanUserSortColumns="True"
+                  CanUserReorderColumns="False"
+                  CanUserResizeColumns="True"
+                  SelectionMode="Extended"
+                  SelectionUnit="FullRow"
+                  SelectedItem="{Binding SelectedItem}"
+                  CanUserAddRows="False"
+                  ScrollViewer.CanContentScroll="True"
+                  ScrollViewer.VerticalScrollBarVisibility="Auto"
+                  ScrollViewer.HorizontalScrollBarVisibility="Visible">
+			<DataGrid.Columns>
+				<DataGridTemplateColumn>
+					<DataGridTemplateColumn.CellTemplate>
+						<DataTemplate>
+							<CheckBox Style="{StaticResource MaterialDesignCheckBox}"
+                                      IsChecked="{Binding IsSelected, Mode=TwoWay}">
+								<cal:Message.Attach>
+									[Event Click] = [Action OnClickCheckBoxItem($source, $eventArgs)];
+								</cal:Message.Attach>
+							</CheckBox>
+						</DataTemplate>
+					</DataGridTemplateColumn.CellTemplate>
+
+					<DataGridTemplateColumn.Header>
+						<Border Padding="0 0 0 0"
+                                    Margin="-2 0 0 0">
+							<CheckBox Style="{StaticResource MaterialDesignCheckBox}"
+                                      IsChecked="{Binding Data.IsAllChecked, Mode=TwoWay, Source={StaticResource CameraPresetProxy}}"
+                                      HorizontalAlignment="Center">
+								<cal:Message.Attach>
+									[Event Click] = [Action OnClickCheckBoxColumnHeader($source, $eventArgs)];
+								</cal:Message.Attach>
+							</CheckBox>
+						</Border>
+					</DataGridTemplateColumn.Header>
+				</DataGridTemplateColumn>
+
+				<!-- Id -->
+				<DataGridTemplateColumn  Header="Id"
+                                         SortMemberPath="Id"
+										 CellStyle="{StaticResource TemplateCell}"
+										 HeaderStyle="{StaticResource TemplateHeader}"
+                                         CanUserSort="True">
+					<DataGridTemplateColumn.CellTemplate>
+						<DataTemplate>
+							<TextBlock VerticalAlignment="Center"
+									   TextAlignment="Center" 
+									   Text="{Binding Id, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+									   />
+						</DataTemplate>
+					</DataGridTemplateColumn.CellTemplate>
+				</DataGridTemplateColumn>
+
+				<!-- Camera Id -->
+				<DataGridTemplateColumn CanUserSort="True"
+										Header="Camera Id"
+										CellStyle="{StaticResource TemplateCell}"
+										HeaderStyle="{StaticResource TemplateHeader}"
+										SortMemberPath="ReferenceId">
+					<DataGridTemplateColumn.CellTemplate>
+						<DataTemplate>
+							<TextBlock VerticalAlignment="Center"
+									   TextAlignment="Center" 
+									   Text="{Binding ReferenceId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+									   />
+						</DataTemplate>
+					</DataGridTemplateColumn.CellTemplate>
+					<DataGridTemplateColumn.CellEditingTemplate>
+						<DataTemplate>
+							<ComboBox VerticalAlignment="Center"
+									  HorizontalContentAlignment="Center"
+									  IsEditable="False"
+									  ItemsSource="{Binding  Data.CameraComboList, Source={StaticResource CameraPresetProxy}, UpdateSourceTrigger=PropertyChanged}"
+									  SelectedItem="{Binding ReferenceId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+									  >
+								<ComboBox.ItemsPanel>
+									<ItemsPanelTemplate>
+										<VirtualizingStackPanel />
+									</ItemsPanelTemplate>
+								</ComboBox.ItemsPanel>
+								<ComboBox.ItemTemplate>
+									<DataTemplate>
+										<TextBlock Text="{Binding }" TextAlignment="Center"/>
+									</DataTemplate>
+								</ComboBox.ItemTemplate>
+								<ComboBox.ItemContainerStyle>
+									<Style TargetType="{x:Type ComboBoxItem}" />
+								</ComboBox.ItemContainerStyle>
+							</ComboBox>
+						</DataTemplate>
+					</DataGridTemplateColumn.CellEditingTemplate>
+				</DataGridTemplateColumn>
+
+				<!-- PresetName -->
+				<DataGridTemplateColumn  Header="Preset Name"
+                                         SortMemberPath="PresetName"
+										 CellStyle="{StaticResource TemplateCell}"
+										 HeaderStyle="{StaticResource TemplateHeader}"
+                                         CanUserSort="True">
+					<DataGridTemplateColumn.CellTemplate>
+						<DataTemplate>
+							<TextBlock VerticalAlignment="Center"
+                                       TextAlignment="Center"
+                                       Text="{Binding PresetName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+									   />
+						</DataTemplate>
+					</DataGridTemplateColumn.CellTemplate>
+					<DataGridTemplateColumn.CellEditingTemplate>
+						<DataTemplate>
+							<TextBox VerticalAlignment="Center"
+									 TextAlignment="Center"
+									 Text="{Binding PresetName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+									 />
+						</DataTemplate>
+					</DataGridTemplateColumn.CellEditingTemplate>
+				</DataGridTemplateColumn>
+
+				<!-- IsHome -->
+				<DataGridTemplateColumn  Header="Home"
+                                         SortMemberPath="Home"
+										 CellStyle="{StaticResource TemplateCell}"
+										 HeaderStyle="{StaticResource TemplateHeader}"
+                                         CanUserSort="True">
+
+					<DataGridTemplateColumn.CellTemplate>
+						<DataTemplate>
+							<TextBlock VerticalAlignment="Center"
+                                       TextAlignment="Center"
+                                       Text="{Binding IsHome, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+									   />
+						</DataTemplate>
+					</DataGridTemplateColumn.CellTemplate>
+					<DataGridTemplateColumn.CellEditingTemplate>
+						<DataTemplate>
+							<ComboBox VerticalAlignment="Center"
+									  HorizontalContentAlignment="Center"
+									  IsEditable="False"
+									  ItemsSource="{Binding  Data.BooleanComboList, Source={StaticResource CameraPresetProxy}, UpdateSourceTrigger=PropertyChanged}"
+									  SelectedItem="{Binding IsHome, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+									  >
+								<ComboBox.ItemsPanel>
+									<ItemsPanelTemplate>
+										<VirtualizingStackPanel />
+									</ItemsPanelTemplate>
+								</ComboBox.ItemsPanel>
+								<ComboBox.ItemTemplate>
+									<DataTemplate>
+										<TextBlock Text="{Binding }" TextAlignment="Center"/>
+									</DataTemplate>
+								</ComboBox.ItemTemplate>
+								<ComboBox.ItemContainerStyle>
+									<Style TargetType="{x:Type ComboBoxItem}" />
+								</ComboBox.ItemContainerStyle>
+							</ComboBox>
+						</DataTemplate>
+					</DataGridTemplateColumn.CellEditingTemplate>
+				</DataGridTemplateColumn>
+
+				<!-- Pan -->
+				<DataGridTemplateColumn  Header="Pan"
+                                         SortMemberPath="Pan"
+										 CellStyle="{StaticResource TemplateCell}"
+										 HeaderStyle="{StaticResource TemplateHeader}"
+                                         CanUserSort="True">
+
+					<DataGridTemplateColumn.CellTemplate>
+						<DataTemplate>
+							<TextBlock VerticalAlignment="Center"
+                                       TextAlignment="Center"
+                                       Text="{Binding Pan, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+									   />
+						</DataTemplate>
+					</DataGridTemplateColumn.CellTemplate>
+					<DataGridTemplateColumn.CellEditingTemplate>
+						<DataTemplate>
+							<TextBox VerticalAlignment="Center"
+									 TextAlignment="Center"
+									 Text="{Binding Pan, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+									 />
+						</DataTemplate>
+					</DataGridTemplateColumn.CellEditingTemplate>
+				</DataGridTemplateColumn>
+
+				<!-- Tilt -->
+				<DataGridTemplateColumn  Header="Tilt"
+                                         SortMemberPath="Tilt"
+										 CellStyle="{StaticResource TemplateCell}"
+										 HeaderStyle="{StaticResource TemplateHeader}"
+                                         CanUserSort="True">
+
+					<DataGridTemplateColumn.CellTemplate>
+						<DataTemplate>
+							<TextBlock VerticalAlignment="Center"
+                                       TextAlignment="Center"
+                                       Text="{Binding Tilt, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+									   />
+						</DataTemplate>
+					</DataGridTemplateColumn.CellTemplate>
+					<DataGridTemplateColumn.CellEditingTemplate>
+						<DataTemplate>
+							<TextBox VerticalAlignment="Center"
+									 TextAlignment="Center"
+									 Text="{Binding Tilt, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+									 />
+						</DataTemplate>
+					</DataGridTemplateColumn.CellEditingTemplate>
+				</DataGridTemplateColumn>
+
+				<!-- Zoom -->
+				<DataGridTemplateColumn  Header="Zoom"
+                                         SortMemberPath="Zoom"
+										 CellStyle="{StaticResource TemplateCell}"
+										 HeaderStyle="{StaticResource TemplateHeader}"
+                                         CanUserSort="True">
+
+					<DataGridTemplateColumn.CellTemplate>
+						<DataTemplate>
+							<TextBlock VerticalAlignment="Center"
+                                       TextAlignment="Center"
+                                       Text="{Binding Zoom, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+									   />
+						</DataTemplate>
+					</DataGridTemplateColumn.CellTemplate>
+					<DataGridTemplateColumn.CellEditingTemplate>
+						<DataTemplate>
+							<TextBox VerticalAlignment="Center"
+									 TextAlignment="Center"
+									 Text="{Binding Zoom, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+									 />
+						</DataTemplate>
+					</DataGridTemplateColumn.CellEditingTemplate>
+				</DataGridTemplateColumn>
+
+				<!-- Delay -->
+				<DataGridTemplateColumn  Header="Delay"
+                                         SortMemberPath="Delay"
+										 CellStyle="{StaticResource TemplateCell}"
+										 HeaderStyle="{StaticResource TemplateHeader}"
+                                         CanUserSort="True">
+
+					<DataGridTemplateColumn.CellTemplate>
+						<DataTemplate>
+							<TextBlock VerticalAlignment="Center"
+                                       TextAlignment="Center"
+                                       Text="{Binding Delay, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+									   />
+						</DataTemplate>
+					</DataGridTemplateColumn.CellTemplate>
+					<DataGridTemplateColumn.CellEditingTemplate>
+						<DataTemplate>
+							<TextBox VerticalAlignment="Center"
+									 TextAlignment="Center"
+									 Text="{Binding Delay, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+									 />
+						</DataTemplate>
+					</DataGridTemplateColumn.CellEditingTemplate>
+				</DataGridTemplateColumn>
+				
+			</DataGrid.Columns>
+		</DataGrid>
+		<StackPanel Grid.Row="2"
+                    VerticalAlignment="Center"
+                    Margin="10"
+                    Orientation="Horizontal">
+
+			<TextBlock Text="{DynamicResource Preset_SelectedItem}" />
+			<TextBlock Text="{Binding SelectedItemCount, UpdateSourceTrigger=PropertyChanged}" />
+		</StackPanel>
+	</Grid>
+</UserControl>

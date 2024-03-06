@@ -1,0 +1,36 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Ironwall.Libraries.Devices.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="TableController" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">device_controller</Value>
+    </Setting>
+    <Setting Name="TableSensor" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">device_sensor</Value>
+    </Setting>
+    <Setting Name="TableCamera" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">device_camera</Value>
+    </Setting>
+    <Setting Name="TableCategory" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">device_category</Value>
+    </Setting>
+    <Setting Name="TableDevice" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">device_common</Value>
+    </Setting>
+    <Setting Name="TableDeviceInfo" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">device_Info</Value>
+    </Setting>
+    <Setting Name="TableCameraPreset" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">device_camera_preset</Value>
+    </Setting>
+    <Setting Name="TableCameraProfile" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">device_camera_profile</Value>
+    </Setting>
+    <Setting Name="TableCameraMapping" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">device_camera_mapping</Value>
+    </Setting>
+    <Setting Name="TableMappingInfo" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">device_camera_mapping_info</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

@@ -1,0 +1,343 @@
+﻿<UserControl x:Class="Ironwall.Libraries.UI.Controls.UserControls.UCUserEditorProperty"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Ironwall.Libraries.UI.Controls.UserControls"
+             mc:Ignorable="d" 
+			 xmlns:cal="http://www.caliburnproject.org"
+			 xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+			 xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:utils="clr-namespace:Ironwall.Libraries.Utils;assembly=Ironwall.Libraries.Utils"
+			 xmlns:utilPass="clr-namespace:Ironwall.Libraries.Utils.PasswordControl;assembly=Ironwall.Libraries.Utils"
+             xmlns:dataProvider="clr-namespace:Ironwall.Libraries.Enums;assembly=Ironwall.Libraries.Enums"
+             xmlns:behaviors="clr-namespace:Ironwall.Libraries.Utils.Behaviors;assembly=Ironwall.Libraries.Utils"
+			 xmlns:glob ="clr-namespace:System.Globalization;assembly=mscorlib"
+             d:DesignHeight="520" d:DesignWidth="800">
+	<UserControl.Resources>
+		<ResourceDictionary Source="../Resources/Resources.xaml" />
+	</UserControl.Resources>
+
+	<Grid Margin="10 0">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="4*" />
+			<ColumnDefinition Width="4*" />
+			<ColumnDefinition Width="2*" />
+		</Grid.ColumnDefinitions>
+
+		<!-- ID -->
+		<TextBlock Style="{StaticResource TextBlockTitle}"
+                                   Grid.Row="0"
+                                   Grid.Column="0"
+                                   Text="{DynamicResource UserId}" />
+		<TextBox Style="{StaticResource TextBoxInput}"
+				 Grid.Row="0"
+				 Grid.Column="1"
+				 Grid.ColumnSpan="2"
+				 md:HintAssist.Hint="{DynamicResource UserId}"
+				 IsReadOnly="True"
+				 IsEnabled="False"
+				 cal:Message.Attach="[Event TextChanged]=[Action OnIdChanged($source)]"
+				 >
+			<TextBox.Text>
+				<Binding Path="IdUser"
+						 ConverterCulture="{x:Static glob:CultureInfo.CurrentCulture}"
+						 UpdateSourceTrigger="LostFocus">
+					<Binding.ValidationRules>
+						<utils:StringLengthValidationRule Max="20"
+														  Min="5"
+														  ValidatesOnTargetUpdated="True" />
+					</Binding.ValidationRules>
+				</Binding>
+			</TextBox.Text>
+		</TextBox>
+		
+		<!-- Password -->
+		<TextBlock 
+            Grid.Row="1"
+            Grid.Column="0"
+			Style="{StaticResource TextBlockTitle}"
+			VerticalAlignment="Center"
+            Text="{DynamicResource UserPass}">
+		</TextBlock>
+		<PasswordBox 
+			Grid.Row="1"
+            Grid.Column="1"
+            Style="{StaticResource PasswordBoxInput}"
+            PasswordChar="*"
+			IsEnabled="False"
+            utilPass:PasswordBoxAssistant.BindPassword="True"
+            md:HintAssist.Hint="{DynamicResource UserPass}">
+			<i:Interaction.Behaviors>
+				<behaviors:PasswordBehavior Password="{Binding Password, 
+									Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+			</i:Interaction.Behaviors>
+		</PasswordBox>
+		<Button 
+			Grid.Row="1"
+			Grid.Column="2"
+			FontSize="15"
+			Style="{StaticResource MaterialDesignFlatButton}"
+			cal:Message.Attach="[Event Click]=[Action OnClickResetPassword($source, $eventArgs)]"
+			x:Name="ClickResetPassword">
+			<Button.Content>
+				<StackPanel Orientation="Horizontal"
+							VerticalAlignment="Center">
+					<md:PackIcon Width="{StaticResource WidthIconSmall}"
+								 Height="{StaticResource HeightIconSmall}"
+								 Kind="Eraser" />
+				</StackPanel>
+			</Button.Content>
+
+		</Button>
+
+		<!-- Level -->
+		<TextBlock Style="{StaticResource TextBlockTitle}"
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    Text="{DynamicResource UserLevel}" />
+		<StackPanel Grid.Row="2"
+                    Grid.Column="1"
+                    Grid.ColumnSpan="2">
+			<ComboBox x:Name="LevelComboBox"
+                    Style="{StaticResource ComboBoxContent}"
+                    ItemsSource="{Binding Source={utils:EnumBindingSource {x:Type dataProvider:EnumLevel}}}"
+                    SelectedIndex="{Binding Level, Mode=TwoWay, Converter={StaticResource LevelIndexConverter}}"
+                    SelectedItem="{Binding Level, Converter={StaticResource LevelStringToIntConverter}, UpdateSourceTrigger=PropertyChanged}">
+				<ComboBox.ItemsPanel>
+					<ItemsPanelTemplate>
+						<VirtualizingStackPanel />
+					</ItemsPanelTemplate>
+				</ComboBox.ItemsPanel>
+				<ComboBox.ItemTemplate>
+					<DataTemplate>
+						<TextBlock Text="{Binding}" />
+					</DataTemplate>
+				</ComboBox.ItemTemplate>
+				<ComboBox.ItemContainerStyle>
+					<Style TargetType="ComboBoxItem"
+                            BasedOn="{StaticResource ComboBoxItemContent}" />
+				</ComboBox.ItemContainerStyle>
+			</ComboBox>
+		</StackPanel>
+
+		<!-- UserName -->
+		<TextBlock Style="{StaticResource TextBlockTitle}"
+                                   Grid.Row="3"
+                                   Grid.Column="0"
+                                   Text="{DynamicResource UserName}" />
+		<TextBox Grid.Row="3"
+				 Grid.Column="1"
+				 Grid.ColumnSpan="2"
+				 Style="{StaticResource TextBoxInput}"
+				 VerticalAlignment="Center"
+				 
+				 md:ValidationAssist.HorizontalAlignment="Left"
+				 md:HintAssist.Hint="{DynamicResource UserName}">
+			<TextBox.Text>
+				<Binding Path="UserName"
+						 Mode="TwoWay"
+						 UpdateSourceTrigger="PropertyChanged"
+						 ConverterCulture="{x:Static glob:CultureInfo.CurrentCulture}"
+						 >
+					<Binding.ValidationRules>
+						<utils:StringLengthValidationRule Max="10"
+														  Min="2"
+														  ValidatesOnTargetUpdated="True" />
+					</Binding.ValidationRules>
+				</Binding>
+			</TextBox.Text>
+		</TextBox>
+
+		<!-- EmployeeNumber -->
+		<TextBlock Style="{StaticResource TextBlockTitle}"
+                    Grid.Row="4"
+                    Grid.Column="0"
+                    Text="{DynamicResource UserEmplyoeeNumber}" />
+		<TextBox Style="{StaticResource TextBoxInput}"
+                Grid.Row="4"
+                Grid.Column="1"
+                Grid.ColumnSpan="2"
+                VerticalAlignment="Center"
+                md:HintAssist.Hint="{DynamicResource UserEmplyoeeNumber}"
+                Text="{Binding EmployeeNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+		</TextBox>
+
+		<!-- Birth -->
+		<TextBlock Style="{StaticResource TextBlockTitle}"
+                    Grid.Row="5"
+                    Grid.Column="0"
+                    Text="{DynamicResource UserBirth}" />
+		<StackPanel Grid.Row="5"
+					Grid.Column="1"
+					Grid.ColumnSpan="2"
+					VerticalAlignment="Center"
+					md:ValidationAssist.HorizontalAlignment="Left"
+					md:HintAssist.Hint="1990-10-10">
+			<DatePicker Style="{StaticResource DatePickerContent}"
+						SelectedDate="{Binding Birth, 
+                        UpdateSourceTrigger=PropertyChanged, Mode=TwoWay,
+                        Converter={StaticResource StringToDateConverter}}" />
+		</StackPanel>
+
+		<!-- Phone -->
+		<TextBlock Style="{StaticResource TextBlockTitle}"
+                                   Grid.Row="6"
+                                   Grid.Column="0"
+                                   Text="{DynamicResource UserPhone}" />
+		<TextBox Style="{StaticResource TextBoxInput}"
+                                 Grid.Row="6"
+                                 Grid.Column="1"
+                                 Grid.ColumnSpan="2"
+                                 VerticalAlignment="Center"
+                                 md:HintAssist.Hint="{DynamicResource UserPhone}"
+                                 Text="{Binding Phone, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+			<cal:Message.Attach>
+				[Event PreviewTextInput] = [Action OnPreviewTextInputNumeric($source, $eventArgs)];
+			</cal:Message.Attach>
+		</TextBox>
+
+		<!-- Address -->
+		<TextBlock Style="{StaticResource TextBlockTitle}"
+                                   Grid.Row="7"
+                                   Grid.Column="0"
+                                   Text="{DynamicResource UserAddress}" />
+		<TextBox Style="{StaticResource TextBoxInput}"
+                                 Grid.Row="7"
+                                 Grid.Column="1"
+                                 Grid.ColumnSpan="2"
+                                 VerticalAlignment="Center"
+                                 md:HintAssist.Hint="{DynamicResource UserAddress}"
+                                 Text="{Binding Address, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+		<!-- EMail -->
+		<TextBlock Style="{StaticResource TextBlockTitle}"
+                                   Grid.Row="8"
+                                   Grid.Column="0"
+                                   Text="{DynamicResource UserEmail}" />
+		<TextBox Style="{StaticResource TextBoxInput}"
+                                 Grid.Row="8"
+                                 Grid.Column="1"
+                                 Grid.ColumnSpan="2"
+                                 VerticalAlignment="Center"
+                                 md:HintAssist.Hint="{DynamicResource UserEmail}"
+                                 Text="{Binding EMail, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+		<!-- Image -->
+		<TextBlock Style="{StaticResource TextBlockTitle}"
+                                   Grid.Row="9"
+                                   Grid.Column="0"
+                                   Text="{DynamicResource UserProfile}" />
+		<TextBox Style="{StaticResource TextBoxInput}"
+                                 Grid.Row="9"
+                                 Grid.Column="1"
+                                 IsEnabled="False"
+                                 VerticalAlignment="Center"
+                                 md:HintAssist.Hint="{DynamicResource UserProfile}"
+                                 Text="{Binding Image, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+		<!-- open file -->
+		<Button x:Name="ClickAddPicture"
+                                Grid.Row="9"
+                                Grid.Column="2"
+                                Style="{StaticResource MaterialDesignFlatButton}"
+                                IsDefault="True"
+                                VerticalAlignment="Center">
+			<Button.Content>
+				<StackPanel Orientation="Horizontal"
+                                            VerticalAlignment="Center">
+					<md:PackIcon Width="{StaticResource WidthIconSmall}"
+                                                 Height="{StaticResource HeightIconSmall}"
+                                                 Kind="ImageAdd" />
+				</StackPanel>
+			</Button.Content>
+		</Button>
+
+		<!-- Position -->
+		<TextBlock Style="{StaticResource TextBlockTitle}"
+                                   Grid.Row="10"
+                                   Grid.Column="0"
+                                   Text="{DynamicResource UserPosition}" />
+		<TextBox Style="{StaticResource TextBoxInput}"
+                                 Grid.Row="10"
+                                 Grid.Column="1"
+                                 Grid.ColumnSpan="2"
+                                 VerticalAlignment="Center"
+                                 md:HintAssist.Hint="{DynamicResource UserPosition}"
+                                 Text="{Binding Position, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+		<!-- Department -->
+		<TextBlock Style="{StaticResource TextBlockTitle}"
+                                   Grid.Row="11"
+                                   Grid.Column="0"
+                                   Text="{DynamicResource UserDepartment}" />
+		<TextBox Style="{StaticResource TextBoxInput}"
+                                 Grid.Row="11"
+                                 Grid.Column="1"
+                                 Grid.ColumnSpan="2"
+                                 VerticalAlignment="Center"
+                                 md:HintAssist.Hint="{DynamicResource UserDepartment}"
+                                 Text="{Binding Department, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+		<!-- Company -->
+		<TextBlock Style="{StaticResource TextBlockTitle}"
+                                   Grid.Row="12"
+                                   Grid.Column="0"
+                                   Text="{DynamicResource UserCompany}" />
+		<TextBox Style="{StaticResource TextBoxInput}"
+                                 Grid.Row="12"
+                                 Grid.Column="1"
+                                 Grid.ColumnSpan="2"
+                                 VerticalAlignment="Center"
+                                 md:HintAssist.Hint="{DynamicResource UserCompany}"
+                                 Text="{Binding Company, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+		<!-- USED -->
+		<TextBlock Style="{StaticResource TextBlockTitle}"
+                    Grid.Row="13"
+                    Grid.Column="0"
+                    Text="{DynamicResource UserState}" />
+		<StackPanel Grid.Row="13"
+                    Grid.Column="1"
+                    Grid.ColumnSpan="2">
+			<ComboBox x:Name="UsedComboBox"
+                    Style="{StaticResource ComboBoxContent}"
+                    ItemsSource="{Binding Source={utils:EnumBindingSource {x:Type dataProvider:EnumAccountState}}}"
+                    SelectedIndex="{Binding Used, Mode=OneWay, Converter={StaticResource UsedIndexConverter}, UpdateSourceTrigger=PropertyChanged}"
+                    SelectedItem="{Binding Used, Converter={StaticResource UsedStringToIntConverter}, UpdateSourceTrigger=PropertyChanged}">
+
+				<ComboBox.ItemsPanel>
+					<ItemsPanelTemplate>
+						<VirtualizingStackPanel />
+					</ItemsPanelTemplate>
+				</ComboBox.ItemsPanel>
+				<ComboBox.ItemTemplate>
+					<DataTemplate>
+						<TextBlock Text="{Binding}" />
+					</DataTemplate>
+				</ComboBox.ItemTemplate>
+				<ComboBox.ItemContainerStyle>
+					<Style TargetType="ComboBoxItem"
+                            BasedOn="{StaticResource ComboBoxItemContent}" />
+				</ComboBox.ItemContainerStyle>
+			</ComboBox>
+		</StackPanel>
+	</Grid>
+</UserControl>

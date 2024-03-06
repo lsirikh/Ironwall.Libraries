@@ -1,0 +1,21 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Wpf.Libraries.Surv.Common.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="TableSurvCamera" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">surv_camera</Value>
+    </Setting>
+    <Setting Name="TableSurvEvent" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">surv_event</Value>
+    </Setting>
+    <Setting Name="TableSurvMapping" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">surv_mapping</Value>
+    </Setting>
+    <Setting Name="TableSurvApi" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">surv_api</Value>
+    </Setting>
+    <Setting Name="TableSurvSensor" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">surv_sensor</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

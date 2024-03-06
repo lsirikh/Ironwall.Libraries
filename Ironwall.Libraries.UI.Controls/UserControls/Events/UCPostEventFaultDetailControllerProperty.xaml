@@ -1,0 +1,63 @@
+﻿<UserControl x:Class="Ironwall.Libraries.UI.Controls.UserControls.Events.UCPostEventFaultDetailControllerProperty"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Ironwall.Libraries.UI.Controls.UserControls.Events"
+             mc:Ignorable="d" 
+			 xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+			 xmlns:ctrl="clr-namespace:Ironwall.Libraries.UI.Controls.UserControls.Events"
+             FontFamily="{DynamicResource MaterialDesignFont}"
+             d:DesignHeight="450" d:DesignWidth="800">
+	
+	<TabControl Grid.Row="2"
+                Height="430"
+                Background="Transparent"
+                Style="{StaticResource MaterialDesignNavigatilRailTabControl}"
+                md:ColorZoneAssist.Mode="Standard"
+                HorizontalContentAlignment="Stretch"
+                VerticalContentAlignment="Stretch"
+                TabStripPlacement="Top"
+                md:ShadowAssist.ShadowDepth="Depth0">
+		<TabItem>
+			<TabItem.Header>
+				<StackPanel Width="auto"
+                                        Height="auto">
+					<md:PackIcon Width="24"
+                                             Height="24"
+                                             HorizontalAlignment="Center"
+                                             Kind="Error" />
+					<TextBlock HorizontalAlignment="Center"
+                                           Style="{StaticResource ButtonTextBlock}"
+                                           Margin="0"
+                                           TextAlignment="Center"
+										   TextWrapping="Wrap"
+                                           Text="{DynamicResource EventFaultDetails_FalutTap}" />
+				</StackPanel>
+			</TabItem.Header>
+			<ScrollViewer VerticalScrollBarVisibility="Auto">
+			    <ctrl:UCPreEventFaultDetailControllerProperty/>
+			</ScrollViewer>
+		</TabItem>
+		<TabItem>
+			<TabItem.Header>
+				<StackPanel Width="auto"
+                                        Height="auto">
+					<md:PackIcon Width="24"
+                                             Height="24"
+                                             HorizontalAlignment="Center"
+                                             Kind="Clipboard" />
+					<TextBlock HorizontalAlignment="Center"
+                                           Style="{StaticResource ButtonTextBlock}"
+                                           Margin="0"
+                                           TextAlignment="Center"
+										   TextWrapping="Wrap"
+                                           Text="{DynamicResource EventFaultDetails_ActionTap}" />
+				</StackPanel>
+			</TabItem.Header>
+			<ScrollViewer>
+				<ctrl:UCPostEventFaultDetailActionProperty/>
+			</ScrollViewer>
+		</TabItem>
+	</TabControl>
+</UserControl>

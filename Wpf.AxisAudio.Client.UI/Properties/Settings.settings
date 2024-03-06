@@ -1,0 +1,24 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Wpf.AxisAudio.Client.UI.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="TableAudio" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">audio_device</Value>
+    </Setting>
+    <Setting Name="TableAudioGroup" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">audio_group</Value>
+    </Setting>
+    <Setting Name="TableAudioSensor" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">audio_sensor</Value>
+    </Setting>
+    <Setting Name="TableAudioSymbol" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">audio_symbol</Value>
+    </Setting>
+    <Setting Name="AudioFile" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">fence</Value>
+    </Setting>
+    <Setting Name="TableMultiGroup" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">audio_multi_group</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

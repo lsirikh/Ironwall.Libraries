@@ -1,0 +1,12 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Ironwall.Libraries.WatchDog.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="Process_Name" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Ironwall Monitoring Client</Value>
+    </Setting>
+    <Setting Name="Exe_Name" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Ironwall.Monitoring.Client</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

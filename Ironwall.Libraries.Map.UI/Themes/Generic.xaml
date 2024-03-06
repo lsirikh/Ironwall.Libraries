@@ -1,0 +1,132 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:units="clr-namespace:Ironwall.Libraries.Map.UI.UI.Units"
+	xmlns:utils="clr-namespace:Ironwall.Libraries.Utils;assembly=Ironwall.Libraries.Utils"
+	xmlns:thumbs="clr-namespace:Wpf.Libraries.AdornerDecorator.Thumbs;assembly=Wpf.Libraries.AdornerDecorator"
+	xmlns:utils_self="clr-namespace:Ironwall.Libraries.Map.UI.Utils"
+	xmlns:uc="clr-namespace:Ironwall.Libraries.Map.UI.UserControls"
+	xmlns:views="clr-namespace:Ironwall.Libraries.Map.UI.Views"
+	xmlns:viewModels="clr-namespace:Ironwall.Libraries.Map.UI.ViewModels"
+	xmlns:symbolViewModels="clr-namespace:Ironwall.Libraries.Map.UI.ViewModels.Symbols"
+	xmlns:symbolViews="clr-namespace:Ironwall.Libraries.Map.UI.Views.Symbols"
+	xmlns:symbolCollectionViewModels="clr-namespace:Ironwall.Libraries.Map.UI.ViewModels.SymbolCollections"
+	xmlns:symbolCollectionViews="clr-namespace:Ironwall.Libraries.Map.UI.Views.SymbolCollections"
+	>
+	
+	<ResourceDictionary.MergedDictionaries>
+		<!--
+		pack://application:,,,/Ironwall.Libraries.Map.UI;component/Themes/Generic.xaml
+		-->
+		<ResourceDictionary Source="/Ironwall.Libraries.Map.UI;Component/Themes/Units/CustomControl.xaml"/>
+	</ResourceDictionary.MergedDictionaries>
+
+	<!-- Symbol For Map -->
+	<DataTemplate DataType="{x:Type viewModels:MapViewModel}">
+		<views:MapView />
+	</DataTemplate>
+
+	<!-- Symbol For Controller-->
+	<DataTemplate DataType="{x:Type symbolViewModels:ControllerObjectViewModel}">
+		<symbolViews:ControllerObjectView />
+	</DataTemplate>
+
+	<!-- Symbol For MultiSensor-->
+	<DataTemplate DataType="{x:Type symbolViewModels:MultiSensorObjectViewModel}">
+		<symbolViews:MultiSensorObjectView />
+	</DataTemplate>
+
+	<!-- Symbol For FenceSensor-->
+	<DataTemplate DataType="{x:Type symbolViewModels:FenceObjectViewModel}">
+		<symbolViews:FenceObjectView />
+	</DataTemplate>
+
+	<!-- Symbol For Camera-->
+	<DataTemplate DataType="{x:Type symbolViewModels:FixedCameraObjectViewModel}">
+		<symbolViews:FixedCameraObjectView />
+	</DataTemplate>
+
+	<!-- Symbol For TextSymbol-->
+	<DataTemplate DataType="{x:Type symbolViewModels:TextSymbolViewModel}">
+		<symbolViews:TextSymbolView />
+	</DataTemplate>
+
+	<!-- Symbol For RectangleSymbol-->
+	<DataTemplate DataType="{x:Type symbolViewModels:RectangleShapeViewModel}">
+		<symbolViews:RectangleShapeView />
+	</DataTemplate>
+
+	<!-- Symbol For TriangleSymbole-->
+	<DataTemplate DataType="{x:Type symbolViewModels:TriangleShapeViewModel}">
+		<symbolViews:TriangleShapeView />
+	</DataTemplate>
+
+	<!-- Symbol For EllipseSymbol-->
+	<DataTemplate DataType="{x:Type symbolViewModels:EllipseShapeViewModel}">
+		<symbolViews:EllipseShapeView />
+	</DataTemplate>
+
+	<DataTemplate DataType="{x:Type symbolCollectionViewModels:SymbolCollectionViewModel}">
+		<symbolCollectionViews:SymbolCollectionView/>
+	</DataTemplate>
+	
+	<DataTemplate x:Key="SymbolTemplate">
+		<uc:SymbolPropertyView DataContext="{Binding}"/>
+	</DataTemplate>
+	<DataTemplate x:Key="ShapeTemplate">
+		<uc:ShapePropertyView DataContext="{Binding}"/>
+	</DataTemplate>
+	<DataTemplate x:Key="ObjectTemplate">
+		<uc:ObjectPropertyView DataContext="{Binding}"/>
+	</DataTemplate>
+	
+	<utils:ShapeSizeConverter x:Key="ShapeSizeConverter" />
+	<utils:ShapeSizeWithLableConverter x:Key="ShapeSizeWithLableConverter" />
+	<utils:StringToColorConverter x:Key="StringToColorConverter"/>
+
+	<utils_self:ViewModelConverter x:Key="ViewModelConverter"/>
+	<utils_self:SymbolTypeTemplateSelector x:Key="SymbolTypeTemplateSelector"
+									  SymbolTemplate="{StaticResource SymbolTemplate}"
+									  ShapeTemplate="{StaticResource ShapeTemplate}"
+								      ObjectTemplate="{StaticResource ObjectTemplate}"/>
+
+	<ControlTemplate x:Key="MoveThumbTemplate" TargetType="{x:Type thumbs:MoveThumb}">
+		<Rectangle Fill="Transparent"/>
+	</ControlTemplate>
+	
+
+	<Style x:Key="CustomItemAdornerStyle" TargetType="{x:Type units:CustomControl}">
+		<Setter Property="MinHeight" Value="10"/>
+		<Setter Property="MinWidth" Value="10"/>
+		<Setter Property="RenderTransformOrigin" Value="0.5, 0.5"/>
+		<Setter Property="SnapsToDevicePixels" Value="True"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type units:CustomControl}">
+					<Grid DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}">
+						<thumbs:MoveThumb Cursor="SizeAll" Template="{StaticResource MoveThumbTemplate}"
+										  x:Name="MoveDecorator"
+										  Visibility="Collapsed"/>
+						
+						<units:CustomControl Content="{TemplateBinding ContentControl.Content}"
+											 Margin="{TemplateBinding Padding}"/>
+						<thumbs:DesignerItemDecorator x:Name="ItemDecorator" ShowDecorator="False"/>
+						
+					</Grid>
+					<ControlTemplate.Triggers>
+						<Trigger Property="IsEditable" Value="True">
+							<Setter TargetName="ItemDecorator" Property="ShowDecorator" Value="True"/>
+							<Setter TargetName="MoveDecorator" Property="Visibility" Value="Visible"/>
+							<Setter Property="Opacity" Value="0.5"/>
+						</Trigger>
+						<Trigger Property="IsEditable" Value="False">
+							<Setter TargetName="ItemDecorator" Property="ShowDecorator" Value="False"/>
+							<Setter TargetName="MoveDecorator" Property="Visibility" Value="Collapsed"/>
+							<Setter Property="Opacity" Value="1"/>
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+</ResourceDictionary>

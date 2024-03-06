@@ -1,0 +1,48 @@
+﻿using Ironwall.Framework.Models.Accounts;
+using Ironwall.Framework.Models.Maps;
+using Ironwall.Libraries.Enums;
+using Newtonsoft.Json;
+using StackExchange.Redis;
+using System.Collections.Generic;
+
+namespace Ironwall.Framework.Models.Communications.Symbols
+{
+    /****************************************************************************
+        Purpose      :                                                           
+        Created By   : GHLee                                                
+        Created On   : 5/26/2023 2:31:59 PM                                                    
+        Department   : SW Team                                                   
+        Company      : Sensorway Co., Ltd.                                       
+        Email        : lsirikh@naver.com                                         
+     ****************************************************************************/
+
+    public class MapFileLoadRequestModel : UserSessionBaseRequestModel, IMapFileLoadRequestModel
+    {
+
+        #region - Ctors -
+        public MapFileLoadRequestModel()
+        {
+            Command = (int)EnumCmdType.MAP_FILE_LOAD_REQUEST;
+        }
+
+        public MapFileLoadRequestModel(ILoginSessionModel model) : base(model)
+        {
+            Command = (int)EnumCmdType.MAP_FILE_LOAD_REQUEST;
+        }
+        #endregion
+        #region - Implementation of Interface -
+        #endregion
+        #region - Overrides -
+        #endregion
+        #region - Binding Methods -
+        #endregion
+        #region - Processes -
+        #endregion
+        #region - IHanldes -
+        #endregion
+        #region - Properties -
+        #endregion
+        #region - Attributes -
+        #endregion
+    }
+}

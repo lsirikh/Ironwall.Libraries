@@ -1,0 +1,256 @@
+﻿<UserControl x:Class="Ironwall.Libraries.Event.UI.Views.Panels.DetectionPanelView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Ironwall.Libraries.Event.UI.Views.Panels"
+			 xmlns:enums="clr-namespace:Ironwall.Libraries.Enums;assembly=Ironwall.Libraries.Enums"
+             xmlns:utils="clr-namespace:Ironwall.Libraries.Utils;assembly=Ironwall.Libraries.Utils"
+             xmlns:cal="http://caliburnmicro.com"
+			 xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+			 xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d"
+			 d:Background="Gray"
+             d:DesignHeight="500" d:DesignWidth="800">
+	<UserControl.Resources>
+		<utils:UserControlVisibilityConverter x:Key="UserControlVisibilityConverter"/>
+		<utils:DeviceMultiBindingConverter x:Key="SensorMultiBindingConverter"/>
+		<utils:EnumDeviceTypeToValueConverter x:Key="EnumDeivceTypeToValueConverter"/>
+		<utils:EnumDeviceTypeToTextConverter x:Key="EnumDeviceTypeToTextConverter"/>
+		<utils:EnumDeviceTypeToAllowedDeviceConverter x:Key="EnumDeviceTypeToAllowedDeviceConverter"/>
+	</UserControl.Resources>
+
+
+	<StackPanel Orientation="Vertical"
+					Margin="15 0 10 0">
+		<md:TransitioningContent>
+			<md:TransitioningContent.OpeningEffects>
+				<md:TransitionEffect Kind="FadeIn"
+										 Duration="0:0:0.5" />
+				<md:TransitionEffect Kind="SlideInFromRight"
+										 Duration="0:0:0.5" />
+			</md:TransitioningContent.OpeningEffects>
+			<!-- Detection Section -->
+			<Grid Grid.Row="0">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="30" />
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="50"/>
+					<RowDefinition Height="*" MinHeight="340"/>
+					<RowDefinition Height="30" />
+				</Grid.RowDefinitions>
+				<TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}"
+										Grid.Row="0"
+										VerticalAlignment="Center"
+										Margin="10 0"
+										FontWeight="Bold"
+										FontSize="15"
+										Text="Detection Event"/>
+				<Grid Grid.Row="2" Margin="5">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="1.5*"/>
+						<ColumnDefinition Width="5*"/>
+						<ColumnDefinition Width="1.5*"/>
+						<ColumnDefinition Width="5*"/>
+						<ColumnDefinition Width="2*"/>
+						<ColumnDefinition Width="2*"/>
+					</Grid.ColumnDefinitions>
+						<Grid.Resources>
+						<Style TargetType="TextBlock" BasedOn="{StaticResource MaterialDesignTextBlock}">
+							<Setter Property="HorizontalAlignment" Value="Left"/>
+							<Setter Property="VerticalAlignment" Value="Center"/>
+							<Setter Property="Margin" Value="10 0"/>
+							<Setter Property="FontSize" Value="15"/>
+						</Style>
+						<Style TargetType="mah:DateTimePicker" >
+							<Setter Property="VerticalAlignment" Value="Center"/>
+							<Setter Property="Margin" Value="10 0"/>
+							<Setter Property="FontSize" Value="15"/>
+							<Setter Property="Height" Value="30"/>
+						</Style>
+						<Style x:Key="SearchButton" TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatButton}">
+							<Setter Property="VerticalAlignment" Value="Center"/>
+							<Setter Property="Margin" Value="5"/>
+							<Setter Property="FontSize" Value="15"/>
+							<Setter Property="Padding" Value="0"/>
+						</Style>
+					</Grid.Resources>
+					<TextBlock Grid.Row="0" 
+									   Grid.Column="0"
+									   Text="From" />
+
+					<mah:DateTimePicker 
+								Grid.Row="0" 
+								Grid.Column="1"
+								FontWeight="Bold"
+								SelectedDateTime="{Binding StartDate, Mode=TwoWay, StringFormat={}{yyyy-MM-dd HH:mm:ss}, UpdateSourceTrigger=PropertyChanged}"
+								/>
+					<TextBlock Grid.Row="0" 
+									   Grid.Column="2"
+									   Text="To" />
+					<mah:DateTimePicker 
+								Grid.Row="0"
+								Grid.Column="3"
+								DisplayDateStart="{Binding EndDateDisplay, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+								FontWeight="Bold"
+								SelectedDateTime="{Binding EndDate, Mode=TwoWay, StringFormat={}{yyyy-MM-dd HH:mm:ss}, UpdateSourceTrigger=PropertyChanged}"
+								/>
+
+					<Button Grid.Row="0"
+									Grid.Column="4"
+									x:Name="ClickSearch"
+									Style="{StaticResource SearchButton}"
+									Content="Search"
+									/>
+					<Button Grid.Row="0"
+									Grid.Column="5"
+									x:Name="ClickCancel"
+									md:ButtonAssist.CornerRadius="2"
+									Style="{StaticResource SearchButton}"
+									Content="Cancel"
+									/>
+				</Grid>
+
+				<!-- Detection DataGrid-->
+				<Grid Grid.Row ="3"
+					  Height ="320">
+					<ProgressBar Width="50"
+								 Height="50"
+								 Margin="16"
+								 Visibility="{Binding IsVisible, Converter={StaticResource BoolToInverseVisibleConverter}}"
+								 Style="{DynamicResource MaterialDesignCircularProgressBar}"
+								 IsIndeterminate="True"
+								 Value="44" />
+				</Grid>
+				<DataGrid Grid.Row="3" 
+						  Height="320"
+						  CanUserAddRows="False"
+						  AutoGenerateColumns="False"
+						  Background="#88000000"
+						  EnableRowVirtualization="True"
+						  EnableColumnVirtualization="True"
+						  ScrollViewer.VerticalScrollBarVisibility="Auto"
+						  Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
+						  ItemsSource="{Binding DetectionViewModelProvider.CollectionEntity, UpdateSourceTrigger=PropertyChanged}">
+					<DataGrid.RowStyle>
+						<Style TargetType="DataGridRow">
+							<Style.Triggers>
+								<DataTrigger Binding="{Binding Status}" Value="0">
+									<Setter Property="Background" Value="Transparent"></Setter>
+								</DataTrigger>
+								<DataTrigger Binding="{Binding Status}" Value="1">
+									<Setter Property="Background" Value="#88000000"></Setter>
+								</DataTrigger>
+							</Style.Triggers>
+						</Style>
+					</DataGrid.RowStyle>
+					<DataGrid.Columns>
+						<DataGridTextColumn Header="Id"
+									Binding="{Binding Path=Id}" />
+
+						<DataGridTextColumn Header="Group"
+									Binding="{Binding Path=EventGroup, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+
+						<DataGridTemplateColumn Header="Device Type"
+										SortMemberPath="UnitType"
+										CanUserSort="True">
+							<DataGridTemplateColumn.CellTemplate>
+								<DataTemplate>
+									<TextBlock Text="{Binding Device.DeviceType, Converter={StaticResource EnumDeviceTypeToTextConverter}, UpdateSourceTrigger=LostFocus}" />
+								</DataTemplate>
+							</DataGridTemplateColumn.CellTemplate>
+							<DataGridTemplateColumn.CellEditingTemplate>
+								<DataTemplate>
+									<ComboBox VerticalAlignment="Center"
+										ItemsSource="{Binding Source={utils:EnumBindingSource {x:Type enums:EnumDeviceType}}}"
+										SelectedItem="{Binding TypeDevice, Mode=TwoWay, Converter={StaticResource EnumDeivceTypeToValueConverter}, UpdateSourceTrigger=LostFocus}">
+										<ComboBox.ItemsPanel>
+											<ItemsPanelTemplate>
+												<VirtualizingStackPanel />
+											</ItemsPanelTemplate>
+										</ComboBox.ItemsPanel>
+										<ComboBox.ItemTemplate>
+											<DataTemplate>
+												<TextBlock Text="{Binding}" />
+											</DataTemplate>
+										</ComboBox.ItemTemplate>
+									</ComboBox>
+								</DataTemplate>
+							</DataGridTemplateColumn.CellEditingTemplate>
+						</DataGridTemplateColumn>
+
+						<DataGridTextColumn Header="Device" Binding="{Binding Path=Device.Id, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+
+						<DataGridTextColumn Header="Message Type"
+									Binding="{Binding Path=MessageType, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+
+						<DataGridTextColumn Header="Detection Result"
+									Binding="{Binding Path=Result, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+
+						<DataGridTextColumn Header="Status"
+									Binding="{Binding Path=Status, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+						<DataGridTextColumn Header="Event Time"
+									Binding="{Binding Path=DateTime, StringFormat=\{0:yyyy.MM.dd HH:mm:ss.ff\},Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+
+					</DataGrid.Columns>
+				</DataGrid>
+
+				<!-- Status -->
+				<Grid Grid.Row="4">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="1.5*"/>
+						<ColumnDefinition Width="1*"/>
+						<ColumnDefinition Width="1.5*"/>
+						<ColumnDefinition Width="1*"/>
+						<ColumnDefinition Width="1.5*"/>
+						<ColumnDefinition Width="1*"/>
+					</Grid.ColumnDefinitions>
+					<TextBlock 
+							VerticalAlignment="Center"
+							HorizontalAlignment="Left"
+							Margin="10 0"
+							Grid.Column="0" 
+							Text="Total : "
+							/>
+					<TextBlock
+							VerticalAlignment="Center"
+							HorizontalAlignment="Left"
+							Margin="5 0"
+							Grid.Column="1"
+							Style="{StaticResource MaterialDesignCaptionTextBlock}"
+							Text="{Binding Total, UpdateSourceTrigger=PropertyChanged}"/>
+					<TextBlock 
+							VerticalAlignment="Center"
+							HorizontalAlignment="Left"
+							Margin="5 0"
+							Grid.Column="2" 
+							Text="Reported : "
+							/>
+					<TextBlock
+							VerticalAlignment="Center"
+							HorizontalAlignment="Left"
+							Margin="5 0"
+							Grid.Column="3"
+							Style="{StaticResource MaterialDesignCaptionTextBlock}"
+							Text="{Binding Reported, UpdateSourceTrigger=PropertyChanged}"/>
+					<TextBlock 
+							VerticalAlignment="Center"
+							HorizontalAlignment="Left"
+							Margin="5 0"
+							Grid.Column="4" 
+							Text="Unreported : "
+							/>
+					<TextBlock
+							VerticalAlignment="Center"
+							HorizontalAlignment="Left"
+							Margin="5 0"
+							Grid.Column="5"
+							Style="{StaticResource MaterialDesignCaptionTextBlock}"
+							Text="{Binding UnReported, UpdateSourceTrigger=PropertyChanged}"/>
+				</Grid>
+			</Grid>
+
+		</md:TransitioningContent>
+	</StackPanel>
+</UserControl>

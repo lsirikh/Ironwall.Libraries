@@ -1,0 +1,70 @@
+﻿<UserControl x:Class="Ironwall.Libraries.Event.UI.Views.Components.Parts.ControllerDevicePartView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Ironwall.Libraries.Event.UI.Views.Components.Parts"
+			 xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+		<Grid.RowDefinitions>
+		    <RowDefinition />
+		    <RowDefinition />
+			<RowDefinition />
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="3*" />
+			<ColumnDefinition Width="7*" />
+		</Grid.ColumnDefinitions>
+		<TextBlock Grid.Row="0"
+                               Grid.Column="0"
+                               Margin="5 10 0 10"
+                               VerticalAlignment="Bottom"
+							   TextWrapping="Wrap"
+                               Text="{DynamicResource EventDetails_ControllerId}" />
+		<TextBox Grid.Row="0"
+                             Grid.Column="1"
+                             Foreground="White"
+                             IsReadOnly="True"
+                             Opacity="1"
+                             Margin="10 10 0 0"
+                             Text="{Binding DeviceNumber, Mode=OneWay}"
+                             md:HintAssist.Hint="{DynamicResource EventDetails_ControllerId}"
+                             md:HintAssist.IsFloating="True">
+		</TextBox>
+		<TextBlock Grid.Row="1"
+                               Grid.Column="0"
+                               Margin="5 10 0 10"
+                               VerticalAlignment="Bottom"
+							   TextWrapping="Wrap"
+                               Text="{DynamicResource EventDetails_SensorId}" />
+		<TextBox Grid.Row="1"
+                             Grid.Column="1"
+                             IsReadOnly="True"
+                             Text="{x:Null}"
+                             Foreground="White"
+                             Opacity="1"
+                             Margin="10 10 0 0"
+                             md:HintAssist.Hint="{DynamicResource EventDetails_SensorId}"
+                             md:HintAssist.IsFloating="True">
+		</TextBox>
+		<TextBlock Grid.Row="2"
+                               Grid.Column="0"
+                               Margin="5 10 0 5"
+                               VerticalAlignment="Bottom"
+							   TextWrapping="Wrap"
+                               Text="{DynamicResource EventDetails_EventTime}" />
+		<TextBox IsReadOnly="True"
+                             Grid.Row="2"
+                             Grid.Column="1"
+                             Text="{Binding DateTime, Mode=OneWay, StringFormat=yyyy-MM-dd HH:mm:ss}"
+                             Foreground="White"
+                             Opacity="1"
+                             Margin="10 10 0 0"
+                             md:HintAssist.Hint="{DynamicResource EventDetails_EventTime}"
+                             md:HintAssist.IsFloating="True">
+		</TextBox>
+
+	</Grid>
+</UserControl>

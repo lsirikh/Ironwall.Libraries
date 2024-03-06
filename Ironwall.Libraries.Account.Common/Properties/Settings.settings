@@ -1,0 +1,24 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Ironwall.Libraries.Account.Common.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="TableSession" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">session_users</Value>
+    </Setting>
+    <Setting Name="TableLogin" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">login_users</Value>
+    </Setting>
+    <Setting Name="PathDatabase" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Database</Value>
+    </Setting>
+    <Setting Name="NameDatabase" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">AccountDb.db3</Value>
+    </Setting>
+    <Setting Name="TableUser" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">account_users</Value>
+    </Setting>
+    <Setting Name="SessionTimeout" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">200</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

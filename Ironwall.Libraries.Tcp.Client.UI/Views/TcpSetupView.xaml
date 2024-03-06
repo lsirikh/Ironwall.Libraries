@@ -1,0 +1,141 @@
+﻿<UserControl x:Class="Ironwall.Libraries.Tcp.Client.UI.Views.TcpSetupView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Ironwall.Libraries.Tcp.Client.UI.Views"
+			 xmlns:cal="http://caliburnmicro.com"
+			 xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+			 xmlns:uc="clr-namespace:Ironwall.Libraries.UI.Controls.UserControls;assembly=Ironwall.Libraries.UI.Controls"
+             mc:Ignorable="d" 
+			 d:Background="Gray"
+			 d:Foreground="White"
+             d:DesignHeight="450" d:DesignWidth="800">
+
+	<StackPanel Orientation="Vertical">
+
+		<!-- 이벤트 맵 자동전환 -->
+		<Grid>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="Auto" />
+			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition Width="16" />
+				<ColumnDefinition Width="*" />
+				<ColumnDefinition Width="*" />
+				<ColumnDefinition Width="Auto" />
+			</Grid.ColumnDefinitions>
+			<Grid.Resources>
+				<Style TargetType="TextBlock">
+					<Setter Property="FontSize" Value="16" />
+					<Setter Property="Opacity" Value="0.75" />
+				</Style>
+			</Grid.Resources>
+
+			<md:PackIcon Grid.Column="0"
+						Kind="Connection"
+						VerticalAlignment="Center"
+						Width="18"
+						Height="18"
+						Foreground="{Binding ElementName=TcpAutoConnect, Path=Foreground}" />
+
+			<TextBlock Grid.Column="2"
+						x:Name="TcpAutoConnect"
+						IsEnabled="{Binding ElementName=ToggleButtonTcpAutoConnect, Path=IsChecked}"
+						Text="{DynamicResource TcpSetup_Function_AutoConnect}">
+				<TextBlock.Style>
+					<Style TargetType="TextBlock">
+						<Setter Property="FontSize"
+                                Value="16" />
+						<Setter Property="Opacity"
+                                Value="0.75" />
+
+						<Style.Triggers>
+							<Trigger Property="TextBlock.IsEnabled"
+                                     Value="False">
+								<Setter Property="TextBlock.Foreground"
+                                        Value="Gray" />
+							</Trigger>
+						</Style.Triggers>
+					</Style>
+				</TextBlock.Style>
+			</TextBlock>
+
+			<ToggleButton x:Name="ToggleButtonTcpAutoConnect"
+							Grid.Column="4"
+							Style="{StaticResource MaterialDesignSwitchToggleButton}"
+							IsChecked="{Binding IsAutoConnect, Mode=TwoWay}" />
+
+
+		</Grid>
+
+
+		<uc:UCTcpServerProperty DataContext="{Binding }"/>
+		<uc:UCTcpClientProperty DataContext="{Binding }" />
+
+		<Grid Margin="0 16 0 0">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition Width="16" />
+				<ColumnDefinition Width="1*" />
+				<ColumnDefinition Width="1*" />
+				<ColumnDefinition Width="1*" />
+				<ColumnDefinition Width="1*" />
+				<ColumnDefinition Width="1*" />
+			</Grid.ColumnDefinitions>
+			<Grid.Resources>
+				<Style TargetType="TextBlock">
+					<!--<Setter Property="FontFamily"
+									Value="{StaticResource NotoSansCJKkRRegular}" />-->
+					<Setter Property="FontSize"
+									Value="16" />
+					<Setter Property="Opacity"
+									Value="0.75" />
+				</Style>
+			</Grid.Resources>
+			<md:PackIcon VerticalAlignment="Center"
+						Kind="Network"
+						Width="16"
+						Height="16"
+						 />
+
+			<TextBlock Grid.Column="2"
+						Margin="5 0"
+						Text="{DynamicResource TcpSetup_Function_Status}" />
+
+			<TextBox Grid.Column="3"
+					Grid.ColumnSpan="2"
+					Margin="5 0"
+					IsReadOnly="True"
+					Text="{Binding ClientStatusViewModel.Status, UpdateSourceTrigger=PropertyChanged}" />
+		</Grid>
+
+		<Grid Margin="0 40 0 0">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition Width="16" />
+				<ColumnDefinition Width="1*" />
+				<ColumnDefinition Width="1*" />
+				<ColumnDefinition Width="1*" />
+				<ColumnDefinition Width="1*" />
+			</Grid.ColumnDefinitions>
+
+			<Button Grid.Column="4"
+								Margin="5 0"
+								x:Name="TcpConnectionButton"
+								IsEnabled="{Binding ClientStatusViewModel.IsConnected, Converter={StaticResource InverseBooleanConverter}}"
+								Content="{DynamicResource TcpSetup_Function_ConnectButton}" 
+								/>
+			<Button Grid.Column="5"
+								Margin="5 0"
+								x:Name="TcpDisconnectionButton"
+								IsEnabled="{Binding ClientStatusViewModel.IsConnected}"
+								Content="{DynamicResource TcpSetup_Function_DisconButton}" 
+								/>
+		</Grid>
+	</StackPanel>
+
+
+</UserControl>

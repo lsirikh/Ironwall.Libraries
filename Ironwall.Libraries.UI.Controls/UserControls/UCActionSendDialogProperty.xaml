@@ -1,0 +1,143 @@
+﻿<UserControl x:Class="Ironwall.Libraries.UI.Controls.UserControls.UCActionSendDialogProperty"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Ironwall.Libraries.UI.Controls.UserControls"
+             xmlns:cal="http://www.caliburnproject.org"
+			 xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+			 xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:utils="clr-namespace:Ironwall.Libraries.Utils;assembly=Ironwall.Libraries.Utils"
+			 xmlns:utilPass="clr-namespace:Ironwall.Libraries.Utils.PasswordControl;assembly=Ironwall.Libraries.Utils"
+             xmlns:dataProvider="clr-namespace:Ironwall.Libraries.Enums;assembly=Ironwall.Libraries.Enums"
+             xmlns:behaviors="clr-namespace:Ironwall.Libraries.Utils.Behaviors;assembly=Ironwall.Libraries.Utils"
+             mc:Ignorable="d" 
+             >
+	<UserControl.Resources>
+		<Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource MaterialDesignTextBlock}"
+			   x:Key="BaseTextBlock">
+			<Setter Property="Margin" Value="10 5"/>
+			<Setter Property="VerticalAlignment" Value="Center"/>
+		</Style>
+		<Style x:Key="ContentIcon" TargetType="{x:Type md:PackIcon}">
+			<Setter Property="Width" Value="24"/>
+			<Setter Property="Height" Value="24"/>
+			<Setter Property="Opacity" Value="0.75"/>
+			<Setter Property="VerticalAlignment" Value="Center"/>
+		</Style>
+		<Style x:Key="TextBlockTitle" TargetType="{x:Type TextBlock}" 
+                   BasedOn="{StaticResource MaterialDesignTextBlock}">
+			<Setter Property="FontFamily" Value="{StaticResource MaterialDesignFont}"/>
+			<Setter Property="FontSize" Value="15"/>
+			<Setter Property="Opacity" Value="0.75"/>
+			<Setter Property="FontWeight" Value="Bold"/>
+			<Setter Property="VerticalAlignment" Value="Center"/>
+			<Setter Property="Margin" Value="10 5 0 5"/>
+		</Style>
+		<Style x:Key="TextBlockContent" TargetType="{x:Type TextBlock}" 
+                   BasedOn="{StaticResource MaterialDesignTextBlock}">
+			<Setter Property="FontFamily" Value="{StaticResource MaterialDesignFont}"/>
+			<Setter Property="FontSize" Value="15"/>
+			<Setter Property="Opacity" Value="0.75"/>
+			<Setter Property="Margin" Value="10 5 0 5"/>
+			<Setter Property="VerticalAlignment" Value="Center"/>
+		</Style>
+	</UserControl.Resources>
+	<StackPanel Orientation="Horizontal">
+		<Grid>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="12" />
+				<RowDefinition Height="Auto" />
+			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition Width="16" />
+				<ColumnDefinition Width="*" />
+			</Grid.ColumnDefinitions>
+			<Grid.Resources>
+				<Style TargetType="TextBlock"
+								   x:Key="TextBlockSection">
+					<Setter Property="FontFamily"
+										Value="{StaticResource MaterialDesignFont}" />
+					<Setter Property="FontSize"
+										Value="16" />
+					<Setter Property="Opacity"
+										Value="0.75" />
+				</Style>
+			</Grid.Resources>
+			<md:PackIcon Grid.Column="0"
+						 Kind="TableOfContents"
+						 Style="{StaticResource ContentIcon}"/>
+			<TextBlock Grid.Column="2"
+					   Style="{StaticResource TextBlockContent}"
+					   Text="조치내용">
+			</TextBlock>
+		</Grid>
+
+		<Grid>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width=".7*" />
+				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition Width="1*" />
+			</Grid.ColumnDefinitions>
+
+			<StackPanel Orientation="Vertical"
+                                Margin="10 0">
+
+				<ItemsControl ItemsSource="{Binding CollectionActionItem}">
+					<ItemsControl.ItemTemplate>
+						<DataTemplate>
+							<RadioButton GroupName="CollectionActionItem"
+                                                 VerticalAlignment="Center"
+                                                 IsChecked="{Binding Path=IsSelected, Mode=TwoWay}">
+
+								<RadioButton.Content>
+									<StackPanel Orientation="Horizontal">
+										<TextBlock Text="{Binding Name, FallbackValue=테스트}"
+                                                           Style="{StaticResource TextBlockContent}" />
+									</StackPanel>
+								</RadioButton.Content>
+							</RadioButton>
+						</DataTemplate>
+					</ItemsControl.ItemTemplate>
+				</ItemsControl>
+			</StackPanel>
+
+			<Separator Grid.Column="1"
+                               Style="{StaticResource MaterialDesignLightSeparator}" />
+
+			<Grid Grid.Column="2"
+					VerticalAlignment="Top"
+					Margin="10 0">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="10" />
+					<RowDefinition Height="1*" />
+				</Grid.RowDefinitions>
+
+				<RadioButton x:Name="RadioButtonEtc"
+                                     GroupName="CollectionActionItem"
+                                     IsChecked="{Binding EtcViewModel.IsSelected, Mode=TwoWay}">
+
+					<RadioButton.Content>
+						<TextBlock Text="{Binding EtcViewModel.Name, FallbackValue=기타}"
+                                           Style="{StaticResource TextBlockContent}" />
+					</RadioButton.Content>
+				</RadioButton>
+
+				<TextBox Grid.Row="2"
+						Text="{Binding Memo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+						Style="{StaticResource MaterialDesignOutlinedTextBox}"
+						IsEnabled="{Binding ElementName=RadioButtonEtc, Path=IsChecked}"
+						FontSize="16"
+						Height="130"
+						VerticalAlignment="Top"
+						AcceptsReturn="True"
+						TextWrapping="Wrap"
+						VerticalScrollBarVisibility="Auto" />
+			</Grid>
+		</Grid>
+	</StackPanel>
+</UserControl>

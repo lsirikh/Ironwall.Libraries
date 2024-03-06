@@ -1,0 +1,265 @@
+﻿<UserControl x:Class="Ironwall.Libraries.UI.Controls.UserControls.Events.UCPostEventDetailProperty"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Ironwall.Libraries.UI.Controls.UserControls.Events"
+             mc:Ignorable="d" 
+			 xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:cal="http://www.caliburnproject.org"
+			 FontFamily="{DynamicResource MaterialDesignFont}"
+             d:DesignHeight="450" d:DesignWidth="800"
+			 >
+			 <!--Background="White"-->
+	
+	<StackPanel Margin="0 10 0 0">
+		<StackPanel.Resources>
+			<Style TargetType="TextBlock">
+				<Setter Property="FontFamily"
+                                    Value="{StaticResource NotoSansCJKkRRegular}" />
+				<Setter Property="FontSize"
+                                    Value="16" />
+				<Setter Property="Opacity"
+                                    Value="0.85" />
+			</Style>
+			<Style TargetType="{x:Type Grid}">
+				<Setter Property="Margin" Value="5"/>
+			</Style>
+		</StackPanel.Resources>
+
+
+		<Grid>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition Width="16" />
+				<ColumnDefinition Width="150" />
+				<ColumnDefinition Width="24" />
+				<ColumnDefinition Width="*"/>
+			</Grid.ColumnDefinitions>
+			
+			<md:PackIcon Grid.Column="0"
+						 Kind="Numeric1Box"
+						 VerticalAlignment="Center"
+						 Width="20"
+						 Height="20" />
+			<TextBlock Grid.Column="2"
+					   VerticalAlignment="Center"
+					   Text="Action Report Id" />
+			<TextBlock Grid.Column="4"
+					   Text="{Binding Id, Mode=TwoWay}" />
+		</Grid>
+
+
+		<Grid>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition Width="16" />
+				<ColumnDefinition Width="150" />
+				<ColumnDefinition Width="24" />
+				<ColumnDefinition Width="*"/>
+			</Grid.ColumnDefinitions>
+		    <md:PackIcon Grid.Column="0"
+                        Kind="Numeric2Box"
+                        VerticalAlignment="Center"
+                        Width="20"
+                        Height="20" />
+		    <TextBlock  Grid.Column="2"
+                        VerticalAlignment="Center"
+                        Text="{DynamicResource EventDetails_Area}" />
+		    <TextBlock Grid.Column="4"
+                        Text="{Binding FromEventModel.EventGroup, Mode=TwoWay}" />
+		</Grid>
+
+
+		<Grid>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition Width="16" />
+				<ColumnDefinition Width="150" />
+				<ColumnDefinition Width="24" />
+				<ColumnDefinition Width="*"/>
+			</Grid.ColumnDefinitions>
+			
+			<md:PackIcon Grid.Column="0"
+						Kind="Numeric3Box"
+						VerticalAlignment="Center"
+						Width="20"
+						Height="20" />
+			<TextBlock Grid.Column="2"
+						VerticalAlignment="Center"
+						Text="{DynamicResource EventDetails_ControllerId}" />
+			<TextBlock Grid.Column="4"
+						Text="{Binding FromEventModel.Device.Controller.DeviceNumber, Mode=TwoWay}" />
+		</Grid>
+
+
+		<Grid>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition Width="16" />
+				<ColumnDefinition Width="150" />
+				<ColumnDefinition Width="24" />
+				<ColumnDefinition Width="*"/>
+			</Grid.ColumnDefinitions>
+
+			<md:PackIcon Grid.Column="0"
+						Kind="Numeric4Box"
+						VerticalAlignment="Center"
+						Width="20"
+						Height="20" />
+			<TextBlock Grid.Column="2"
+						VerticalAlignment="Center"
+						Text="{DynamicResource EventDetails_SensorId}" />
+			<TextBlock x:Name="TextBoxController"
+						Grid.Column="4"
+						Text="{Binding FromEventModel.Device.DeviceNumber, Mode=TwoWay}" />
+		</Grid>
+
+		<Grid>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition Width="16" />
+				<ColumnDefinition Width="150" />
+				<ColumnDefinition Width="24" />
+				<ColumnDefinition Width="*"/>
+			</Grid.ColumnDefinitions>
+
+			<md:PackIcon Grid.Column="0"
+						Kind="Numeric5Box"
+						VerticalAlignment="Center"
+						Width="20"
+						Height="20" />
+			<TextBlock Grid.Column="2"
+						VerticalAlignment="Center"
+						Text="{DynamicResource EventDetails_SensorNumber}" />
+			<TextBlock Grid.Column="4"
+						Text="{Binding FromEventModel.Device.DeviceName, Mode=TwoWay}" />
+		</Grid>
+
+		<Grid>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition Width="16" />
+				<ColumnDefinition Width="150" />
+				<ColumnDefinition Width="24" />
+				<ColumnDefinition Width="*"/>
+			</Grid.ColumnDefinitions>
+
+			<md:PackIcon Grid.Column="0"
+						Kind="Numeric6Box"
+						VerticalAlignment="Center"
+						Width="20"
+						Height="20" />
+			<TextBlock Grid.Column="2"
+						VerticalAlignment="Center"
+						Text="{DynamicResource EventDetails_EventTime}" />
+			<TextBlock Grid.Column="4"
+						Text="{Binding FromEventModel.DateTime, Mode=TwoWay, StringFormat=yyyy-MM-dd HH:mm:ss}" />
+		</Grid>
+
+		<Grid>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition Width="16" />
+				<ColumnDefinition Width="150" />
+				<ColumnDefinition Width="24" />
+				<ColumnDefinition Width="*"/>
+			</Grid.ColumnDefinitions>
+
+			<md:PackIcon Grid.Column="0"
+						 Kind="Numeric7Box"
+						 VerticalAlignment="Center"
+						 Width="20"
+						 Height="20" />
+			<TextBlock Grid.Column="2"
+					   VerticalAlignment="Center"
+					   Text="Event Id" />
+			<TextBlock Grid.Column="4"
+					   Text="{Binding FromEventModel.Id, Mode=TwoWay}" />
+		</Grid>
+
+		<Grid>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition Width="16" />
+				<ColumnDefinition Width="150" />
+				<ColumnDefinition Width="24" />
+				<ColumnDefinition Width="*"/>
+			</Grid.ColumnDefinitions>
+
+			<md:PackIcon Grid.Column="0"
+						Kind="Numeric8Box"
+						VerticalAlignment="Center"
+						Width="20"
+						Height="20" />
+			<TextBlock Grid.Column="2"
+						VerticalAlignment="Center"
+						Text="{DynamicResource EventDetails_ActionTime}" />
+			<TextBlock Grid.Column="4"
+						Text="{Binding DateTime, Mode=TwoWay, StringFormat=yyyy-MM-dd HH:mm:ss}" />
+		</Grid>
+
+		<Grid>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition Width="16" />
+				<ColumnDefinition Width="150" />
+				<ColumnDefinition Width="24" />
+				<ColumnDefinition Width="*"/>
+			</Grid.ColumnDefinitions>
+
+			<md:PackIcon Grid.Column="0"
+						 Kind="Numeric9Box"
+						 VerticalAlignment="Center"
+						 Width="20"
+						 Height="20" />
+			<TextBlock Grid.Column="2"
+					   VerticalAlignment="Center"
+					   Text="{DynamicResource EventDetails_User}" />
+			<TextBlock Grid.Column="4"
+					   HorizontalAlignment="Left"
+					   TextAlignment="Left"
+					   Text="{Binding User, Mode=TwoWay}" />
+		</Grid>
+
+		<Grid>
+			<Grid.RowDefinitions>
+				<RowDefinition />
+				<RowDefinition Height="16" />
+				<RowDefinition />
+				<RowDefinition Height="16" />
+			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition Width="16" />
+				<ColumnDefinition Width="*" />
+			</Grid.ColumnDefinitions>
+
+			<md:PackIcon Grid.Row="0"
+						Grid.Column="0"
+						Kind="Numeric10Box"
+						VerticalAlignment="Center"
+						Width="20"
+						Height="20" />
+			
+			<TextBlock Grid.Row="0"
+					   Grid.Column="2"
+					   Grid.ColumnSpan="3"
+					   VerticalAlignment="Center"
+					   TextAlignment="Left"
+					   HorizontalAlignment="Left"
+					   Text="{DynamicResource EventDetails_ActionComment}" />
+
+			<TextBox Grid.Row="2"
+					Grid.Column="0"
+					Grid.ColumnSpan="5"
+					Style="{StaticResource MaterialDesignOutlinedTextBox}"
+					Text="{Binding Content, Mode=TwoWay}"
+					FontSize="16"
+					IsReadOnly="True"
+					VerticalAlignment="Top"
+					Height="80" />
+		</Grid>
+		
+	</StackPanel>
+</UserControl>

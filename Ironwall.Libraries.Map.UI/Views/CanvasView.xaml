@@ -1,0 +1,132 @@
+﻿<UserControl x:Class="Ironwall.Libraries.Map.UI.Views.CanvasView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Ironwall.Libraries.Map.UI.Views"
+			 xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+			 xmlns:map="clr-namespace:Ironwall.Libraries.Map.UI.ViewModels"
+			 xmlns:control="clr-namespace:ZoomAndPan;assembly=ZoomAndPan"
+             xmlns:cal="http://www.caliburnproject.org"
+			 xmlns:design ="clr-namespace:Ironwall.Libraries.Map.UI.Views.DesignComponents"
+			 xmlns:utils="clr-namespace:Ironwall.Libraries.Map.UI.Utils"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+	<UserControl.Resources>
+		<utils:CenterConverter x:Key="CenterConverter"/>
+		<utils:SliderConverter x:Key="SliderConverter"/>
+	</UserControl.Resources>
+
+	<Grid Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+
+		<ScrollViewer Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"
+					  Width="Auto" Height="Auto"
+					  x:Name="scroller"
+					  CanContentScroll="True"
+					  HorizontalScrollBarVisibility="Hidden"
+					  VerticalScrollBarVisibility="Hidden"
+					  cal:Message.Attach="[Event PreviewMouseWheel] = [Action scroller_MouseWheel($source, $eventArgs)];
+										  [Event PreviewMouseDoubleClick] = [Action scroller_MouseDoubleClick($source, $eventArgs)];
+										  [Event PreviewMouseDown] = [Action scroller_MouseDown($source, $eventArgs)];
+										  [Event PreviewMouseUp] = [Action scroller_MouseUp($source, $eventArgs)]; 
+										  [Event PreviewMouseMove] = [Action scroller_MouseMove($source, $eventArgs)];
+										  [Event PreviewKeyDown] = [Action scroller_KeyDown($source, $eventArgs)];
+										  [Event PreviewKeyUp] = [Action scroller_KeyUp($source, $eventArgs)];">
+			<control:ZoomAndPanControl 
+					x:Name="overview"
+					ContentScale="{Binding ContentScale}" 
+					ContentOffsetX="{Binding ContentOffsetX}" 
+					ContentOffsetY="{Binding ContentOffsetY}"
+					ContentViewportWidth="{Binding  ContentViewportWidth, Mode=OneWayToSource}"
+					ContentViewportHeight="{Binding ContentViewportHeight, Mode=OneWayToSource}">
+
+				<Border BorderThickness="2" BorderBrush="Black" Background="White">
+					<Canvas x:Name="canvas" Width="{Binding ContentWidth}" Height="{Binding ContentHeight}"
+							Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+						<ContentPresenter Content="{Binding SelectedMapViewModel}"/>
+						<ContentPresenter Content="{Binding SymbolCollectionViewModel}"/>
+						<!-- Current Point 표시 -->
+						<Grid Canvas.Left="{Binding CurrentPoint.X, UpdateSourceTrigger=PropertyChanged}" 
+								Canvas.Top="{Binding CurrentPoint.Y, UpdateSourceTrigger=PropertyChanged}">
+							<Line X1="0" Y1="-5" X2="0" Y2="5" Stroke="Red" StrokeThickness="2"/>
+							<Line X1="-5" Y1="0" X2="5" Y2="0" Stroke="Red" StrokeThickness="2"/>
+						</Grid>
+						<!--<Rectangle Canvas.Left="{Binding CurrentPoint.X, Converter={StaticResource CenterConverter}, ConverterParameter=300}"
+									   Canvas.Top="{Binding CurrentPoint.Y, Converter={StaticResource CenterConverter}, ConverterParameter=300}"
+									   Width="600" Height="600" Fill="Red" />-->
+						<!-- PolyLine Desing 표시 -->
+						<design:TempPolyLineView DataContext="{Binding TempPolyLineViewModel}"/>
+					</Canvas>
+				</Border>
+			</control:ZoomAndPanControl>
+		</ScrollViewer>
+		<Border BorderBrush="DimGray"
+				BorderThickness="1"
+				CornerRadius="5"
+				VerticalAlignment="Bottom"
+				HorizontalAlignment="Center"
+				Background="#88000000"
+				Height="50"
+				Margin="10"
+				Padding="5">
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="100"/>
+					<ColumnDefinition Width="100"/>
+					<ColumnDefinition Width="70"/>
+					<ColumnDefinition Width="50"/>
+					<ColumnDefinition Width="200"/>
+					<ColumnDefinition Width="50"/>
+				</Grid.ColumnDefinitions>
+				<Button Grid.Column="0" 
+						Margin="2 0"
+						FontSize="13"
+						Height="30"
+						cal:Message.Attach="[Event Click]=[Action OnClickSetFill()];"	
+						Style="{StaticResource MaterialDesignPaperButton}"
+						Content="Fill"/>
+				<Button Grid.Column="1" 
+						Margin="2 0"
+						FontSize="13"
+						Height="30"
+						cal:Message.Attach="[Event Click]=[Action OnClickSetZoom100()];"		
+						Style="{StaticResource MaterialDesignPaperButton}"
+						Content="100%"/>
+				<TextBlock Grid.Column="2" 
+							Margin="2 0"
+							FontSize="13"
+							Foreground="WhiteSmoke"
+							VerticalAlignment="Center"
+							TextAlignment="Center"
+							Style="{StaticResource MaterialDesignButtonTextBlock}"
+							Text="{Binding ElementName=ZoomSlider, Path=Value, FallbackValue=100%, StringFormat='{}{0:F1}%'}"/>
+				<Button Grid.Column="3" 
+						Margin="2 0"
+						FontSize="13"
+						Height="30"
+						Style="{StaticResource MaterialDesignPaperButton}"
+						cal:Message.Attach="[Event Click]=[Action OnClickZoomOut()];"		
+						Content="-"
+								/>
+				<Slider Grid.Column="4" 
+						Margin="5 0"
+						x:Name="ZoomSlider"
+						VerticalAlignment="Center"
+						Style="{StaticResource MaterialDesignDiscreteSlider}"
+						Minimum="50" 
+						LargeChange="20" 
+						TickFrequency="10" 
+						Maximum="300"
+						Value="{Binding ZoomAndPanControl.ContentScale, Mode=TwoWay, Converter={StaticResource SliderConverter}}"/>
+				
+				<Button Grid.Column="5" 
+						Margin="2 0"
+						FontSize="13"
+						Height="30"
+						Style="{StaticResource MaterialDesignPaperButton}"
+						cal:Message.Attach="[Event Click]=[Action OnClickZoomIn()];"
+						Content="+"/>
+			</Grid>
+		</Border>
+	</Grid>
+</UserControl>

@@ -1,0 +1,133 @@
+﻿<UserControl x:Class="Ironwall.Libraries.WatchDog.UI.Views.WatchdogSetupView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Ironwall.Libraries.WatchDog.UI.Views"
+			 xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:cal="http://www.caliburnproject.org"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+	<StackPanel Orientation="Vertical">
+
+		<!-- 이벤트 자동해제 -->
+		<Grid>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="Auto" />
+			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition Width="16" />
+				<ColumnDefinition Width="*" />
+				<ColumnDefinition Width="*" />
+				<ColumnDefinition Width="Auto" />
+			</Grid.ColumnDefinitions>
+
+			<Grid.Resources>
+				<Style TargetType="TextBlock">
+					<Setter Property="FontFamily"
+                            Value="{StaticResource NotoSansCJKkRRegular}" />
+					<Setter Property="FontSize"
+                            Value="16" />
+					<Setter Property="Opacity"
+                            Value="0.75" />
+				</Style>
+			</Grid.Resources>
+
+			<md:PackIcon Grid.Column="0"
+                         Grid.Row="0"
+                         Kind="EventClock"
+                         VerticalAlignment="Center"
+                         Width="18"
+                         Height="18"
+                         Foreground="{Binding ElementName=TextBlockWatchdog, Path=Foreground}" />
+
+			<TextBlock x:Name="TextBlockWatchdog"
+                       Grid.Row="0"
+                       Grid.Column="2"
+                       IsEnabled="{Binding ElementName=ToggleButtonWatchdog, Path=IsChecked}"
+                       Text="{DynamicResource Watchdog_Function}">
+
+				<TextBlock.Style>
+					<Style TargetType="TextBlock">
+						<Setter Property="FontFamily"
+                                Value="{StaticResource NotoSansCJKkRRegular}" />
+						<Setter Property="FontSize"
+                                Value="16" />
+						<Setter Property="Opacity"
+                                Value="0.75" />
+
+						<Style.Triggers>
+							<Trigger Property="TextBlock.IsEnabled"
+                                     Value="False">
+								<Setter Property="TextBlock.Foreground"
+                                        Value="Gray" />
+							</Trigger>
+						</Style.Triggers>
+					</Style>
+				</TextBlock.Style>
+			</TextBlock>
+
+			<ToggleButton x:Name="ToggleButtonWatchdog"
+                          Grid.Column="4"
+                          Grid.Row="0"
+                          Style="{StaticResource MaterialDesignSwitchToggleButton}"
+                          IsChecked="{Binding IsEnabledToggleButtonWatchdog, Mode=TwoWay}" />
+
+			<Grid Grid.Row="1"
+                  Grid.Column="2"
+                  Grid.ColumnSpan="9"
+                  Margin="0 16 0 0">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="16" />
+					<ColumnDefinition Width="1*" />
+					<ColumnDefinition Width="1*" />
+				</Grid.ColumnDefinitions>
+
+				<Button Grid.Column="2"
+						Margin="10 10"
+						x:Name="ActivateWatchdog"
+						IsEnabled="{Binding ElementName=ToggleButtonWatchdog, Path=IsChecked}"
+                        Content="{DynamicResource Watchdog_Function_Activate}"/>
+				<Button Grid.Column="3"
+						Margin="10 10"
+						x:Name="DeactivateWatchdog"
+						IsEnabled="{Binding ElementName=ToggleButtonWatchdog, Path=IsChecked}"
+                        Content="{DynamicResource Watchdog_Function_Deactivate}"/>
+			</Grid>
+
+			<Grid Grid.Row="3"
+                  Grid.Column="2"
+                  Grid.ColumnSpan="9"
+                  Margin="0 16 0 0">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="16" />
+					<ColumnDefinition Width="1*" />
+					<ColumnDefinition Width="16" />
+					<ColumnDefinition Width="3*" />
+				</Grid.ColumnDefinitions>
+
+				<TextBlock
+                    Grid.Column="2"
+                    FontSize="15"
+                    Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                    VerticalAlignment="Center"
+                    Text="{DynamicResource Watchdog_Function_Status}"/>
+
+				<TextBox Grid.Column="4"
+                    FontSize="15"
+                    Foreground="White"
+                    IsReadOnly="True"
+                    VerticalAlignment="Center"
+                    TextAlignment="Center"
+                    Text="{Binding WatchdogStatus, UpdateSourceTrigger=PropertyChanged}"/>
+			</Grid>
+		</Grid>
+
+
+	</StackPanel>
+</UserControl>

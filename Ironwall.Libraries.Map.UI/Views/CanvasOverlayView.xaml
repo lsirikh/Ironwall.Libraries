@@ -1,0 +1,96 @@
+﻿<UserControl x:Class="Ironwall.Libraries.Map.UI.Views.CanvasOverlayView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Ironwall.Libraries.Map.UI.Views"
+			 xmlns:control="clr-namespace:ZoomAndPan;assembly=ZoomAndPan"
+			 xmlns:viewModel="clr-namespace:Ironwall.Libraries.Map.UI.ViewModels"
+			 xmlns:cal="http://caliburnmicro.com"
+             mc:Ignorable="d" 
+             Height="130" 
+             Width="180" >
+
+	<Border CornerRadius="5"
+			Padding="5"
+			BorderThickness="1"
+			Background="#88000000"
+			BorderBrush="Gray">
+
+		<Grid>
+			<!--
+			Embed a zoom and pan control.
+			This is used so that we can scale the content to fit the overview window,
+			therefore we see an overview of all of the content at once.
+			-->
+			<control:ZoomAndPanControl
+				x:Name="overview"
+				Margin="0 20 0 0"
+				Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}"
+				cal:Message.Attach="[Event SizeChanged] = [Action overlay_SizeChanged($source, $eventArgs)];">
+				<!--SizeChanged="overview_SizeChanged"-->
+
+				<!-- 
+				This is the content that is displayed.
+				-->
+				<Grid
+					Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}"
+					Width="{Binding ZoomAndPanControl.ContentWidth, UpdateSourceTrigger=PropertyChanged}"
+					Height="{Binding ZoomAndPanControl.ContentHeight, UpdateSourceTrigger=PropertyChanged}"
+					cal:Message.Attach="[Event SizeChanged] = [Action overlay_SizeChanged($source, $eventArgs)];">
+					<!--SizeChanged="overview_SizeChanged"-->
+
+					<!--
+					같은 ViewModel 인스턴스를 여러 뷰에서 미러링하려면, 실제 뷰 요소를 공유하는 
+					대신 데이터만을 공유하는 방법을 사용할 수 있습니다. 이를 위해 ContentPresenter를
+					사용하여 동일한 ViewModel을 여러 뷰에 바인딩할 수 있습니다.
+					-->
+					<ContentPresenter Content="{Binding OverlayMapViewModel}"/>
+					<ContentPresenter Content="{Binding SymbolCollectionViewModel}"/>
+
+					<!--
+        			This ItemsControl is the main part of the content that is displayed.
+					It contains instances of RectangleData, the DataTemplate for RectangleData is in
+					the UserControl.Resources section of this file.
+					-->
+
+					<!--
+					This Canvas and Border are used to draw the 'overview' zoom rect. 
+					This show the area of the content that is being viewed in the main window.
+					-->
+					<Canvas>
+						<Thumb x:Name="overviewZoomRectThumb"
+							   Canvas.Left="{Binding CanvasViewModel.ZoomAndPanControl.ContentOffsetX, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+							   Canvas.Top="{Binding CanvasViewModel.ZoomAndPanControl.ContentOffsetY, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+							   cal:Message.Attach="[Event DragDelta] = [Action overlay_DragDelta($source, $eventArgs)];"
+							   Opacity="0.5">
+							<!--DragDelta="overviewZoomRectThumb_DragDelta"-->
+							<Thumb.Template>
+								<ControlTemplate TargetType="{x:Type Thumb}">
+									<Border BorderBrush="Black"
+											BorderThickness="1"
+											Width="{Binding CanvasViewModel.ZoomAndPanControl.ContentViewportWidth, UpdateSourceTrigger=PropertyChanged}"
+											Height="{Binding CanvasViewModel.ZoomAndPanControl.ContentViewportHeight, UpdateSourceTrigger=PropertyChanged}"
+											Background="Yellow"
+											CornerRadius="1"/>
+								</ControlTemplate>
+							</Thumb.Template>
+						</Thumb>
+					</Canvas>
+				</Grid>
+			</control:ZoomAndPanControl>
+			<TextBlock Text="Minimap" Margin="5 2" 
+					   FontSize="13" FontWeight="Bold"
+					   VerticalAlignment="Top"
+					   HorizontalAlignment="Left">
+				<TextBlock.Effect>
+					<DropShadowEffect Color="Black"
+									  Direction="320"
+									  ShadowDepth="5"
+									  Opacity="0.5"
+									  BlurRadius="4"/>
+				</TextBlock.Effect>
+			</TextBlock>
+		</Grid>
+	</Border>
+</UserControl>

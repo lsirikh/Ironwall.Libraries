@@ -1,0 +1,156 @@
+﻿<UserControl x:Class="Ironwall.Libraries.UI.Controls.UserControls.UCTcpServerProperty"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Ironwall.Libraries.UI.Controls.UserControls"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+			 xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:utils="clr-namespace:Ironwall.Libraries.Utils;assembly=Ironwall.Libraries.Utils"
+			 xmlns:utilPass="clr-namespace:Ironwall.Libraries.Utils.PasswordControl;assembly=Ironwall.Libraries.Utils"
+             xmlns:dataProvider="clr-namespace:Ironwall.Libraries.Enums;assembly=Ironwall.Libraries.Enums"
+             xmlns:behaviors="clr-namespace:Ironwall.Libraries.Utils.Behaviors;assembly=Ironwall.Libraries.Utils"
+             mc:Ignorable="d" 
+             d:DesignHeight="250"
+			 d:DesignWidth="450"
+			 >
+	<UserControl.Resources>
+		<!--Converters-->
+		<utils:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+		<utils:BoolToInverseVisibleConverter x:Key="BoolToInverseVisibleConverter"/>
+		<utils:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+		<utils:StringToDateConverter x:Key="StringToDateConverter" />
+		<utils:LevelStringToIntConverter x:Key="LevelStringToIntConverter" />
+		<utils:LevelIndexConverter x:Key="LevelIndexConverter"/>
+		<utils:UsedStringToIntConverter x:Key="UsedStringToIntConverter" />
+		<utils:UsedIndexConverter x:Key="UsedIndexConverter" />
+		<utils:ImageConverter x:Key="ImageConverter"/>
+		<utils:MapImageConverter x:Key="MapImageConverter"/>
+		<utils:TimeFormatConverter x:Key="TimeFormatConverter"/>
+		<utils:AdminLevelAllowConverter x:Key="AdminLevelAllowConverter"/>
+		<utils:UserLevelAllowConverter x:Key="UserLevelAllowConverter"/>
+		<utils:NoImageNameConverter x:Key="NoImageNameConverter"/>
+		<utils:IsDeletableAccountConverter x:Key="IsDeletableAccountConverter"/>
+		<utils:AccountIndexNumberingConverter x:Key="AccountIndexNumberingConverter"/>
+		<utils:AdminAllowedWIthIsItemExistMutliValueConverter x:Key="AdminAllowedWIthIsItemExistMutliValueConverter"/>
+		<utils:PassConfirmValidationParameters x:Key="PassConfirmValidationParameters" />
+		<utils:BindingProxy x:Key="BindingProxy" />
+		<utilPass:PasswordBoxAssistant x:Key="PasswordBoxAssistant" />
+
+		<!--Validation Rules-->
+		<utils:IdValidationRule x:Key="IdValidationRule"/>
+		<utils:NotEmptyValidationRule x:Key="NotEmptyValidationRule"/>
+		<utils:PassConfirmValidationRule x:Key="PassConfirmValidationRule" />
+		<utils:StringLengthValidationRule x:Key="StringLengthValidationRule" />
+
+	</UserControl.Resources>
+
+	
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+		</Grid.RowDefinitions>
+		
+		<Grid.Resources>
+			<Style TargetType="TextBlock">
+				<Setter Property="FontSize" Value="16" />
+				<Setter Property="Opacity" Value="0.75" />
+			</Style>
+		</Grid.Resources>
+
+
+		<Grid Grid.Row="2"
+              Margin="0 16 0 0">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition Width="16" />
+				<ColumnDefinition Width="1*" />
+				<ColumnDefinition Width="1*" />
+				<ColumnDefinition Width="1*" />
+				<ColumnDefinition Width="1*" />
+				<ColumnDefinition Width="1*" />
+			</Grid.ColumnDefinitions>
+
+			<md:PackIcon VerticalAlignment="Center"
+                         Kind="Ip"
+                         Width="16"
+                         Height="16"
+                         Foreground="{Binding ElementName=ServerIP, Path=Foreground}" />
+			<TextBlock Grid.Column="2"
+                       Margin="5 0"
+					   x:Name="ServerIP"
+					   IsEnabled="{Binding ClientStatusViewModel.IsConnected, Converter={StaticResource InverseBooleanConverter}}"
+                       Text="{DynamicResource TcpSetup_Function_ServerIP}" />
+
+			<TextBox Grid.Column="3" 
+                     Margin="5 0"
+                     MaxLength="3"
+                     md:TextFieldAssist.CharacterCounterVisibility="Collapsed"
+                     IsEnabled="{Binding ClientStatusViewModel.IsConnected, Converter={StaticResource InverseBooleanConverter}}"
+                     Foreground="{Binding ElementName=ServerIP, Path=Foreground}"
+                     Text="{Binding ServerClassA, FallbackValue=192}"/>
+			<TextBox Grid.Column="4"
+                     Margin="5 0"
+                     MaxLength="3"
+                     md:TextFieldAssist.CharacterCounterVisibility="Collapsed"
+                     IsEnabled="{Binding ClientStatusViewModel.IsConnected, Converter={StaticResource InverseBooleanConverter}}"
+                     Foreground="{Binding ElementName=ServerIP, Path=Foreground}"
+                     Text="{Binding ServerClassB, FallbackValue=168}"/>
+			<TextBox Grid.Column="5"
+                     Margin="5 0"
+                     MaxLength="3"
+                     md:TextFieldAssist.CharacterCounterVisibility="Collapsed"
+                     IsEnabled="{Binding ClientStatusViewModel.IsConnected, Converter={StaticResource InverseBooleanConverter}}"
+                     Foreground="{Binding ElementName=ServerIP, Path=Foreground}"
+                     Text="{Binding ServerClassC, FallbackValue=12}"/>
+			<TextBox Grid.Column="6"
+                     Margin="5 0"
+                     MaxLength="3"
+                     md:TextFieldAssist.CharacterCounterVisibility="Collapsed"
+                     IsEnabled="{Binding ClientStatusViewModel.IsConnected, Converter={StaticResource InverseBooleanConverter}}"
+                     Foreground="{Binding ElementName=ServerIP, Path=Foreground}"
+                     Text="{Binding ServerClassD, FallbackValue=33}" />
+
+
+		</Grid>
+		<Grid Grid.Row="3"
+              Margin="0 16 0 0">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition Width="16" />
+				<ColumnDefinition Width="1*" />
+				<ColumnDefinition Width="1*" />
+				<ColumnDefinition Width="1*" />
+				<ColumnDefinition Width="1*" />
+				<ColumnDefinition Width="1*" />
+			</Grid.ColumnDefinitions>
+
+			<md:PackIcon VerticalAlignment="Center"
+                         Kind="SerialPort"
+                         Width="16"
+                         Height="16"
+                         Foreground="{Binding ElementName=ServerIP, Path=Foreground}" />
+
+			<TextBlock Grid.Column="2"
+                       Margin="5 0"
+                       Foreground="{Binding ElementName=ServerIP, Path=Foreground}"
+                       Text="{DynamicResource TcpSetup_Function_ServerPort}" />
+
+			<TextBox Grid.Column="3"
+                     Margin="5 0"
+                     IsEnabled="{Binding ClientStatusViewModel.IsConnected, Converter={StaticResource InverseBooleanConverter}}"
+                     Foreground="{Binding ElementName=ServerIP, Path=Foreground}"
+                     Text="{Binding ServerPort, FallbackValue=2005}" />
+
+		</Grid>
+		
+		
+	</Grid>
+</UserControl>
+

@@ -1,0 +1,36 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Ironwall.Libraries.Map.Common.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="TableMaps" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">object_maps</Value>
+    </Setting>
+    <Setting Name="TableCameras" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">object_cameras</Value>
+    </Setting>
+    <Setting Name="TableControllers" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">object_controllers</Value>
+    </Setting>
+    <Setting Name="TableGeometies" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">object_geometries</Value>
+    </Setting>
+    <Setting Name="TablePoints" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">object_points</Value>
+    </Setting>
+    <Setting Name="TableFences" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">object_fences</Value>
+    </Setting>
+    <Setting Name="TableMultiSensors" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">object_multisensors</Value>
+    </Setting>
+    <Setting Name="TableSymbols" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">object_symbols</Value>
+    </Setting>
+    <Setting Name="TableObjects" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">object_objects</Value>
+    </Setting>
+    <Setting Name="TableSymbolInfo" Type="System.String" Scope="User">
+      <Value Profile="(Default)">object_info</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
