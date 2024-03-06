@@ -116,14 +116,6 @@
     <Compile Include="Settings.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Ironwall.Framework\Ironwall.Framework.csproj">
-      <Project>{cc34c433-38a8-4092-b172-d89db0e632be}</Project>
-      <Name>Ironwall.Framework</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Ironwall.Libraries.Base\Ironwall.Libraries.Base.csproj">
-      <Project>{9D2531FC-7A97-478B-9303-9B0A3D223551}</Project>
-      <Name>Ironwall.Libraries.Base</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Ironwall.Libraries.Common\Ironwall.Libraries.Common.csproj">
       <Project>{93e4883c-0365-485f-a9b9-c04e204aec65}</Project>
       <Name>Ironwall.Libraries.Common</Name>

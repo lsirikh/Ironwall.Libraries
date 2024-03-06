@@ -137,14 +137,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Ironwall.Framework\Ironwall.Framework.csproj">
-      <Project>{cc34c433-38a8-4092-b172-d89db0e632be}</Project>
-      <Name>Ironwall.Framework</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Ironwall.Libraries.Base\Ironwall.Libraries.Base.csproj">
-      <Project>{9D2531FC-7A97-478B-9303-9B0A3D223551}</Project>
-      <Name>Ironwall.Libraries.Base</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Ironwall.Libraries.Devices\Ironwall.Libraries.Devices.csproj">
       <Project>{af906809-40d8-4e3c-822f-2ad5989f4ae6}</Project>
       <Name>Ironwall.Libraries.Devices</Name>

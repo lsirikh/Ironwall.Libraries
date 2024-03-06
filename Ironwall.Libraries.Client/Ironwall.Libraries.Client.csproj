@@ -94,17 +94,9 @@
     <Compile Include="Services\IClientService.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Ironwall.Framework\Ironwall.Framework.csproj">
-      <Project>{cc34c433-38a8-4092-b172-d89db0e632be}</Project>
-      <Name>Ironwall.Framework</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Ironwall.Libraries.Account.Client\Ironwall.Libraries.Account.Client.csproj">
       <Project>{240A11B9-761C-4693-9331-67868C4730B8}</Project>
       <Name>Ironwall.Libraries.Account.Client</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Ironwall.Libraries.Base\Ironwall.Libraries.Base.csproj">
-      <Project>{9d2531fc-7a97-478b-9303-9b0a3d223551}</Project>
-      <Name>Ironwall.Libraries.Base</Name>
     </ProjectReference>
     <ProjectReference Include="..\Ironwall.Libraries.Common\Ironwall.Libraries.Common.csproj">
       <Project>{93E4883C-0365-485F-A9B9-C04E204AEC65}</Project>

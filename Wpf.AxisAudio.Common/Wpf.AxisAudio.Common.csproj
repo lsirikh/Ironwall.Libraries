@@ -121,12 +121,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Ironwall.Libraries.Base\Ironwall.Libraries.Base.csproj">
-      <Project>{9d2531fc-7a97-478b-9303-9b0a3d223551}</Project>
-      <Name>Ironwall.Libraries.Base</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="packages.config" />
     <None Include="ReadMe.md" />
   </ItemGroup>
