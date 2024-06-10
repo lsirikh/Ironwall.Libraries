@@ -72,24 +72,32 @@ namespace Wpf.GstD3DStream.UI.Controls
         private void StreamView_Loaded(object sender, RoutedEventArgs e)
         {
             // Loaded 이벤트가 발생했을 때 실행할 로직
+            try
+            {
+                _d3DImageEx = new D3DImageEx();
+                _D3D11Scene = new D3D11TestScene(1920, 1080);
 
-            _d3DImageEx = new D3DImageEx();
-            _D3D11Scene = new D3D11TestScene(1920, 1080);
+                d3dScene.Source = _d3DImageEx;
 
-            d3dScene.Source = _d3DImageEx;
+                /* Set the backbuffer, which is a ID3D11Texture2D pointer */
+                var renderTarget = _D3D11Scene.GetRenderTarget();
+                var backBuffer = _d3DImageEx.CreateBackBuffer(D3DResourceTypeEx.ID3D11Texture2D, renderTarget);
 
-            /* Set the backbuffer, which is a ID3D11Texture2D pointer */
-            var renderTarget = _D3D11Scene.GetRenderTarget();
-            var backBuffer = _d3DImageEx.CreateBackBuffer(D3DResourceTypeEx.ID3D11Texture2D, renderTarget);
+                _d3DImageEx?.Lock();
+                _d3DImageEx?.SetBackBuffer(D3DResourceType.IDirect3DSurface9, backBuffer, _enableSoftwareFallback);
+                _d3DImageEx?.Unlock();
 
-            _d3DImageEx?.Lock();
-            _d3DImageEx?.SetBackBuffer(D3DResourceType.IDirect3DSurface9, backBuffer, _enableSoftwareFallback);
-            _d3DImageEx?.Unlock();
+                _playback = new Playback(IntPtr.Zero, _enableOverlay, uri: Uri);
+                _playback.OnDrawSignalReceived += VideoSink_OnBeginDraw;
 
-            _playback = new Playback(IntPtr.Zero, _enableOverlay, uri: Uri);
-            _playback.OnDrawSignalReceived += VideoSink_OnBeginDraw;
+                CompositionTarget.Rendering += CompositionTarget_Rendering;
+            }
+            catch (Exception)
+            {
 
-            CompositionTarget.Rendering += CompositionTarget_Rendering;
+                throw;
+            }
+            
         }
 
         private void StreamView_Unloaded(object sender, RoutedEventArgs e)

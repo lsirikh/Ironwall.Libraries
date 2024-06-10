@@ -1,5 +1,4 @@
-﻿using Ironwall.Libraries.Base.Services;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using System.Data.Common;
 using System.Data;
 using System;
@@ -11,6 +10,7 @@ using Wpf.AxisAudio.Client.UI.Models;
 using Wpf.AxisAudio.Client.UI.Providers.Models;
 using Caliburn.Micro;
 using System.Data.SQLite;
+using Ironwall.Libraries.Base.Services;
 
 namespace Wpf.AxisAudio.Common.Providers
 {

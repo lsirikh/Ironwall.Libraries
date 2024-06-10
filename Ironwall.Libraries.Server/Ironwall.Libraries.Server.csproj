@@ -70,11 +70,16 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Ironwall.Message.Base">
+      <HintPath>..\Ironwall.Framework\Exts\Ironwall.Message.Base.dll</HintPath>
+    </Reference>
+    <Reference Include="Ironwall.Redis.Message.Framework">
+      <HintPath>..\Ironwall.Framework\Exts\Ironwall.Redis.Message.Framework.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\Ironwall.Monitoring.Server\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
-    <Reference Include="Sensorway.Broker.SeoIncheon, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -91,6 +96,10 @@
     <Compile Include="Services\ServerService.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Ironwall.Framework\Ironwall.Framework.csproj">
+      <Project>{cc34c433-38a8-4092-b172-d89db0e632be}</Project>
+      <Name>Ironwall.Framework</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Ironwall.Libraries.Account.Common\Ironwall.Libraries.Account.Common.csproj">
       <Project>{B3EB5954-521C-4482-91A2-49604E7AD060}</Project>
       <Name>Ironwall.Libraries.Account.Common</Name>
@@ -98,6 +107,10 @@
     <ProjectReference Include="..\Ironwall.Libraries.Account.Server\Ironwall.Libraries.Account.Server.csproj">
       <Project>{0711a9f3-3d23-4674-9408-3219dd781f55}</Project>
       <Name>Ironwall.Libraries.Account.Server</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ironwall.Libraries.Base\Ironwall.Libraries.Base.csproj">
+      <Project>{9d2531fc-7a97-478b-9303-9b0a3d223551}</Project>
+      <Name>Ironwall.Libraries.Base</Name>
     </ProjectReference>
     <ProjectReference Include="..\Ironwall.Libraries.Common\Ironwall.Libraries.Common.csproj">
       <Project>{93e4883c-0365-485f-a9b9-c04e204aec65}</Project>

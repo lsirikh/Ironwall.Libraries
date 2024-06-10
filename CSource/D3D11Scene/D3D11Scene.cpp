@@ -3,6 +3,7 @@
 #include <stdexcept>
 #include <sstream>
 #include <iostream>
+#include <limits>
 
 
 namespace D3D11Scene {

@@ -89,6 +89,10 @@
     <Folder Include="Defines\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Ironwall.Framework\Ironwall.Framework.csproj">
+      <Project>{cc34c433-38a8-4092-b172-d89db0e632be}</Project>
+      <Name>Ironwall.Framework</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Ironwall.Libraries.Enums\Ironwall.Libraries.Enums.csproj">
       <Project>{848ae203-d3b4-4e73-8ef0-1a18d88a040c}</Project>
       <Name>Ironwall.Libraries.Enums</Name>

@@ -70,10 +70,6 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Ironwall.Libraries.Utils, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Ironwall.Libraries.Utils\bin\Release\Ironwall.Libraries.Utils.dll</HintPath>
-    </Reference>
     <Reference Include="Ironwall.Message.Base, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Exts\Ironwall.Message.Base.dll</HintPath>
@@ -552,6 +548,10 @@
     <ProjectReference Include="..\Ironwall.Libraries.Enums\Ironwall.Libraries.Enums.csproj">
       <Project>{848ae203-d3b4-4e73-8ef0-1a18d88a040c}</Project>
       <Name>Ironwall.Libraries.Enums</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ironwall.Libraries.Utils\Ironwall.Libraries.Utils.csproj">
+      <Project>{14220279-9b26-4383-bf1e-a0da31726758}</Project>
+      <Name>Ironwall.Libraries.Utils</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

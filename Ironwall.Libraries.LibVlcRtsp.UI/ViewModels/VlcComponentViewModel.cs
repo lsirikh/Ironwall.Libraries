@@ -52,10 +52,10 @@ namespace Ironwall.Libraries.LibVlcRtsp.UI.ViewModels
         #region - Implementation of Interface -
         #endregion
         #region - Overrides -
-        protected override Task OnActivateAsync(CancellationToken cancellationToken)
-        {
-            return base.OnActivateAsync(cancellationToken);
-        }
+        //protected override Task OnActivateAsync(CancellationToken cancellationToken)
+        //{
+        //    return base.OnActivateAsync(cancellationToken);
+        //}
 
         protected override Task OnDeactivateAsync(bool close, CancellationToken cancellationToken)
         {

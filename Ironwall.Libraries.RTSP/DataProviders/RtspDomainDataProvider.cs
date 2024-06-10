@@ -1,6 +1,7 @@
 ﻿using Caliburn.Micro;
 using Dapper;
 using Ironwall.Framework.Services;
+using Ironwall.Libraries.Base.Services;
 using Ironwall.Libraries.RTSP.Models;
 using Ironwall.Libraries.RTSP.ViewModels;
 using System;
@@ -44,12 +45,11 @@ namespace Ironwall.Libraries.RTSP.DataProviders
                 }, TaskContinuationOptions.ExecuteSynchronously, token);
         }
 
-
-
-        public override void Stop()
+        protected override Task ExitTask(CancellationToken token=default)
         {
-            throw new NotImplementedException();
+            return Task.CompletedTask;
         }
+
         #endregion
         #region - Binding Methods -
 

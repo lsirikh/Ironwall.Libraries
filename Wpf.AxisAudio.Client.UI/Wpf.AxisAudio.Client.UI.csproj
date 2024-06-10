@@ -253,6 +253,10 @@
     <Folder Include="Modules\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Ironwall.Framework\Ironwall.Framework.csproj">
+      <Project>{cc34c433-38a8-4092-b172-d89db0e632be}</Project>
+      <Name>Ironwall.Framework</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Ironwall.Libraries.Api.Client\Ironwall.Libraries.Api.Client.csproj">
       <Project>{8937e8ab-6402-4ac3-affc-ac5b76813a9d}</Project>
       <Name>Ironwall.Libraries.Api.Client</Name>
@@ -260,6 +264,10 @@
     <ProjectReference Include="..\Ironwall.Libraries.Api.Common\Ironwall.Libraries.Api.Common.csproj">
       <Project>{a6f3508f-2685-47fc-87b7-6fe3c92fda50}</Project>
       <Name>Ironwall.Libraries.Api.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ironwall.Libraries.Base\Ironwall.Libraries.Base.csproj">
+      <Project>{9D2531FC-7A97-478B-9303-9B0A3D223551}</Project>
+      <Name>Ironwall.Libraries.Base</Name>
     </ProjectReference>
     <ProjectReference Include="..\Ironwall.Libraries.Enums\Ironwall.Libraries.Enums.csproj">
       <Project>{848ae203-d3b4-4e73-8ef0-1a18d88a040c}</Project>
