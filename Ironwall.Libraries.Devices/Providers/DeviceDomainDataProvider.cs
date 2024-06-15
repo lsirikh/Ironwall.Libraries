@@ -81,7 +81,6 @@ namespace Ironwall.Libraries.Devices.Providers
                 //Create TableController Device DB Table
                 cmd.CommandText = $@"CREATE TABLE IF NOT EXISTS {_setupModel.TableController} (
                                             id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ,
-                                            deviceid TEXT UNIQUE NOT NULL ,
                                             devicegroup INTEGER,
                                             devicenumber INTEGER,
                                             devicename TEXT,
@@ -96,7 +95,6 @@ namespace Ironwall.Libraries.Devices.Providers
                 //Create TableSensor Device DB Table
                 cmd.CommandText = $@"CREATE TABLE IF NOT EXISTS {_setupModel.TableSensor} (
                                             id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ,
-                                            deviceid TEXT UNIQUE NOT NULL ,
                                             devicegroup INTEGER,
                                             controller INTEGER,  
                                             devicenumber INTEGER,
@@ -110,7 +108,6 @@ namespace Ironwall.Libraries.Devices.Providers
                 //Create TableCamera Device DB Table
                 cmd.CommandText = $@"CREATE TABLE IF NOT EXISTS {_setupModel.TableCamera} (
                                             id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ,
-                                            deviceid TEXT UNIQUE NOT NULL ,
                                             devicegroup INTEGER,
                                             devicenumber INTEGER,
                                             devicename TEXT,
@@ -133,8 +130,7 @@ namespace Ironwall.Libraries.Devices.Providers
                 //Create TableDeviceCameraProfile Device DB Table
                 cmd.CommandText = $@"CREATE TABLE IF NOT EXISTS {_setupModel.TableDeviceCameraProfile} (
                                             id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ,
-                                            optionid TEXT UNIQUE NOT NULL ,
-                                            referenceid TEXT NOT NULL ,
+                                            referenceid INTEGER ,
                                             profile TEXT
                                            )";
                 cmd.ExecuteNonQuery();
@@ -142,8 +138,7 @@ namespace Ironwall.Libraries.Devices.Providers
                 //Create TableDeviceCameraPreset Device DB Table
                 cmd.CommandText = $@"CREATE TABLE IF NOT EXISTS {_setupModel.TableDeviceCameraPreset} (
                                             id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ,
-                                            optionid TEXT UNIQUE NOT NULL ,
-                                            referenceid TEXT NOT NULL ,
+                                            referenceid INTEGER ,
                                             presetname TEXT,
                                             ishome INTEGER,
                                             pan REAL,
@@ -156,11 +151,10 @@ namespace Ironwall.Libraries.Devices.Providers
                 //Create TableDeviceCameraPreset Device DB Table
                 cmd.CommandText = $@"CREATE TABLE IF NOT EXISTS {_setupModel.TableCameraMapping} (
                                             id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ,
-                                            mapperid TEXT UNIQUE NOT NULL,
                                             groupid TEXT,
-                                            sensor TEXT,
-                                            firstpreset TEXT,
-                                            secondpreset TEXT
+                                            sensor INTEGER,
+                                            firstpreset INTEGER,
+                                            secondpreset INTEGER
                                            )";
                 cmd.ExecuteNonQuery();
 
@@ -226,7 +220,7 @@ namespace Ironwall.Libraries.Devices.Providers
                                 INSERT INTO {table} 
                                 (deviceid, devicegroup, devicenumber, devicename, devicetype, version, status, ipaddress, port) 
                                 VALUES 
-                                ('c{id + 1}', '0', '{i}', '{i}번_제어기', '1', 'v1.0', '1', '192.168.1.{i}', '80')
+                                ('{id + 1}', '0', '{i}', '{i}번_제어기', '1', 'v1.0', '1', '192.168.1.{i}', '80')
                                 ";
 
                     //SQL Execution

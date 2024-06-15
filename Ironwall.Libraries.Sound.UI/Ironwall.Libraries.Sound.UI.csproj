@@ -121,6 +121,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Ironwall.Framework.ViewModels\Ironwall.Framework.ViewModels.csproj">
+      <Project>{7da0d9f1-e2f8-4c6e-91b2-43deebd3c3fe}</Project>
+      <Name>Ironwall.Framework.ViewModels</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Ironwall.Libraries.Enums\Ironwall.Libraries.Enums.csproj">
       <Project>{848ae203-d3b4-4e73-8ef0-1a18d88a040c}</Project>
       <Name>Ironwall.Libraries.Enums</Name>

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Windows;
 using Ironwall.Framework.ViewModels;
+using Ironwall.Libraries.Enums;
 
 namespace Ironwall.Libraries.Device.UI.ViewModels
 {
@@ -20,7 +21,6 @@ namespace Ironwall.Libraries.Device.UI.ViewModels
 
     public abstract class BaseDeviceViewModel<T> : BaseCustomViewModel<T>, IBaseDeviceViewModel<T> where T : IBaseDeviceModel
     {
-
         #region - Ctors -
         public BaseDeviceViewModel()
         {
@@ -73,7 +73,7 @@ namespace Ironwall.Libraries.Device.UI.ViewModels
             }
         }
 
-        public int DeviceType
+        public EnumDeviceType DeviceType
         {
             get { return _model.DeviceType; }
             set

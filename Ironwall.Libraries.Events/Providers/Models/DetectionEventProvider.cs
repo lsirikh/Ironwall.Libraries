@@ -35,7 +35,7 @@ namespace Ironwall.Libraries.Events.Providers
                     Clear();
 
                     foreach (DetectionEventModel item in _eventProvider
-                    .Where(entity => entity.MessageType == (int)EnumEventType.Intrusion)
+                    .Where(entity => entity.MessageType == EnumEventType.Intrusion)
                     .ToList())
                     {
                         Debug.WriteLine($"DetectionEventModel == >{item.Id}");
@@ -59,7 +59,7 @@ namespace Ironwall.Libraries.Events.Providers
             {
                 try
                 {
-                    if (item.MessageType == (int)EnumEventType.Intrusion)
+                    if (item.MessageType == EnumEventType.Intrusion)
                     {
                         Debug.WriteLine($"[{item.Id}]{ClassName} was executed({CollectionEntity.Count()})!!!");
                         ret = await InsertedItem(item);

@@ -125,15 +125,15 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Dashboards
             {
                 Controller = DeviceProvider.OfType<IControllerDeviceViewModel>().Count();
                 await Task.Delay(200, cancellationToken);
-                MultiSensor = DeviceProvider.OfType<ISensorDeviceViewModel>().Where(t => t.DeviceType == (int)EnumDeviceType.Multi).Count();
+                MultiSensor = DeviceProvider.OfType<ISensorDeviceViewModel>().Where(t => t.DeviceType == EnumDeviceType.Multi).Count();
                 await Task.Delay(200, cancellationToken);
-                FenseSensor = DeviceProvider.OfType<ISensorDeviceViewModel>().Where(t => t.DeviceType == (int)EnumDeviceType.Fence).Count();
+                FenseSensor = DeviceProvider.OfType<ISensorDeviceViewModel>().Where(t => t.DeviceType == EnumDeviceType.Fence).Count();
                 await Task.Delay(200, cancellationToken);
-                ContactSensor = DeviceProvider.OfType<ISensorDeviceViewModel>().Where(t => t.DeviceType == (int)EnumDeviceType.Contact).Count();
-                UndergroundSensor = DeviceProvider.OfType<ISensorDeviceViewModel>().Where(t => t.DeviceType == (int)EnumDeviceType.Underground).Count();
-                PIRSensor = DeviceProvider.OfType<ISensorDeviceViewModel>().Where(t => t.DeviceType == (int)EnumDeviceType.PIR).Count();
-                IOController = DeviceProvider.OfType<ISensorDeviceViewModel>().Where(t => t.DeviceType == (int)EnumDeviceType.IoController).Count();
-                LaserSensor = DeviceProvider.OfType<ISensorDeviceViewModel>().Where(t => t.DeviceType == (int)EnumDeviceType.Laser).Count();
+                ContactSensor = DeviceProvider.OfType<ISensorDeviceViewModel>().Where(t => t.DeviceType == EnumDeviceType.Contact).Count();
+                UndergroundSensor = DeviceProvider.OfType<ISensorDeviceViewModel>().Where(t => t.DeviceType == EnumDeviceType.Underground).Count();
+                PIRSensor = DeviceProvider.OfType<ISensorDeviceViewModel>().Where(t => t.DeviceType == EnumDeviceType.PIR).Count();
+                IOController = DeviceProvider.OfType<ISensorDeviceViewModel>().Where(t => t.DeviceType == EnumDeviceType.IoController).Count();
+                LaserSensor = DeviceProvider.OfType<ISensorDeviceViewModel>().Where(t => t.DeviceType == EnumDeviceType.Laser).Count();
                 await Task.Delay(200, cancellationToken);
                 IPCamera = DeviceProvider.OfType<ICameraDeviceViewModel>().Count();
             });

@@ -6,6 +6,6 @@ namespace Ironwall.Libraries.Device.UI.ViewModels
 {
     public interface IBaseOptionViewModel<T> : IBaseCustomViewModel<T> where T : IOptionBaseModel
     {
-        string ReferenceId { get; set; }
+        int ReferenceId { get; set; }
     }
 }

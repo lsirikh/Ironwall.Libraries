@@ -1,5 +1,6 @@
 ﻿using Ironwall.Framework.Models.Devices;
 using Ironwall.Framework.ViewModels;
+using Ironwall.Libraries.Enums;
 using System.Windows;
 
 namespace Ironwall.Libraries.Device.UI.ViewModels
@@ -9,7 +10,7 @@ namespace Ironwall.Libraries.Device.UI.ViewModels
         int DeviceGroup { get; set; }
         string DeviceName { get; set; }
         int DeviceNumber { get; set; }
-        int DeviceType { get; set; }
+        EnumDeviceType DeviceType { get; set; }
         int Status { get; set; }
         string Version { get; set; }
     }

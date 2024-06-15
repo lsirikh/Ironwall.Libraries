@@ -22,7 +22,7 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Components
         
         public PreFaultEventViewModel(IMalfunctionEventModel model) : base(model)
         {
-            MessageType = (int)EnumEventType.Fault;
+            MessageType = EnumEventType.Fault;
         }
         #endregion
         #region - Implementation of Interface -
@@ -111,7 +111,7 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Components
         //public string NameAreaSpeaker { get; set; }
         //public string Action { get; set; }
         public string Type { get; set; }
-        public int Reason
+        public EnumFaultType Reason
         {
             get => (EventModel as IMalfunctionEventModel).Reason;
             set
@@ -134,7 +134,7 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Components
             get => (EventModel as IMalfunctionEventModel).FirstEnd;
             set
             {
-                (EventModel as IMalfunctionEventModel).Reason = value;
+                (EventModel as IMalfunctionEventModel).FirstEnd = value;
                 NotifyOfPropertyChange(() => CutFirstEnd);
             }
         }

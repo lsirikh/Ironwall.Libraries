@@ -16,6 +16,7 @@ using Ironwall.Framework.Models;
 using Ironwall.Libraries.Devices.Providers;
 using Ironwall.Libraries.Enums;
 using System.Linq;
+using Ironwall.Framework.ViewModels;
 
 namespace Ironwall.Libraries.Event.UI.ViewModels.Panels
 {

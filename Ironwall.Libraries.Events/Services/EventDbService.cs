@@ -6,6 +6,7 @@ using Ironwall.Framework.Models.Devices;
 using Ironwall.Framework.Models.Events;
 using Ironwall.Framework.Models.Mappers;
 using Ironwall.Framework.Services;
+using Ironwall.Framework.ViewModels;
 using Ironwall.Libraries.Devices.Models;
 using Ironwall.Libraries.Devices.Providers;
 using Ironwall.Libraries.Devices.Services;
@@ -110,7 +111,7 @@ namespace Ironwall.Libraries.Events.Services
 
                         IBaseDeviceModel device = null;
 
-                        switch (model?.Device[0])
+                        switch (model?.Device)
                         {
                             case 'c':
                                 device = _controllerProvider
@@ -236,7 +237,7 @@ namespace Ironwall.Libraries.Events.Services
 
                         IBaseDeviceModel device = null;
 
-                        switch (model?.Device[0])
+                        switch (model?.Device)
                         {
                             case 'c':
                                 device = _controllerProvider
@@ -358,16 +359,14 @@ namespace Ironwall.Libraries.Events.Services
                         ActionEventModel action = null;
                         switch (metaEvent?.MessageType)
                         {
-                            case (int)EnumEventType.Intrusion:
+                            case EnumEventType.Intrusion:
                                 {
-                                    action = ModelFactory
-                                    .Build<ActionEventModel>(model, metaEvent as DetectionEventModel);
+                                    action = ModelFactory.Build<ActionEventModel>(model, metaEvent as DetectionEventModel);
                                 }
                                 break;
-                            case (int)EnumEventType.Fault:
+                            case EnumEventType.Fault:
                                 {
-                                    action = ModelFactory
-                                    .Build<ActionEventModel>(model, metaEvent as MalfunctionEventModel);
+                                    action = ModelFactory.Build<ActionEventModel>(model, metaEvent as MalfunctionEventModel);
                                 }
                                 break;
                             default:

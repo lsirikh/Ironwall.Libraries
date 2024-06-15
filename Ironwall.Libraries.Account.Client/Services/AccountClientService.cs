@@ -3,6 +3,7 @@ using Ironwall.Framework.Models;
 using Ironwall.Framework.Models.Accounts;
 using Ironwall.Framework.Models.Communications;
 using Ironwall.Framework.Models.Communications.Accounts;
+using Ironwall.Framework.ViewModels;
 using Ironwall.Libraries.Base.DataProviders;
 using Ironwall.Libraries.Tcp.Client.Services;
 using Ironwall.Libraries.Tcp.Common.Models;

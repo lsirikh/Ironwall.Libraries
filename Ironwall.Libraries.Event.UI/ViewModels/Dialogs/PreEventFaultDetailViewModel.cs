@@ -1,6 +1,7 @@
 ﻿using Caliburn.Micro;
 using Ironwall.Framework.Models.Devices;
 using Ironwall.Framework.Models.Events;
+using Ironwall.Libraries.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,7 +35,7 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Dialogs
 
         public string EventGroup => _eventViewModel.EventGroup;
 
-        public int Reason => MalfunctionEventModel.Reason;
+        public EnumFaultType Reason => MalfunctionEventModel.Reason;
 
         public int FirstStart => MalfunctionEventModel.FirstStart;
         

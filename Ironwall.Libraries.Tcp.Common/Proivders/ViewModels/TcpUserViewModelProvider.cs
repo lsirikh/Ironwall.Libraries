@@ -1,6 +1,4 @@
 ﻿using Ironwall.Framework.Models.Accounts;
-using Ironwall.Framework.ViewModels.Account;
-using Ironwall.Framework.ViewModels;
 using Ironwall.Libraries.Tcp.Common.Proivders.Models;
 using System;
 using System.Collections.Generic;

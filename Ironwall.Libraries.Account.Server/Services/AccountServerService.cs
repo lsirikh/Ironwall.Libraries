@@ -28,6 +28,7 @@ using Ironwall.Libraries.Account.Common.Helpers;
 using Ironwall.Libraries.Common.Providers;
 using Ironwall.Libraries.Tcp.Server.Models;
 using Ironwall.Libraries.Base.DataProviders;
+using Ironwall.Framework.ViewModels;
 
 namespace Ironwall.Libraries.Account.Server.Services
 {
@@ -1217,7 +1218,7 @@ namespace Ironwall.Libraries.Account.Server.Services
                         //Create LogoutRequestModel instance
                         var logoutRequestModel = InstanceFactory.Build<LogoutRequestModel>();
                         //Insert data
-                        logoutRequestModel.Insert((int)EnumCmdType.LOGOUT_REQUEST_TIMEOUT, item.Value.UserId, item.Value.Token);
+                        logoutRequestModel.Insert(EnumCmdType.LOGOUT_REQUEST_TIMEOUT, item.Value.UserId, item.Value.Token);
                         //Execute Logout process
                         Logout(logoutRequestModel).Wait();
 

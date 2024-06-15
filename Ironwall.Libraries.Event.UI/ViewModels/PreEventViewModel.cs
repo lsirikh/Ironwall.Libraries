@@ -123,7 +123,7 @@ namespace Ironwall.Libraries.Event.UI.ViewModels
             }
         }
 
-        public int MessageType
+        public EnumEventType? MessageType
         {
             get { return _model.MessageType; }
             set 

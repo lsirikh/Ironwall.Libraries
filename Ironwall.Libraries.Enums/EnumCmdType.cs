@@ -67,6 +67,9 @@ namespace Ironwall.Libraries.Enums
         EVENT_CONTACT_OFF_REQUEST = 560,
         EVENT_CONTACT_OFF_RESPONSE = 561,
 
+        DEVICE_MAX_ID_REQUEST = 600,
+        DEVICE_MAX_ID_RESPONSE = 601,
+
         DEVICE_INFO_REQUEST = 610,
         DEVICE_INFO_RESPONSE = 611,
 
@@ -138,7 +141,25 @@ namespace Ironwall.Libraries.Enums
         MODE_WINDY_REQUEST = 910,
         MODE_WINDY_RESPONSE = 911,
 
+
         STATUS_UPDATE = 1000,
 
+        /// <summary>
+        /// VMS API COMMAND
+        /// </summary>
+        API_LOGIN_REQUEST =2000,
+        API_LOGIN_RESPONSE = 2001,
+
+        API_LOGOUT_REQUEST = 2010,
+        API_LOGOUT_RESPONSE = 2011,
+
+        API_REQUEST_KEEP_ALIVE_USER = 2020,
+        API_RESPONSE_KEEP_ALIVE_USER = 2021,
+
+        API_REQUEST_ACT_EVENT = 2030,
+        API_RESPONSE_ACT_EVENT = 2031,
+
+        API_REQUEST_LIST_EVENT = 2040,
+        API_RESPONSE_LIST_EVENT = 2041,
     }
 }

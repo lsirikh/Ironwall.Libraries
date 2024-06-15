@@ -17,6 +17,7 @@ using System.Diagnostics;
 using System.Diagnostics.Eventing;
 using EventProvider = Ironwall.Libraries.Events.Providers.EventProvider;
 using Ironwall.Framework.Helpers;
+using Ironwall.Framework.ViewModels;
 
 namespace Ironwall.Libraries.Event.UI.ViewModels.Panels
 {

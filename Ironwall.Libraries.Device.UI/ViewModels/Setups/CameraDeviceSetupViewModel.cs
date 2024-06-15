@@ -70,13 +70,15 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Setups
         public override async void OnClickInsertButton(object sender, RoutedEventArgs e)
         {
             int id = 0;
-            if(_provider.Count > 0)
-                id = GetIdHelper.GetCameraId(_provider.LastOrDefault().Id);
+            //if(_provider.Count > 0)
+            //    id = GetIdHelper.GetCameraId(_provider.LastOrDefault().Id);
             
-            var camera = ModelFactory.Build<CameraDeviceModel>($"v{id + 1}");
+            //var camera = ModelFactory.Build<CameraDeviceModel>();
+            var camera = new CameraDeviceModel();
+
             var viewModel = ViewModelFactory.Build<CameraDeviceViewModel>(camera);
             await viewModel.ActivateAsync();
-            ViewModelProvider.Add(viewModel);
+            //ViewModelProvider.Add(viewModel);
         }
 
         public override async void OnClickDeleteButton(object sender, RoutedEventArgs e)

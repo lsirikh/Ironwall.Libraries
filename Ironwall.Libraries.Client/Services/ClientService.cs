@@ -47,6 +47,7 @@ using Ironwall.Libraries.Map.Common.Helpers;
 using System.Windows.Interop;
 using Ironwall.Libraries.Common.Providers;
 using Ironwall.Libraries.Devices.Providers.Models;
+using Ironwall.Framework.ViewModels;
 
 namespace Ironwall.Libraries.Client.Services
 {
@@ -912,7 +913,7 @@ namespace Ironwall.Libraries.Client.Services
                     if (!response.Success)
                         return false;
 
-                    var list = _deviceProvider.Where(t => t.DeviceType == (int)EnumDeviceType.Controller).ToList();
+                    var list = _deviceProvider.Where(t => t.DeviceType == EnumDeviceType.Controller).ToList();
 
                     foreach (var item in list)
                     {

@@ -132,6 +132,12 @@
       <Version>3.0.20</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Ironwall.Framework.ViewModels\Ironwall.Framework.ViewModels.csproj">
+      <Project>{7da0d9f1-e2f8-4c6e-91b2-43deebd3c3fe}</Project>
+      <Name>Ironwall.Framework.ViewModels</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\Ironwall.Monitoring.Client\packages\VideoLAN.LibVLC.Windows.3.0.18\build\VideoLAN.LibVLC.Windows.targets" Condition="Exists('..\..\Ironwall.Monitoring.Client\packages\VideoLAN.LibVLC.Windows.3.0.18\build\VideoLAN.LibVLC.Windows.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

@@ -43,13 +43,13 @@ namespace Ironwall.Libraries.Devices.Providers
                     Debug.WriteLine($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.ffffff")}]{nameof(Provider_Initialize)}({ClassName}) was executed!!!");
                     foreach (BaseDeviceModel item in _provider
                     .Where(entity => 
-                    entity.DeviceType == (int)EnumDeviceType.Multi
-                     || entity.DeviceType == (int)EnumDeviceType.Fence
-                     || entity.DeviceType == (int)EnumDeviceType.Contact
-                     || entity.DeviceType == (int)EnumDeviceType.Laser
-                     || entity.DeviceType == (int)EnumDeviceType.Underground
-                     || entity.DeviceType == (int)EnumDeviceType.PIR
-                     || entity.DeviceType == (int)EnumDeviceType.IoController
+                    entity.DeviceType == EnumDeviceType.Multi
+                     || entity.DeviceType == EnumDeviceType.Fence
+                     || entity.DeviceType == EnumDeviceType.Contact
+                     || entity.DeviceType == EnumDeviceType.Laser
+                     || entity.DeviceType == EnumDeviceType.Underground
+                     || entity.DeviceType == EnumDeviceType.PIR
+                     || entity.DeviceType == EnumDeviceType.IoController
                      )
                     .ToList())
                     {
@@ -78,13 +78,13 @@ namespace Ironwall.Libraries.Devices.Providers
             {
                 try
                 {
-                    if (item.DeviceType == (int)EnumDeviceType.Multi
-                     || item.DeviceType == (int)EnumDeviceType.Fence
-                     || item.DeviceType == (int)EnumDeviceType.Contact
-                     || item.DeviceType == (int)EnumDeviceType.Laser
-                     || item.DeviceType == (int)EnumDeviceType.Underground
-                     || item.DeviceType == (int)EnumDeviceType.PIR
-                     || item.DeviceType == (int)EnumDeviceType.IoController)
+                    if (item.DeviceType == EnumDeviceType.Multi
+                     || item.DeviceType == EnumDeviceType.Fence
+                     || item.DeviceType == EnumDeviceType.Contact
+                     || item.DeviceType == EnumDeviceType.Laser
+                     || item.DeviceType == EnumDeviceType.Underground
+                     || item.DeviceType == EnumDeviceType.PIR
+                     || item.DeviceType == EnumDeviceType.IoController)
                     {
                         if (!(item is ISensorDeviceModel model)) return false;
 

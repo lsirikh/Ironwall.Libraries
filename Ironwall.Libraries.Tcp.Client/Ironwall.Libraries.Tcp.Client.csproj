@@ -89,6 +89,10 @@
     <Folder Include="Defines\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Ironwall.Framework.Models\Ironwall.Framework.Models.csproj">
+      <Project>{3e640a4b-ddb5-47d0-bed9-8187f01b1d6b}</Project>
+      <Name>Ironwall.Framework.Models</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Ironwall.Framework\Ironwall.Framework.csproj">
       <Project>{cc34c433-38a8-4092-b172-d89db0e632be}</Project>
       <Name>Ironwall.Framework</Name>

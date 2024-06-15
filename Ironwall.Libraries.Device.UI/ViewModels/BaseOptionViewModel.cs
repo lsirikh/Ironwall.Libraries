@@ -43,7 +43,7 @@ namespace Ironwall.Libraries.Device.UI.ViewModels
         #region - IHanldes -
         #endregion
         #region - Properties -
-        public string ReferenceId
+        public int ReferenceId
         {
             get { return _model.ReferenceId; }
             set

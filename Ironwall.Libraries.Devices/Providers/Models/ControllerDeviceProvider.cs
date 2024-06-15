@@ -41,7 +41,7 @@ namespace Ironwall.Libraries.Devices.Providers
                     Debug.WriteLine($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.ffffff")}]{nameof(Provider_Initialize)}({ClassName}) was executed!!!");
                     //var provider = _provider.ToList();
                     foreach (BaseDeviceModel item in _provider
-                    .Where(entity => entity.DeviceType == (int)EnumDeviceType.Controller)
+                    .Where(entity => entity.DeviceType == EnumDeviceType.Controller)
                     .ToList())
                     {
                         if (!(item is IControllerDeviceModel model)) continue;
@@ -70,7 +70,7 @@ namespace Ironwall.Libraries.Devices.Providers
             bool ret = false;
             try
             {
-                if (item.DeviceType == (int)EnumDeviceType.Controller)
+                if (item.DeviceType == EnumDeviceType.Controller)
                 {
                     if (!(item is IControllerDeviceModel model)) return false;
 

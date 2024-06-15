@@ -1,0 +1,189 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{E9D2A235-A72A-4137-83FF-B153DB7CE069}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Ironwall.Libraries.VMS.UI</RootNamespace>
+    <AssemblyName>Ironwall.Libraries.VMS.UI</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>8.0</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>8.0</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>8.0</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>8.0</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Caliburn.Micro.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
+      <HintPath>..\..\Ironwall.Monitoring.Client\packages\Caliburn.Micro.Core.4.0.212\lib\netstandard2.0\Caliburn.Micro.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Caliburn.Micro.Platform, Version=4.0.0.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
+      <HintPath>..\..\Ironwall.Monitoring.Client\packages\Caliburn.Micro.4.0.212\lib\net462\Caliburn.Micro.Platform.dll</HintPath>
+    </Reference>
+    <Reference Include="Caliburn.Micro.Platform.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
+      <HintPath>..\..\Ironwall.Monitoring.Client\packages\Caliburn.Micro.4.0.212\lib\net462\Caliburn.Micro.Platform.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="MaterialDesignColors, Version=2.1.4.0, Culture=neutral, PublicKeyToken=df2a72020bd7962a, processorArchitecture=MSIL">
+      <HintPath>..\..\Ironwall.Monitoring.Client\packages\MaterialDesignColors.2.1.4\lib\net462\MaterialDesignColors.dll</HintPath>
+    </Reference>
+    <Reference Include="MaterialDesignThemes.Wpf, Version=4.9.0.0, Culture=neutral, PublicKeyToken=df2a72020bd7962a, processorArchitecture=MSIL">
+      <HintPath>..\..\Ironwall.Monitoring.Client\packages\MaterialDesignThemes.4.9.0\lib\net462\MaterialDesignThemes.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Xaml.Behaviors, Version=1.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\Ironwall.Monitoring.Client\packages\Microsoft.Xaml.Behaviors.Wpf.1.1.39\lib\net45\Microsoft.Xaml.Behaviors.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Runtime.Serialization.Primitives, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\Ironwall.Monitoring.Client\packages\System.Runtime.Serialization.Primitives.4.3.0\lib\net46\System.Runtime.Serialization.Primitives.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Providers\ViewModels\VmsApiViewModelProvider.cs" />
+    <Compile Include="Providers\ViewModels\VmsMappingViewModelProvider.cs" />
+    <Compile Include="Providers\ViewModels\VmsSensorViewModelProvider.cs" />
+    <Compile Include="ViewModels\IVmsBaseViewModel.cs" />
+    <Compile Include="ViewModels\Panels\SetupPanels\VmsApiSetupViewModel.cs" />
+    <Compile Include="ViewModels\Panels\SetupPanels\VmsEventMappingSetupViewModel.cs" />
+    <Compile Include="ViewModels\Panels\SetupPanels\VmsEventSensorSetupViewModel.cs" />
+    <Compile Include="ViewModels\Panels\VmsSetupPanelViewModel.cs" />
+    <Compile Include="ViewModels\VmsApiViewModel.cs" />
+    <Compile Include="ViewModels\VmsBaseViewModel.cs" />
+    <Compile Include="ViewModels\VmsMappingViewModel.cs" />
+    <Compile Include="Views\Panels\SetupPanels\VmsApiSetupView.xaml.cs">
+      <DependentUpon>VmsApiSetupView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Panels\VmsSetupPanelView.xaml.cs">
+      <DependentUpon>VmsSetupPanelView.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Models\" />
+    <Folder Include="Views\Dialogs\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Views\Panels\SetupPanels\VmsApiSetupView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Panels\VmsSetupPanelView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Ironwall.Framework.Models\Ironwall.Framework.Models.csproj">
+      <Project>{3e640a4b-ddb5-47d0-bed9-8187f01b1d6b}</Project>
+      <Name>Ironwall.Framework.Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ironwall.Framework.ViewModels\Ironwall.Framework.ViewModels.csproj">
+      <Project>{7da0d9f1-e2f8-4c6e-91b2-43deebd3c3fe}</Project>
+      <Name>Ironwall.Framework.ViewModels</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ironwall.Framework\Ironwall.Framework.csproj">
+      <Project>{cc34c433-38a8-4092-b172-d89db0e632be}</Project>
+      <Name>Ironwall.Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ironwall.Libraries.Base\Ironwall.Libraries.Base.csproj">
+      <Project>{9d2531fc-7a97-478b-9303-9b0a3d223551}</Project>
+      <Name>Ironwall.Libraries.Base</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ironwall.Libraries.Devices\Ironwall.Libraries.Devices.csproj">
+      <Project>{af906809-40d8-4e3c-822f-2ad5989f4ae6}</Project>
+      <Name>Ironwall.Libraries.Devices</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ironwall.Libraries.Enums\Ironwall.Libraries.Enums.csproj">
+      <Project>{848ae203-d3b4-4e73-8ef0-1a18d88a040c}</Project>
+      <Name>Ironwall.Libraries.Enums</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ironwall.Libraries.Utils\Ironwall.Libraries.Utils.csproj">
+      <Project>{14220279-9b26-4383-bf1e-a0da31726758}</Project>
+      <Name>Ironwall.Libraries.Utils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ironwall.Libraries.VMS.Common\Ironwall.Libraries.VMS.Common.csproj">
+      <Project>{82169ce4-697e-4533-b6e3-29d50f6b398d}</Project>
+      <Name>Ironwall.Libraries.VMS.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\..\Ironwall.Monitoring.Client\packages\MaterialDesignThemes.4.9.0\build\MaterialDesignThemes.targets" Condition="Exists('..\..\Ironwall.Monitoring.Client\packages\MaterialDesignThemes.4.9.0\build\MaterialDesignThemes.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\Ironwall.Monitoring.Client\packages\MaterialDesignThemes.4.9.0\build\MaterialDesignThemes.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\Ironwall.Monitoring.Client\packages\MaterialDesignThemes.4.9.0\build\MaterialDesignThemes.targets'))" />
+  </Target>
+</Project>

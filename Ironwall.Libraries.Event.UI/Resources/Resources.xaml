@@ -4,7 +4,6 @@
 					xmlns:sys="clr-namespace:System;assembly=mscorlib"
                     xmlns:utils="clr-namespace:Ironwall.Libraries.Utils;assembly=Ironwall.Libraries.Utils"
                     xmlns:utilPass="clr-namespace:Ironwall.Libraries.Utils.PasswordControl;assembly=Ironwall.Libraries.Utils"
-					xmlns:deviceType="clr-namespace:Ironwall.Framework.Models.Devices;assembly=Ironwall.Framework"
 					xmlns:helper="clr-namespace:Ironwall.Libraries.Event.UI.Helpers">
 
 	<!-- Material Design -->

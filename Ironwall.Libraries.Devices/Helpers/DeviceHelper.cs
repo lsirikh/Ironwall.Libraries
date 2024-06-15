@@ -14,9 +14,9 @@ namespace Ironwall.Libraries.Devices.Helpers
     public static class DeviceHelper
     {
 
-        public static EnumDeviceCategory GetCategory(int num)
+        public static EnumDeviceCategory GetCategory(EnumDeviceType num)
         {
-            switch ((EnumDeviceType)num)
+            switch (num)
             {
                 case EnumDeviceType.NONE:
                     return EnumDeviceCategory.None;
@@ -40,9 +40,9 @@ namespace Ironwall.Libraries.Devices.Helpers
             }
         }
 
-        public static bool IsControllerCategory(int num)
+        public static bool IsControllerCategory(EnumDeviceType num)
         {
-            switch ((EnumDeviceType)num)
+            switch (num)
             {
                 case EnumDeviceType.NONE:
                     return false;
@@ -66,9 +66,9 @@ namespace Ironwall.Libraries.Devices.Helpers
             }
         }
 
-        public static bool IsSensorCategory(int num)
+        public static bool IsSensorCategory(EnumDeviceType num)
         {
-            switch ((EnumDeviceType)num)
+            switch (num)
             {
                 case EnumDeviceType.NONE:
                     return false;
@@ -92,9 +92,9 @@ namespace Ironwall.Libraries.Devices.Helpers
             }
         }
 
-        public static bool IsCameraCategory(int num)
+        public static bool IsCameraCategory(EnumDeviceType num)
         {
-            switch ((EnumDeviceType)num)
+            switch (num)
             {
                 case EnumDeviceType.NONE:
                     return false;
@@ -118,9 +118,9 @@ namespace Ironwall.Libraries.Devices.Helpers
             }
         }
 
-        public static bool IsEtcCategory(int num)
+        public static bool IsEtcCategory(EnumDeviceType num)
         {
-            switch ((EnumDeviceType)num)
+            switch (num)
             {
                 case EnumDeviceType.NONE:
                     return false;

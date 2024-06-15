@@ -23,6 +23,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Xml;
+using Ironwall.Framework.ViewModels;
+using Ironwall.Framework.Models.Accounts;
+using Ironwall.Libraries.Base.Services;
 
 namespace Ironwall.Libraries.Devices.Services
 {
@@ -32,6 +35,7 @@ namespace Ironwall.Libraries.Devices.Services
         #region - Ctors -
         public DeviceDbService(
             IDbConnection dbConnection
+            , ILogService log
             , DeviceProvider deviceProvider
             , DeviceSetupModel deviceSetupModel
             , ControllerDeviceProvider controllerDeviceProivder
@@ -44,6 +48,7 @@ namespace Ironwall.Libraries.Devices.Services
             )
         {
             _dbConnection = dbConnection;
+            _log = log;
             _setupModel = deviceSetupModel;
             _deviceProvider = deviceProvider;
             _controllerProvider = controllerDeviceProivder;
@@ -56,7 +61,6 @@ namespace Ironwall.Libraries.Devices.Services
 
             _deviceInfoModel = deviceInfoModel;
             _mappingInfoModel = mappingInfoModel;
-            //Debug.WriteLine($"_deviceInfoModel : {_deviceInfoModel.GetHashCode()} in {nameof(DeviceDbService)}");
         }
         #endregion
         #region - Implementation of Interface -
@@ -89,12 +93,12 @@ namespace Ironwall.Libraries.Devices.Services
             }
             catch (TaskCanceledException ex)
             {
-                Debug.WriteLine($"Task was cancelled in {nameof(FetchDeviceInfo)}: " + ex.Message);
+                _log.Error($"Task was cancelled in {nameof(FetchDeviceInfo)}: " + ex.Message);
                 tcs?.SetException(ex);
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Raised Exception for Task to insert DB data in {nameof(FetchDeviceInfo)}: " + ex.Message);
+                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchDeviceInfo)}: " + ex.Message);
                 tcs?.SetException(ex);
             }
         }
@@ -117,7 +121,7 @@ namespace Ironwall.Libraries.Devices.Services
                 { 
                     commitResult = await conn.ExecuteAsync($@"DELETE FROM {table}");
 
-                    Debug.WriteLine($"DELETE {table} for not being matched device data in DB");
+                    _log.Info($"DELETE {table} for not being matched device data in DB");
                     if (!(commitResult > 0))
                         throw new Exception($"Raised exception during deleting Table({table}).");
 
@@ -125,18 +129,18 @@ namespace Ironwall.Libraries.Devices.Services
                 }
                 else
                 {
-                    Debug.WriteLine($"{table} was empty Table in DB");
+                    _log.Info($"{table} was empty Table in DB");
                 }
                 tcs?.SetResult(true);
             }
             catch (TaskCanceledException ex)
             {
-                Debug.WriteLine($"Task was cancelled in {nameof(FetchDeviceInfo)}: " + ex.Message);
+                _log.Error($"Task was cancelled in {nameof(FetchDeviceInfo)}: " + ex.Message);
                 tcs?.SetException(ex);
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Raised Exception for Task to insert DB data in {nameof(FetchDeviceInfo)}: " + ex.Message);
+                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchDeviceInfo)}: " + ex.Message);
                 tcs?.SetException(ex);
             }
         }
@@ -174,23 +178,72 @@ namespace Ironwall.Libraries.Devices.Services
 
                     _deviceInfoModel.Update(model);
 
-                    Debug.WriteLine($"({commitResult}) rows was updated in DB[{table}] : Controller({model.Controller}ea), Sensor({model.Sensor}ea), Camera({model.Camera}ea), UpdateTime({model.UpdateTime})");
+                    _log.Info($"({commitResult}) rows was updated in DB[{table}] : Controller({model.Controller}ea), Sensor({model.Sensor}ea), Camera({model.Camera}ea), UpdateTime({model.UpdateTime})");
                     tcs?.SetResult(true);
                 }
                 catch (TaskCanceledException ex)
                 {
-                    Debug.WriteLine($"Task was cancelled in {nameof(UpdateDeviceInfo)}: " + ex.Message);
+                    _log.Error($"Task was cancelled in {nameof(UpdateDeviceInfo)}: " + ex.Message);
                     tcs?.SetException(ex);
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception for Task to insert DB data in {nameof(UpdateDeviceInfo)}: " + ex.Message);
+                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(UpdateDeviceInfo)}: " + ex.Message);
                     tcs?.SetException(ex);
                 }
             });
         }
 
-        public async Task FetchControllerDevice(CancellationToken token = default, bool isFinished = false, TaskCompletionSource<bool> tcs = default)
+        //public async Task FetchControllerDevice(CancellationToken token = default, bool isFinished = false, TaskCompletionSource<bool> tcs = default)
+        //{
+        //    try
+        //    {
+        //        if (_dbConnection.State != ConnectionState.Open)
+        //            await (_dbConnection as DbConnection).OpenAsync();
+
+        //        ///////////////////////////////////////////////////////////////////
+        //        ///                   CONTROLLER Device
+        //        ///////////////////////////////////////////////////////////////////
+
+        //        //DeviceType에 따라서 다른 방식으로 Fetch해온다.
+        //        //var sql = $@"SELECT deviceid, devicenumber, devicename, devicetype, ipaddress, port, version, status FROM {_setupModel.TableController}";
+        //        var sql = $@"SELECT * FROM {_setupModel.TableController}";
+
+        //        await Task.Delay(100, token);
+
+        //        int count = 0;
+
+        //        foreach (var model in (await _dbConnection
+        //            .QueryAsync<ControllerTableMapper>(sql)).ToList())
+        //        {
+        //            if (token.IsCancellationRequested)
+        //                break;
+
+        //            var controllerModel = ModelFactory.Build<ControllerDeviceModel>(model);
+        //            _deviceProvider.Add(controllerModel);
+        //            count++;
+        //        }
+
+
+        //        if (isFinished)
+        //            await _deviceProvider.Finished();
+
+        //        tcs?.SetResult(true);
+
+        //    }
+        //    catch (TaskCanceledException ex)
+        //    {
+        //        _log.Info($"Task was cancelled in {nameof(FetchControllerDevice)}: " + ex.Message);
+        //        tcs?.SetException(ex);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _log.Info($"Raised Exception for Task to insert DB data in {nameof(FetchControllerDevice)}: " + ex.Message);
+        //        tcs?.SetException(ex);
+        //    }
+        //}
+
+        public async Task<IControllerDeviceModel> FetchControllerDevice(IControllerDeviceModel model, CancellationToken token = default, bool isFinished = false, TaskCompletionSource<bool> tcs = default)
         {
             try
             {
@@ -201,45 +254,37 @@ namespace Ironwall.Libraries.Devices.Services
                 ///                   CONTROLLER Device
                 ///////////////////////////////////////////////////////////////////
 
-                //DeviceType에 따라서 다른 방식으로 Fetch해온다.
-                //var sql = $@"SELECT deviceid, devicenumber, devicename, devicetype, ipaddress, port, version, status FROM {_setupModel.TableController}";
-                var sql = $@"SELECT * FROM {_setupModel.TableController}";
+                string sql = @$"SELECT * FROM {_setupModel.TableController} 
+                            WHERE devicegroup = '{model.DeviceGroup}' 
+                            AND devicenumber = '{model.DeviceNumber}'
+                            AND devicename = '{model.DeviceName}'
+                            AND DeviceType = '{model.DeviceType}'
+                            ";
 
-                await Task.Delay(100, token);
+                var fetchedModel = (await _dbConnection.QueryAsync<ControllerDeviceModel>(sql)).FirstOrDefault();
+                if (fetchedModel == null) throw new Exception(message: $"Device({model.DeviceName}) is not exist.");
 
-                int count = 0;
-
-                foreach (var model in (await _dbConnection
-                    .QueryAsync<ControllerTableMapper>(sql)).ToList())
-                {
-                    if (token.IsCancellationRequested)
-                        break;
-
-                    var controllerModel = ModelFactory.Build<ControllerDeviceModel>(model);
-                    _deviceProvider.Add(controllerModel);
-                    count++;
-                }
-
-
-                if (isFinished)
-                    await _deviceProvider.Finished();
+                var createdModel = new ControllerDeviceModel(fetchedModel);
 
                 tcs?.SetResult(true);
+                return createdModel;
 
             }
             catch (TaskCanceledException ex)
             {
-                Debug.WriteLine($"Task was cancelled in {nameof(FetchControllerDevice)}: " + ex.Message);
+                _log.Error($"Task was cancelled in {nameof(FetchControllerDevice)}: " + ex.Message);
                 tcs?.SetException(ex);
+                return null;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Raised Exception for Task to insert DB data in {nameof(FetchControllerDevice)}: " + ex.Message);
+                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchControllerDevice)}: " + ex.Message);
                 tcs?.SetException(ex);
+                return null;
             }
         }
 
-        public Task SaveControllerDevice(IControllerDeviceModel model, CancellationToken token = default, bool isFinished = false, TaskCompletionSource<bool> tcs = default)
+        public Task<IControllerDeviceModel> SaveControllerDevice(IControllerDeviceModel model, CancellationToken token = default, bool isFinished = false, TaskCompletionSource<bool> tcs = default)
         {
             int commitResult = 0;
 
@@ -250,28 +295,30 @@ namespace Ironwall.Libraries.Devices.Services
                     var conn = _dbConnection as SQLiteConnection;
                     var table = _setupModel.TableController;
 
-                    var mapper = MapperFactory.Build<ControllerTableMapper>(model);
+                    //Mapper를 쓸 이유가 없다.
+                    //var mapper = MapperFactory.Build<ControllerTableMapper>(model);
 
                     commitResult = await conn.ExecuteAsync(
-                        $@"INSERT INTO {table} 
-                        (deviceid, devicegroup, devicenumber, devicename, devicetype, version, status, ipaddress, port) 
-                        VALUES
-                        (@DeviceId, @DeviceGroup, @DeviceNumber, @DeviceName, @DeviceType, @Version, @Status, @IpAddress, @Port)", mapper);
+                    $@"INSERT INTO {table} 
+                    (id, devicegroup, devicenumber, devicename, devicetype, version, status, ipaddress, port) 
+                    VALUES
+                    (@Id, @DeviceGroup, @DeviceNumber, @DeviceName, @DeviceType, @Version, @Status, @IpAddress, @Port)", model);
 
-                    Debug.WriteLine($"({commitResult}) rows was updated in DB[{table}] : {model}");
+                    _log.Info($"({commitResult}) rows was updated in DB[{table}] : {model}");
 
-                    await _deviceProvider.InsertedItem(model);
+                    var fetchedModel = await FetchControllerDevice(model);
+                    if (fetchedModel == null) throw new Exception($"Fail to fetch {model.Token} from {table}");
 
                     tcs?.SetResult(true);
                 }
                 catch (TaskCanceledException ex)
                 {
-                    Debug.WriteLine($"Task was cancelled in {nameof(SaveControllerDevice)}: " + ex.Message);
+                    _log.Error($"Task was cancelled in {nameof(SaveControllerDevice)}: " + ex.Message);
                     tcs?.SetException(ex);
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception for Task to insert DB data in {nameof(SaveControllerDevice)}: " + ex.Message);
+                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(SaveControllerDevice)}: " + ex.Message);
                     tcs?.SetException(ex);
                 }
             });
@@ -294,47 +341,46 @@ namespace Ironwall.Libraries.Devices.Services
                     {
                         commitResult = await conn.ExecuteAsync($@"DELETE FROM {table}");
 
-                        Debug.WriteLine($"DELETE {_setupModel.TableController} for saving new Data in DB");
+                        _log.Info($"DELETE {_setupModel.TableController} for saving new Data in DB");
                         if (!(commitResult > 0))
                             throw new Exception($"Raised exception during deleting Table({table}).");
                     }
 
-                    int updatedRecord = 0;
-                    foreach (var item in _deviceProvider)
+                    using (var transaction = conn.BeginTransaction())
                     {
-                        if (token.IsCancellationRequested)
-                            throw new TaskCanceledException();
-
-                        if(DeviceHelper.IsControllerCategory(item.DeviceType))
+                        foreach (var item in _deviceProvider.OfType<IControllerDeviceModel>().ToList())
                         {
-                            var mapper = MapperFactory.Build<ControllerTableMapper>(item as IControllerDeviceModel);
-                            
-                            //Debug.WriteLine($"Save Controller : {model.DeviceId}" +
-                            //    $", {model.DeviceNumber}, {model.DeviceGroup}, {model.DeviceName}, {model.DeviceType}" +
-                            //    $", {model.Version}, {model.Status}, {model.IpAddress}, {model.Port}");
+                            if (token.IsCancellationRequested)  throw new TaskCanceledException();
 
-                            commitResult = await conn.ExecuteAsync(
-                                $@"INSERT INTO {table} 
-                                (deviceid, devicenumber, devicegroup, devicename, devicetype, version, status, ipaddress, port) 
-                                VALUES
-                                (@DeviceId, @DeviceNumber, @DeviceGroup, @DeviceName, @DeviceType, @Version, @Status, @IpAddress, @Port)", mapper);
+                            //if (DeviceHelper.IsControllerCategory(item.DeviceType))
+                            //{
+                            //    var mapper = MapperFactory.Build<ControllerTableMapper>(item as IControllerDeviceModel);
 
-                            updatedRecord++;
+                            //    commitResult += await conn.ExecuteAsync(
+                            //        $@"INSERT INTO {table} 
+                            //        (id, devicenumber, devicegroup, devicename, devicetype, version, status, ipaddress, port) 
+                            //        VALUES
+                            //        (@Id, @DeviceNumber, @DeviceGroup, @DeviceName, @DeviceType, @Version, @Status, @IpAddress, @Port)", item);
+                            //}
+
+                            commitResult += await conn.ExecuteAsync($@"INSERT INTO {table} 
+                            (id, devicenumber, devicegroup, devicename, devicetype, version, status, ipaddress, port) 
+                            VALUES
+                            (@Id, @DeviceNumber, @DeviceGroup, @DeviceName, @DeviceType, @Version, @Status, @IpAddress, @Port)", item);
                         }
-
                     }
-                    Debug.WriteLine($"ControllerDevice was inserted in DB[{table}] : {updatedRecord}ea");
+                    _log.Info($"ControllerDevice was inserted in DB[{table}] : {commitResult}ea");
                     
                     tcs?.SetResult(true);
                 }
                 catch (TaskCanceledException ex)
                 {
-                    Debug.WriteLine($"Task was cancelled in {nameof(SaveControllers)}: " + ex.Message);
+                    _log.Error($"Task was cancelled in {nameof(SaveControllers)}: " + ex.Message);
                     tcs?.SetException(ex);
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception for Task to insert DB data in {nameof(SaveControllers)}: " + ex.Message);
+                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(SaveControllers)}: " + ex.Message);
                     tcs?.SetException(ex);
                 }
             });
@@ -377,12 +423,12 @@ namespace Ironwall.Libraries.Devices.Services
             }
             catch (TaskCanceledException ex)
             {
-                Debug.WriteLine($"Task was cancelled in {nameof(FetchSensorDevice)}: " + ex.Message);
+                _log.Error($"Task was cancelled in {nameof(FetchSensorDevice)}: " + ex.Message);
                 task?.SetException(ex);
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Raised Exception for Task to insert DB data in {nameof(FetchSensorDevice)}: " + ex.Message);
+                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchSensorDevice)}: " + ex.Message);
                 task?.SetException(ex);
             }
         }
@@ -404,9 +450,9 @@ namespace Ironwall.Libraries.Devices.Services
                         $@"INSERT INTO {table} 
                         (deviceid, devicegroup, controller, devicenumber, devicename, devicetype, version, status) 
                         VALUES
-                        (@DeviceId, @DeviceGroup, @Controller, @DeviceNumber, @DeviceName, @DeviceType, @Version, @Status)", mapper);
+                        (@Id, @DeviceGroup, @Controller, @DeviceNumber, @DeviceName, @DeviceType, @Version, @Status)", mapper);
 
-                    Debug.WriteLine($"({commitResult}) rows was updated in DB[{table}] : {model}");
+                    _log.Info($"({commitResult}) rows was updated in DB[{table}] : {model}");
 
                     await _deviceProvider.InsertedItem(model);
 
@@ -414,12 +460,12 @@ namespace Ironwall.Libraries.Devices.Services
                 }
                 catch (TaskCanceledException ex)
                 {
-                    Debug.WriteLine($"Task was cancelled in {nameof(SaveSensorDevice)}: " + ex.Message);
+                    _log.Error($"Task was cancelled in {nameof(SaveSensorDevice)}: " + ex.Message);
                     tcs?.SetException(ex);
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception for Task to insert DB data in {nameof(SaveSensorDevice)}: " + ex.Message);
+                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(SaveSensorDevice)}: " + ex.Message);
                     tcs?.SetException(ex);
                 }
             });
@@ -440,7 +486,7 @@ namespace Ironwall.Libraries.Devices.Services
                     if (count > 0)
                     {
                         commitResult = await conn.ExecuteAsync($@"DELETE FROM {table}");
-                        Debug.WriteLine($"DELETE {table} for saving new Data in DB");
+                        _log.Info($"DELETE {table} for saving new Data in DB");
 
                         if (!(commitResult > 0))
                             throw new Exception($"Raised exception during deleting Table({table}).");
@@ -460,24 +506,24 @@ namespace Ironwall.Libraries.Devices.Services
                                 $@"INSERT INTO {table} 
                                 (deviceid, devicegroup, controller, devicenumber, devicename, devicetype, version, status) 
                                 VALUES
-                                (@DeviceId, @DeviceGroup, @Controller, @DeviceNumber, @DeviceName, @DeviceType, @Version, @Status)", mapper);
+                                (@Id, @DeviceGroup, @Controller, @DeviceNumber, @DeviceName, @DeviceType, @Version, @Status)", mapper);
 
                             updatedRecord++;
                         }
 
                     }
-                    Debug.WriteLine($"SensorDevice was inserted in DB[{table}] : {updatedRecord}ea");
+                    _log.Info($"SensorDevice was inserted in DB[{table}] : {updatedRecord}ea");
 
                     tcs?.SetResult(true);
                 }
                 catch (TaskCanceledException ex)
                 {
-                    Debug.WriteLine($"Task was cancelled in {nameof(SaveSensors)}: " + ex.Message);
+                    _log.Error($"Task was cancelled in {nameof(SaveSensors)}: " + ex.Message);
                     tcs?.SetException(ex);
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception for Task to insert DB data in {nameof(SaveSensors)}: " + ex.Message);
+                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(SaveSensors)}: " + ex.Message);
                     tcs?.SetException(ex);
                 }
             });
@@ -518,12 +564,12 @@ namespace Ironwall.Libraries.Devices.Services
             }
             catch (TaskCanceledException ex)
             {
-                Debug.WriteLine($"Task was cancelled in {nameof(FetchCameraPreset)}: " + ex.Message);
+                _log.Error($"Task was cancelled in {nameof(FetchCameraPreset)}: " + ex.Message);
                 task?.SetException(ex);
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Raised Exception for Task to insert DB data in {nameof(FetchCameraPreset)}: " + ex.Message);
+                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchCameraPreset)}: " + ex.Message);
                 task?.SetException(ex);
             }
         }
@@ -557,7 +603,7 @@ namespace Ironwall.Libraries.Devices.Services
                             commitResult = await conn.ExecuteAsync($@"DELETE FROM {table} 
                                                                 WHERE referenceid = '{preset.ReferenceId}'");
 
-                            Debug.WriteLine($"DELETE {table} for not being matched device data in DB");
+                            _log.Info($"DELETE {table} for not being matched device data in DB");
                             if (!(commitResult > 0)) throw new Exception($"Raised exception during deleting Table({table}).");
                         }
                     }
@@ -576,18 +622,18 @@ namespace Ironwall.Libraries.Devices.Services
                         updatedRecord++;
                     }
 
-                    Debug.WriteLine($"CameraPreset was inserted in DB[{table}] : {updatedRecord}ea");
+                    _log.Info($"CameraPreset was inserted in DB[{table}] : {updatedRecord}ea");
 
                     tcs?.SetResult(true);
                 }
                 catch (TaskCanceledException ex)
                 {
-                    Debug.WriteLine($"Task was cancelled in {nameof(SaveCameraPreset)}: " + ex.Message);
+                    _log.Error($"Task was cancelled in {nameof(SaveCameraPreset)}: " + ex.Message);
                     tcs?.SetException(ex);
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception for Task to insert DB data in {nameof(SaveCameraPreset)}: " + ex.Message);
+                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(SaveCameraPreset)}: " + ex.Message);
                     tcs?.SetException(ex);
                 }
             });
@@ -611,7 +657,7 @@ namespace Ironwall.Libraries.Devices.Services
                     {
                         commitResult = await conn.ExecuteAsync($@"DELETE FROM {table}");
 
-                        Debug.WriteLine($"DELETE {table} data in DB");
+                        _log.Info($"DELETE {table} data in DB");
                         if (!(commitResult > 0)) throw new Exception($"Raised exception during deleting Table({table}).");
                     }
 
@@ -628,18 +674,18 @@ namespace Ironwall.Libraries.Devices.Services
                         updatedRecord++;
                     }
 
-                    Debug.WriteLine($"CameraPreset was inserted in DB[{table}] : {updatedRecord}ea");
+                    _log.Info($"CameraPreset was inserted in DB[{table}] : {updatedRecord}ea");
 
                     tcs?.SetResult(true);
                 }
                 catch (TaskCanceledException ex)
                 {
-                    Debug.WriteLine($"Task was cancelled in {nameof(SaveCameraPreset)}: " + ex.Message);
+                    _log.Error($"Task was cancelled in {nameof(SaveCameraPreset)}: " + ex.Message);
                     tcs?.SetException(ex);
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception for Task to insert DB data in {nameof(SaveCameraPreset)}: " + ex.Message);
+                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(SaveCameraPreset)}: " + ex.Message);
                     tcs?.SetException(ex);
                 }
             });
@@ -680,12 +726,12 @@ namespace Ironwall.Libraries.Devices.Services
             }
             catch (TaskCanceledException ex)
             {
-                Debug.WriteLine($"Task was cancelled in {nameof(FetchCameraProfile)}: " + ex.Message);
+                _log.Error($"Task was cancelled in {nameof(FetchCameraProfile)}: " + ex.Message);
                 task?.SetException(ex);
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Raised Exception for Task to insert DB data in {nameof(FetchCameraProfile)}: " + ex.Message);
+                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchCameraProfile)}: " + ex.Message);
                 task?.SetException(ex);
             }
         }
@@ -719,7 +765,7 @@ namespace Ironwall.Libraries.Devices.Services
                             commitResult = await conn.ExecuteAsync($@"DELETE FROM {table} 
                                                                 WHERE referenceid = '{profile.ReferenceId}'");
                             
-                            Debug.WriteLine($"DELETE {table} for not being matched device data in DB");
+                            _log.Info($"DELETE {table} for not being matched device data in DB");
                             if (!(commitResult > 0)) throw new Exception($"Raised exception during deleting Table({table}).");
                         }
                     }
@@ -738,17 +784,17 @@ namespace Ironwall.Libraries.Devices.Services
                         updatedRecord++;
                     }
 
-                    Debug.WriteLine($"CameraProfile was inserted in DB[{table}] : {updatedRecord}ea");
+                    _log.Info($"CameraProfile was inserted in DB[{table}] : {updatedRecord}ea");
                     tcs?.SetResult(true);
                 }
                 catch (TaskCanceledException ex)
                 {
-                    Debug.WriteLine($"Task was cancelled in {nameof(SaveCameraProfile)}: " + ex.Message);
+                    _log.Error($"Task was cancelled in {nameof(SaveCameraProfile)}: " + ex.Message);
                     tcs?.SetException(ex);
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception for Task to insert DB data in {nameof(SaveCameraProfile)}: " + ex.Message);
+                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(SaveCameraProfile)}: " + ex.Message);
                     tcs?.SetException(ex);
                 }
             });
@@ -775,8 +821,8 @@ namespace Ironwall.Libraries.Devices.Services
                 {
                     if (token.IsCancellationRequested) break;
 
-                    List<CameraPresetModel> presets = _presetProvider.Where(t => t.ReferenceId == model.DeviceId).OfType<CameraPresetModel>().ToList();
-                    List<CameraProfileModel> profiles = _profileProvider.Where(t => t.ReferenceId == model.DeviceId).OfType<CameraProfileModel>().ToList();
+                    List<CameraPresetModel> presets = _presetProvider.Where(t => t.ReferenceId == model.Id).OfType<CameraPresetModel>().ToList();
+                    List<CameraProfileModel> profiles = _profileProvider.Where(t => t.ReferenceId == model.Id).OfType<CameraProfileModel>().ToList();
 
                     var cameraModel = ModelFactory.Build<CameraDeviceModel>(model, presets, profiles);
                     _deviceProvider.Add(cameraModel);
@@ -792,12 +838,12 @@ namespace Ironwall.Libraries.Devices.Services
             }
             catch (TaskCanceledException ex)
             {
-                Debug.WriteLine($"Task was cancelled in {nameof(FetchSensorDevice)}: " + ex.Message);
+                _log.Error($"Task was cancelled in {nameof(FetchSensorDevice)}: " + ex.Message);
                 task?.SetException(ex);
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Raised Exception for Task to insert DB data in {nameof(FetchSensorDevice)}: " + ex.Message);
+                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchSensorDevice)}: " + ex.Message);
                 task?.SetException(ex);
             }
         }
@@ -821,9 +867,9 @@ namespace Ironwall.Libraries.Devices.Services
                         $@"INSERT INTO {table} 
                         (deviceid, devicegroup, devicenumber, devicename, devicetype, version, status, ipaddress, port, username, password, category, devicemodel, rtspuri, rtspport, mode) 
                         VALUES
-                        (@DeviceId, @DeviceGroup, @DeviceNumber, @DeviceName, @DeviceType, @Version, @Status, @IpAddress, @Port, @UserName, @Password, @Category, @DeviceModel, @RtspUri, @RtspPort, @Mode)", mapper);
+                        (@Id, @DeviceGroup, @DeviceNumber, @DeviceName, @DeviceType, @Version, @Status, @IpAddress, @Port, @Username, @Password, @Category, @DeviceModel, @RtspUri, @RtspPort, @Mode)", mapper);
 
-                    Debug.WriteLine($"({commitResult}) rows was updated in DB[{table}] : {model}");
+                    _log.Info($"({commitResult}) rows was updated in DB[{table}] : {model}");
 
                     await _deviceProvider.InsertedItem(model);
 
@@ -831,12 +877,12 @@ namespace Ironwall.Libraries.Devices.Services
                 }
                 catch (TaskCanceledException ex)
                 {
-                    Debug.WriteLine($"Task was cancelled in {nameof(SaveCameraDevice)}: " + ex.Message);
+                    _log.Error($"Task was cancelled in {nameof(SaveCameraDevice)}: " + ex.Message);
                     tcs?.SetException(ex);
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception for Task to insert DB data in {nameof(SaveCameraDevice)}: " + ex.Message);
+                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(SaveCameraDevice)}: " + ex.Message);
                     tcs?.SetException(ex);
                 }
             });
@@ -857,7 +903,7 @@ namespace Ironwall.Libraries.Devices.Services
                     if (count > 0)
                     {
                         commitResult = await conn.ExecuteAsync($@"DELETE FROM {table}");
-                        Debug.WriteLine($"DELETE {table} for saving new Data in DB");
+                        _log.Info($"DELETE {table} for saving new Data in DB");
 
                         if (!(commitResult > 0))
                             throw new Exception($"Raised exception during deleting Table({table}).");
@@ -875,23 +921,23 @@ namespace Ironwall.Libraries.Devices.Services
                         commitResult = await conn.ExecuteAsync($@"INSERT INTO {table} 
                                 (deviceid, devicegroup, devicenumber, devicename, devicetype, version, status, ipaddress, port, username, password, category, devicemodel, rtspuri, rtspport, mode) 
                                 VALUES
-                                (@DeviceId, @DeviceGroup, @DeviceNumber, @DeviceName, @DeviceType, @Version, @Status, @IpAddress, @Port, @UserName, @Password, @Category, @DeviceModel, @RtspUri, @RtspPort, @Mode)", mapper);
+                                (@Id, @DeviceGroup, @DeviceNumber, @DeviceName, @DeviceType, @Version, @Status, @IpAddress, @Port, @Username, @Password, @Category, @DeviceModel, @RtspUri, @RtspPort, @Mode)", mapper);
 
                         updatedRecord++;
                     }
 
-                    Debug.WriteLine($"CameraDevice was inserted in DB[{table}] : {updatedRecord}ea");
+                    _log.Info($"CameraDevice was inserted in DB[{table}] : {updatedRecord}ea");
 
                     tcs?.SetResult(true);
                 }
                 catch (TaskCanceledException ex)
                 {
-                    Debug.WriteLine($"Task was cancelled in {nameof(SaveCameras)}: " + ex.Message);
+                    _log.Error($"Task was cancelled in {nameof(SaveCameras)}: " + ex.Message);
                     tcs?.SetException(ex);
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception for Task to insert DB data in {nameof(SaveCameras)}: " + ex.Message);
+                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(SaveCameras)}: " + ex.Message);
                     tcs?.SetException(ex);
                 }
             });
@@ -926,12 +972,12 @@ namespace Ironwall.Libraries.Devices.Services
             }
             catch (TaskCanceledException ex)
             {
-                Debug.WriteLine($"Task was cancelled in {nameof(FetchMappingInfo)}: " + ex.Message);
+                _log.Error($"Task was cancelled in {nameof(FetchMappingInfo)}: " + ex.Message);
                 tcs?.SetException(ex);
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Raised Exception for Task to insert DB data in {nameof(FetchMappingInfo)}: " + ex.Message);
+                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchMappingInfo)}: " + ex.Message);
                 tcs?.SetException(ex);
             }
         }
@@ -954,7 +1000,7 @@ namespace Ironwall.Libraries.Devices.Services
                 {
                     commitResult = await conn.ExecuteAsync($@"DELETE FROM {table}");
 
-                    Debug.WriteLine($"DELETE {table} for not being matched mapping if data in DB");
+                    _log.Info($"DELETE {table} for not being matched mapping if data in DB");
                     if (!(commitResult > 0))
                         throw new Exception($"Raised exception during deleting Table({table}).");
 
@@ -963,19 +1009,19 @@ namespace Ironwall.Libraries.Devices.Services
                 }
                 else
                 {
-                    Debug.WriteLine($"{table} was empty Table in DB");
+                    _log.Info($"{table} was empty Table in DB");
                     tcs?.SetResult(false);
                 }
                 
             }
             catch (TaskCanceledException ex)
             {
-                Debug.WriteLine($"Task was cancelled in {nameof(DeleteMappingInfo)}: " + ex.Message);
+                _log.Error($"Task was cancelled in {nameof(DeleteMappingInfo)}: " + ex.Message);
                 tcs?.SetException(ex);
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Raised Exception for Task to insert DB data in {nameof(DeleteMappingInfo)}: " + ex.Message);
+                _log.Error($"Raised Exception for Task to insert DB data in {nameof(DeleteMappingInfo)}: " + ex.Message);
                 tcs?.SetException(ex);
             }
         }
@@ -1013,19 +1059,19 @@ namespace Ironwall.Libraries.Devices.Services
                             mapping = @Mapping, updatetime = @UpdateTime", model);
                     }
 
-                    Debug.WriteLine($"({commitResult}) rows was updated in DB[{table}] : Mapping({model.Mapping}ea), UpdateTime({model.UpdateTime})");
+                    _log.Info($"({commitResult}) rows was updated in DB[{table}] : Mapping({model.Mapping}ea), UpdateTime({model.UpdateTime})");
 
                     _mappingInfoModel.Update(model);
                     tcs?.SetResult(true);
                 }
                 catch (TaskCanceledException ex)
                 {
-                    Debug.WriteLine($"Task was cancelled in {nameof(UpdateMappingInfo)}: " + ex.Message);
+                    _log.Error($"Task was cancelled in {nameof(UpdateMappingInfo)}: " + ex.Message);
                     tcs?.SetException(ex);
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception for Task to insert DB data in {nameof(UpdateMappingInfo)}: " + ex.Message);
+                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(UpdateMappingInfo)}: " + ex.Message);
                     tcs?.SetException(ex);
                 }
             });
@@ -1053,9 +1099,9 @@ namespace Ironwall.Libraries.Devices.Services
                     if (token.IsCancellationRequested) break;
 
 
-                    var sensor = _sensorProvider.Where(entity => entity.Id == mapper.Sensor).FirstOrDefault() as SensorDeviceModel;
-                    var preset1 = _presetProvider.Where(entity => entity.Id == mapper.FirstPreset).FirstOrDefault() as CameraPresetModel;
-                    var preset2 = _presetProvider.Where(entity => entity.Id == mapper.SecondPreset).FirstOrDefault() as CameraPresetModel;
+                    var sensor = _sensorProvider.OfType<SensorDeviceModel>().Where(entity => entity.Id == mapper.Sensor).FirstOrDefault();
+                    var preset1 = _presetProvider.OfType<CameraPresetModel>().Where(entity => entity.Id == mapper.FirstPreset).FirstOrDefault();
+                    var preset2 = _presetProvider.OfType<CameraPresetModel>().Where(entity => entity.Id == mapper.SecondPreset).FirstOrDefault();
 
                     var model = ModelFactory.Build<CameraMappingModel>(mapper, sensor, preset1, preset2);
                     _mappingProvider.Add(model);
@@ -1071,12 +1117,12 @@ namespace Ironwall.Libraries.Devices.Services
             }
             catch (TaskCanceledException ex)
             {
-                Debug.WriteLine($"Task was cancelled in {nameof(FetchCameraMapping)}: " + ex.Message);
+                _log.Error($"Task was cancelled in {nameof(FetchCameraMapping)}: " + ex.Message);
                 task?.SetException(ex);
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Raised Exception for Task to insert DB data in {nameof(FetchCameraMapping)}: " + ex.Message);
+                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchCameraMapping)}: " + ex.Message);
                 task?.SetException(ex);
             }
         }
@@ -1109,23 +1155,23 @@ namespace Ironwall.Libraries.Devices.Services
                     commitResult = await conn.ExecuteAsync($@"INSERT INTO {table} 
                     (mapperid, groupid, sensor, firstpreset, secondpreset)  
                     VALUES
-                    (@MapperId, @GroupId, @Sensor, @FirstPreset, @SecondPreset)", mapper);
+                    (@Id, @GroupId, @Sensor, @FirstPreset, @SecondPreset)", mapper);
 
                     await _mappingProvider.InsertedItem(model);
                     updatedRecord++;
 
-                    Debug.WriteLine($"CameraPreset was inserted in DB[{table}] : {updatedRecord}ea");
+                    _log.Info($"CameraPreset was inserted in DB[{table}] : {updatedRecord}ea");
 
                     tcs?.SetResult(true);
                 }
                 catch (TaskCanceledException ex)
                 {
-                    Debug.WriteLine($"Task was cancelled in {nameof(SaveCameraPreset)}: " + ex.Message);
+                    _log.Error($"Task was cancelled in {nameof(SaveCameraPreset)}: " + ex.Message);
                     tcs?.SetException(ex);
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception for Task to insert DB data in {nameof(SaveCameraPreset)}: " + ex.Message);
+                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(SaveCameraPreset)}: " + ex.Message);
                     tcs?.SetException(ex);
                 }
             });
@@ -1153,12 +1199,12 @@ namespace Ironwall.Libraries.Devices.Services
                         commitResult = await conn.ExecuteAsync($@"INSERT INTO {table} 
                     (mapperid, groupid, sensor, firstpreset, secondpreset)  
                     VALUES
-                    (@MapperId, @GroupId, @Sensor, @FirstPreset, @SecondPreset)", mapper);
+                    (@Id, @GroupId, @Sensor, @FirstPreset, @SecondPreset)", mapper);
 
                         updatedRecord++;
                     }
 
-                    Debug.WriteLine($"CameraDevice was inserted in DB[{table}] : {updatedRecord}ea");
+                    _log.Info($"CameraDevice was inserted in DB[{table}] : {updatedRecord}ea");
 
                     if (isFinished)
                         await _mappingProvider.Finished();
@@ -1167,12 +1213,12 @@ namespace Ironwall.Libraries.Devices.Services
                 }
                 catch (TaskCanceledException ex)
                 {
-                    Debug.WriteLine($"Task was cancelled in {nameof(SaveCameras)}: " + ex.Message);
+                    _log.Error($"Task was cancelled in {nameof(SaveCameras)}: " + ex.Message);
                     tcs?.SetException(ex);
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception for Task to insert DB data in {nameof(SaveCameras)}: " + ex.Message);
+                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(SaveCameras)}: " + ex.Message);
                     tcs?.SetException(ex);
                 }
             });
@@ -1201,13 +1247,13 @@ namespace Ironwall.Libraries.Devices.Services
                 }
                 catch (TaskCanceledException ex)
                 {
-                    Debug.WriteLine($"Task was cancelled in {nameof(MatchDeviceInfo)}: " + ex.Message);
+                    _log.Error($"Task was cancelled in {nameof(MatchDeviceInfo)}: " + ex.Message);
                     tcs?.SetException(ex);
                     return false;
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception for Task to insert DB data in {nameof(MatchDeviceInfo)}: " + ex.Message);
+                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(MatchDeviceInfo)}: " + ex.Message);
                     tcs?.SetException(ex);
                     return false;
                 }
@@ -1233,13 +1279,13 @@ namespace Ironwall.Libraries.Devices.Services
                 }
                 catch (TaskCanceledException ex)
                 {
-                    Debug.WriteLine($"Task was cancelled in {nameof(MatchMappingInfo)}: " + ex.Message);
+                    _log.Error($"Task was cancelled in {nameof(MatchMappingInfo)}: " + ex.Message);
                     tcs?.SetException(ex);
                     return false;
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception for Task to insert DB data in {nameof(MatchMappingInfo)}: " + ex.Message);
+                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(MatchMappingInfo)}: " + ex.Message);
                     tcs?.SetException(ex);
                     return false;
                 }
@@ -1260,7 +1306,7 @@ namespace Ironwall.Libraries.Devices.Services
         #region - Binding Methods -
         #endregion
         #region - Processes -
-        public async Task CheckTable(string table, string id = null)
+        public async Task CheckTable(string table, int? id = null)
         {
             var commitResult = 0;
             var conn = _dbConnection as SQLiteConnection;
@@ -1275,7 +1321,7 @@ namespace Ironwall.Libraries.Devices.Services
                     commitResult = await conn.ExecuteAsync($@"DELETE FROM {table} 
                                                                 WHERE id = '{id}'");
 
-                    Debug.WriteLine($"DELETE a record in {table} for being replaced to new record in DB");
+                    _log.Info($"DELETE a record in {table} for being replaced to new record in DB");
                     if (!(commitResult > 0)) throw new Exception($"Raised exception during deleting Table({table}).");
                 }
             }
@@ -1288,13 +1334,107 @@ namespace Ironwall.Libraries.Devices.Services
                 {
                     commitResult = await conn.ExecuteAsync($@"DELETE FROM {table}");
 
-                    Debug.WriteLine($"DELETE a {table} for being replaced to new Table in DB");
+                    _log.Info($"DELETE a {table} for being replaced to new Table in DB");
                     if (!(commitResult > 0)) throw new Exception($"Raised exception during deleting Table({table}).");
                 }
 
             }
             
         }
+
+        public async Task<int> GetMaxId()
+        {
+            try
+            {
+                var query = $@"
+                            SELECT MAX(max_id)
+                            FROM (
+                                SELECT MAX(id) AS max_id FROM {_setupModel.TableController}
+                                UNION ALL
+                                SELECT MAX(id) AS max_id FROM {_setupModel.TableSensor}
+                                UNION ALL
+                                SELECT MAX(id) AS max_id FROM {_setupModel.TableCamera}
+                                UNION ALL
+                                SELECT MAX(id) AS max_id FROM {_setupModel.TableDeviceCameraPreset}
+                                UNION ALL
+                                SELECT MAX(id) AS max_id FROM {_setupModel.TableDeviceCameraProfile}
+                                UNION ALL
+                                SELECT MAX(id) AS max_id FROM {_setupModel.TableCameraMapping}
+                            ) AS combined_max_ids;";
+
+                var maxId = (await _dbConnection.QueryAsync<int>(query)).FirstOrDefault();
+
+                return maxId;
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<bool> IsIdExists(int id)
+        {
+            try
+            {
+                var query = $@"
+                            SELECT EXISTS (
+                                SELECT 1 FROM {_setupModel.TableController} WHERE id = @Id
+                                UNION ALL
+                                SELECT 1 FROM {_setupModel.TableSensor} WHERE id = @Id
+                                UNION ALL
+                                SELECT 1 FROM {_setupModel.TableCamera} WHERE id = @Id
+                                UNION ALL
+                                SELECT 1 FROM {_setupModel.TableDeviceCameraPreset} WHERE id = @Id
+                                UNION ALL
+                                SELECT 1 FROM {_setupModel.TableDeviceCameraProfile} WHERE id = @Id
+                                UNION ALL
+                                SELECT 1 FROM {_setupModel.TableCameraMapping} WHERE id = @Id
+                            ) AS id_exists;";
+
+                var exists = await _dbConnection.QueryFirstOrDefaultAsync<bool>(query, new { Id = id });
+
+                return exists;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<string> GetTableNameForId(int id)
+        {
+            try
+            {
+                var tableNames = new List<string>
+                {
+                    _setupModel.TableController,
+                    _setupModel.TableSensor,
+                    _setupModel.TableCamera,
+                    _setupModel.TableDeviceCameraPreset,
+                    _setupModel.TableDeviceCameraProfile,
+                    _setupModel.TableCameraMapping
+                };
+
+                foreach (var tableName in tableNames)
+                {
+                    var query = $@"SELECT CASE WHEN EXISTS (SELECT 1 FROM {tableName} WHERE id = @Id) THEN @TableName ELSE NULL END";
+                    var result = await _dbConnection.QueryFirstOrDefaultAsync<string>(query, new { Id = id, TableName = tableName });
+
+                    if (!string.IsNullOrEmpty(result))
+                    {
+                        return result;
+                    }
+                }
+
+                return null; // 해당하는 테이블이 없는 경우
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         #endregion
         #region - IHanldes -
         #endregion
@@ -1302,6 +1442,7 @@ namespace Ironwall.Libraries.Devices.Services
         #endregion
         #region - Attributes -
         private IDbConnection _dbConnection;
+        private ILogService _log;
         private DeviceSetupModel _setupModel;
         private DeviceProvider _deviceProvider;
         private ControllerDeviceProvider _controllerProvider;

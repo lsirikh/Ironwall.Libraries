@@ -39,7 +39,7 @@ namespace Ironwall.Libraries.Devices.Providers
                     Debug.WriteLine($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.ffffff")}]{nameof(Provider_Initialize)}({ClassName}) was executed!!!");
                     Clear();
                     foreach (BaseDeviceModel item in _deviceProvider
-                    .Where(entity => entity.DeviceType == (int)EnumDeviceType.IpCamera)
+                    .Where(entity => entity.DeviceType == EnumDeviceType.IpCamera)
                     .ToList())
                     {
                         if (!(item is ICameraDeviceModel model)) continue;
@@ -66,7 +66,7 @@ namespace Ironwall.Libraries.Devices.Providers
             {
                 try
                 {
-                    if (item.DeviceType == (int)EnumDeviceType.IpCamera)
+                    if (item.DeviceType == EnumDeviceType.IpCamera)
                     {
                         if (!(item is ICameraDeviceModel model)) return false;
 

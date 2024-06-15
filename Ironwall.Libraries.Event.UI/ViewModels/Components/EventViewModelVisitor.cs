@@ -80,12 +80,12 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Components
         {
             try
             {
-                Func<int, string> funcReason = (reasonType) =>
+                Func<EnumFaultType, string> funcReason = (reasonType) =>
                 {
                     return EnumLanguageHelper.GetEventType(LanguageConst.KOREAN, reasonType);
                 };
 
-                Func<int, string> funcType = (uType) =>
+                Func<EnumDeviceType, string> funcType = (uType) =>
                 {
                     return EnumLanguageHelper.GetDeviceType(LanguageConst.KOREAN, uType);
                 };

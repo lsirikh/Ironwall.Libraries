@@ -1,4 +1,5 @@
 ﻿using Ironwall.Framework.Models.Events;
+using Ironwall.Libraries.Enums;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -10,7 +11,7 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Components
         int CutFirstStart { get; set; }
         int CutSecondEnd { get; set; }
         int CutSecondStart { get; set; }
-        int Reason { get; set; }
+        EnumFaultType Reason { get; set; }
         string Type { get; set; }
 
         void Accept(EventVisitor visitor, ActionEventModel actionModel);

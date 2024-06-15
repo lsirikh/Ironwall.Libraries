@@ -43,7 +43,7 @@ namespace Ironwall.Libraries.Events.Providers
                     Clear();
 
                     foreach (MalfunctionEventModel item in _eventProvider
-                    .Where(entity => entity.MessageType == (int)EnumEventType.Connection)
+                    .Where(entity => entity.MessageType == EnumEventType.Connection)
                     .ToList())
                     {
                         Add(item);
@@ -66,7 +66,7 @@ namespace Ironwall.Libraries.Events.Providers
             {
                 try
                 {
-                    if (item.MessageType == (int)EnumEventType.Connection)
+                    if (item.MessageType == EnumEventType.Connection)
                         ret = await InsertedItem(item);
                 }
                 catch (Exception ex)

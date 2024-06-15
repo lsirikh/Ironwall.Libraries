@@ -84,7 +84,7 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Events
         #region - IHanldes -
         #endregion
         #region - Properties -
-        public int Reason
+        public EnumFaultType Reason
         {
             get { return (_model as IMalfunctionEventModel).Reason; }
             set

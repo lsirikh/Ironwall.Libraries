@@ -76,7 +76,7 @@ namespace Ironwall.Libraries.CameraOnvif.Services
                     IOnvifModel model2 = null;
 
                     foreach (var item in _onvifProvider
-                        .Where(entity => entity.CameraDeviceModel.DeviceType == (int)EnumDeviceType.IpCamera).ToList())
+                        .Where(entity => entity.CameraDeviceModel.DeviceType == EnumDeviceType.IpCamera).ToList())
                     {
                         if (item.CameraDeviceModel.Id == model.FirstPreset.ReferenceId
                         && IsModeCheck(item.CameraDeviceModel, EnumCameraMode.ONVIF))

@@ -25,7 +25,6 @@ namespace Ironwall.Libraries.Tcp.Common.ViewModels
         bool Used { get; set; }
         ITcpModel TcpModel { get; set; }
         IUserModel UserModel { get; set; }
-
         public void Refresh();
     }
 }

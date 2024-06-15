@@ -50,6 +50,7 @@ using Ironwall.Libraries.Devices.Helpers;
 using Ironwall.Libraries.Devices.Providers.Models;
 using Ironwall.Libraries.Devices.Services;
 using Ironwall.Framework.Helpers;
+using Ironwall.Framework.ViewModels;
 
 namespace Ironwall.Libraries.Server.Services
 {
@@ -282,7 +283,7 @@ namespace Ironwall.Libraries.Server.Services
                     MalfunctionEventModel eventModel = null;
                     switch (model.UnitType)
                     {
-                        case (int)EnumDeviceType.Controller:
+                        case EnumDeviceType.Controller:
                             {
                                 var controller = _controllerDeviceProvider
                                 .Where(t => t.DeviceNumber == model.Controller)
@@ -292,13 +293,12 @@ namespace Ironwall.Libraries.Server.Services
                                 .Build<MalfunctionEventModel>(model, controller);
                             }
                             break;
-
-                        case (int)EnumDeviceType.Multi:
-                        case (int)EnumDeviceType.Fence:
-                        case (int)EnumDeviceType.Contact:
-                        case (int)EnumDeviceType.PIR:
-                        case (int)EnumDeviceType.Underground:
-                        case (int)EnumDeviceType.Laser:
+                        case EnumDeviceType.Multi:
+                        case EnumDeviceType.Fence:
+                        case EnumDeviceType.Contact:
+                        case EnumDeviceType.PIR:
+                        case EnumDeviceType.Underground:
+                        case EnumDeviceType.Laser:
                             {
                                 var sensor = _sensorDeviceProvider
                                 .Where(s => s.DeviceNumber == model.Sensor)

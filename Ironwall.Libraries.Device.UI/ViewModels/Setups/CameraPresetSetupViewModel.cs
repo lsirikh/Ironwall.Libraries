@@ -63,14 +63,15 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Setups
         public override async void OnClickInsertButton(object sender, RoutedEventArgs e)
         {
             int id = 0;
-            if(_provider.Count > 0)
-                id = GetIdHelper.GetOptionId(_provider.LastOrDefault().Id);
+            //if(_provider.Count > 0)
+            //    id = GetIdHelper.GetOptionId(_provider.LastOrDefault().Id);
 
-            var preset = ModelFactory.Build<CameraPresetModel>($"o{id + 1}");
+            //var preset = ModelFactory.Build<CameraPresetModel>($"o{id + 1}");
+            //var preset = CameraPresetModel();
 
-            var viewModel = ViewModelFactory.Build<CameraPresetViewModel>(preset);
-            await viewModel.ActivateAsync();
-            ViewModelProvider.Add(viewModel);
+            //var viewModel = ViewModelFactory.Build<CameraPresetViewModel>(preset);
+            //await viewModel.ActivateAsync();
+            //ViewModelProvider.Add(viewModel);
         }
 
         public override async void OnClickDeleteButton(object sender, RoutedEventArgs e)
@@ -266,7 +267,7 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Setups
         }
         #endregion
         #region - Properties -
-        public List<string> CameraComboList { get; set; }
+        public List<int> CameraComboList { get; set; }
         public List<bool> BooleanComboList { get; set; }
 
         #endregion

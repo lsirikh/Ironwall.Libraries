@@ -1,5 +1,6 @@
 ﻿using Caliburn.Micro;
 using Ironwall.Framework.Models.Devices;
+using Ironwall.Libraries.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,7 +30,7 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Components.Parts
         #region - IHanldes -
         #endregion
         #region - Properties -
-        public string Id 
+        public int Id 
         { 
             get=> DeviceModel.Id;
             set
@@ -56,7 +57,7 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Components.Parts
                 NotifyOfPropertyChange();
             }
         }
-        public int DeviceType 
+        public EnumDeviceType DeviceType 
         {
             get => DeviceModel.DeviceType;
             set

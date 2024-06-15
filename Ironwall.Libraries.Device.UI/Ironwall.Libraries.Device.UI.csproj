@@ -180,6 +180,14 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Ironwall.Framework.Models\Ironwall.Framework.Models.csproj">
+      <Project>{3e640a4b-ddb5-47d0-bed9-8187f01b1d6b}</Project>
+      <Name>Ironwall.Framework.Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ironwall.Framework.ViewModels\Ironwall.Framework.ViewModels.csproj">
+      <Project>{7da0d9f1-e2f8-4c6e-91b2-43deebd3c3fe}</Project>
+      <Name>Ironwall.Framework.ViewModels</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Ironwall.Framework\Ironwall.Framework.csproj">
       <Project>{cc34c433-38a8-4092-b172-d89db0e632be}</Project>
       <Name>Ironwall.Framework</Name>

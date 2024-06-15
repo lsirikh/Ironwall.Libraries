@@ -65,26 +65,26 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Dialogs
                     var matchedGroupCount = mappingProvider.Where(entity => entity.Group == Group).Count();
                     if (matchedGroupCount > 0) throw new Exception(message: $"There is the same group name({Group})!");
 
-                    string mappingPreviewId = null;
+                    int mappingPreviewId = 0;
                     if(mappingProvider.Count > 0)
                        mappingPreviewId = mappingProvider.Select(entity => entity.Id).LastOrDefault();
 
-                    var mappingId = GetIdHelper.GetMappingId(mappingPreviewId) + 1;
-                    var sensorId = GetIdHelper.GetSensorId(SensorDeviceViewModel.Id);
+                    //var mappingId = GetIdHelper.GetMappingId(mappingPreviewId) + 1;
+                    //var sensorId = GetIdHelper.GetSensorId(SensorDeviceViewModel.Id);
 
-                    for (int i = 0; i < ItemCount; i++)
-                    {
-                        var sensor = SensorProvider.Where(entity => entity.Id == $"s{sensorId + i}").FirstOrDefault();
-                        if (sensor == null) throw new NullReferenceException(message:$"s{sensorId + i} was not exist!");
-                        var model = new CameraMappingModel($"m{mappingId++}"
-                            , Group
-                            , sensor as SensorDeviceModel
-                            , SelectedFirstPreset
-                            , SelectedSecondPreset);
+                    //for (int i = 0; i < ItemCount; i++)
+                    //{
+                    //    var sensor = SensorProvider.Where(entity => entity.Id == $"s{sensorId + i}").FirstOrDefault();
+                    //    if (sensor == null) throw new NullReferenceException(message:$"s{sensorId + i} was not exist!");
+                    //    var model = new CameraMappingModel($"m{mappingId++}"
+                    //        , Group
+                    //        , sensor as SensorDeviceModel
+                    //        , SelectedFirstPreset
+                    //        , SelectedSecondPreset);
 
-                        mappingProvider.Add(model);
+                    //    mappingProvider.Add(model);
 
-                    }
+                    //}
                     await mappingProvider.Finished();
 
                     await _eventAggregator.PublishOnUIThreadAsync(new MappingAppliedMessage());

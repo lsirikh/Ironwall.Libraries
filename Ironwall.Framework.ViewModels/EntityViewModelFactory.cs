@@ -2,7 +2,7 @@
 using Ironwall.Framework.ViewModels;
 using System;
 
-namespace Ironwall.Framework.DataProviders
+namespace Ironwall.Framework.ViewModels
 {
     public static class EntityViewModelFactory
     {
