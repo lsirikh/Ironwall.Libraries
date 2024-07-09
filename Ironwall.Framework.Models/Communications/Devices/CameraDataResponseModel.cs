@@ -15,15 +15,13 @@ namespace Ironwall.Framework.Models.Communications.Devices
         public CameraDataResponseModel()
         {
             Command = EnumCmdType.CAMERA_DATA_RESPONSE;
-            Cameras = new List<CameraDeviceModel>();
         }
-        public CameraDataResponseModel(bool success, string content, List<CameraDeviceModel> cameras)
-            : base(success, content)
+        public CameraDataResponseModel(bool success, string content, List<CameraDeviceModel> body)
+            : base(EnumCmdType.CAMERA_DATA_RESPONSE, success, content)
         {
-            Command = EnumCmdType.CAMERA_DATA_RESPONSE;
-            Cameras = cameras;
+            Body = body;
         }
-        [JsonProperty("cameras", Order = 4)]
-        public List<CameraDeviceModel> Cameras { get; private set; }
+        [JsonProperty("body", Order = 4)]
+        public List<CameraDeviceModel> Body { get; private set; }
     }
 }

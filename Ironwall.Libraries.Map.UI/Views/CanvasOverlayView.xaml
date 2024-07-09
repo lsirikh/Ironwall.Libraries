@@ -35,8 +35,8 @@
 				-->
 				<Grid
 					Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}"
-					Width="{Binding ZoomAndPanControl.ContentWidth, UpdateSourceTrigger=PropertyChanged}"
-					Height="{Binding ZoomAndPanControl.ContentHeight, UpdateSourceTrigger=PropertyChanged}"
+					Width="{Binding CanvasViewModel.ContentWidth, UpdateSourceTrigger=PropertyChanged}"
+					Height="{Binding CanvasViewModel.ContentHeight, UpdateSourceTrigger=PropertyChanged}"
 					cal:Message.Attach="[Event SizeChanged] = [Action overlay_SizeChanged($source, $eventArgs)];">
 					<!--SizeChanged="overview_SizeChanged"-->
 

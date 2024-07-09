@@ -1,9 +1,10 @@
-﻿namespace Ironwall.Framework.Models.Mappers
+﻿using Ironwall.Libraries.Enums;
+
+namespace Ironwall.Framework.Models.Mappers
 {
-    public interface IEventMapperBase
+    public interface IEventMapperBase : IBaseModel
     {
-        string EventId { get; set; }
-        
+        int MessageType { get; set; }
         string DateTime { get; set; }
     }
 }

@@ -6,6 +6,6 @@ namespace Ironwall.Framework.Models.Communications.Devices
     public interface ICameraDataResponseModel
         : IResponseModel
     {
-        List<CameraDeviceModel> Cameras { get; }
+        List<CameraDeviceModel> Body { get; }
     }
 }

@@ -89,7 +89,7 @@ namespace Ironwall.Libraries.Tcp.Common.Proivders.ViewModels
                     //{
                     //    searchedItem.IdUser = viewModel.IdUser;
                     //    searchedItem.Password = viewModel.Password;
-                    //    searchedItem.GroupId = viewModel.GroupId;
+                    //    searchedItem.MappingGroup = viewModel.MappingGroup;
                     //    searchedItem.EmployeeNumber = viewModel.EmployeeNumber;
                     //    searchedItem.Birth = viewModel.Birth;
                     //    searchedItem.Phone = viewModel.Phone;

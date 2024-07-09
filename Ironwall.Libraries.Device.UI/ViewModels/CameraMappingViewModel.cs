@@ -1,9 +1,11 @@
 ﻿using Caliburn.Micro;
 using Ironwall.Framework.Models.Devices;
 using Ironwall.Framework.ViewModels;
+using Ironwall.Libraries.Base.Services;
 using Ironwall.Libraries.Device.UI.Providers;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Ironwall.Libraries.Device.UI.ViewModels
 {
@@ -22,11 +24,13 @@ namespace Ironwall.Libraries.Device.UI.ViewModels
         #region - Ctors -
         public CameraMappingViewModel()
         {
-
+            _log = IoC.Get<ILogService>();
+            _model = new CameraMappingModel();
         }
 
         public CameraMappingViewModel(ICameraMappingModel model) : base(model)
         {
+            _log = IoC.Get<ILogService>();
             UpdateModel(model);
         }
 
@@ -37,15 +41,18 @@ namespace Ironwall.Libraries.Device.UI.ViewModels
         }
         #endregion
         #region - Implementation of Interface -
-        public override void UpdateModel(ICameraMappingModel model)
+        public override async void UpdateModel(ICameraMappingModel model)
         {
             base.UpdateModel(model);
-            var sensorPorvider = IoC.Get<SensorViewModelProvider>();
-            Sensor = sensorPorvider.OfType<SensorDeviceViewModel>().Where(entity => entity?.Id == model.Sensor.Id).FirstOrDefault();
+            
+
+            await FetchPrerequisits(model);
          
             var presetProvider = IoC.Get<PresetViewModelProvider>();
-            FirstPreset = presetProvider.OfType<CameraPresetViewModel>().Where(entity => entity?.Id == model.FirstPreset.Id).FirstOrDefault();
-            SecondPreset = presetProvider.OfType<CameraPresetViewModel>().Where(entity => entity?.Id == model.SecondPreset.Id).FirstOrDefault();
+            if(model.FirstPreset != null) 
+                FirstPreset = presetProvider.OfType<CameraPresetViewModel>().Where(entity => entity?.Id == model.FirstPreset.Id).FirstOrDefault();
+            if(model.SecondPreset != null) 
+                SecondPreset = presetProvider.OfType<CameraPresetViewModel>().Where(entity => entity?.Id == model.SecondPreset.Id).FirstOrDefault();
         }
         #endregion
         #region - Overrides -
@@ -53,17 +60,41 @@ namespace Ironwall.Libraries.Device.UI.ViewModels
         #region - Binding Methods -
         #endregion
         #region - Processes -
+        private async Task FetchPrerequisits(ICameraMappingModel model)
+        {
+            var _checkCount = 1;
+            while (true)
+            {
+                try
+                {
+                    if (_checkCount > 5) break;
+                    var sensorPorvider = IoC.Get<SensorViewModelProvider>();
+                    if (sensorPorvider.Count > 0)
+                    {
+                        Sensor = sensorPorvider.OfType<SensorDeviceViewModel>().Where(entity => entity?.Id == model.Sensor.Id).FirstOrDefault();
+                        break;
+                    }
+                    _log.Info($"{nameof(UpdateModel)} of {nameof(CameraMappingViewModel)} was executed({_checkCount}) without {nameof(SensorViewModelProvider)}!");
+                    await Task.Delay(1000);
+                    _checkCount++;
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+            }
+        }
         #endregion
         #region - IHanldes -
         #endregion
         #region - Properties -
-        public string Group
+        public string MappingGroup
         {
-            get { return _model.Group; }
+            get { return _model.MappingGroup; }
             set
             {
-                _model.Group = value;
-                NotifyOfPropertyChange(() => Group);
+                _model.MappingGroup = value;
+                NotifyOfPropertyChange(() => MappingGroup);
             }
         }
         public SensorDeviceViewModel Sensor
@@ -103,6 +134,7 @@ namespace Ironwall.Libraries.Device.UI.ViewModels
         private SensorDeviceViewModel _sensor;
         private CameraPresetViewModel _firstPreset;
         private CameraPresetViewModel _secondPreset;
+        private ILogService _log;
         #endregion
     }
 }

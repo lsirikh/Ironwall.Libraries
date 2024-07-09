@@ -11,7 +11,7 @@ namespace Ironwall.Framework.Models.Vms
        Company      : Sensorway Co., Ltd.                                       
        Email        : lsirikh@naver.com                                         
     ****************************************************************************/
-    public class VmsApiModel : BasicModel, IVmsApiModel
+    public class VmsApiModel : BaseModel, IVmsApiModel
     {
         #region - Ctors -
         public VmsApiModel()
@@ -26,6 +26,14 @@ namespace Ironwall.Framework.Models.Vms
             ApiPort = port;
             Username = username;
             Password = password;
+        }
+
+        public VmsApiModel(IVmsApiModel model) : base(model)
+        {
+            ApiAddress = model.ApiAddress;
+            ApiPort = model.ApiPort;
+            Username = model.Username;
+            Password = model.Password;
         }
         #endregion
         #region - Implementation of Interface -

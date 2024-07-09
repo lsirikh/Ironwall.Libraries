@@ -1,5 +1,9 @@
-﻿using Ironwall.Framework.Models.Devices;
+﻿using Ironwall.Framework.Models.Accounts;
+using Ironwall.Framework.Models.Devices;
 using Ironwall.Libraries.Enums;
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Ironwall.Framework.Models.Communications.Devices
 {
@@ -12,7 +16,7 @@ namespace Ironwall.Framework.Models.Communications.Devices
         Email        : lsirikh@naver.com                                         
      ****************************************************************************/
 
-    public class CameraDataSaveResponseModel : DeviceInfoResponseModel, ICameraDataSaveResponseModel
+    public class CameraDataSaveResponseModel : ResponseModel, ICameraDataSaveResponseModel
     {
 
         #region - Ctors -
@@ -21,10 +25,10 @@ namespace Ironwall.Framework.Models.Communications.Devices
             Command = EnumCmdType.CAMERA_DATA_SAVE_RESPONSE;
         }
 
-        public CameraDataSaveResponseModel(bool success, string content, IDeviceDetailModel detail)
-            : base(success, content, detail)
+        public CameraDataSaveResponseModel(List<ICameraDeviceModel> body, bool success = true, string content = default)
+            : base(EnumCmdType.CAMERA_DATA_SAVE_RESPONSE, success, content)
         {
-            Command = EnumCmdType.CAMERA_DATA_SAVE_RESPONSE;
+            Body = body.OfType<CameraDeviceModel>().ToList();
         }
         #endregion
         #region - Implementation of Interface -
@@ -38,6 +42,8 @@ namespace Ironwall.Framework.Models.Communications.Devices
         #region - IHanldes -
         #endregion
         #region - Properties -
+        [JsonProperty("body", Order = 4)]
+        public List<CameraDeviceModel> Body { get; set; }
         #endregion
         #region - Attributes -
         #endregion

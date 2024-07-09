@@ -1,7 +1,9 @@
-﻿namespace Ironwall.Framework.Models.Communications.Events
+﻿using Ironwall.Framework.Models.Events;
+
+namespace Ironwall.Framework.Models.Communications.Events
 {
-    public interface IMalfunctionRequestModel: IBaseEventMessageModel
+    public interface IMalfunctionRequestModel: IBaseMessageModel
     {
-        MalfunctionDetailModel Detail { get; set; }
+        MalfunctionEventModel Body { get; set; }
     }
 }

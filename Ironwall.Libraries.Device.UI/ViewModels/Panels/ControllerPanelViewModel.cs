@@ -23,7 +23,6 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Panels
         public ControllerPanelViewModel(IEventAggregator eventAggregator)
             :base(eventAggregator)
         {
-
         }
 
         #endregion

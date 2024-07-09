@@ -96,7 +96,7 @@ namespace Ironwall.Libraries.CameraOnvif.Services
 
                 //WriteLine("Capabilities");
                 //WriteLine("\tDevice: " + Caps.Capabilities.Device.XAddr);
-                //WriteLine("\tEvents: " + Caps.Capabilities.Events.XAddr);
+                //WriteLine("\tEvents: " + Caps.Capabilities.Body.XAddr);
                 //WriteLine("\tImaging: " + Caps.Capabilities.Imaging.XAddr);
                 //WriteLine("\tMedia: " + Caps.Capabilities.Media.XAddr);
                 //WriteLine("\tPTZ: " + Caps.Capabilities.PTZ?.XAddr);
@@ -513,9 +513,9 @@ namespace Ironwall.Libraries.CameraOnvif.Services
             Mictlanix.DotNet.Onvif.Ptz.GetPresetsResponse presets = null;
             try
             {
-                WriteLine($"Get Ptz Presets...");
+                WriteLine($"Get Ptz Body...");
                 presets = await Ptz.GetPresetsAsync(Profile_token);
-                WriteLine("Presets count: " + presets?.Preset?.Length);
+                WriteLine("Body count: " + presets?.Preset?.Length);
 
                 _ = Task.Run(() =>
                 {
@@ -1013,7 +1013,7 @@ namespace Ironwall.Libraries.CameraOnvif.Services
 
                 var presets = await ptz.GetPresetsAsync(profile_token);
 
-                WriteLine("Presets count: " + presets?.Preset?.Length);
+                WriteLine("Body count: " + presets?.Preset?.Length);
 
                 foreach (var preset in presets?.Preset)
                 {

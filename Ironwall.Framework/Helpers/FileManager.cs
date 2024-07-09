@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Ironwall.Framework.Helpers
 {
-    public static class FileManager
+    static class FileManager
     {
         /// <summary>
         /// CopyUriFile은 프로젝트 하위 폴더에 Uri로 부터 받은 주소의
@@ -23,7 +23,7 @@ namespace Ironwall.Framework.Helpers
         /// <param name="folder">(필수)프로젝트 하위 폴더 명칭 지정</param>
         /// <param name="Uri">(필수)복사할 데이터의 위치정보</param>
         /// <returns>상대적 위치에 따른 Uri 값</returns>
-        public static async Task<string> CopyUriFile(string folder, string Uri)
+        static async Task<string> CopyUriFile(string folder, string Uri)
         {
             try
             {
@@ -83,7 +83,7 @@ namespace Ironwall.Framework.Helpers
         /// <param name="filename"></param>
         /// <param name="token"></param>
         /// <returns></returns>
-        public static async Task<bool> SaveCSVFile<T>(List<T> Data, string folder = null, string filename = null, CancellationToken token = default)
+        static async Task<bool> SaveCSVFile<T>(List<T> Data, string folder = null, string filename = null, CancellationToken token = default)
         {
             try
             {
@@ -121,7 +121,7 @@ namespace Ironwall.Framework.Helpers
             }
         }
 
-        public static async Task<IEnumerable<T>> ReadCSVFile<T>(string uri, CancellationToken token = default)
+        static async Task<IEnumerable<T>> ReadCSVFile<T>(string uri, CancellationToken token = default)
         {
             var items = new List<T>();
             if (string.IsNullOrEmpty(uri))

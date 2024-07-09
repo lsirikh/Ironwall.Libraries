@@ -62,8 +62,8 @@ namespace Ironwall.Framework.ViewModels
             get => _selectableItemModel.IsSelected;
             set
             {
-                //string prevFuncName = new StackFrame(1, true).GetMethod().GroupId;
-                //string prevClassName = new StackTrace().GetFrame(1).GetMethod().ReflectedType.GroupId;
+                //string prevFuncName = new StackFrame(1, true).GetMethod().MappingGroup;
+                //string prevClassName = new StackTrace().GetFrame(1).GetMethod().ReflectedType.MappingGroup;
                 _selectableItemModel.IsSelected = value;
                 NotifyOfPropertyChange(() => IsSelected);
             }

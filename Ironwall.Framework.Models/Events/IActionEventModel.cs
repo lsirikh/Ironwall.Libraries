@@ -2,8 +2,8 @@
 {
     public interface IActionEventModel : IBaseEventModel
     {
+        MetaEventModel FromEvent { get; set; }
         string Content { get; set; }
-        IMetaEventModel FromEvent { get; set; }
         string User { get; set; }
     }
 }

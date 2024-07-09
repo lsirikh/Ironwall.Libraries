@@ -18,13 +18,12 @@ namespace Ironwall.Framework.Models.Communications.Devices
         }
 
         public ControllerDataResponseModel(bool success, string content, List<ControllerDeviceModel> controller)
-            : base(success, content)
+            : base(EnumCmdType.CONTROLLER_DATA_RESPONSE, success, content)
         {
-            Command = EnumCmdType.CONTROLLER_DATA_RESPONSE;
-            Controllers = controller;
+            Body = controller;
         }
 
-        [JsonProperty("controllers", Order = 4)]
-        public List<ControllerDeviceModel> Controllers { get; private set; }
+        [JsonProperty("body", Order = 4)]
+        public List<ControllerDeviceModel> Body { get; private set; }
     }
 }

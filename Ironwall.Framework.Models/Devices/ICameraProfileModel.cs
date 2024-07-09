@@ -1,6 +1,6 @@
 ﻿namespace Ironwall.Framework.Models.Devices
 {
-    public interface ICameraProfileModel : IOptionBaseModel
+    public interface ICameraProfileModel : IBaseOptionModel
     {
         string Profile { get; set; }
     }

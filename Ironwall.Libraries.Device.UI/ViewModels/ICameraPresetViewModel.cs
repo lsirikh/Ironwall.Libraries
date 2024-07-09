@@ -2,7 +2,7 @@
 
 namespace Ironwall.Libraries.Device.UI.ViewModels
 {
-    public interface ICameraPresetViewModel : ICameraOptionViewModel
+    interface ICameraPresetViewModel : ICameraOptionViewModel
     {
         string PresetName { get; set; }
         bool IsHome { get; set; }

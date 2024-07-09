@@ -5,6 +5,6 @@ namespace Ironwall.Framework.Models.Communications.Events
 {
     public interface ISearchDetectionResponseModel : IResponseModel
     {
-        List<DetectionRequestModel> Events { get; set; }
+        List<DetectionEventModel> Body { get; set; }
     }
 }

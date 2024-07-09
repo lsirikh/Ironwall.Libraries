@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Ironwall.Framework.Models.Communications.Devices
 {
-    public interface IDeviceDataRequestModel : IUserSessionBaseRequestModel
+    public interface IDeviceDataRequestModel : IBaseMessageModel
     {
       
     }

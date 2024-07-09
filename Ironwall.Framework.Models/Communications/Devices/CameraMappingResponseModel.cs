@@ -3,6 +3,7 @@ using Ironwall.Libraries.Enums;
 using Newtonsoft.Json;
 
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Ironwall.Framework.Models.Communications.Devices
 {
@@ -24,11 +25,10 @@ namespace Ironwall.Framework.Models.Communications.Devices
             Command = EnumCmdType.CAMERA_MAPPING_DATA_RESPONSE;
         }
 
-        public CameraMappingResponseModel(bool success, string content, List<CameraMappingModel> list)
-            : base(success, content)
+        public CameraMappingResponseModel(bool success, string content, List<ICameraMappingModel> list)
+            : base(EnumCmdType.CAMERA_MAPPING_DATA_RESPONSE, success, content)
         {
-            Command = EnumCmdType.CAMERA_MAPPING_DATA_RESPONSE;
-            List = list;
+            Body = list.OfType<CameraMappingModel>().ToList();
         }
         #endregion
         #region - Implementation of Interface -
@@ -43,7 +43,7 @@ namespace Ironwall.Framework.Models.Communications.Devices
         #endregion
         #region - Properties -
         [JsonProperty("mapping_list", Order = 4)]
-        public List<CameraMappingModel> List { get; private set; }
+        public List<CameraMappingModel> Body { get; private set; }
         #endregion
         #region - Attributes -
         #endregion

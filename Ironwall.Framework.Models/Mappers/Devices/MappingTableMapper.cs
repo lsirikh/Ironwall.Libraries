@@ -25,7 +25,7 @@ namespace Ironwall.Framework.Models.Mappers
         public MappingTableMapper(ICameraMappingModel model) : base(model)
         {
             Id = model.Id;
-            GroupId = model.Group;
+            MappingGroup = model.MappingGroup;
             Sensor = model.Sensor.Id;
             FirstPreset = model?.FirstPreset?.Id;
             SecondPreset = model?.SecondPreset?.Id;
@@ -42,7 +42,7 @@ namespace Ironwall.Framework.Models.Mappers
         #region - IHanldes -
         #endregion
         #region - Properties -
-        public string GroupId { get; set; }
+        public string MappingGroup { get; set; }
         public int Sensor { get; set; }
         public int? FirstPreset { get; set; }
         public int? SecondPreset { get; set; }

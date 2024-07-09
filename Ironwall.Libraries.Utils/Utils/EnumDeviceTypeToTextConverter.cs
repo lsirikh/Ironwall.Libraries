@@ -17,6 +17,7 @@ namespace Ironwall.Libraries.Utils
             if (targetType != typeof(string))
                 return null;
 
+            //return (EnumDeviceType)value;
             switch (value)
             {
                 case (int)EnumDeviceType.NONE:

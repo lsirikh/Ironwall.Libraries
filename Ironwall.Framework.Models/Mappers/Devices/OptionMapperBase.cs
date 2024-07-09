@@ -20,7 +20,7 @@ namespace Ironwall.Framework.Models.Mappers
 
         }
 
-        public OptionMapperBase(IOptionBaseModel model) : base(model)
+        public OptionMapperBase(IBaseOptionModel model) : base(model)
         {
             ReferenceId = model.ReferenceId;
         }

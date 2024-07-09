@@ -16,16 +16,14 @@ namespace Ironwall.Framework.Models.Communications.Devices
     public class DeviceMaxIdResponseModel : ResponseModel
     {
         #region - Ctors -
-        public DeviceMaxIdResponseModel()
+        DeviceMaxIdResponseModel()
         {
             Command = EnumCmdType.DEVICE_MAX_ID_RESPONSE;
         }
 
-        public DeviceMaxIdResponseModel(bool success, string content, IDeviceDetailModel detail)
-            : base(success, content)
+        DeviceMaxIdResponseModel(bool success, string content, IDeviceDetailModel detail)
+            : base(EnumCmdType.DEVICE_MAX_ID_RESPONSE, success, content)
         {
-            Command = EnumCmdType.DEVICE_MAX_ID_RESPONSE;
-
         }
         #endregion
         #region - Implementation of Interface -

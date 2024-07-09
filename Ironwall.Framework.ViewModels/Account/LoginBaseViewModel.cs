@@ -15,7 +15,7 @@ namespace Ironwall.Framework.ViewModels.Account
 
         }
 
-        public LoginBaseViewModel(string userId, string timeCreated)
+        public LoginBaseViewModel(string userId, DateTime timeCreated)
         {
             UserId = userId;
             TimeCreated = timeCreated;
@@ -28,7 +28,7 @@ namespace Ironwall.Framework.ViewModels.Account
             TimeCreated = model.TimeCreated;
         }
 
-        public LoginBaseViewModel(int id, string userId, string timeCreated)
+        public LoginBaseViewModel(int id, string userId, DateTime timeCreated)
             : base(id)
         {
             UserId = userId;
@@ -47,7 +47,7 @@ namespace Ironwall.Framework.ViewModels.Account
         }
 
 
-        public string TimeCreated
+        public DateTime TimeCreated
         {
             get { return _timeCreated; }
             set
@@ -59,6 +59,6 @@ namespace Ironwall.Framework.ViewModels.Account
 
 
         private string _userId;
-        private string _timeCreated;
+        private DateTime _timeCreated;
     }
 }

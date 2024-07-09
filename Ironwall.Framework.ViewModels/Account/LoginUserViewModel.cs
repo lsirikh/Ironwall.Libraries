@@ -23,7 +23,7 @@ namespace Ironwall.Framework.ViewModels.Account
             Mode = model.Mode;
         }
 
-        public LoginUserViewModel(string userId, int userLevel, int clientId, int mode, string timeCreated)
+        public LoginUserViewModel(string userId, int userLevel, int clientId, int mode, DateTime timeCreated)
             : base(userId, timeCreated)
         {
             UserLevel = userLevel;

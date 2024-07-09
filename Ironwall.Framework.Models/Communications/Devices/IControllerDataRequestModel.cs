@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Ironwall.Framework.Models.Communications.Devices
 {
     public interface IControllerDataRequestModel
-        : IUserSessionBaseRequestModel
+        : IBaseMessageModel
     {
     }
 }

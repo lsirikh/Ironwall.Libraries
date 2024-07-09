@@ -1,7 +1,9 @@
-﻿namespace Ironwall.Framework.Models.Communications.Accounts
+﻿using System;
+
+namespace Ironwall.Framework.Models.Communications.Accounts
 {
     public interface IKeepAliveResponseModel : IResponseModel
     {
-        string TimeExpired { get; set; }
+        DateTime TimeExpired { get; set; }
     }
 }

@@ -9,10 +9,10 @@
         Email        : lsirikh@naver.com                                         
      ****************************************************************************/
 
-    public static class GetIdHelper
+    static class GetIdHelper
     {
 
-        public static int GetControllerId(string id)
+        static int GetControllerId(string id)
         {
             if(id == null) return 0;
 
@@ -20,7 +20,7 @@
             return int.Parse(pId[1]);
         }
 
-        public static int GetSensorId(string id)
+        static int GetSensorId(string id)
         {
             if (id == null) return 0;
 
@@ -28,7 +28,7 @@
             return int.Parse(pId[1]);
         }
 
-        public static int GetCameraId(string id)
+        static int GetCameraId(string id)
         {
             if (id == null) return 0;
 
@@ -36,7 +36,7 @@
             return int.Parse(pId[1]);
         }
 
-        public static int GetOptionId(string id)
+        static int GetOptionId(string id)
         {
             if (id == null) return 0;
 
@@ -44,7 +44,7 @@
             return int.Parse(pId[1]);
         }
 
-        public static int GetMappingId(string id)
+        static int GetMappingId(string id)
         {
             if (id == null) return 0;
 

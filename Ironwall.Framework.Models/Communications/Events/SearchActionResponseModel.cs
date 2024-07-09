@@ -1,5 +1,9 @@
-﻿using Ironwall.Libraries.Enums;
+﻿using Ironwall.Framework.Models.Events;
+using Ironwall.Framework.Models.Mappers;
+using Ironwall.Libraries.Enums;
+using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Ironwall.Framework.Models.Communications.Events
 {
@@ -22,16 +26,16 @@ namespace Ironwall.Framework.Models.Communications.Events
         }
 
         public SearchActionResponseModel(bool success, string msg
-            , List<DetectionRequestModel> detectionEvents
-            , List<MalfunctionRequestModel> malfunctionEvents 
-            , List<ActionRequestModel> actionEvents
+            //, List<IDetectionEventModel> detections
+            //, List<IMalfunctionEventModel> malfunctions 
+            , List<IActionEventModel> body
             )
              : base(success, msg)
         {
             Command = EnumCmdType.SEARCH_EVENT_ACTION_RESPONSE;
-            DetectionEvents = detectionEvents;
-            MalfunctionEvents = malfunctionEvents;
-            ActionEvents = actionEvents;
+            //Detections = detections.OfType<DetectionEventModel>().ToList();
+            //Malfunctions = malfunctions.OfType<MalfunctionEventModel>().ToList();
+            Body = body.OfType<ActionEventModel>().ToList();
         }
 
         #endregion
@@ -46,9 +50,12 @@ namespace Ironwall.Framework.Models.Communications.Events
         #region - IHanldes -
         #endregion
         #region - Properties -
-        public List<DetectionRequestModel> DetectionEvents { get; set; }
-        public List<MalfunctionRequestModel> MalfunctionEvents { get; set; }
-        public List<ActionRequestModel> ActionEvents { get; set; }
+        [JsonProperty("body", Order = 4)]
+        public List<ActionEventModel> Body { get; set; }
+        //[JsonProperty("detections", Order = 5)]
+        //public List<DetectionEventModel> Detections { get; set; }
+        //[JsonProperty("malfunctions", Order = 6)]
+        //public List<MalfunctionEventModel> Malfunctions { get; set; }
         #endregion
         #region - Attributes -
         #endregion

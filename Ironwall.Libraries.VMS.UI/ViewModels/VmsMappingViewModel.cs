@@ -1,4 +1,7 @@
-﻿using Ironwall.Framework.Models.Vms;
+﻿using Ironwall.Framework.Models.Devices;
+using Ironwall.Framework.Models.Vms;
+using Ironwall.Framework.ViewModels;
+using Ironwall.Libraries.Enums;
 using System;
 
 namespace Ironwall.Libraries.VMS.UI.ViewModels
@@ -11,7 +14,7 @@ namespace Ironwall.Libraries.VMS.UI.ViewModels
        Company      : Sensorway Co., Ltd.                                       
        Email        : lsirikh@naver.com                                         
     ****************************************************************************/
-    public class VmsMappingViewModel : VmsBaseViewModel<IVmsMappingModel>
+    public class VmsMappingViewModel : BaseCustomViewModel<IVmsMappingModel>, IVmsMappingViewModel
     {
         #region - Ctors -
         public VmsMappingViewModel(IVmsMappingModel model) : base(model)
@@ -21,6 +24,11 @@ namespace Ironwall.Libraries.VMS.UI.ViewModels
         #region - Implementation of Interface -
         #endregion
         #region - Overrides -
+        public override void Dispose()
+        {
+            _model = new VmsMappingModel();
+            GC.Collect();
+        }
         #endregion
         #region - Binding Methods -
         #endregion
@@ -32,8 +40,8 @@ namespace Ironwall.Libraries.VMS.UI.ViewModels
         public int GroupNumber
         {
             get { return _model.GroupNumber; }
-            set 
-            { 
+            set
+            {
                 _model.GroupNumber = value;
                 NotifyOfPropertyChange(() => GroupNumber);
             }
@@ -46,6 +54,16 @@ namespace Ironwall.Libraries.VMS.UI.ViewModels
             {
                 _model.EventId = value;
                 NotifyOfPropertyChange(() => EventId);
+            }
+        }
+
+        public EnumTrueFalse Status
+        {
+            get { return _model.Status; }
+            set
+            {
+                _model.Status = value;
+                NotifyOfPropertyChange(() => Status);
             }
         }
         #endregion

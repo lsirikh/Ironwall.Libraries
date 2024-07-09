@@ -13,10 +13,10 @@ using System.Threading.Tasks;
 
 namespace Ironwall.Framework.ViewModels
 {
-    public static class ModelTypeHelper
+    static class ModelTypeHelper
     {
 
-        public static IBaseDeviceModel GetDevice(IBaseDeviceViewModel device)
+        static IBaseDeviceModel GetDevice(IBaseDeviceViewModel device)
         {
             IBaseDeviceModel model = null;
             try
@@ -64,7 +64,7 @@ namespace Ironwall.Framework.ViewModels
         }
 
 
-        public static IMetaEventModel GetEvent(IMetaEventViewModel fromEvent)
+        static IMetaEventModel GetEvent(IMetaEventViewModel fromEvent)
         {
             IMetaEventModel model = null;
             try

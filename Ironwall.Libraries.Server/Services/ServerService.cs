@@ -51,15 +51,24 @@ using Ironwall.Libraries.Devices.Providers.Models;
 using Ironwall.Libraries.Devices.Services;
 using Ironwall.Framework.Helpers;
 using Ironwall.Framework.ViewModels;
+using Ironwall.Libraries.Base.Services;
+using System.Diagnostics.Eventing;
+using Newtonsoft.Json.Converters;
+using Ironwall.Libraries.VMS.Common.Services;
+using Ironwall.Framework.Models.Communications.VmsApis;
+using Ironwall.Libraries.VMS.Common.Providers.Models;
+using Ironwall.Libraries.VMS.Common.Models.Providers;
+using Sensorway.Events.Base.Models;
+using IActionEventModel = Ironwall.Framework.Models.Events.IActionEventModel;
 
 namespace Ironwall.Libraries.Server.Services
 {
-    public class ServerService
-        : AccountServerService, IServerService
+    public class ServerService : AccountServerService, IServerService
     {
         #region - Ctors -
         public ServerService(
-            AccountSetupModel accountSetupModel
+            ILogService log
+            , AccountSetupModel accountSetupModel
             , TcpSetupModel tcpSetupModel
             , TcpServerSetupModel tcpServerSetupModel
             , SessionProvider sessionProvider
@@ -68,9 +77,9 @@ namespace Ironwall.Libraries.Server.Services
             , UserProvider userProvider
             , LoginUserProvider loginUserProvider
             , AccountDbService accountDbService
-            , EventDbService eventDbService
+            , IEventDbService eventDbService
 
-            , EventProvider eventProvider
+            , Events.Providers.EventProvider eventProvider
             , DetectionEventProvider detectionEventProvider
             , MalfunctionEventProvider malfunctionEventProvider
 
@@ -81,8 +90,10 @@ namespace Ironwall.Libraries.Server.Services
             , SensorDeviceProvider sensorDeviceProvider
             , CameraDeviceProvider cameraDeviceProvider
             , CameraPresetProvider cameraPresetProvider
+            , CameraProfileProvider cameraProfileProvider
+            , CameraOptionProvider cameraOptionProvider
             , CameraMappingProvider cameraMappingProvider
-            , DeviceDbService deviceDbService
+            , IDeviceDbService deviceDbService
 
             , SymbolProvider symbolProvider
             , MapProvider mapProvider
@@ -92,12 +103,18 @@ namespace Ironwall.Libraries.Server.Services
             , TcpUserProvider tcpUserProvider
             , LogProvider logProvdier
 
-            , DeviceInfoModel deviceInfoModel
+            , IVmsApiService vmsApiService
+            , IVmsDbService vmsDbService
+            , VmsApiProvider vmsApiProvider
+            , VmsEventProvider vmsEventProvider
+            , VmsMappingProvider vmsMappingProvider
+            , VmsSensorProvider vmsSensorProvider
+            
             , SymbolInfoModel symbolInfoModel
-            , MappingInfoModel mappingInfoModel
             )
             : base
-            (accountSetupModel
+            ( log
+            , accountSetupModel
             , tcpSetupModel
             , tcpServerSetupModel
             , sessionProvider
@@ -110,21 +127,23 @@ namespace Ironwall.Libraries.Server.Services
             , logProvdier)
         {
 
-            EventDbService = eventDbService;
-            EventProvider = eventProvider;
-            DetectionEventProvider = detectionEventProvider;
-            MalfunctionEventProvider = malfunctionEventProvider;
-            ActionEventProvider = actionEventProvider;
+            _eventDbService = eventDbService;
+            _eventProvider = eventProvider;
+            _detectionEventProvider = detectionEventProvider;
+            _malfunctionEventProvider = malfunctionEventProvider;
+            _actionEventProvider = actionEventProvider;
 
+            _deviceDbService = deviceDbService;
             _deviceProvider = deviceProvider;
             _controllerDeviceProvider = controllerDeviceProvider;
             _sensorDeviceProvider = sensorDeviceProvider;
             _cameraDeviceProvider = cameraDeviceProvider;
+
             _cameraMappingProvider = cameraMappingProvider;
+
+            _cameraOptionProvider = cameraOptionProvider;
             _cameraPresetProvider = cameraPresetProvider;
-
-            _deviceDbService = deviceDbService;
-
+            _cameraProfileProvider = cameraProfileProvider;
 
 
             _mapProvider = mapProvider;
@@ -132,9 +151,20 @@ namespace Ironwall.Libraries.Server.Services
             _mapDbService = mapDbService;
             _pointProvider = pointProvider;
 
-            _deviceInfoModel = deviceInfoModel;
             _symbolInfoModel = symbolInfoModel;
-            _mappingInfoModel = mappingInfoModel;
+
+            _vmsApiService = vmsApiService;
+            _vmsDbService = vmsDbService;
+            _vmsApiProvider = vmsApiProvider;
+            _vmsEventProvider = vmsEventProvider;
+            _vmsMappingProvider = vmsMappingProvider;
+            _vmsSensorProvider = vmsSensorProvider;
+
+            settings = new JsonSerializerSettings
+            {
+                Converters = new List<JsonConverter> { new StringEnumConverter() },
+                DateFormatString = "yyyy-MM-ddTHH:mm:ss.ff"
+            };
         }
 
 
@@ -162,19 +192,19 @@ namespace Ironwall.Libraries.Server.Services
 
                     AcceptedClient_Event(msg, endPoint);
                     
-                    await SendRequest(JsonConvert.SerializeObject(responseModel), endPoint);
+                    await SendRequest(JsonConvert.SerializeObject(responseModel, settings), endPoint);
                     return true;
                 }
                 catch (SocketSendException ex)
                 {
-                    Debug.WriteLine($"Raised SocketSendException in {nameof(UpdateHeartBeat)}  : {ex.Message}");
+                    _log.Error($"Raised SocketSendException in {nameof(UpdateHeartBeat)}  : {ex.Message}");
                     AcceptedClient_Event($"Raised SocketSendException in {nameof(UpdateHeartBeat)}  : {ex.Message}", endPoint, EnumTcpCommunication.COMMUNICATION_ERROR);
                     return false;
                 }
                 catch (NullReferenceException ex)
                 {
                     var message = $"Raised NullReferenceException in {nameof(UpdateHeartBeat)}  : {ex.Message}";
-                    Debug.WriteLine(message);
+                    _log.Error(message);
                     //Response message to the Client
                     //await KeepAliveResponse(false, "token was not matched!", null, endPoint);
                     AcceptedClient_Event(message, endPoint);
@@ -182,7 +212,7 @@ namespace Ironwall.Libraries.Server.Services
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception in {nameof(UpdateHeartBeat)} : {ex.Message}");
+                    _log.Error($"Raised Exception in {nameof(UpdateHeartBeat)} : {ex.Message}");
                     //Response message to the Client
                     //await KeepAliveResponse(false, $"Raised Exception in {nameof(UpdateHeartBeat)} : {ex.Message}", null, endPoint);
                     AcceptedClient_Event("token was not matched!", endPoint);
@@ -192,226 +222,332 @@ namespace Ironwall.Libraries.Server.Services
         }
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////
-        public Task ConnectionEventRequest(IConnectionRequestModel model, IPEndPoint endPoint = null)
+        public  Task ConnectionEventRequest(IConnectionEventModel model, IPEndPoint endPoint = null)
         {
             ///01. Check model
             ///02. Save Connection Event with Updating Connection Event Provider
             ///03. Bypass Event Message to All Clients
             ///04. Send Message to UI Log
 
-            return Task.Run(async () =>
+            try
             {
-                try
-                {
-                    //01. Check model
-                    if (model == null)
-                        throw new Exception(message: "Connection data is empty.");
+                //01. Check model
+                if (model == null)
+                    throw new Exception(message: "Connection data is empty.");
 
-                    //02. Save Connection Event with Updating Connection Event Provider
+                //02. Save Connection Event with Updating Connection Event Provider
 
 
-                    //03. Bypass Event Message to All Clients
-                    await SendRequest(JsonConvert.SerializeObject(model));
+                //03. Bypass Event Message to All Clients
+                //await SendRequest(JsonConvert.SerializeObject(model));
 
-                    //04. Send Message to UI Log
-                    AcceptedClient_Event($"[{model.Id}]Controller({model.Controller}), Sensor({model.Sensor}) was connected");
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"Raised Exception in {nameof(ConnectionEventRequest)} : {ex.Message}");
-                    AcceptedClient_Event($"Raised Exception in {nameof(ConnectionEventRequest)} : {ex.Message}", endPoint, EnumTcpCommunication.COMMUNICATION_ERROR);
-                }
+                //04. Send Message to UI Log
+                AcceptedClient_Event($"[{model.Id}]{model.Device.DeviceType} Device({model.Device.Id}) was connected!");
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"Raised Exception in {nameof(ConnectionEventRequest)} : {ex.Message}");
+                AcceptedClient_Event($"Raised Exception in {nameof(ConnectionEventRequest)} : {ex.Message}", endPoint, EnumTcpCommunication.COMMUNICATION_ERROR);
+            }
 
-            });
+            return Task.CompletedTask;
         }
 
-        public Task DetectionEventRequest(IDetectionRequestModel model, IPEndPoint endPoint = null)
+        public async Task DetectionEventRequest(IDetectionEventModel model, IPEndPoint endPoint = null)
         {
             ///01. Check model
             ///02. Save Detection Event with Updating Detection Event Provider
             ///03. Bypass Event Message to All Clients
             ///04. Send Message to UI Log
-
-            return Task.Run(async () =>
+            try
             {
+                //01. Check model
+                if (model == null)
+                    throw new Exception(message: "Detection data is empty.");
+
+                var tcs = new TaskCompletionSource<bool>();
+                Debug.WriteLine($"model : {model.DateTime.ToString("yyyy-MM-dd HH:mm:ss.ff")}");
+                var fetchEvent = await _eventDbService.SaveDetectionEvent(model, tcs: tcs);
+                var result = await tcs.Task;
+                Debug.WriteLine($"fetchmodel : {fetchEvent.DateTime.ToString("yyyy-MM-dd HH:mm:ss.ff")}");
+                if (!result) throw new Exception(message: $"Fail to execute {nameof(DetectionEventRequest)} in {nameof(ServerService)}");
+
                 try
                 {
-                    //01. Check model
-                    if (model == null)
-                        throw new Exception(message: "Detection data is empty.");
+                    //Test를 위해서 Static 코드를 추가
+                    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                    var vmsSensor = _vmsSensorProvider.Where(entity => entity.Device.Id == fetchEvent.Device.Id).FirstOrDefault();
+                    var vmsMapping = _vmsMappingProvider.Where(entity => entity.GroupNumber == vmsSensor?.GroupNumber).FirstOrDefault();
+                    var eventModel = _vmsEventProvider.Where(entity => entity.Id == vmsMapping?.EventId).FirstOrDefault();
 
-                    //02. Save Detection Event with Updating Detection Event Provider
-                    var sensor = _sensorDeviceProvider
-                    .Where((t) => (t as ISensorDeviceModel).DeviceNumber == model.Sensor
-                    && (t as ISensorDeviceModel).Controller.DeviceNumber == model.Controller)
-                    .FirstOrDefault() as SensorDeviceModel;
-                    var detectionModel = ModelFactory.Build<DetectionEventModel>(model, sensor);
+                    var device = fetchEvent.Device as ISensorDeviceModel;
 
-                    await EventDbService.SaveDetectionEvent(detectionModel);
-
-                    //03. Bypass Event Message to All Clients
-                    await SendRequest(JsonConvert.SerializeObject(model));
-
-                    //04. Send Message to UI Log
-                    AcceptedClient_Event($"[{model.Id}]Controller({model.Controller}), Sensor({model.Sensor}) was detected");
+                    var actionEvent = new Sensorway.Events.Base.Models.ActionEventModel(0, eventModel.Id, $"Controller : {device.Controller.DeviceNumber}, Sensor : {device.DeviceNumber} was detected", Sensorway.Events.Base.Enums.EnumEventStatus.ON, DateTime.Now);
+                    await _vmsApiService.ApiSetActionEventProcess(actionEvent);
+                    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
                 }
-                catch (Exception ex)
+                catch 
                 {
-                    Debug.WriteLine($"Raised Exception in {nameof(DetectionEventRequest)} : {ex.Message}");
-                    AcceptedClient_Event($"Raised Exception in {nameof(DetectionEventRequest)} : {ex.Message}", endPoint, EnumTcpCommunication.COMMUNICATION_ERROR);
                 }
+                
 
-            });
+                var request = new DetectionRequestModel(fetchEvent);
+
+                //03. Bypass Event Message to All Clients
+                await SendRequest(JsonConvert.SerializeObject(request, settings));
+
+                //04. Send Message to UI Log
+                AcceptedClient_Event($"[{model.Id}]{model.Device.DeviceType} Device({model.Device.Id}) was detected!");
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"Raised Exception in {nameof(DetectionEventRequest)} : {ex.Message}");
+                AcceptedClient_Event($"Raised Exception in {nameof(DetectionEventRequest)} : {ex.Message}", endPoint, EnumTcpCommunication.COMMUNICATION_ERROR);
+            }
+
         }
 
-        public Task MalfunctionEventRequest(IMalfunctionRequestModel model, IPEndPoint endPoint = null)
+        public async Task MalfunctionEventRequest(IMalfunctionEventModel model, IPEndPoint endPoint = null)
         {
             ///01. Check model
             ///02. Save Malfunction Event with Updating Malfunction Event Provider
             ///03. Bypass Event Message to All Clients
             ///04. Send Message to UI Log
-
-            return Task.Run(async () =>
+            try
             {
-                try
-                {
-                    //01. Check model
-                    if (model == null)
-                        throw new Exception(message: "Detection data is empty.");
+                //01. Check model
+                if (model == null)
+                    throw new Exception(message: "Detection data is empty.");
 
-                    //02. Save Detection Event with Updating Detection Event Provider
-                    MalfunctionEventModel eventModel = null;
-                    switch (model.UnitType)
-                    {
-                        case EnumDeviceType.Controller:
-                            {
-                                var controller = _controllerDeviceProvider
-                                .Where(t => t.DeviceNumber == model.Controller)
-                                .FirstOrDefault() as ControllerDeviceModel;
+                var tcs = new TaskCompletionSource<bool>();
+                var fetchEvent = await _eventDbService.SaveMalfunctionEvent(model, tcs: tcs);
+                var result = await tcs.Task;
+                if (!result) throw new Exception(message: $"Fail to execute {nameof(MalfunctionEventRequest)} in {nameof(ServerService)}");
 
-                                eventModel = ModelFactory
-                                .Build<MalfunctionEventModel>(model, controller);
-                            }
-                            break;
-                        case EnumDeviceType.Multi:
-                        case EnumDeviceType.Fence:
-                        case EnumDeviceType.Contact:
-                        case EnumDeviceType.PIR:
-                        case EnumDeviceType.Underground:
-                        case EnumDeviceType.Laser:
-                            {
-                                var sensor = _sensorDeviceProvider
-                                .Where(s => s.DeviceNumber == model.Sensor)
-                                .FirstOrDefault() as SensorDeviceModel;
+                var request = new MalfunctionRequestModel(fetchEvent);
 
-                                eventModel = ModelFactory
-                                .Build<MalfunctionEventModel>(model, sensor);
-                            }
-                            break;
+                //03. Bypass Event Message to All Clients
+                await SendRequest(JsonConvert.SerializeObject(request, settings));
 
-                        default:
-                            break;
-                    }
-
-                    await EventDbService.SaveMalfunctionEvent(eventModel);
-
-                    //03. Bypass Event Message to All Clients
-                    await SendRequest(JsonConvert.SerializeObject(model));
-
-                    //04. Send Message to UI Log
-                    AcceptedClient_Event($"[{model.Id}]Controller({model.Controller}), Sensor({model.Sensor}) has an error");
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"Raised Exception in {nameof(MalfunctionEventRequest)} : {ex.Message}");
-                    AcceptedClient_Event($"Raised Exception in {nameof(MalfunctionEventRequest)} : {ex.Message}", endPoint, EnumTcpCommunication.COMMUNICATION_ERROR);
-                }
-            });
+                //04. Send Message to UI Log
+                AcceptedClient_Event($"[{model.Id}]{model.Device.DeviceType} Device({model.Device.Id}) was broken!");
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"Raised Exception in {nameof(MalfunctionEventRequest)} : {ex.Message}");
+                AcceptedClient_Event($"Raised Exception in {nameof(MalfunctionEventRequest)} : {ex.Message}", endPoint, EnumTcpCommunication.COMMUNICATION_ERROR);
+            }
         }
 
-        public Task<bool> ActionEventRequest(IActionRequestModel model, IPEndPoint endPoint = null)
+
+        public async Task<bool> ActionEventRequest(IActionRequestModel model, IPEndPoint endPoint = null)
         {
-            ///01. Check model
-            ///02. Save Detection Event with Updating Detection Event Provider
-            ///03. Send ActionResponse 
-            ///04. Send Message to UI Log
+            //01. Check model
+            //02. Fetch original event from DB
+            //03. Check original event was updated from EnumTrueFalse.False to EnumTrueFalse.True
+            //04.Update original event from DB
+            //05.Save new action event
+            //06. Send ActionResponse 
+            //07. Send Message to UI Log
 
-            return Task.Run(async () =>
+            await _semaphore.WaitAsync(); // 시작 시 세마포어를 기다립니다.
+
+            try
             {
+                //01. Check model
+                if (model == null) throw new Exception(message: $"{nameof(ActionEventRequest)} data is empty.");
+
+                //02. Fetch original event from DB
+                var tcs = new TaskCompletionSource<bool>();
+                var eventModel = model.Body;
+                bool result = false;
+                IMetaEventModel originEvent = null;
+                switch ((EnumEventType)eventModel.FromEvent.MessageType)
+                {
+                    case EnumEventType.Intrusion:
+                        {
+                            originEvent = await _eventDbService.FetchDetectionEvent(eventModel.FromEvent as IDetectionEventModel, tcs: tcs);
+                            result = await tcs.Task;
+                        }
+                        break;
+                    case EnumEventType.ContactOn:
+                        break;
+                    case EnumEventType.ContactOff:
+                        break;
+                    case EnumEventType.Connection:
+                        break;
+                    case EnumEventType.Action:
+                        break;
+                    case EnumEventType.Fault:
+                        {
+                            originEvent = await _eventDbService.FetchMalfunctionEvent(eventModel.FromEvent as IMalfunctionEventModel, tcs: tcs);
+                            result = await tcs.Task;
+                        }
+                        break;
+                    case EnumEventType.WindyMode:
+                        break;
+                    default:
+                        break;
+                }
+
+                if (!result) throw new Exception(message: $"Fail to execute {nameof(ActionEventRequest)} in {nameof(ServerService)}");
+
+                //03. Check original event was updated from EnumTrueFalse.False to EnumTrueFalse.True
+                if (originEvent.Status == EnumTrueFalse.True)
+                    throw new Exception(message: $"{originEvent.Id} has already been processed.");
+
+                //04.Save new action event
+                tcs = new TaskCompletionSource<bool>();
+                var savedEvent = await _eventDbService.SaveActionEvent(eventModel, tcs: tcs);
+                result = await tcs.Task;
+                if (!result) throw new Exception(message: $"Fail to execute {nameof(ActionEventRequest)} in {nameof(ServerService)}");
+
+                //05.Update original event from DB
+                tcs = new TaskCompletionSource<bool>();
+                originEvent.Status = EnumTrueFalse.True;
+
+                switch ((EnumEventType)originEvent.MessageType)
+                {
+                    case EnumEventType.Intrusion:
+                        {
+                            await _eventDbService.UpdateDetectionEvent(originEvent as IDetectionEventModel, tcs: tcs);
+                            result = await tcs.Task;
+                        }
+                        break;
+                    case EnumEventType.ContactOn:
+                        break;
+                    case EnumEventType.ContactOff:
+                        break;
+                    case EnumEventType.Connection:
+                        break;
+                    case EnumEventType.Action:
+                        break;
+                    case EnumEventType.Fault:
+                        {
+                            await _eventDbService.UpdateMalfunctionEvent(originEvent as IMalfunctionEventModel, tcs: tcs);
+                            result = await tcs.Task;
+                        }
+                        break;
+                    case EnumEventType.WindyMode:
+                        break;
+                    default:
+                        break;
+                }
+                if (!result) throw new Exception(message: $"Fail to execute {nameof(ActionEventRequest)} in {nameof(ServerService)}");
+
+
+                //Static Code should be removed!!!!!!!!!!!!!!
+                ////////////////////////////////////////////////////////////////////////////////////////////////////////////
                 try
                 {
-                    //01. Check model
-                    if (model == null)
-                        throw new Exception(message: $"{nameof(ActionEventRequest)} data is empty.");
+                    var vmsSensor = _vmsSensorProvider.Where(entity => entity.Device.Id == originEvent.Device.Id).FirstOrDefault();
+                    var vmsMapping = _vmsMappingProvider.Where(entity => entity.GroupNumber == vmsSensor.GroupNumber).FirstOrDefault();
+                    var vmsEventModel = _vmsEventProvider.Where(entity => entity.Id == vmsMapping.EventId).FirstOrDefault();
 
-                    //02. Save Detection Event with Updating Detection Event Provider
-                    var eventModel = EventProvider.Where(item => item.Id == model.EventId).FirstOrDefault();
-
-                    if (eventModel.Status == 1)
-                        throw new Exception(message: $"{model.EventId} has already been processed.");
-
-                    eventModel.Status = 1;
-                    ActionEventModel actionModel = null;
-                    switch ((EnumEventType)eventModel.MessageType)
-                    {
-                        case EnumEventType.Intrusion:
-                            {
-                                var eModel = eventModel as DetectionEventModel;
-                                actionModel = ModelFactory.Build<ActionEventModel>(model, eModel);
-                                await EventDbService.UpdateDetectionEvent(eModel);
-                            }
-                            break;
-                        case EnumEventType.ContactOn:
-                            break;
-                        case EnumEventType.ContactOff:
-                            break;
-                        case EnumEventType.Connection:
-                            break;
-                        case EnumEventType.Action:
-                            break;
-                        case EnumEventType.Fault:
-                            {
-                                var eModel = eventModel as MalfunctionEventModel;
-                                actionModel = ModelFactory.Build<ActionEventModel>(model, eModel);
-                                await EventDbService.UpdateMalfunctionEvent(eModel);
-                            }
-                            break;
-                        case EnumEventType.WindyMode:
-                            break;
-                        default:
-                            break;
-                    }
-
-
-                    await EventDbService.SaveActionEvent(actionModel);
-
-
-                    //03. Send ActionResponse 
-                    //await ActionEventResponse(true, "Action Request was successfully applied!", actionModel);
-                    await ActionEventResponse(true, "Action Request was successfully applied!", model);
-
-                    //04. Send Message to UI Log
-                    AcceptedClient_Event($"[{model.Id}]Action Report was requested!", endPoint);
-
-                    return true;
+                    var device = originEvent.Device as ISensorDeviceModel;
+                    var actionEvent = new Sensorway.Events.Base.Models.ActionEventModel(0, vmsEventModel.Id, $"Detection Event(Controller : {device.Controller.DeviceNumber}, Sensor : {device.DeviceNumber}) was reported", Sensorway.Events.Base.Enums.EnumEventStatus.OFF, DateTime.Now);
+                    await _vmsApiService.ApiSetActionEventProcess(actionEvent);
                 }
-                catch (SocketSendException ex)
+                catch 
                 {
-                    Debug.WriteLine($"Raised SocketSendException in {nameof(ActionEventRequest)} : {ex.Message}");
-                    AcceptedClient_Event($"Raised SocketSendException in {nameof(ActionEventRequest)} : {ex.Message}", endPoint, EnumTcpCommunication.COMMUNICATION_ERROR);
+                }      
+                
+                ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-                    return false;
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"Raised Exception in {nameof(ActionEventRequest)} : {ex.Message}");
-                    await ActionEventResponse(false, ex.Message, null, endPoint);
-                    AcceptedClient_Event($"Raised Exception in {nameof(ActionEventRequest)} : {ex.Message}", endPoint, EnumTcpCommunication.COMMUNICATION_ERROR);
+                //06. Send ActionResponse 
+                await ActionEventDetectionResponse(true, "Action Request was successfully applied!", savedEvent);
 
-                    return false;
-                }
-            });
+                //07. Send Message to UI Log
+                AcceptedClient_Event($"[{model.Id}]Action Report was requested!", endPoint);
+
+                return true;
+            }
+            catch (SocketSendException ex)
+            {
+                _log.Error($"Raised SocketSendException in {nameof(ActionEventRequest)} : {ex.Message}");
+                AcceptedClient_Event($"Raised SocketSendException in {nameof(ActionEventRequest)} : {ex.Message}", endPoint, EnumTcpCommunication.COMMUNICATION_ERROR);
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"Raised Exception in {nameof(ActionEventRequest)} : {ex.Message}");
+                await ActionEventResponse(false, ex.Message, null as IActionEventModel, endPoint);
+                AcceptedClient_Event($"Raised Exception in {nameof(ActionEventRequest)} : {ex.Message}", endPoint, EnumTcpCommunication.COMMUNICATION_ERROR);
+
+                return false;
+            }
+            finally
+            {
+                _semaphore.Release(); // 작업이 완료되면 세마포어를 해제합니다.
+            }
         }
+
+        //public Task<bool> ActionEventRequest(IActionRequestMalfunctionModel model, IPEndPoint endPoint = null)
+        //{
+        //    ///01. Check model
+        //    ///02. Save Detection Event with Updating Detection Event Provider
+        //    ///03. Send ActionResponse 
+        //    ///04. Send Message to UI Log
+
+        //    return Task.Run(async () =>
+        //    {
+        //        try
+        //        {
+        //            //01. Check model
+        //            if (model == null)
+        //                throw new Exception(message: $"{nameof(ActionEventRequest)} data is empty.");
+
+
+        //            //01. Fetch original event from DB
+        //            var tcs = new TaskCompletionSource<bool>();
+        //            var eventModel = new ActionEventModel(model);
+        //            var originEvent = await _eventDbService.FetchMalfunctionEvent(eventModel.FromEvent.Id, tcs: tcs);
+        //            var result = await tcs.Task;
+        //            if (!result) throw new Exception(message: $"Fail to execute {nameof(ActionEventRequest)} in {nameof(ServerService)}");
+
+        //            //02. Check original event was updated from EnumTrueFalse.False to EnumTrueFalse.True
+        //            if (originEvent.Status == EnumTrueFalse.True)
+        //                throw new Exception(message: $"{originEvent.Id} has already been processed.");
+
+        //            //03.Update original event from DB
+        //            tcs = new TaskCompletionSource<bool>();
+        //            originEvent.Status = EnumTrueFalse.True;
+        //            await _eventDbService.UpdateMalfunctionEvent(originEvent, tcs: tcs);
+        //            result = await tcs.Task;
+        //            if (!result) throw new Exception(message: $"Fail to execute {nameof(ActionEventRequest)} in {nameof(ServerService)}");
+
+        //            //04.Save new action event
+        //            tcs = new TaskCompletionSource<bool>();
+        //            var savedEvent = await _eventDbService.SaveActionEvent(eventModel, tcs: tcs);
+        //            result = await tcs.Task;
+        //            if (!result) throw new Exception(message: $"Fail to execute {nameof(ActionEventRequest)} in {nameof(ServerService)}");
+
+        //            //05. Send ActionResponse 
+        //            await ActionEventMalfunctionResponse(true, "Action Request was successfully applied!", savedEvent);
+
+        //            //06. Send Message to UI Log
+        //            AcceptedClient_Event($"[{model.Id}]Action Report was requested!", endPoint);
+
+        //            return true;
+        //        }
+        //        catch (SocketSendException ex)
+        //        {
+        //            _log.Error($"Raised SocketSendException in {nameof(ActionEventRequest)} : {ex.Message}");
+        //            AcceptedClient_Event($"Raised SocketSendException in {nameof(ActionEventRequest)} : {ex.Message}", endPoint, EnumTcpCommunication.COMMUNICATION_ERROR);
+
+        //            return false;
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            _log.Error($"Raised Exception in {nameof(ActionEventRequest)} : {ex.Message}");
+        //            await ActionEventResponse(false, ex.Message, null as IMalfunctionEventModel, endPoint);
+        //            AcceptedClient_Event($"Raised Exception in {nameof(ActionEventRequest)} : {ex.Message}", endPoint, EnumTcpCommunication.COMMUNICATION_ERROR);
+
+        //            return false;
+        //        }
+        //    });
+        //}
 
         public Task<bool> SearchDetectionEventRequest(ISearchDetectionRequestModel model, IPEndPoint endPoint)
         {
@@ -432,17 +568,10 @@ namespace Ironwall.Libraries.Server.Services
                         throw new Exception(message: "User token is not appropriate!");
 
                     //02. Find events from DB
-                    await EventDbService.FetchDetectionEvent(model.StartDateTime, model.EndDateTime);
-
-                    List<DetectionRequestModel> events = new List<DetectionRequestModel>();
-                    foreach (DetectionEventModel item in EventProvider.OfType<IDetectionEventModel>().ToList())
-                    {
-                        var requestModel = RequestFactory.Build<DetectionRequestModel>(item);
-                        events.Add(requestModel);
-                    }
+                    var list = await _eventDbService.FetchDetectionEvents(model.StartDateTime, model.EndDateTime);
 
                     //03. Send SearchDetectionEventResponse 
-                    await SearchEventResponse(true, "Search Detection Event Request was successfully applied!", events);
+                    await SearchEventResponse(true, "Search Detection Event Request was successfully applied!", list);
 
                     //04. Send Message to UI Log
                     AcceptedClient_Event($"Search Detection Event Request was requested!", endPoint);
@@ -451,15 +580,15 @@ namespace Ironwall.Libraries.Server.Services
                 }
                 catch (SocketSendException ex)
                 {
-                    Debug.WriteLine($"Raised SocketSendException in {nameof(SearchDetectionEventRequest)} : {ex.Message}");
+                    _log.Error($"Raised SocketSendException in {nameof(SearchDetectionEventRequest)} : {ex.Message}");
                     AcceptedClient_Event($"Raised SocketSendException in {nameof(SearchDetectionEventRequest)} : {ex.Message}", endPoint, EnumTcpCommunication.COMMUNICATION_ERROR);
 
                     return false;
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception in {nameof(SearchDetectionEventRequest)} : {ex.Message}");
-                    await ActionEventResponse(false, ex.Message, null, endPoint);
+                    _log.Error($"Raised Exception in {nameof(SearchDetectionEventRequest)} : {ex.Message}");
+                    await SearchEventResponse(false, ex.Message, null as List<IDetectionEventModel>, endPoint);
                     AcceptedClient_Event($"Raised Exception in {nameof(SearchDetectionEventRequest)} : {ex.Message}", endPoint, EnumTcpCommunication.COMMUNICATION_ERROR);
 
                     return false;
@@ -486,14 +615,7 @@ namespace Ironwall.Libraries.Server.Services
                         throw new Exception(message: "User token is not appropriate!");
 
                     //02. Find events from DB
-                    await EventDbService.FetchMalfunctionEvent(model.StartDateTime, model.EndDateTime);
-
-                    List<MalfunctionRequestModel> events = new List<MalfunctionRequestModel>();
-                    foreach (MalfunctionEventModel item in EventProvider.OfType<IMalfunctionEventModel>().ToList())
-                    {
-                        var requestModel = RequestFactory.Build<MalfunctionRequestModel>(item);
-                        events.Add(requestModel);
-                    }
+                    var events = await _eventDbService.FetchMalfunctionEvents(model.StartDateTime, model.EndDateTime);
 
                     //03. Send SearchDetectionEventResponse 
                     await SearchEventResponse(true, "Search Malfunction Event Request was successfully applied!", events);
@@ -505,15 +627,15 @@ namespace Ironwall.Libraries.Server.Services
                 }
                 catch (SocketSendException ex)
                 {
-                    Debug.WriteLine($"Raised SocketSendException in {nameof(SearchMalfunctionEventRequest)} : {ex.Message}");
+                    _log.Error($"Raised SocketSendException in {nameof(SearchMalfunctionEventRequest)} : {ex.Message}");
                     AcceptedClient_Event($"Raised SocketSendException in {nameof(SearchMalfunctionEventRequest)} : {ex.Message}", endPoint, EnumTcpCommunication.COMMUNICATION_ERROR);
 
                     return false;
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception in {nameof(SearchMalfunctionEventRequest)} : {ex.Message}");
-                    await ActionEventResponse(false, ex.Message, null, endPoint);
+                    _log.Error($"Raised Exception in {nameof(SearchMalfunctionEventRequest)} : {ex.Message}");
+                    await SearchEventResponse(false, ex.Message, null as List<IMalfunctionEventModel>, endPoint);
                     AcceptedClient_Event($"Raised Exception in {nameof(SearchMalfunctionEventRequest)} : {ex.Message}", endPoint, EnumTcpCommunication.COMMUNICATION_ERROR);
 
                     return false;
@@ -540,35 +662,12 @@ namespace Ironwall.Libraries.Server.Services
                         throw new Exception(message: "User token is not appropriate!");
 
                     //02. Find events from DB
-                    await EventDbService.FetchEvent(model.StartDateTime, model.EndDateTime);
-
-                    List<DetectionRequestModel> detectionEvents = new List<DetectionRequestModel>();
-                    List<MalfunctionRequestModel> malfunctionEvents = new List<MalfunctionRequestModel>();
-                    List<ActionRequestModel> actionEvents = new List<ActionRequestModel>();
-                    foreach (var item in EventProvider.ToList())
-                    {
-                        if(item is IDetectionEventModel detectionModel)
-                        {
-                            var requestModel = RequestFactory.Build<DetectionRequestModel>(detectionModel);
-                            detectionEvents.Add(requestModel);
-                        }else if(item is IMalfunctionEventModel malfunctionModel)
-                        {
-                            var requestModel = RequestFactory.Build<MalfunctionRequestModel>(malfunctionModel);
-                            malfunctionEvents.Add(requestModel);
-                        }
-                        else
-                        {
-                        }
-                    }
-
-                    foreach (IActionEventModel item in ActionEventProvider.ToList())
-                    {
-                        var requestModel = RequestFactory.Build<ActionRequestModel>(item);
-                        actionEvents.Add(requestModel);
-                    }
+                    //var detectionList = await _eventDbService.FetchDetectionEvents(model.StartDateTime, model.EndDateTime);
+                    //var malfunctionList = await _eventDbService.FetchMalfunctionEvents(model.StartDateTime, model.EndDateTime);
+                    var events = await _eventDbService.FetchActionEvents(model.StartDateTime, model.EndDateTime);
 
                     //03. Send SearchActionEventResponse 
-                    await SearchEventResponse(true, "Search Action Event Request was successfully applied!", detectionEvents, malfunctionEvents, actionEvents);
+                    await SearchEventResponse(true, "Search Action Event Request was successfully applied!", events);
 
                     //04. Send Message to UI Log
                     AcceptedClient_Event($"Search Action Event Request was requested!", endPoint);
@@ -577,54 +676,18 @@ namespace Ironwall.Libraries.Server.Services
                 }
                 catch (SocketSendException ex)
                 {
-                    Debug.WriteLine($"Raised SocketSendException in {nameof(SearchActionEventRequest)} : {ex.Message}");
+                    _log.Error($"Raised SocketSendException in {nameof(SearchActionEventRequest)} : {ex.Message}");
                     AcceptedClient_Event($"Raised SocketSendException in {nameof(SearchActionEventRequest)} : {ex.Message}", endPoint, EnumTcpCommunication.COMMUNICATION_ERROR);
 
                     return false;
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception in {nameof(SearchActionEventRequest)} : {ex.Message}");
-                    await ActionEventResponse(false, ex.Message, null, endPoint);
+                    _log.Error($"Raised Exception in {nameof(SearchActionEventRequest)} : {ex.Message}");
+                    await SearchEventResponse(false, ex.Message, null as List<IActionEventModel>, endPoint);
                     AcceptedClient_Event($"Raised Exception in {nameof(SearchActionEventRequest)} : {ex.Message}", endPoint, EnumTcpCommunication.COMMUNICATION_ERROR);
 
                     return false;
-                }
-            });
-        }
-
-       
-
-        public Task DeviceInfoRequest(IDeviceInfoRequestModel model, IPEndPoint endPoint)
-        {
-            ///01. Create Model with Parameters
-            ///02. Send Message to All Clients
-            ///03. Send Message to UI Log
-            var aim = $"Send Device Info to {model.UserId} Successfully.";
-            return Task.Run(async () =>
-            {
-                try
-                {
-                    if (!await IsLoggedInUser(model))
-                        throw new Exception(message: "User token is not appropriate!");
-
-                    //Debug.WriteLine($"_deviceInfoModel : {_deviceInfoModel.GetHashCode()}");
-
-                    //01. Create Model with Parameters
-                    var detail = ResponseFactory.Build<DeviceDetailModel>(_deviceInfoModel.Controller, _deviceInfoModel.Sensor, _deviceInfoModel.Camera, _deviceInfoModel.UpdateTime);
-
-                    //02. Send Message to the designated Clients
-                    await DeviceInfoResponse(true, aim, detail, endPoint);
-
-                    //03. Send Message to UI Log
-                    AcceptedClient_Event($"{aim}");
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"Raised Exception in {nameof(DeviceInfoRequest)} : {ex.Message}");
-
-                    //await SendDetectionEventResponse(false, ex.Message, null, endPoint);
-                    AcceptedClient_Event($"Raised Exception in {nameof(DeviceInfoRequest)} : {ex.Message}", endPoint, EnumTcpCommunication.COMMUNICATION_ERROR);
                 }
             });
         }
@@ -634,7 +697,7 @@ namespace Ironwall.Libraries.Server.Services
             ///01. Create Model with Parameters
             ///02. Send Message to All Clients
             ///03. Send Message to UI Log
-            var aim = $"Send Device Data Reponse to {model.UserId} Successfully.";
+            var aim = $"Send Device Data Reponse to {endPoint.Address} Successfully.";
             return Task.Run(async () =>
             {
                 try
@@ -644,24 +707,21 @@ namespace Ironwall.Libraries.Server.Services
                     var sensorList = new List<SensorDeviceModel>();
                     var cameraList = new List<CameraDeviceModel>();
 
-                    foreach (var item in _deviceProvider)
+                    foreach (var item in _deviceProvider.OfType<ControllerDeviceModel>().ToList())
                     {
-                        if (!DeviceHelper.IsControllerCategory(item.DeviceType)) continue;
-
+                        //if (!DeviceHelper.IsControllerCategory(item.DeviceType)) continue;
                         contrllerList.Add(item as ControllerDeviceModel);
                     }
 
-                    foreach (var item in _deviceProvider)
+                    foreach (var item in _deviceProvider.OfType<SensorDeviceModel>().ToList())
                     {
-                        if (!DeviceHelper.IsSensorCategory(item.DeviceType)) continue;
-
+                        //if (!DeviceHelper.IsSensorCategory(item.DeviceType)) continue;
                         sensorList.Add(item as SensorDeviceModel);
                     }
 
-                    foreach (var item in _deviceProvider)
+                    foreach (var item in _deviceProvider.OfType<CameraDeviceModel>().ToList())
                     {
-                        if (!DeviceHelper.IsCameraCategory(item.DeviceType)) continue;
-
+                        //if (!DeviceHelper.IsCameraCategory(item.DeviceType)) continue;
                         cameraList.Add(item as CameraDeviceModel);
                     }
 
@@ -674,7 +734,7 @@ namespace Ironwall.Libraries.Server.Services
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception in {nameof(ControllerDataRequest)} : {ex.Message}");
+                    _log.Error($"Raised Exception in {nameof(ControllerDataRequest)} : {ex.Message}");
 
                     //await SendDetectionEventResponse(false, ex.Message, null, endPoint);
                     AcceptedClient_Event($"Raised Exception in {nameof(ControllerDataRequest)} : {ex.Message}", endPoint, EnumTcpCommunication.COMMUNICATION_ERROR);
@@ -688,7 +748,7 @@ namespace Ironwall.Libraries.Server.Services
             ///01. Create Model with Parameters
             ///02. Send Message to All Clients
             ///03. Send Message to UI Log
-            var aim = $"Send Controller Data Reponse to {model.UserId} Successfully.";
+            var aim = $"Send Controller Data Reponse to {endPoint.Address} Successfully.";
             return Task.Run(async () =>
             {
                 try
@@ -708,7 +768,7 @@ namespace Ironwall.Libraries.Server.Services
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception in {nameof(ControllerDataRequest)} : {ex.Message}");
+                    _log.Error($"Raised Exception in {nameof(ControllerDataRequest)} : {ex.Message}");
 
                     //await SendDetectionEventResponse(false, ex.Message, null, endPoint);
                     AcceptedClient_Event($"Raised Exception in {nameof(ControllerDataRequest)} : {ex.Message}", endPoint, EnumTcpCommunication.COMMUNICATION_ERROR);
@@ -722,7 +782,7 @@ namespace Ironwall.Libraries.Server.Services
             ///01. Create Model with Parameters
             ///02. Send Message to All Clients
             ///03. Send Message to UI Log
-            var aim = $"Send Sensor Data Reponse to {model.UserId} Successfully.";
+            var aim = $"Send Sensor Data Reponse to {endPoint.Address} Successfully.";
             return Task.Run(async () =>
             {
                 try
@@ -744,7 +804,7 @@ namespace Ironwall.Libraries.Server.Services
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception in {nameof(SensorDataRequest)} : {ex.Message}");
+                    _log.Error($"Raised Exception in {nameof(SensorDataRequest)} : {ex.Message}");
                     AcceptedClient_Event($"Raised Exception in {nameof(SensorDataRequest)} : {ex.Message}", endPoint, EnumTcpCommunication.COMMUNICATION_ERROR);
                 }
 
@@ -756,7 +816,7 @@ namespace Ironwall.Libraries.Server.Services
             ///01. Create Model with Parameters
             ///02. Send Message to All Clients
             ///03. Send Message to UI Log
-            var aim = $"Send Camera Data Reponse to {model.UserId} Successfully.";
+            var aim = $"Send Camera Data Reponse to {endPoint.Address} Successfully.";
             return Task.Run(async () =>
             {
                 try
@@ -772,7 +832,7 @@ namespace Ironwall.Libraries.Server.Services
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception in {nameof(CameraDataRequest)} : {ex.Message}");
+                    _log.Error($"Raised Exception in {nameof(CameraDataRequest)} : {ex.Message}");
                     AcceptedClient_Event($"Raised Exception in {nameof(CameraDataRequest)} : {ex.Message}", endPoint, EnumTcpCommunication.COMMUNICATION_ERROR);
                 }
             });
@@ -781,50 +841,82 @@ namespace Ironwall.Libraries.Server.Services
         public Task CameraDataSaveRequest(ICameraDataSaveRequestModel model, IPEndPoint endPoint)
         {
             ///01. Remove All Data from Provider
-            ///02. Insert All Received Data from RequestModel
+            ///02. Insert All Received Data from Body
             ///03. Send Message to UI Log
             var aim = $"Send Camera Data Reponse to {model.UserId} Successfully.";
             return Task.Run(async () =>
             {
                 try
                 {
-                    ///01. Remove All Data from Provider
-                    foreach (var item in _deviceProvider.OfType<ICameraDeviceModel>().ToList())
+                    var tcs = new TaskCompletionSource<bool>();
+                    var list = model.Body.OfType<ICameraDeviceModel>().ToList();
+                    await _deviceDbService.SaveCameras(list, tcs: tcs);
+                    var result = await tcs.Task;
+                    if (!result) throw new Exception(message: $"Fail to execute {nameof(CameraDataSaveRequest)} in {nameof(ServerService)}");
+
+                    tcs = new TaskCompletionSource<bool>();
+                    var fetches = await _deviceDbService.FetchCameras(tcs: tcs);
+                    result = await tcs.Task;
+                    if (!result) throw new Exception(message: $"Fail to fetch {fetches.GetType()} in {nameof(CameraDataSaveRequest)} of {nameof(ServerService)}");
+
+                    foreach (var item in _deviceProvider.OfType<CameraDeviceModel>().ToList())
                     {
                         _deviceProvider.Remove(item);
                     }
 
-                    //For Data size, needs to send the partially grouped data
-                    foreach (var item in model.Cameras)
+                    foreach (var item in fetches)
                     {
                         _deviceProvider.Add(item);
                     }
 
-                    await _deviceDbService.SaveCameras();
-
-                    var deviceDetail = DeviceInfoUpdate();
-                    await _deviceDbService.UpdateDeviceInfo(deviceDetail);
-
                     //02. Send Message to the designated Clients
-                    await CameraDataSaveResponse(true, aim, deviceDetail, endPoint);
+                    await CameraDataSaveResponse(true, aim, fetches, endPoint);
 
                     //03. Send Message to UI Log
                     AcceptedClient_Event($"{aim}");
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception in {nameof(CameraDataRequest)} : {ex.Message}");
+                    _log.Error($"Raised Exception in {nameof(CameraDataRequest)} : {ex.Message}");
                     AcceptedClient_Event($"Raised Exception in {nameof(CameraDataRequest)} : {ex.Message}", endPoint, EnumTcpCommunication.COMMUNICATION_ERROR);
                 }
             });
         }
+
+        public Task CameraOptionRequest(CameraOptionRequestModel json, IPEndPoint endPoint)
+        {
+            ///01. Create Model with Parameters
+            ///02. Send Message to All Clients
+            ///03. Send Message to UI Log
+            var aim = $"Send Camera Option Data Reponse to {endPoint.Address} Successfully.";
+            return Task.Run(async () =>
+            {
+                try
+                {
+
+                    //var response = new CameraOptionResponse(_cameraOptionProvider.OfType<BaseOptionModel>().ToList(), true, aim);
+                    //02. Send Message to the designated Clients
+                    await CameraOptionResponse(true, aim, endPoint);
+
+                    //03. Send Message to UI Log
+                    AcceptedClient_Event($"{aim}");
+                }
+                catch (Exception ex)
+                {
+                    _log.Error($"Raised Exception in {nameof(CameraPresetRequest)} : {ex.Message}");
+                    AcceptedClient_Event($"Raised Exception in {nameof(CameraPresetRequest)} : {ex.Message}", endPoint, EnumTcpCommunication.COMMUNICATION_ERROR);
+                }
+            });
+        }
+
+        
 
         public Task CameraPresetRequest(ICameraPresetRequestModel model, IPEndPoint endPoint)
         {
             ///01. Create Model with Parameters
             ///02. Send Message to All Clients
             ///03. Send Message to UI Log
-            var aim = $"Send Camera Preset Data Reponse to {model.UserId} Successfully.";
+            var aim = $"Send Camera Preset Data Reponse to {endPoint.Address} Successfully.";
             return Task.Run(async () =>
             {
                 try
@@ -841,7 +933,7 @@ namespace Ironwall.Libraries.Server.Services
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception in {nameof(CameraPresetRequest)} : {ex.Message}");
+                    _log.Error($"Raised Exception in {nameof(CameraPresetRequest)} : {ex.Message}");
                     AcceptedClient_Event($"Raised Exception in {nameof(CameraPresetRequest)} : {ex.Message}", endPoint, EnumTcpCommunication.COMMUNICATION_ERROR);
                 }
             });
@@ -859,25 +951,38 @@ namespace Ironwall.Libraries.Server.Services
                 {
                     //01. Create Model with Parameters
                     //For Data size, needs to send the partially grouped data
-                    
-                    _cameraPresetProvider.Clear();
-                    foreach (var preset in model.Presets) 
+
+                    var tcs = new TaskCompletionSource<bool>();
+                    var list = model.Body.OfType<ICameraPresetModel>().ToList();
+                    await _deviceDbService.SavePresets(list, tcs: tcs);
+                    var result = await tcs.Task;
+                    if (!result) throw new Exception(message: $"Fail to execute {nameof(CameraPresetSaveRequest)} in {nameof(ServerService)}");
+
+                    tcs = new TaskCompletionSource<bool>();
+                    var fetches = await _deviceDbService.FetchPresets(tcs: tcs);
+                    result = await tcs.Task;
+                    if (!result) throw new Exception(message: $"Fail to fetch {fetches.GetType()} in {nameof(CameraDataSaveRequest)} of {nameof(ServerService)}");
+
+
+                    foreach (var item in _cameraOptionProvider.OfType<CameraPresetModel>().ToList())
                     {
-                        _cameraPresetProvider.Add(preset);
+                        _cameraOptionProvider.Remove(item);
                     }
 
-                    TaskCompletionSource<bool> tcs = new TaskCompletionSource<bool>();
-                    await _deviceDbService.SaveCameraPresets(tcs:tcs);
+                    foreach (var item in fetches) 
+                    {
+                        _cameraOptionProvider.Add(item);
+                    }
 
                     //02. Send Message to the designated Clients
-                    await CameraPresetSaveResponse(tcs.Task.Result, aim, endPoint);
+                    await CameraPresetSaveResponse(tcs.Task.Result, aim, fetches, endPoint);
 
                     //03. Send Message to UI Log
                     AcceptedClient_Event($"{aim}");
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception in {nameof(CameraPresetRequest)} : {ex.Message}");
+                    _log.Error($"Raised Exception in {nameof(CameraPresetRequest)} : {ex.Message}");
                     AcceptedClient_Event($"Raised Exception in {nameof(CameraPresetRequest)} : {ex.Message}", endPoint, EnumTcpCommunication.COMMUNICATION_ERROR);
                 }
             });
@@ -888,29 +993,31 @@ namespace Ironwall.Libraries.Server.Services
             ///01. Create Model with Parameters
             ///02. Send Message to All Clients
             ///03. Send Message to UI Log
-            var aim = $"Send Camera Mapping Data Reponse to {model.UserId} Successfully.";
+            var aim = $"Send Camera Mapping Data Reponse to {endPoint.Address} Successfully.";
             return Task.Run(async () =>
             {
                 try
                 {
-                    //01. Create Model with Parameters
-                    var list = new List<CameraMappingModel>();
+                    var tcs = new TaskCompletionSource<bool>();
+                    var mappings = await _deviceDbService.FetchCameraMappings(tcs: tcs);
+                   
+                    var result = await tcs.Task;
+                    if (!result) throw new Exception(message: $"Fail to fetch CameraMappingModels in {nameof(CameraMappingRequest)} of {nameof(ServerService)}");
 
-                    //For Data size, needs to send the partially grouped data
-                    foreach (CameraMappingModel item in _cameraMappingProvider)
+                    _cameraMappingProvider.Clear();
+                    foreach (var item in mappings)
                     {
-                        list.Add(item);
+                        _cameraMappingProvider.Add(item);
                     }
 
-                    //02. Send Message to the designated Clients
-                    await CameraMappingResponse(true, aim, list, endPoint);
+                    await CameraMappingResponse(true, aim, _cameraMappingProvider.ToList(), endPoint);
 
                     //03. Send Message to UI Log
                     AcceptedClient_Event($"{aim}");
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception in {nameof(CameraMappingRequest)} : {ex.Message}");
+                    _log.Error($"Raised Exception in {nameof(CameraMappingRequest)} : {ex.Message}");
                     AcceptedClient_Event($"Raised Exception in {nameof(CameraMappingRequest)} : {ex.Message}", endPoint, EnumTcpCommunication.COMMUNICATION_ERROR);
                 }
             });
@@ -926,60 +1033,37 @@ namespace Ironwall.Libraries.Server.Services
             {
                 try
                 {
-                    _cameraMappingProvider.Clear();
-                    foreach (var item in model.Mappings)
+                    var tcs = new TaskCompletionSource<bool>();
+                    
+                    await _deviceDbService.SaveCameraMappings(model.Body?.OfType<ICameraMappingModel>().ToList(), tcs: tcs);
+                    var result = await tcs.Task;
+                    if (!result) throw new Exception(message: $"Fail to save CameraMappingModels in {nameof(CameraDataSaveRequest)} of {nameof(ServerService)}");
+
+
+                    tcs = new TaskCompletionSource<bool>();
+                    var mappings = await _deviceDbService.FetchCameraMappings(tcs: tcs);
+                    result = await tcs.Task;
+                    if (!result) throw new Exception(message: $"Fail to fetch CameraMappingModels in {nameof(CameraDataSaveRequest)} of {nameof(ServerService)}");
+
+
+                    foreach (var item in mappings)
                     {
                         _cameraMappingProvider.Add(item);
                     }
 
-                    //MetaData UPDATE ===> MappingInfoModel Update!!
-                    var mappingInfo = ModelFactory.Build<MappingInfoModel>(_cameraMappingProvider.Count, DateTimeHelper.GetCurrentTimeWithoutMS());
-                    //_mappingInfoModel.Mapping =_cameraMappingProvider.Count;
-                    //_mappingInfoModel.UpdateTime = DateTimeHelper.GetCurrentTimeWithoutMS();
-
-                    await _deviceDbService.SaveCameraMappings(isFinished:true);
-                    await _deviceDbService.UpdateMappingInfo(mappingInfo);
-
                     //02. Send Message to the designated Clients
-                    await CameraMappingSaveResponse(true, aim, endPoint);
+                    await CameraMappingSaveResponse(mappings, true, aim, endPoint);
 
                     //03. Send Message to UI Log
                     AcceptedClient_Event($"{aim}");
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception in {nameof(CameraMappingRequest)} : {ex.Message}");
+                    _log.Error($"Raised Exception in {nameof(CameraMappingRequest)} : {ex.Message}");
                     AcceptedClient_Event($"Raised Exception in {nameof(CameraMappingRequest)} : {ex.Message}", endPoint, EnumTcpCommunication.COMMUNICATION_ERROR);
                 }
             });
         }
-
-        public Task CameraMappingInfoRequest(ICameraMappingInfoRequestModel model, IPEndPoint endPoint)
-        {
-            ///01. Create Model with Parameters
-            ///02. Send Message to All Clients
-            ///03. Send Message to UI Log
-            var aim = $"Send Camera Mapping Data Reponse to {model.UserId} Successfully.";
-            return Task.Run(async () =>
-            {
-                try
-                {
-                    //01. Create Model with Parameters
-
-                    //02. Send Message to the designated Clients
-                    await CameraMappingInfoResponse(true, aim, _mappingInfoModel, endPoint);
-
-                    //03. Send Message to UI Log
-                    AcceptedClient_Event($"{aim}");
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"Raised Exception in {nameof(CameraMappingInfoRequest)} : {ex.Message}");
-                    AcceptedClient_Event($"Raised Exception in {nameof(CameraMappingInfoRequest)} : {ex.Message}", endPoint, EnumTcpCommunication.COMMUNICATION_ERROR);
-                }
-            });
-        }
-
         
 
         public Task SymbolInfoDataRequest(ISymbolInfoRequestModel model, IPEndPoint endPoint)
@@ -1007,7 +1091,7 @@ namespace Ironwall.Libraries.Server.Services
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception in {nameof(SymbolInfoDataRequest)} : {ex.Message}");
+                    _log.Error($"Raised Exception in {nameof(SymbolInfoDataRequest)} : {ex.Message}");
 
                     AcceptedClient_Event($"Raised Exception in {nameof(SymbolInfoDataRequest)} : {ex.Message}", endPoint, EnumTcpCommunication.COMMUNICATION_ERROR);
                 }
@@ -1069,7 +1153,7 @@ namespace Ironwall.Libraries.Server.Services
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception in {nameof(SymbolDataLoadRequest)} : {ex.Message}");
+                    _log.Error($"Raised Exception in {nameof(SymbolDataLoadRequest)} : {ex.Message}");
 
                     //await SendDetectionEventResponse(false, ex.Message, null, endPoint);
                     AcceptedClient_Event($"Raised Exception in {nameof(SymbolDataLoadRequest)} : {ex.Message}", endPoint, EnumTcpCommunication.COMMUNICATION_ERROR);
@@ -1174,7 +1258,7 @@ namespace Ironwall.Libraries.Server.Services
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception in {nameof(SymbolDataSaveRequest)} : {ex.Message}");
+                    _log.Error($"Raised Exception in {nameof(SymbolDataSaveRequest)} : {ex.Message}");
 
                     //await SendDetectionEventResponse(false, ex.Message, null, endPoint);
                     AcceptedClient_Event($"Raised Exception in {nameof(SymbolDataSaveRequest)} : {ex.Message}", endPoint, EnumTcpCommunication.COMMUNICATION_ERROR);
@@ -1210,7 +1294,7 @@ namespace Ironwall.Libraries.Server.Services
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception in {nameof(SymbolInfoDataRequest)} : {ex.Message}");
+                    _log.Error($"Raised Exception in {nameof(SymbolInfoDataRequest)} : {ex.Message}");
 
                     AcceptedClient_Event($"Raised Exception in {nameof(SymbolInfoDataRequest)} : {ex.Message}", endPoint, EnumTcpCommunication.COMMUNICATION_ERROR);
                 }
@@ -1253,7 +1337,7 @@ namespace Ironwall.Libraries.Server.Services
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception in {nameof(SymbolInfoDataRequest)} : {ex.Message}");
+                    _log.Error($"Raised Exception in {nameof(SymbolInfoDataRequest)} : {ex.Message}");
 
                     AcceptedClient_Event($"Raised Exception in {nameof(SymbolInfoDataRequest)} : {ex.Message}", endPoint, EnumTcpCommunication.COMMUNICATION_ERROR);
                 }
@@ -1261,18 +1345,46 @@ namespace Ironwall.Libraries.Server.Services
             });
         }
 
+        //////////////////////////////////////////VMS API METHODS/////////////////////////////////////////////
+        public Task VmsApiGetEventListRequest(IVmsApiGetEventListRequestModel model, IPEndPoint endPoint)
+        {
+            ///01. Create Model with Parameters
+            ///02. Send Message to All Clients
+            ///03. Send Message to UI Log
+            var aim = $"Send VmsEventList Data Reponse to {endPoint.Address} Successfully.";
+            return Task.Run(async () =>
+            {
+                try
+                {
+                    //01. Create Model with Parameters
 
+                    await _vmsApiService.ApiGetEventListProcess();
+                   
 
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////
-        #endregion
-        #region TaskResponse Process
-        public async Task ActionEventResponse(bool success, string msg, IActionRequestModel model = null, IPEndPoint endPoint = null)
+                    //02. Send Message to the designated Clients
+                    await VmsApiGetEventListResponse(true, aim, _vmsEventProvider.OfType<Sensorway.Events.Base.Models.IEventModel>().ToList(), endPoint);
+
+                    //03. Send Message to UI Log
+                    AcceptedClient_Event($"{aim}");
+                }
+                catch (Exception ex)
+                {
+                    _log.Error($"Raised Exception in {nameof(ControllerDataRequest)} : {ex.Message}");
+
+                    //await SendDetectionEventResponse(false, ex.Message, null, endPoint);
+                    AcceptedClient_Event($"Raised Exception in {nameof(ControllerDataRequest)} : {ex.Message}", endPoint, EnumTcpCommunication.COMMUNICATION_ERROR);
+                }
+
+            });
+        }
+
+        public async Task VmsApiGetEventListResponse(bool success, string msg, List<Sensorway.Events.Base.Models.IEventModel> model, IPEndPoint endPoint = null)
         {
             try
             {
-                var responseModel = ResponseFactory.Build<ActionResponseModel>(success, msg, model);
+                var responseModel = new VmsApiGetEventListResponseModel(success, msg, model);
 
-                await SendRequest(JsonConvert.SerializeObject(responseModel), endPoint);
+                await SendRequest(JsonConvert.SerializeObject(responseModel, settings), endPoint);
             }
             catch (Exception ex)
             {
@@ -1281,13 +1393,74 @@ namespace Ironwall.Libraries.Server.Services
         }
 
 
-        private async Task SearchEventResponse(bool success, string msg, List<DetectionRequestModel> events, IPEndPoint endPoint = null)
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////
+        #endregion
+        #region TaskResponse Process
+        public async Task ActionEventDetectionResponse(bool success, string msg, IActionEventModel model = null, IPEndPoint endPoint = null)
         {
             try
             {
-                var responseModel = ResponseFactory.Build<SearchDetectionResponseModel>(success, msg, events);
+                var responseModel = new ActionResponseModel(success, msg, model);
 
-                await SendRequest(JsonConvert.SerializeObject(responseModel), endPoint);
+                await SendRequest(JsonConvert.SerializeObject(responseModel, settings), endPoint);
+            }
+            catch (Exception ex)
+            {
+                throw new SocketSendException($"Raised Exception in {nameof(ActionEventResponse)} while sending message : {ex.Message}", endPoint);
+            }
+        }
+
+        public async Task ActionEventMalfunctionResponse(bool success, string msg, IActionEventModel model = null, IPEndPoint endPoint = null)
+        {
+            try
+            {
+                var responseModel = new ActionResponseModel(success, msg, model);
+
+                await SendRequest(JsonConvert.SerializeObject(responseModel, settings), endPoint);
+            }
+            catch (Exception ex)
+            {
+                throw new SocketSendException($"Raised Exception in {nameof(ActionEventResponse)} while sending message : {ex.Message}", endPoint);
+            }
+        }
+
+        public async Task ActionEventResponse(bool success, string msg, IActionEventModel model = null, IPEndPoint endPoint = null)
+        {
+            try
+            {
+                var responseModel = new ActionResponseModel(success, msg, model);
+
+                await SendRequest(JsonConvert.SerializeObject(responseModel, settings), endPoint);
+            }
+            catch (Exception ex)
+            {
+                throw new SocketSendException($"Raised Exception in {nameof(ActionEventResponse)} while sending message : {ex.Message}", endPoint);
+            }
+        }
+
+        public async Task ActionEventResponse(bool success, string msg, IMalfunctionEventModel model = null, IPEndPoint endPoint = null)
+        {
+            try
+            {
+                var responseModel = new ActionResponseMalfunctionModel(success, msg, model);
+
+                await SendRequest(JsonConvert.SerializeObject(responseModel, settings), endPoint);
+            }
+            catch (Exception ex)
+            {
+                throw new SocketSendException($"Raised Exception in {nameof(ActionEventResponse)} while sending message : {ex.Message}", endPoint);
+            }
+        }
+
+
+        private async Task SearchEventResponse(bool success, string msg, List<IDetectionEventModel> events = null, IPEndPoint endPoint = null)
+        {
+            try
+            {
+                var responseModel = new SearchDetectionResponseModel(success, msg, events);
+
+                await SendRequest(JsonConvert.SerializeObject(responseModel, settings), endPoint);
             }
             catch (Exception ex)
             {
@@ -1295,13 +1468,13 @@ namespace Ironwall.Libraries.Server.Services
             }
         }
 
-        private async Task SearchEventResponse(bool success, string msg, List<MalfunctionRequestModel> events, IPEndPoint endPoint = null)
+        private async Task SearchEventResponse(bool success, string msg, List<IMalfunctionEventModel> events = null, IPEndPoint endPoint = null)
         {
             try
             {
-                var responseModel = ResponseFactory.Build<SearchMalfunctionResponseModel>(success, msg, events);
+                var responseModel = new SearchMalfunctionResponseModel(success, msg, events);
 
-                await SendRequest(JsonConvert.SerializeObject(responseModel), endPoint);
+                await SendRequest(JsonConvert.SerializeObject(responseModel, settings), endPoint);
             }
             catch (Exception ex)
             {
@@ -1310,31 +1483,18 @@ namespace Ironwall.Libraries.Server.Services
         }
 
         private async Task SearchEventResponse(bool success, string msg
-            , List<DetectionRequestModel> detectionEvents
-            , List<MalfunctionRequestModel> malfunctionEvents
-            , List<ActionRequestModel> actionEvents, IPEndPoint endPoint = null)
+            //, List<DetectionRequestModel> detectionEvents
+            //, List<MalfunctionRequestModel> malfunctionEvents
+            , List<IActionEventModel> events, IPEndPoint endPoint = null)
         {
             try
             {
-                var responseModel = ResponseFactory.Build<SearchActionResponseModel>(success, msg, detectionEvents, malfunctionEvents, actionEvents);
-                await SendRequest(JsonConvert.SerializeObject(responseModel), endPoint);
+                var responseModel = new SearchActionResponseModel(success, msg, events);
+                await SendRequest(JsonConvert.SerializeObject(responseModel, settings), endPoint);
             }
             catch (Exception ex)
             {
                 throw new SocketSendException($"Raised Exception in {nameof(SearchEventResponse)} while sending message : {ex.Message}", endPoint);
-            }
-        }
-
-        public async Task DeviceInfoResponse(bool success, string msg, IDeviceDetailModel model, IPEndPoint endPoint = null)
-        {
-            try
-            {
-                var responseModel = ResponseFactory.Build<DeviceInfoResponseModel>(success, msg, model);
-                await SendRequest(JsonConvert.SerializeObject(responseModel), endPoint);
-            }
-            catch (Exception ex)
-            {
-                throw new SocketSendException($"Raised Exception in {nameof(DeviceInfoResponse)} while sending message : {ex.Message}", endPoint);
             }
         }
 
@@ -1347,7 +1507,7 @@ namespace Ironwall.Libraries.Server.Services
             try
             {
                 var responseModel = ResponseFactory.Build<DeviceDataResponseModel>(success, msg, contrllerList, sensorList, cameraList);
-                await SendRequest(JsonConvert.SerializeObject(responseModel), endPoint);
+                await SendRequest(JsonConvert.SerializeObject(responseModel, settings), endPoint);
             }
             catch (Exception ex)
             {
@@ -1360,7 +1520,7 @@ namespace Ironwall.Libraries.Server.Services
             try
             {
                 var responseModel = ResponseFactory.Build<ControllerDataResponseModel>(success, msg, list);
-                await SendRequest(JsonConvert.SerializeObject(responseModel), endPoint);
+                await SendRequest(JsonConvert.SerializeObject(responseModel, settings), endPoint);
             }
             catch (Exception ex)
             {
@@ -1372,7 +1532,7 @@ namespace Ironwall.Libraries.Server.Services
             try
             {
                 var responseModel = ResponseFactory.Build<SensorDataResponseModel>(success, msg, list);
-                await SendRequest(JsonConvert.SerializeObject(responseModel), endPoint);
+                await SendRequest(JsonConvert.SerializeObject(responseModel, settings), endPoint);
             }
             catch (Exception ex)
             {
@@ -1384,7 +1544,7 @@ namespace Ironwall.Libraries.Server.Services
             try
             {
                 var responseModel = ResponseFactory.Build<CameraDataResponseModel>(success, msg, list);
-                await SendRequest(JsonConvert.SerializeObject(responseModel), endPoint);
+                await SendRequest(JsonConvert.SerializeObject(responseModel, settings), endPoint);
             }
             catch (Exception ex)
             {
@@ -1392,16 +1552,32 @@ namespace Ironwall.Libraries.Server.Services
             }
         }
         
-        public async Task CameraDataSaveResponse(bool success, string msg, IDeviceDetailModel deviceDetail, IPEndPoint endPoint = null)
+        public async Task CameraDataSaveResponse(bool success, string msg, List<ICameraDeviceModel> list, IPEndPoint endPoint = null)
         {
             try
             {
-                var responseModel = ResponseFactory.Build<CameraDataSaveResponseModel>(success, msg, deviceDetail);
-                await SendRequest(JsonConvert.SerializeObject(responseModel), endPoint);
+                var responseModel = new CameraDataSaveResponseModel(list, success:success, content: msg);
+                await SendRequest(JsonConvert.SerializeObject(responseModel, settings), endPoint);
             }
             catch (Exception ex)
             {
                 throw new SocketSendException($"Raised Exception in {nameof(CameraDataSaveResponse)} while sending message : {ex.Message}", endPoint);
+            }
+        }
+
+        private async Task CameraOptionResponse(bool success, string msg, IPEndPoint endPoint = null)
+        {
+            try
+            {
+                var presets = _cameraOptionProvider.OfType<CameraPresetModel>().ToList();
+                var profiles = _cameraOptionProvider.OfType<CameraProfileModel>().ToList();
+
+                var responseModel = new CameraOptionResponseModel(presets, profiles, success: success, content: msg);
+                await SendRequest(JsonConvert.SerializeObject(responseModel, settings), endPoint);
+            }
+            catch (Exception ex)
+            {
+                throw new SocketSendException($"Raised Exception in {nameof(CameraOptionResponse)} while sending message : {ex.Message}", endPoint);
             }
         }
 
@@ -1410,7 +1586,7 @@ namespace Ironwall.Libraries.Server.Services
             try
             {
                 var responseModel = ResponseFactory.Build<CameraPresetResponseModel>(success, msg, list);
-                await SendRequest(JsonConvert.SerializeObject(responseModel), endPoint);
+                await SendRequest(JsonConvert.SerializeObject(responseModel, settings), endPoint);
             }
             catch (Exception ex)
             {
@@ -1418,12 +1594,15 @@ namespace Ironwall.Libraries.Server.Services
             }
         }
         
-        private async Task CameraPresetSaveResponse(bool success, string msg, IPEndPoint endPoint)
+
+
+        private async Task CameraPresetSaveResponse(bool success, string msg, List<ICameraPresetModel> fetches, IPEndPoint endPoint)
         {
             try
             {
-                var responseModel = ResponseFactory.Build<CameraPresetSaveResponseModel>(success, msg);
-                await SendRequest(JsonConvert.SerializeObject(responseModel), endPoint);
+                //var responseModel = ResponseFactory.Build<CameraPresetSaveResponseModel>(success, msg);
+                var responseModel = new CameraPresetSaveResponseModel(fetches, success, msg);
+                await SendRequest(JsonConvert.SerializeObject(responseModel, settings), endPoint);
             }
             catch (Exception ex)
             {
@@ -1431,12 +1610,13 @@ namespace Ironwall.Libraries.Server.Services
             }
         }
 
-        private async Task CameraMappingResponse(bool success, string msg, List<CameraMappingModel> list, IPEndPoint endPoint)
+        private async Task CameraMappingResponse(bool success, string msg, List<ICameraMappingModel> list, IPEndPoint endPoint)
         {
             try
             {
-                var responseModel = ResponseFactory.Build<CameraMappingResponseModel>(success, msg, list);
-                await SendRequest(JsonConvert.SerializeObject(responseModel), endPoint);
+                var responseModel =new CameraMappingResponseModel(success, msg, list);
+                
+                await SendRequest(JsonConvert.SerializeObject(responseModel, settings), endPoint);
             }
             catch (Exception ex)
             {
@@ -1444,31 +1624,17 @@ namespace Ironwall.Libraries.Server.Services
             }
         }
         
-        
 
-        private async Task CameraMappingSaveResponse(bool success, string msg, IPEndPoint endPoint)
+        private async Task CameraMappingSaveResponse(List<ICameraMappingModel> list, bool success, string msg, IPEndPoint endPoint)
         {
             try
             {
-                var responseModel = ResponseFactory.Build<CameraMappingSaveResponseModel>(success, msg, _mappingInfoModel);
-                await SendRequest(JsonConvert.SerializeObject(responseModel), endPoint);
+                var responseModel = new CameraMappingSaveResponseModel(list, success: success, content: msg);
+                await SendRequest(JsonConvert.SerializeObject(responseModel, settings), endPoint);
             }
             catch (Exception ex)
             {
                 throw new SocketSendException($"Raised Exception in {nameof(CameraMappingSaveResponse)} while sending message : {ex.Message}", endPoint);
-            }
-        }
-
-        private async Task CameraMappingInfoResponse(bool success, string msg, MappingInfoModel mappingInfoModel, IPEndPoint endPoint)
-        {
-            try
-            {
-                var responseModel = ResponseFactory.Build<CameraMappingInfoResponseModel>(success, msg, mappingInfoModel);
-                await SendRequest(JsonConvert.SerializeObject(responseModel), endPoint);
-            }
-            catch (Exception ex)
-            {
-                throw new SocketSendException($"Raised Exception in {nameof(CameraMappingResponse)} while sending message : {ex.Message}", endPoint);
             }
         }
 
@@ -1477,7 +1643,7 @@ namespace Ironwall.Libraries.Server.Services
             try
             {
                 var responseModel = ResponseFactory.Build<SymbolInfoResponseModel>(success, msg, model);
-                await SendRequest(JsonConvert.SerializeObject(responseModel), endPoint);
+                await SendRequest(JsonConvert.SerializeObject(responseModel, settings), endPoint);
             }
             catch (Exception ex)
             {
@@ -1491,7 +1657,7 @@ namespace Ironwall.Libraries.Server.Services
             {
                 var responseModel = ResponseFactory.Build<SymbolDataLoadResponseModel>(success, msg, maps, points, symbols, shapes, objects);
 
-                await SendRequest(JsonConvert.SerializeObject(responseModel), endPoint);
+                await SendRequest(JsonConvert.SerializeObject(responseModel, settings), endPoint);
             }
             catch (Exception ex)
             {
@@ -1505,7 +1671,7 @@ namespace Ironwall.Libraries.Server.Services
             {
                 var responseModel = ResponseFactory.Build<SymbolDataSaveResponseModel>(success, msg, detail);
 
-                await SendRequest(JsonConvert.SerializeObject(responseModel), endPoint);
+                await SendRequest(JsonConvert.SerializeObject(responseModel, settings), endPoint);
             }
             catch (Exception ex)
             {
@@ -1519,7 +1685,7 @@ namespace Ironwall.Libraries.Server.Services
             {
                 var responseModel = ResponseFactory.Build<MapFileLoadResponseModel>(success, msg, model);
 
-                await SendRequest(JsonConvert.SerializeObject(responseModel), endPoint);
+                await SendRequest(JsonConvert.SerializeObject(responseModel, settings), endPoint);
             }
             catch (Exception ex)
             {
@@ -1533,7 +1699,7 @@ namespace Ironwall.Libraries.Server.Services
             {
                 var responseModel = ResponseFactory.Build<MapFileSaveResponseModel>(success, msg, model);
 
-                await SendRequest(JsonConvert.SerializeObject(responseModel), endPoint);
+                await SendRequest(JsonConvert.SerializeObject(responseModel, settings), endPoint);
             }
             catch (Exception ex)
             {
@@ -1555,32 +1721,47 @@ namespace Ironwall.Libraries.Server.Services
             return ModelFactory.Build<DeviceDetailModel>(controller, sensor, camera, DateTimeHelper.GetCurrentTimeWithoutMS());
             
         }
+
+
         #endregion
         #region - IHanldes -
         #endregion
         #region - Properties -
-        public EventDbService EventDbService { get; }
-        public EventProvider EventProvider { get; }
-        public DetectionEventProvider DetectionEventProvider { get; }
-        public ActionEventProvider ActionEventProvider { get; }
-        public MalfunctionEventProvider MalfunctionEventProvider { get; }
         #endregion
         #region - Attributes -
-        public DeviceInfoModel _deviceInfoModel;
         private SymbolInfoModel _symbolInfoModel;
-        private MappingInfoModel _mappingInfoModel;
+        private VmsControlService _vmsControlService;
+        private IVmsApiService _vmsApiService;
+        private IVmsDbService _vmsDbService;
+        private VmsApiProvider _vmsApiProvider;
+        private VmsEventProvider _vmsEventProvider;
+        private VmsMappingProvider _vmsMappingProvider;
+        private VmsSensorProvider _vmsSensorProvider;
+        private JsonSerializerSettings settings;
+        private IEventDbService _eventDbService;
+        private Events.Providers.EventProvider _eventProvider;
+        private DetectionEventProvider _detectionEventProvider;
+        private ActionEventProvider _actionEventProvider;
+        private MalfunctionEventProvider _malfunctionEventProvider;
+        
+        private IDeviceDbService _deviceDbService;
         private DeviceProvider _deviceProvider;
-        public ControllerDeviceProvider _controllerDeviceProvider;
-        public SensorDeviceProvider _sensorDeviceProvider;
-        public CameraDeviceProvider _cameraDeviceProvider;
+        private ControllerDeviceProvider _controllerDeviceProvider;
+        private SensorDeviceProvider _sensorDeviceProvider;
+        private CameraDeviceProvider _cameraDeviceProvider;
+
         private CameraMappingProvider _cameraMappingProvider;
+        private CameraOptionProvider _cameraOptionProvider;
         private CameraPresetProvider _cameraPresetProvider;
-        private DeviceDbService _deviceDbService;
+        private CameraProfileProvider _cameraProfileProvider;
         private MapDbService _mapDbService;
 
         private MapProvider _mapProvider;
         private SymbolProvider _symbolProvider;
         private PointProvider _pointProvider;
+
+        private static readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
+
         #endregion
     }
 }

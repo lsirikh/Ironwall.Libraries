@@ -9,6 +9,6 @@ namespace Ironwall.Framework.Models.Communications.Symbols
 {
     public interface IMapFileLoadRequestModel : IUserSessionBaseRequestModel
     {
-        //List<MapModel> Maps { get; set; }
+        //Body<MapModel> Maps { get; set; }
     }
 }

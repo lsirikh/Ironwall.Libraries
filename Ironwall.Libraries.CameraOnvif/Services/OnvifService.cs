@@ -391,12 +391,12 @@ namespace Ironwall.Libraries.CameraOnvif.Services
         #endregion
         #region - Attributes -
         private OnvifControl _onvifControl = new OnvifControl();
-        public CancellationTokenSource cts;
-        public CancellationTokenSource cts_move;
-        public CancellationTokenSource cts_preset;
+        CancellationTokenSource cts;
+        CancellationTokenSource cts_move;
+        CancellationTokenSource cts_preset;
 
-        public event EventHandler connectFinishCallback;
-        public event EventHandler presetFinishCallback;
+        event EventHandler connectFinishCallback;
+        event EventHandler presetFinishCallback;
         #endregion
     }
 }

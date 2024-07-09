@@ -16,10 +16,9 @@ namespace Ironwall.Framework.Models.Mappers
 
         }
 
-        public SensorTableMapper(ISensorDeviceModel model)
-            : base(model)
+        public SensorTableMapper(ISensorDeviceModel model) : base(model)
         {
-            Controller = model.Controller.DeviceNumber;
+            Controller = model.Controller.Id;
         }
         public int Controller { get; set; }
     }

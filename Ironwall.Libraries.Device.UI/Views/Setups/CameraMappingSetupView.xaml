@@ -180,7 +180,7 @@
 						<DataTemplate>
 							<TextBlock VerticalAlignment="Center"
                                        TextAlignment="Center"
-                                       Text="{Binding Group, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                       Text="{Binding MappingGroup, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 						</DataTemplate>
 					</DataGridTemplateColumn.CellTemplate>
 				</DataGridTemplateColumn>
@@ -244,7 +244,7 @@
 						<DataTemplate>
 							<TextBlock x:Name="DataSelf"
 									   VerticalAlignment="Center"
-									   Text="{Binding FirstPreset.Id, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+									   Text="{Binding FirstPreset.PresetName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 									   TextAlignment="Center" />
 						</DataTemplate>
 					</DataGridTemplateColumn.CellTemplate>
@@ -263,7 +263,10 @@
 								</ComboBox.ItemsPanel>
 								<ComboBox.ItemTemplate>
 									<DataTemplate>
-										<TextBlock Text="{Binding Id}" />
+										<StackPanel Orientation="Horizontal">
+											<TextBlock Margin="5 0" Text="{Binding Id}" />
+											<TextBlock Margin="5 0" Text="{Binding PresetName}" />
+										</StackPanel>
 									</DataTemplate>
 								</ComboBox.ItemTemplate>
 								<ComboBox.ItemContainerStyle>
@@ -284,7 +287,7 @@
 						<DataTemplate>
 							<TextBlock VerticalAlignment="Center"
                                        TextAlignment="Center"
-                                       Text="{Binding SecondPreset.Id, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                       Text="{Binding SecondPreset.PresetName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 						</DataTemplate>
 					</DataGridTemplateColumn.CellTemplate>
 					<DataGridTemplateColumn.CellEditingTemplate>
@@ -302,7 +305,10 @@
 								</ComboBox.ItemsPanel>
 								<ComboBox.ItemTemplate>
 									<DataTemplate>
-										<TextBlock Text="{Binding Id}" />
+										<StackPanel Orientation="Horizontal">
+											<TextBlock Margin="5 0" Text="{Binding Id}" />
+											<TextBlock Margin="5 0" Text="{Binding PresetName}" />
+										</StackPanel>
 									</DataTemplate>
 								</ComboBox.ItemTemplate>
 								<ComboBox.ItemContainerStyle>

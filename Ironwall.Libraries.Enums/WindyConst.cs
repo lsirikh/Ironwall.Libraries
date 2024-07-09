@@ -6,19 +6,19 @@ using System.Threading.Tasks;
 
 namespace Ironwall.Libraries.Enums
 {
-    public static class WindyConst_en
+    static class WindyConst_en
     {
-        public const string NORMAL_MODE = "Normal Wind";
-        public const string MILD_WINDY_MODE = "Mild Wind";
-        public const string STRONG_WINDY_MODE = "Strong Wind";
-        public const string TYPHOON_WINDY_MODE = "Typhoon Wind";
+        const string NORMAL_MODE = "Normal Wind";
+        const string MILD_WINDY_MODE = "Mild Wind";
+        const string STRONG_WINDY_MODE = "Strong Wind";
+        const string TYPHOON_WINDY_MODE = "Typhoon Wind";
     }
 
-    public static class WindyConst_kr
+    static class WindyConst_kr
     {
-        public const string NORMAL_MODE = "보통 바람";
-        public const string MILD_WINDY_MODE = "약한 바람";
-        public const string STRONG_WINDY_MODE = "강한 바람";
-        public const string TYPHOON_WINDY_MODE = "태풍 바람";
+        const string NORMAL_MODE = "보통 바람";
+        const string MILD_WINDY_MODE = "약한 바람";
+        const string STRONG_WINDY_MODE = "강한 바람";
+        const string TYPHOON_WINDY_MODE = "태풍 바람";
     }
 }

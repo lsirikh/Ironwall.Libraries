@@ -89,6 +89,7 @@
     <Compile Include="EnumCmdType.cs" />
     <Compile Include="EnumDataType.cs" />
     <Compile Include="EnumDeviceCategory.cs" />
+    <Compile Include="EnumDeviceStatus.cs" />
     <Compile Include="EnumDeviceType.cs" />
     <Compile Include="EnumDrawingType.cs" />
     <Compile Include="EnumEventType.cs" />
@@ -97,6 +98,7 @@
     <Compile Include="EnumTcpDataType.cs" />
     <Compile Include="EnumTcpCommunication.cs" />
     <Compile Include="EnumTcpStateType.cs" />
+    <Compile Include="EnumWindyMode.cs" />
     <Compile Include="LanguageConst.cs" />
     <Compile Include="EnumLevel.cs" />
     <Compile Include="EnumLogType.cs" />

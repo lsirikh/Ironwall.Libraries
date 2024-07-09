@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Ironwall.Libraries.Account.Common.Providers
 {
-    //public class SessionProvider
+    //class SessionProvider
     //     : EntityCollectionProvider<LoginSessionModel>
     //{
     //}

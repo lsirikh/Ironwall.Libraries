@@ -27,13 +27,20 @@ namespace Ironwall.Libraries.Device.UI.Messages
 
     public class MappingAppliedMessage
     {
-        public MappingAppliedMessage()
+        public MappingAppliedMessage(List<ICameraMappingModel> list)
         {
+            Mappings = list;
         }
+        public List<ICameraMappingModel> Mappings { get; }
     }
 
     public class RequestMappingInsertMessage
     {
+        public RequestMappingInsertMessage(List<ICameraMappingModel> list)
+        {
+            Mappings = list;
+        }
+        public List<ICameraMappingModel> Mappings { get; }
     }
 
     
@@ -58,6 +65,12 @@ namespace Ironwall.Libraries.Device.UI.Messages
 
     public class RequestCameraInsertMessage
     {
+        public RequestCameraInsertMessage(List<ICameraDeviceModel> list)
+        {
+            Cameras = list;
+        }
+
+        public List<ICameraDeviceModel> Cameras { get; }
     }
 
 
@@ -81,6 +94,12 @@ namespace Ironwall.Libraries.Device.UI.Messages
 
     public class RequestPresetInsertMessage
     {
+        public RequestPresetInsertMessage(List<ICameraPresetModel> list)
+        {
+            Presets = list;
+        }
+
+        public List<ICameraPresetModel> Presets { get; }
     }
 
 

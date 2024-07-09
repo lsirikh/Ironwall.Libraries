@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Ironwall.Framework.Models.Mappers.Events
 {
     public class ActionMalfunctionEventMapper
-        : ReportEventMapper
+        : ActionEventMapper
     {
 
     }

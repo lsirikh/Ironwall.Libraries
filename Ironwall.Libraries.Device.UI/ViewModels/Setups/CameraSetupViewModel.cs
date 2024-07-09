@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Windows.Controls;
 using System;
+using Ironwall.Libraries.Base.Services;
 
 namespace Ironwall.Libraries.Device.UI.ViewModels.Setups
 {
@@ -24,9 +25,10 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Setups
 
         #region - Ctors -
         public CameraSetupViewModel(IEventAggregator eventAggregator
+                                    , ILogService logService
                                     ):base(eventAggregator)
         {
-
+            _log = logService;
         }
         #endregion
         #region - Implementation of Interface -
@@ -90,7 +92,7 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Setups
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Raised Exception in {nameof(OnActiveTab)} : {ex.Message}");
+                _log.Error($"Raised Exception in {nameof(OnActiveTab)} : {ex.Message}");
             }
 
         }
@@ -104,6 +106,7 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Setups
         #endregion
         #region - Attributes -
         BaseViewModel selectedViewModel;
+        private ILogService _log;
         #endregion
     }
 }

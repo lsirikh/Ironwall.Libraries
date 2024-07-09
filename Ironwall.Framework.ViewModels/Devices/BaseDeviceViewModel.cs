@@ -9,8 +9,7 @@ using System.Threading.Tasks;
 
 namespace Ironwall.Framework.ViewModels.Devices
 {
-    public class BaseDeviceViewModel
-        : Screen, IBaseDeviceViewModel
+    public class BaseDeviceViewModel : Screen, IBaseDeviceViewModel
     {
         #region - Ctors -
         public BaseDeviceViewModel()
@@ -107,8 +106,8 @@ namespace Ironwall.Framework.ViewModels.Devices
             }
         }
 
-        private int _status;
-        public int Status
+        private EnumDeviceStatus _status;
+        public EnumDeviceStatus Status
         {
             get { return _status; }
             set

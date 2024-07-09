@@ -11,14 +11,12 @@ using System.Threading.Tasks;
 
 namespace Ironwall.Libraries.Event.UI.ViewModels.Events
 {
-    public class DetectionEventViewModel
-        : MetaEventViewModel
-        , IDetectionEventViewModel
+    public class DetectionEventViewModel : MetaEventViewModel, IDetectionEventViewModel
     {
         #region - Ctors -
         public DetectionEventViewModel()
         {
-
+            _model = new DetectionEventModel();
         }
 
         public DetectionEventViewModel(IDetectionEventModel model)

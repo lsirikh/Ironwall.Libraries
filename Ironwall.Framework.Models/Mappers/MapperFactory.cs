@@ -71,12 +71,12 @@ namespace Ironwall.Framework.Models.Mappers
         }
 
         /// <summary>
-        /// Create ReportEventMapper Instance From Event Model
+        /// Create ActionEventMapper Instance From Event Model
         /// </summary>
-        /// <typeparam name="T">ReportEventMapper</typeparam>
+        /// <typeparam name="T">ActionEventMapper</typeparam>
         /// <param name="model">IActionEventModel</param>
         /// <returns></returns>
-        public static T Build<T>(IActionEventModel model) where T : ReportEventMapper, new()
+        public static T Build<T>(IActionEventModel model) where T : ActionEventMapper, new()
         {
             var instance = (T)Activator.CreateInstance(typeof(T), new object[] { model });
             return instance;
@@ -142,26 +142,13 @@ namespace Ironwall.Framework.Models.Mappers
         }
 
         /// <summary>
-        /// Create ContactEventMapper Instance From Request Model
+        /// Create ActionEventMapper Instance From Request Model
         /// </summary>
-        /// <typeparam name="T">ContactEventMapper</typeparam>
-        /// <param name="model">IContactRequestModel</param>
-        /// <param name="deviceModel">IBaseDeviceModel</param>
-        /// <returns></returns>
-        public static T Build<T>(IContactRequestModel model, IBaseDeviceModel deviceModel) where T : ContactEventMapper, new()
-        {
-            var instance = (T)Activator.CreateInstance(typeof(T), new object[] { model, deviceModel });
-            return instance;
-        }
-
-        /// <summary>
-        /// Create ReportEventMapper Instance From Request Model
-        /// </summary>
-        /// <typeparam name="T">ReportEventMapper</typeparam>
+        /// <typeparam name="T">ActionEventMapper</typeparam>
         /// <param name="model">IActionRequestModel</param>
         /// <param name="eventModel">IMetaEventModel</param>
         /// <returns></returns>
-        public static T Build<T>(IActionRequestModel model, IMetaEventModel eventModel) where T : ReportEventMapper, new()
+        public static T Build<T>(IActionRequestModel model, IMetaEventModel eventModel) where T : ActionEventMapper, new()
         {
             var instance = (T)Activator.CreateInstance(typeof(T), new object[] { model, eventModel });
             return instance;

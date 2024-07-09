@@ -25,10 +25,9 @@ namespace Ironwall.Framework.Models.Communications.Devices
         }
 
         public CameraPresetResponseModel(bool success, string content, List<CameraPresetModel> list)
-            : base(success, content)
+            : base(EnumCmdType.CAMERA_PRESET_DATA_RESPONSE, success, content)
         {
-            Command = EnumCmdType.CAMERA_PRESET_DATA_RESPONSE;
-            List = list;
+            Body = list;
         }
         #endregion
         #region - Implementation of Interface -
@@ -42,8 +41,8 @@ namespace Ironwall.Framework.Models.Communications.Devices
         #region - IHanldes -
         #endregion
         #region - Properties -
-        [JsonProperty("preset_list", Order = 4)]
-        public List<CameraPresetModel> List { get; set; }
+        [JsonProperty("body", Order = 4)]
+        public List<CameraPresetModel> Body { get; set; }
         #endregion
         #region - Attributes -
         #endregion

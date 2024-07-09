@@ -9,8 +9,7 @@ using System.Threading.Tasks;
 
 namespace Ironwall.Framework.Models.Communications.Events
 {
-    public class ModeWindyRequestModel 
-        : BaseMessageModel
+    public class ModeWindyRequestModel : BaseMessageModel
         , IModeWindyRequestModel
     {
         public ModeWindyRequestModel()
@@ -18,13 +17,12 @@ namespace Ironwall.Framework.Models.Communications.Events
             Command = EnumCmdType.MODE_WINDY_REQUEST;
         }
 
-        public ModeWindyRequestModel(IModeWindyEventModel model)
+        public ModeWindyRequestModel(IModeWindyEventModel model) : base(EnumCmdType.MODE_WINDY_REQUEST)
         {
-            Command = EnumCmdType.MODE_WINDY_REQUEST;
         }
 
 
         [JsonProperty("mode_windy", Order = 1)]
-        public int ModeWindy { get; set; }
+        public EnumWindyMode ModeWindy { get; set; }
     }
 }

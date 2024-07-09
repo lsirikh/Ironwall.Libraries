@@ -23,11 +23,6 @@ namespace Ironwall.Framework.Models.Mappers
         {
 
         }
-
-        public ConnectionEventMapper(IConnectionRequestModel model, IBaseDeviceModel device) 
-            : base(model, device)
-        {
-
-        }
+    
     }
 }

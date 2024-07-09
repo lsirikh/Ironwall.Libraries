@@ -50,7 +50,7 @@ namespace Ironwall.Libraries.Common.Models
         #region - Properties -
         public string Code { get; set; } = "000";
 
-        //public DateTime CreatedTime { get; set; } = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.ff");
+        //DateTime CreatedTime { get; set; } = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.ff");
         public string CreatedTime { get; set; } = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.ff");
 
         public EnumLogType Type { get; set; }

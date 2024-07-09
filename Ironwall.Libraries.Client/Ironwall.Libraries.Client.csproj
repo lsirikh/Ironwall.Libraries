@@ -67,17 +67,31 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Dotnet.OnvifSolution.Base">
+      <HintPath>..\Ironwall.Framework.Models\Exts\Dotnet.OnvifSolution.Base.dll</HintPath>
+    </Reference>
     <Reference Include="Ironwall.Libraries.Account.Common">
       <HintPath>..\Ironwall.Libraries.Account.Common\bin\Debug\Ironwall.Libraries.Account.Common.dll</HintPath>
-    </Reference>
-    <Reference Include="Ironwall.Libraries.Tcp.Client">
-      <HintPath>..\Ironwall.Libraries.Tcp.Client\bin\Debug\Ironwall.Libraries.Tcp.Client.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\Ironwall.Monitoring.Client\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
+    <Reference Include="Sensorway.Accounts.Base, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Ironwall.Framework.Models\Exts\Sensorway.Accounts.Base.dll</HintPath>
+    </Reference>
     <Reference Include="Sensorway.Broker.SeoIncheon, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
+    <Reference Include="Sensorway.Events.Base, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Ironwall.Framework.Models\Exts\Sensorway.Events.Base.dll</HintPath>
+    </Reference>
+    <Reference Include="Sensorway.Framework.Models">
+      <HintPath>..\Ironwall.Framework.Models\Exts\Sensorway.Framework.Models.dll</HintPath>
+    </Reference>
+    <Reference Include="Sensorway.VMS.Messages">
+      <HintPath>..\Ironwall.Framework.Models\Exts\Sensorway.VMS.Messages.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -138,13 +152,21 @@
       <Project>{F02F8DFD-C744-4C57-BF1B-FEEC7B4C8418}</Project>
       <Name>Ironwall.Libraries.Map.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Ironwall.Libraries.Tcp.Client\Ironwall.Libraries.Tcp.Client.csproj">
+      <Project>{837860ab-28aa-4d99-8679-37129757d049}</Project>
+      <Name>Ironwall.Libraries.Tcp.Client</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Ironwall.Libraries.Tcp.Common\Ironwall.Libraries.Tcp.Common.csproj">
-      <Project>{5C2E0347-DCB2-4B47-B2E0-4CD3E1C7537D}</Project>
+      <Project>{5c2e0347-dcb2-4b47-b2e0-4cd3e1c7537d}</Project>
       <Name>Ironwall.Libraries.Tcp.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\Ironwall.Libraries.Utils\Ironwall.Libraries.Utils.csproj">
       <Project>{14220279-9b26-4383-bf1e-a0da31726758}</Project>
       <Name>Ironwall.Libraries.Utils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ironwall.Libraries.VMS.Common\Ironwall.Libraries.VMS.Common.csproj">
+      <Project>{82169ce4-697e-4533-b6e3-29d50f6b398d}</Project>
+      <Name>Ironwall.Libraries.VMS.Common</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

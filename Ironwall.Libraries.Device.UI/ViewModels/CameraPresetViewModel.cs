@@ -29,17 +29,17 @@ namespace Ironwall.Libraries.Device.UI.ViewModels
 
         #endregion
         #region - Implementation of Interface -
-        public override void Dispose()
-        {
-            _model = new CameraPresetModel();
-            GC.Collect();
-        }
+        //public override void Dispose()
+        //{
+        //    _model = new CameraPresetModel();
+        //    GC.Collect();
+        //}
 
-        public void UpdateModel(ICameraPresetModel model)
-        {
-            _model = model;
-            Refresh();
-        }
+        //public void UpdateModel(ICameraPresetModel model)
+        //{
+        //    _model = model;
+        //    Refresh();
+        //}
         #endregion
         #region - Overrides -
         #endregion

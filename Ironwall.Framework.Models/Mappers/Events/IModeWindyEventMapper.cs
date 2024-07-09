@@ -1,7 +1,9 @@
-﻿namespace Ironwall.Framework.Models.Mappers
+﻿using Ironwall.Libraries.Enums;
+
+namespace Ironwall.Framework.Models.Mappers
 {
     public interface IModeWindyEventMapper
     {
-        int ModeWindy { get; set; }
+        EnumWindyMode ModeWindy { get; set; }
     }
 }

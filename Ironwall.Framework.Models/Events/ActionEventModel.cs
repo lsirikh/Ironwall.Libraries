@@ -1,8 +1,10 @@
 ﻿using Ironwall.Framework.Helpers;
 using Ironwall.Framework.Models.Communications.Events;
+using Ironwall.Framework.Models.Communications.Helpers;
 using Ironwall.Framework.Models.Devices;
 using Ironwall.Framework.Models.Mappers;
 using Ironwall.Libraries.Enums;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -18,42 +20,55 @@ namespace Ironwall.Framework.Models.Events
 
         public ActionEventModel()
         {
-
+            MessageType = EnumEventType.Action;
         }
 
-        public ActionEventModel(IReportEventMapper model, IMetaEventModel fromEvent) : base(model)
+        public ActionEventModel(IActionEventMapper model, IMetaEventModel fromEvent) : base(model)
         {
-            //Id = model.EventId != null ? model.EventId : IdCodeGenerator.GenIdCode();
-            
-            FromEvent = fromEvent;
-
+            FromEvent = fromEvent as MetaEventModel;
             Content = model.Content;
             User = model.User;
+            MessageType = EnumEventType.Action;
         }
 
-        public ActionEventModel(IActionRequestModel model, IMetaEventModel fromEvent) : base(model)
+        public ActionEventModel(IActionRequestMalfunctionModel model) : base(model)
         {
-            //Id = model.Id != null ? model.Id : IdCodeGenerator.GenIdCode();
-
-            FromEvent = fromEvent;
-
+            FromEvent = model.Event;
             Content = model.Content;
             User = model.User;
+            MessageType = EnumEventType.Action;
         }
 
-        //public ActionEventModel(IActionEventViewModel model) : base(model)
-        //{
-        //    //Id = model.Id != null ? model.Id : IdCodeGenerator.GenIdCode();
+        public ActionEventModel(IActionRequestDetectionModel model) : base(model)
+        {
+            FromEvent = model.Event;
+            Content = model.Content;
+            User = model.User;
+            MessageType = EnumEventType.Action;
+        }
 
-        //    Content = model.Content;
-        //    User = model.User;
-        //    FromEvent = ModelTypeHelper.GetEvent(model.FromEvent);
-        //}
+        public ActionEventModel(IActionRequestModel model) : base(model)
+        {
+            FromEvent = model.Body.FromEvent;
+            Content = model.Body.Content;
+            User = model.Body.User;
+            MessageType = EnumEventType.Action;
+        }
 
-        
+        public ActionEventModel(IActionEventModel model) : base(model)
+        {
+            FromEvent = model.FromEvent;
+            Content = model.Content;
+            User = model.User;
+            MessageType = EnumEventType.Action;
+        }
 
-        public IMetaEventModel FromEvent { get; set; }
+        [JsonProperty("from_event", Order = 2)]
+        [JsonConverter(typeof(EventModelConverter))] // JsonConverter 추가
+        public MetaEventModel FromEvent { get; set; }
+        [JsonProperty("content", Order = 3)]
         public string Content { get; set; }
+        [JsonProperty("user", Order = 4)]
         public string User { get; set; }
 
     }

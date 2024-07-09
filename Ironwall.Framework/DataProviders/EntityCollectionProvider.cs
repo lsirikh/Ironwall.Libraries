@@ -11,8 +11,7 @@ using System.Windows.Data;
 namespace Ironwall.Framework.DataProviders
 {
     [DebuggerDisplay("Count = {CollectionEntity.Count}")]
-    public abstract class EntityCollectionProvider<T>
-        : ICollector<T>
+    public abstract class EntityCollectionProvider<T> : ICollector<T>
     {
         #region - Ctors -
         /// <summary>

@@ -11,7 +11,7 @@ namespace Ironwall.Libraries.Device.UI.ViewModels
         string DeviceName { get; set; }
         int DeviceNumber { get; set; }
         EnumDeviceType DeviceType { get; set; }
-        int Status { get; set; }
+        EnumDeviceStatus Status { get; set; }
         string Version { get; set; }
     }
 }

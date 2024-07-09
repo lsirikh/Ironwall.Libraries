@@ -5,6 +5,6 @@ namespace Ironwall.Framework.Models.Communications.Devices
 {
     public interface ISensorDataResponseModel : IResponseModel
     {
-        List<SensorDeviceModel> Sensors { get; }
+        List<SensorDeviceModel> Body { get; }
     }
 }

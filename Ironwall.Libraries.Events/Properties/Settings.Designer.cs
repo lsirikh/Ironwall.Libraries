@@ -12,7 +12,7 @@ namespace Ironwall.Libraries.Events.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.3.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.9.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -25,7 +25,7 @@ namespace Ironwall.Libraries.Events.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("detection_events")]
+        [global::System.Configuration.DefaultSettingValueAttribute("events_detection")]
         public string TableDetection {
             get {
                 return ((string)(this["TableDetection"]));
@@ -34,7 +34,7 @@ namespace Ironwall.Libraries.Events.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("malfunction_events")]
+        [global::System.Configuration.DefaultSettingValueAttribute("events_malfunction")]
         public string TableMalfunction {
             get {
                 return ((string)(this["TableMalfunction"]));
@@ -43,7 +43,7 @@ namespace Ironwall.Libraries.Events.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("action_events")]
+        [global::System.Configuration.DefaultSettingValueAttribute("events_action")]
         public string TableAction {
             get {
                 return ((string)(this["TableAction"]));
@@ -52,7 +52,7 @@ namespace Ironwall.Libraries.Events.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("connection_events")]
+        [global::System.Configuration.DefaultSettingValueAttribute("events_connection")]
         public string TableConnection {
             get {
                 return ((string)(this["TableConnection"]));

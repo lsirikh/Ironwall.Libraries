@@ -6,6 +6,6 @@ namespace Ironwall.Framework.Models.Communications.Devices
     public interface IControllerDataResponseModel
         : IResponseModel
     {
-        List<ControllerDeviceModel> Controllers { get; }
+        List<ControllerDeviceModel> Body { get; }
     }
 }

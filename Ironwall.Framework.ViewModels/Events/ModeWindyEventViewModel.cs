@@ -1,4 +1,5 @@
 ﻿using Ironwall.Framework.Models.Events;
+using Ironwall.Libraries.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,9 +34,9 @@ namespace Ironwall.Framework.ViewModels.Events
         #region - IHanldes -
         #endregion
         #region - Properties -
-        private int _modeWindy;
+        private EnumWindyMode _modeWindy;
 
-        public int ModeWindy
+        public EnumWindyMode ModeWindy
         {
             get { return _modeWindy; }
             set

@@ -134,7 +134,7 @@ namespace Ironwall.Libraries.Map.UI.Models.Messages
     }
 
     /// <summary>
-    /// Camera Streaming  Popup을 위한 메시지
+    /// Body Streaming  Popup을 위한 메시지
     /// </summary>
     public class RequestCameraStreaming
     {
@@ -143,7 +143,7 @@ namespace Ironwall.Libraries.Map.UI.Models.Messages
             NameDevice = nameDevice;
         }
         /// <summary>
-        /// Camera 이름이 Camera Streaming 대상의 요소
+        /// Body 이름이 Body Streaming 대상의 요소
         /// </summary>
         public string NameDevice { get; }
     }

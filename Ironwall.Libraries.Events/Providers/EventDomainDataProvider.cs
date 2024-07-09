@@ -43,7 +43,7 @@ namespace Ironwall.Libraries.Events.Providers
             , SensorDeviceProvider sensorDeviceProvider
 
             , EventDbService eventDbService
-            , DeviceDbService deviceDbService
+            //, DeviceDbService deviceDbService
             )
         {
             _dbConnection = dbConnection;
@@ -61,7 +61,7 @@ namespace Ironwall.Libraries.Events.Providers
             _sensorProvider = sensorDeviceProvider;
 
             _eventDbService = eventDbService;
-            _deviceDbService = deviceDbService;
+            //_deviceDbService = deviceDbService;
 
             //_deviceDbService.FetchFinshed += DeviceDbService_FetchFinished;
         }
@@ -241,7 +241,7 @@ namespace Ironwall.Libraries.Events.Providers
                                         SELECT COUNT(*) FROM { _setupModel.TableDetection}
                                         WHERE eventid = 'd{i}'
                                         ";
-                                var count = (await _dbConnection.QueryAsync<int>(preSql))?.FirstOrDefault();
+                                var count = (await _conn.QueryAsync<int>(preSql))?.FirstOrDefault();
                                 if (count > 0)
                                     continue;*/
 
@@ -330,20 +330,20 @@ namespace Ironwall.Libraries.Events.Providers
                 ///                   Detection Event
                 ///////////////////////////////////////////////////////////////////
                 // MessageType을 통해서 Detection Event 식별
-                await _eventDbService.FetchDetectionEvent(from: startDate, to: endDate, isFinished: false);
+                await _eventDbService.FetchDetectionEvents(from: startDate, to: endDate);
 
                 ///////////////////////////////////////////////////////////////////
                 ///                   Malfunction Event
                 ///////////////////////////////////////////////////////////////////
                 // MessageType을 통해서 Detection Event 식별
-                await _eventDbService.FetchMalfunctionEvent(from: startDate, to: endDate, isFinished: true);
+                await _eventDbService.FetchMalfunctionEvents(from: startDate, to: endDate);
 
 
                 ///////////////////////////////////////////////////////////////////
                 ///                   Fetch Action Event
                 ///////////////////////////////////////////////////////////////////
                 //MessageType을 통해서 Action for Detection과 Action for Malfunction을 구분
-                await _eventDbService.FetchActionEvent(from: startDate, to: endDate);
+                await _eventDbService.FetchActionEvents(from: startDate, to: endDate);
 
             }
             catch (Exception)

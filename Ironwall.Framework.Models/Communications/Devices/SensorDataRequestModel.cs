@@ -9,17 +9,11 @@ using System.Threading.Tasks;
 
 namespace Ironwall.Framework.Models.Communications.Devices
 {
-    public class SensorDataRequestModel
-    : UserSessionBaseRequestModel, ISensorDataRequestModel
+    public class SensorDataRequestModel : BaseMessageModel, ISensorDataRequestModel
     {
-        public SensorDataRequestModel()
+        public SensorDataRequestModel(EnumCmdType command = EnumCmdType.SENSOR_DATA_REQUEST)
+         : base(command)
         {
-            Command = EnumCmdType.SENSOR_DATA_REQUEST;
-        }
-        public SensorDataRequestModel(ILoginSessionModel model)
-            : base(model)
-        {
-            Command = EnumCmdType.SENSOR_DATA_REQUEST;
         }
 
     }

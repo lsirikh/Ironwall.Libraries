@@ -12,6 +12,8 @@ using Ironwall.Libraries.Map.UI.ViewModels.SymbolCollections;
 using System.Diagnostics;
 using System.Windows.Controls.Primitives;
 using ZoomAndPan;
+using Ironwall.Libraries.Base.Services;
+using Ironwall.Framework.ViewModels.ConductorViewModels;
 
 namespace Ironwall.Libraries.Map.UI.ViewModels
 {
@@ -28,45 +30,51 @@ namespace Ironwall.Libraries.Map.UI.ViewModels
     {
 
         #region - Ctors -
-        public CanvasOverlayViewModel(SymbolCollectionViewModel symbolCollectionViewModel
-                                      , CanvasViewModel canvasViewModel)
+        public CanvasOverlayViewModel(ILogService log
+                                    , IEventAggregator eventAggregator
+                                    , CanvasViewModel canvasViewModel) 
         {
-            SymbolCollectionViewModel = symbolCollectionViewModel;
+            _log = log;
+            _eventAggregator = eventAggregator;
             CanvasViewModel = canvasViewModel;
+            ClassName = nameof(CanvasOverlayViewModel);
         }
-
-        //private Task<bool> MapViewModelProvider_Refresh()
-        //{
-        //    try
-        //    {
-        //        OverlayMapViewModel = _mapViewModelProvider.OrderBy(entity => entity.MapNumber).FirstOrDefault() as MapViewModel;
-
-        //        Width = OverlayMapViewModel.Width;
-        //        Height = OverlayMapViewModel.Height;
-
-        //        return Task.FromResult(true);
-        //    }
-        //    catch (Exception)
-        //    {
-        //        return Task.FromResult(false);
-        //    }
-        //}
-
         #endregion
         #region - Implementation of Interface -
         #endregion
         #region - Overrides -
+        protected override Task OnActivateAsync(CancellationToken cancellationToken)
+        {
+            _eventAggregator?.SubscribeOnUIThread(this);
+            _cancellationTokenSource = new CancellationTokenSource();
+            _ = DataInitialize(_cancellationTokenSource.Token);
+            return base.OnActivateAsync(cancellationToken);
+        }
+
+        protected override Task OnDeactivateAsync(bool close, CancellationToken cancellationToken)
+        {
+            _eventAggregator?.Unsubscribe(this);
+            if (_cancellationTokenSource != null && !_cancellationTokenSource.IsCancellationRequested)
+                _cancellationTokenSource?.Cancel();
+            _cancellationTokenSource?.Dispose();
+
+            return base.OnDeactivateAsync(close, cancellationToken);
+        }
+
         protected override void OnViewAttached(object view, object context)
         {
             _zoomAndPanControl = (view as CanvasOverlayView).overview;
             _thumb = (view as CanvasOverlayView).overviewZoomRectThumb;
             base.OnViewAttached(view, context);
         }
-        
+        #endregion
+        #region - Binding Methods -
+        #endregion
+        #region - Processes -
         public void overlay_SizeChanged(object sender, RoutedEventArgs e)
         {
             _zoomAndPanControl.ScaleToFit();
-            Debug.WriteLine($"{nameof(overlay_SizeChanged)}");
+            _log.Info($"{nameof(overlay_SizeChanged)}");
         }
 
         public void overlay_DragDelta(object sender, DragDeltaEventArgs e)
@@ -81,16 +89,34 @@ namespace Ironwall.Libraries.Map.UI.ViewModels
             Canvas.SetTop(_thumb, newContentOffsetY);
             //Debug.WriteLine($"{nameof(overlay_DragDelta)} : {newContentOffsetX}, {newContentOffsetY}");
         }
-        #endregion
-        #region - Binding Methods -
-        #endregion
-        #region - Processes -
+
+        private object DataInitialize(CancellationToken cancellationToken = default)
+        {
+            return Task.Run(() =>
+            {
+                try
+                {
+                    IsVisible = false;
+                    //ViewModelProvider Setting
+                    if (cancellationToken.IsCancellationRequested) new TaskCanceledException("Task was cancelled!");
+
+                    DispatcherService.Invoke((System.Action)(() =>
+                    {
+                        SymbolCollectionViewModel = IoC.Get<SymbolCollectionViewModel>();
+                    }));
+                    IsVisible = true;
+                }
+                catch (TaskCanceledException ex)
+                {
+                    _log.Error($"Raised {nameof(TaskCanceledException)}({nameof(DataInitialize)} in {ClassName}) : {ex.Message}");
+                }
+
+            }, cancellationToken);
+        }
         #endregion
         #region - IHanldes -
         #endregion
         #region - Properties -
-        
-
         public IMapViewModel OverlayMapViewModel
         {
             get { return _overlayMapViewModel; }
@@ -133,18 +159,28 @@ namespace Ironwall.Libraries.Map.UI.ViewModels
             }
         }
 
-        public SymbolCollectionViewModel SymbolCollectionViewModel { get; }
-        public CanvasViewModel CanvasViewModel { get; }
+        public SymbolCollectionViewModel SymbolCollectionViewModel
+        {
+            get { return _symbolCollectionViewModel; }
+            set { _symbolCollectionViewModel = value;  NotifyOfPropertyChange(() => SymbolCollectionViewModel); }
+        }
 
+        public CanvasViewModel CanvasViewModel { get; }
+        public string ClassName { get; }
         #endregion
         #region - Attributes -
+        private ILogService _log;
+        private IEventAggregator _eventAggregator;
         private ZoomAndPanControl _zoomAndPanControl;
         private Thumb _thumb;
 
         private IMapViewModel _overlayMapViewModel;
+        private SymbolCollectionViewModel _symbolCollectionViewModel;
 
         private double _width;
         private double _height;
+        private CancellationTokenSource _cancellationTokenSource;
+        private const int ACTION_TOKEN_TIMEOUT = 5000;
         #endregion
     }
 }

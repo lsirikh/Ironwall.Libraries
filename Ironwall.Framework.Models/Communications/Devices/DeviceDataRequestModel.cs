@@ -10,19 +10,12 @@ using System.Threading.Tasks;
 
 namespace Ironwall.Framework.Models.Communications.Devices
 {
-    public class DeviceDataRequestModel
-        : UserSessionBaseRequestModel, IDeviceDataRequestModel
-    {
-        public DeviceDataRequestModel()
+    public class DeviceDataRequestModel : BaseMessageModel, IDeviceDataRequestModel
+    { 
+        public DeviceDataRequestModel(EnumCmdType command = EnumCmdType.DEVICE_DATA_REQUEST)
+         : base(command)
         {
-            Command = EnumCmdType.DEVICE_DATA_REQUEST;
         }
 
-        public DeviceDataRequestModel(ILoginSessionModel model)
-            : base(model)
-        {
-            Command = EnumCmdType.DEVICE_DATA_REQUEST;
-        }
-        
     }
 }

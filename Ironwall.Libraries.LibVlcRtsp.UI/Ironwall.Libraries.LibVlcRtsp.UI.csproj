@@ -147,7 +147,11 @@
     <Error Condition="!Exists('..\..\Ironwall.Monitoring.Client\packages\VideoLAN.LibVLC.Windows.3.0.18\build\VideoLAN.LibVLC.Windows.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\Ironwall.Monitoring.Client\packages\VideoLAN.LibVLC.Windows.3.0.18\build\VideoLAN.LibVLC.Windows.targets'))" />
   </Target>
   <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>if "$(Platform)" == "x64" (
+     xcopy "$(TargetDir)libvlc\win-x64\*.*" "$(SolutionDir)libvlc\win-x64\" /Y /E /C /F
+     
+ ) else (
+     xcopy "$(TargetDir)libvlc\win-x86\*.*" "$(SolutionDir)libvlc\win-x86\" /Y /E /C /F
+ )</PostBuildEvent>
   </PropertyGroup>
 </Project>

@@ -78,19 +78,7 @@ namespace Ironwall.Framework.Models.Communications
             return instance;
         }
 
-        /// <summary>
-        /// Create Event ContactResponseModel Instance From EventRequest
-        /// </summary>
-        /// <typeparam name="T">ContactResponseModel</typeparam>
-        /// <param name="success">bool</param>
-        /// <param name="msg">string</param>
-        /// <param name="model">IContactRequestModel</param>
-        /// <returns></returns>
-        public static T Build<T>(bool success, string msg, IContactRequestModel model) where T : ContactResponseModel, new()
-        {
-            var instance = (T)Activator.CreateInstance(typeof(T), new object[] { success, msg, model });
-            return instance;
-        }
+        
 
         /// <summary>
         /// Create Event ActionResponseModel Instance From EventRequest
@@ -133,14 +121,14 @@ namespace Ironwall.Framework.Models.Communications
             return instance;
         }
 
-        public static T Build<T>(bool success, string msg
-             , List<DetectionRequestModel> detectionEvents
-            , List<MalfunctionRequestModel> malfunctionEvents
-            , List<ActionRequestModel> actionEvents) where T : SearchActionResponseModel, new()
-        {
-            var instance = (T)Activator.CreateInstance(typeof(T), new object[] { success, msg, detectionEvents, malfunctionEvents, actionEvents });
-            return instance;
-        }
+        //public static T Build<T>(bool success, string msg
+        //     , List<DetectionRequestModel> detectionEvents
+        //    , List<MalfunctionRequestModel> malfunctionEvents
+        //    , List<ActionRequestModel> actionEvents) where T : SearchActionResponseModel, new()
+        //{
+        //    var instance = (T)Activator.CreateInstance(typeof(T), new object[] { success, msg, detectionEvents, malfunctionEvents, actionEvents });
+        //    return instance;
+        //}
         #endregion
 
         #region -  From Device Data to Device Response Model-
@@ -175,19 +163,7 @@ namespace Ironwall.Framework.Models.Communications
             return instance;
         }
 
-        /// <summary>
-        /// Create DeviceInfoResponseModel Instance From DeviceDetailResponse
-        /// </summary>
-        /// <typeparam name="T">DeviceInfoResponseModel</typeparam>
-        /// <param name="success">bool</param>
-        /// <param name="content">string</param>
-        /// <param name="detail">IDeviceDetailResponse</param>
-        /// <returns></returns>
-        public static T Build<T>(bool success, string content, IDeviceDetailModel detail) where T : DeviceInfoResponseModel, new()
-        {
-            var instance = (T)Activator.CreateInstance(typeof(T), new object[] {success, content, detail });
-            return instance;
-        }
+       
 
         /// <summary>
         /// Create DeviceDataResponseModel Instance From Data
@@ -195,9 +171,9 @@ namespace Ironwall.Framework.Models.Communications
         /// <typeparam name="T">DeviceDataResponseModel</typeparam>
         /// <param name="success">bool</param>
         /// <param name="content">string</param>
-        /// <param name="controllers">List<ControllerDeviceModel></param>
-        /// <param name="sensors">List<SensorDeviceModel></param>
-        /// <param name="cameras">List<CameraDeviceModel></param>
+        /// <param name="controllers">Body<ControllerDeviceModel></param>
+        /// <param name="sensors">Body<SensorDeviceModel></param>
+        /// <param name="cameras">Body<CameraDeviceModel></param>
         /// <returns></returns>
         public static T Build<T>(bool success, string content
             , List<ControllerDeviceModel> controllers
@@ -214,7 +190,7 @@ namespace Ironwall.Framework.Models.Communications
         /// <typeparam name="T">ControllerDataResponseModel</typeparam>
         /// <param name="success">bool</param>
         /// <param name="content">string</param>
-        /// <param name="devices">List<ControllerDeviceModel></param>
+        /// <param name="devices">Body<ControllerDeviceModel></param>
         /// <returns></returns>
         public static T Build<T>(bool success, string content
             , List<ControllerDeviceModel> devices) where T : ControllerDataResponseModel, new()
@@ -229,7 +205,7 @@ namespace Ironwall.Framework.Models.Communications
         /// <typeparam name="T">SensorDataResponseModel</typeparam>
         /// <param name="success">bool</param>
         /// <param name="content">string</param>
-        /// <param name="devices">List<SensorDeviceModel></param>
+        /// <param name="devices">Body<SensorDeviceModel></param>
         /// <returns></returns>
         public static T Build<T>(bool success, string content
             , List<SensorDeviceModel> devices) where T : SensorDataResponseModel, new()
@@ -251,7 +227,7 @@ namespace Ironwall.Framework.Models.Communications
         /// <typeparam name="T">CameraDataResponseModel</typeparam>
         /// <param name="success">bool</param>
         /// <param name="content">string</param>
-        /// <param name="devices">List<CameraDeviceModel></param>
+        /// <param name="devices">Body<CameraDeviceModel></param>
         /// <returns></returns>
         public static T Build<T>(bool success, string content
             , List<CameraDeviceModel> devices) where T : CameraDataResponseModel, new()
@@ -260,13 +236,7 @@ namespace Ironwall.Framework.Models.Communications
             return instance;
         }
 
-        public static T Build<T>(bool success, string content
-            , MappingInfoModel info) where T : CameraMappingInfoResponseModel, new()
-        {
-            var instance = (T)Activator.CreateInstance(typeof(T), new object[] { success, content, info });
-            return instance;
-        }
-
+        
         /// <summary>
         /// 
         /// </summary>
@@ -398,9 +368,9 @@ namespace Ironwall.Framework.Models.Communications
         /// </summary>
         /// <typeparam name="T">AccountDetailModel</typeparam>
         /// <param name="id">Account Id</param>
-        /// <param name="userId">Account GroupId</param>
+        /// <param name="userId">Account MappingGroup</param>
         /// <param name="password">Account Password</param>
-        /// <param name="name">Account User GroupId</param>
+        /// <param name="name">Account User MappingGroup</param>
         /// <param name="empnum">Account Employee Number</param>
         /// <param name="birth">Account User Birthday</param>
         /// <param name="phone">Account User Phone Number</param>

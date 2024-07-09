@@ -12,7 +12,7 @@ namespace Ironwall.Libraries.Utils.Behaviors
 {
     public static class ListBoxBehavior
     {
-        static readonly Dictionary<ListBox, Capture> Associations =
+        public static readonly Dictionary<ListBox, Capture> Associations =
                new Dictionary<ListBox, Capture>();
 
         public static bool GetScrollOnNewItem(DependencyObject obj)
@@ -66,7 +66,7 @@ namespace Ironwall.Libraries.Utils.Behaviors
             Associations[listBox] = new Capture(listBox);
         }
 
-        static void ListBox_Unloaded(object sender, RoutedEventArgs e)
+        public static void ListBox_Unloaded(object sender, RoutedEventArgs e)
         {
             var listBox = (ListBox)sender;
             if (Associations.ContainsKey(listBox))
@@ -74,7 +74,7 @@ namespace Ironwall.Libraries.Utils.Behaviors
             listBox.Unloaded -= ListBox_Unloaded;
         }
 
-        static void ListBox_Loaded(object sender, RoutedEventArgs e)
+        public static void ListBox_Loaded(object sender, RoutedEventArgs e)
         {
             var listBox = (ListBox)sender;
             var incc = listBox.Items as INotifyCollectionChanged;
@@ -83,7 +83,7 @@ namespace Ironwall.Libraries.Utils.Behaviors
             Associations[listBox] = new Capture(listBox);
         }
 
-        class Capture : IDisposable
+        public class Capture : IDisposable
         {
             private readonly ListBox listBox;
             private readonly INotifyCollectionChanged incc;
@@ -98,7 +98,7 @@ namespace Ironwall.Libraries.Utils.Behaviors
                 }
             }
 
-            void incc_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+            public void incc_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
             {
                 Application.Current.Dispatcher.Invoke(() =>
                 {

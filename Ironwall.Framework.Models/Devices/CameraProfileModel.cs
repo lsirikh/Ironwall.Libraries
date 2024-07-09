@@ -13,7 +13,7 @@ namespace Ironwall.Framework.Models.Devices
         Email        : lsirikh@naver.com                                         
      ****************************************************************************/
 
-    public class CameraProfileModel : OptionBaseModel, ICameraProfileModel
+    public class CameraProfileModel : BaseOptionModel, ICameraProfileModel
     {
 
         #region - Ctors -

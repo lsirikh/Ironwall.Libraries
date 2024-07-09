@@ -15,16 +15,14 @@ namespace Ironwall.Framework.Models.Communications.Devices
         public SensorDataResponseModel()
         {
             Command = EnumCmdType.SENSOR_DATA_RESPONSE;
-            Sensors = new List<SensorDeviceModel>();
         }
 
         public SensorDataResponseModel(bool success, string content, List<SensorDeviceModel> sensors)
-            : base(success, content)
+            : base(EnumCmdType.SENSOR_DATA_RESPONSE, success, content)
         {
-            Command = EnumCmdType.SENSOR_DATA_RESPONSE;
-            Sensors = sensors;
+            Body = sensors;
         }
-        [JsonProperty("sensors", Order = 4)]
-        public List<SensorDeviceModel> Sensors { get; private set; }
+        [JsonProperty("body", Order = 4)]
+        public List<SensorDeviceModel> Body { get; private set; }
     }
 }

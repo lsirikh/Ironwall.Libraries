@@ -98,7 +98,6 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Providers\OnvifBaseProvider.cs" />
     <Compile Include="Providers\OnvifProvider.cs" />
     <Compile Include="Providers\PtzPresetProvider.cs" />
     <Compile Include="Services\OnvifControl.cs" />

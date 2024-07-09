@@ -89,6 +89,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataProviders\BaseCommonProvider.cs" />
+    <Compile Include="DataProviders\BaseProvider.cs" />
     <Compile Include="DataProviders\EntityCollectionProvider.cs" />
     <Compile Include="Events\EventHelper.cs" />
     <Compile Include="Events\IEventHelper.cs" />

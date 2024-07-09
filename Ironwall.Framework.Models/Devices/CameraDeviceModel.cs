@@ -19,6 +19,7 @@ namespace Ironwall.Framework.Models.Devices
             Presets = new List<CameraPresetModel>();
             DeviceType = EnumDeviceType.IpCamera;
         }
+
         public CameraDeviceModel(int id) : this()
         {
             Id = id;
@@ -40,6 +41,21 @@ namespace Ironwall.Framework.Models.Devices
             Mode = model.Mode;
         }
 
+        public CameraDeviceModel(ICameraDeviceModel model, List<CameraPresetModel> presets = default, List<CameraProfileModel> profiles = default)
+            : base(model)
+        {
+            IpAddress = model.IpAddress;
+            Port = model.Port;
+            UserName = model.UserName;
+            Password = model.Password;
+            Presets = presets != null ? presets : model.Presets;
+            Profiles = profiles != null ? profiles : model.Profiles;
+            Category = model.Category;
+            DeviceModel = model.DeviceModel;
+            RtspUri = model.RtspUri;
+            RtspPort = model.RtspPort;
+            Mode = model.Mode;
+        }
 
         [JsonProperty("ip_address", Order = 6)]
         public string IpAddress { get; set; }
@@ -48,7 +64,7 @@ namespace Ironwall.Framework.Models.Devices
         public int Port { get; set; }
         
         [JsonProperty("category", Order = 8)]
-        public int Category { get; set; }
+        public EnumCameraType Category { get; set; }
 
         [JsonProperty("user_name", Order = 9)]
         public string UserName { get; set; }

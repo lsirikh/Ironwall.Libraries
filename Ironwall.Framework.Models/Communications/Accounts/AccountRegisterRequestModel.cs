@@ -5,8 +5,7 @@ using Newtonsoft.Json;
 
 namespace Ironwall.Framework.Models.Communications.Accounts
 {
-    public class AccountRegisterRequestModel
-        : BaseMessageModel
+    public class AccountRegisterRequestModel : BaseMessageModel
         , IAccountRegisterRequestModel
     {
         public AccountRegisterRequestModel()

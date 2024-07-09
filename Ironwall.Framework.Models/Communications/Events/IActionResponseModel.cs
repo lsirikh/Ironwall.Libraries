@@ -1,7 +1,9 @@
-﻿namespace Ironwall.Framework.Models.Communications.Events
+﻿using Ironwall.Framework.Models.Events;
+
+namespace Ironwall.Framework.Models.Communications.Events
 {
     public interface IActionResponseModel : IResponseModel
     {
-        ActionRequestModel RequestModel { get; set; }
+        ActionEventModel Body { get; set; }
     }
 }

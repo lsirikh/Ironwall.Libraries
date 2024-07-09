@@ -5,6 +5,6 @@ namespace Ironwall.Framework.Models.Communications.Devices
 {
     public interface ICameraDataSaveRequestModel : IUserSessionBaseRequestModel
     {
-        List<CameraDeviceModel> Cameras { get; set; }
+        List<CameraDeviceModel> Body { get; }
     }
 }

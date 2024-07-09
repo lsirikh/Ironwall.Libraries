@@ -30,7 +30,7 @@ namespace Ironwall.Framework.Models.Communications.Symbols
 
         public SymbolDataSaveRequestModel(
             ILoginSessionModel model
-            //, List<MapModel> maps
+            //, Body<MapModel> maps
             , List<PointClass> points
             , List<SymbolModel> symbols
             , List<ShapeSymbolModel> shapes
@@ -59,7 +59,7 @@ namespace Ironwall.Framework.Models.Communications.Symbols
         #endregion
         #region - Properties -
         //[JsonProperty("maps", Order = 5)]
-        //public List<MapModel> Maps { get; private set; }
+        //public Body<MapModel> Maps { get; private set; }
         [JsonProperty("points", Order = 6)]
         public List<PointClass> Points { get; private set; }
         [JsonProperty("symbols", Order = 7)]

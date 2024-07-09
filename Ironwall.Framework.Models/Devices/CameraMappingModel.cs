@@ -23,9 +23,17 @@ namespace Ironwall.Framework.Models.Devices
 
         }
 
+        public CameraMappingModel(string group, SensorDeviceModel sensor, CameraPresetModel preset1, CameraPresetModel preset2)
+        {
+            MappingGroup = group;
+            Sensor = sensor;
+            FirstPreset = preset1;
+            SecondPreset = preset2;
+        }
+
         public CameraMappingModel(int id, string group, SensorDeviceModel sensor, CameraPresetModel preset1, CameraPresetModel preset2) : base(id)
         {
-            Group = group;
+            MappingGroup = group;
             Sensor = sensor;
             FirstPreset = preset1;
             SecondPreset = preset2;
@@ -33,12 +41,20 @@ namespace Ironwall.Framework.Models.Devices
 
         public CameraMappingModel(IMappingTableMapper model, SensorDeviceModel sensor, CameraPresetModel preset1, CameraPresetModel preset2) : base(model.Id)
         {
-            Group = model.GroupId;
+            MappingGroup = model.MappingGroup;
             Sensor = sensor;
             FirstPreset = preset1;
             SecondPreset = preset2;
         }
-       
+
+        public CameraMappingModel(ICameraMappingModel model)
+        {
+            MappingGroup = model.MappingGroup;
+            Sensor = model.Sensor;
+            FirstPreset = model.FirstPreset;
+            SecondPreset = model.SecondPreset;
+        }
+
         #endregion
         #region - Implementation of Interface -
         #endregion
@@ -51,8 +67,8 @@ namespace Ironwall.Framework.Models.Devices
         #region - IHanldes -
         #endregion
         #region - Properties -
-        [JsonProperty("group", Order = 2)]
-        public string Group { get; set; }
+        [JsonProperty("mapping_group", Order = 2)]
+        public string MappingGroup { get; set; }
         [JsonProperty("sensor", Order = 3)]
         public SensorDeviceModel Sensor { get; set; }
         [JsonProperty("first_preset", Order = 4)]

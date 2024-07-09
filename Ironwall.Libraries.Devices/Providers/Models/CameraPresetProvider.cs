@@ -11,11 +11,10 @@ namespace Ironwall.Libraries.Devices.Providers.Models
         Email        : lsirikh@naver.com                                         
      ****************************************************************************/
 
-    public class CameraPresetProvider : CameraOptionBaseProvider<ICameraPresetModel>
+    public class CameraPresetProvider : WrapperOptionProvider<CameraPresetModel>
     {
-
         #region - Ctors -
-        public CameraPresetProvider()
+        public CameraPresetProvider(CameraOptionProvider provider) : base(provider)
         {
             ClassName = nameof(CameraPresetProvider);
         }

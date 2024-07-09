@@ -29,7 +29,7 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Dialogs
         #region - IHanldes -
         #endregion
         #region - Properties -
-        public string Id => _eventViewModel.Id;
+        public int Id => _eventViewModel.Id;
 
         public DateTime DateTime => _eventViewModel.DateTime;
 
@@ -45,7 +45,7 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Dialogs
 
         public int SecondEnd => MalfunctionEventModel.SecondEnd;
 
-        public int Status => _eventViewModel.Status;
+        public EnumTrueFalse Status => _eventViewModel.Status;
 
         public string TagFault => EventViewModel.TagFault;
 

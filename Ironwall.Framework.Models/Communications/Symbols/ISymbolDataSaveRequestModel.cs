@@ -7,7 +7,7 @@ namespace Ironwall.Framework.Models.Communications.Symbols
 {
     public interface ISymbolDataSaveRequestModel : IUserSessionBaseRequestModel
     {
-        //List<MapModel> Maps { get; }
+        //Body<MapModel> Maps { get; }
         List<ObjectShapeModel> Objects { get; }
         List<PointClass> Points { get; }
         List<ShapeSymbolModel> Shapes { get; }

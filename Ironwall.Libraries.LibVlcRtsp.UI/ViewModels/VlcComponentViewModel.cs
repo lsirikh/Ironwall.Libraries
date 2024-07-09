@@ -85,9 +85,7 @@ namespace Ironwall.Libraries.LibVlcRtsp.UI.ViewModels
 
 
         // 재생 메서드
-        public Task Play(string rtspUrl, string deviceName = default
-            , bool isRecording = false, string eventId = default
-            , CancellationToken token = default)
+        public Task Play(string rtspUrl, string deviceName = default, bool isRecording = false, int eventId = default, CancellationToken token = default)
         {
             return Task.Run(() =>
             {
@@ -135,9 +133,7 @@ namespace Ironwall.Libraries.LibVlcRtsp.UI.ViewModels
                             };
                         }
                         if (token.IsCancellationRequested) throw new TaskCanceledException();
-                        _media = new Media(_mediaPlayer.LibVLC
-                            , new Uri(rtspUrl)
-                            , options);
+                        _media = new Media(_mediaPlayer.LibVLC, new Uri(rtspUrl), options);
 
                         MediaPlayer.Play(_media);
                     }

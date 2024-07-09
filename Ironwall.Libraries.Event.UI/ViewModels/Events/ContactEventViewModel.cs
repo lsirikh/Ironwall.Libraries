@@ -9,13 +9,12 @@ using System.Threading.Tasks;
 
 namespace Ironwall.Libraries.Event.UI.ViewModels.Events
 {
-    public class ContactEventViewModel
-        : MetaEventViewModel, IContactEventViewModel
+    public class ContactEventViewModel : MetaEventViewModel, IContactEventViewModel
     {
         #region - Ctors -
         public ContactEventViewModel()
         {
-
+            _model = new ContactEventModel();
         }
 
         public ContactEventViewModel(IContactEventModel model) : base(model)

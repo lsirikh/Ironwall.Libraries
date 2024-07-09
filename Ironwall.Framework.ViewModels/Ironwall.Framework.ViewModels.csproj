@@ -129,9 +129,11 @@
     <Compile Include="ConductorViewModels\ScreenViewModel.cs" />
     <Compile Include="ConductorViewModels\UserBasePanelViewModel.cs" />
     <Compile Include="Devices\BaseDeviceViewModel.cs" />
+    <Compile Include="Devices\BaseOptionViewModel.cs" />
     <Compile Include="Devices\CameraDeviceViewModel.cs" />
     <Compile Include="Devices\ControllerDeviceViewModel.cs" />
     <Compile Include="Devices\IBaseDeviceViewModel.cs" />
+    <Compile Include="Devices\IBaseOptionViewModel.cs" />
     <Compile Include="Devices\ICameraDeviceViewModel.cs" />
     <Compile Include="Devices\IControllerDeviceViewModel.cs" />
     <Compile Include="Devices\ISensorDeviceViewModel.cs" />

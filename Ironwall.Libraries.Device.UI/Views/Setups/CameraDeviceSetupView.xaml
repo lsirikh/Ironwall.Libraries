@@ -219,7 +219,7 @@
 						<DataTemplate>
 							<TextBlock VerticalAlignment="Center"
                                        TextAlignment="Center"
-                                       Text="{Binding Category, Mode=TwoWay, Converter={StaticResource EnumCameraTypeToTextConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                                       Text="{Binding Category, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 						</DataTemplate>
 					</DataGridTemplateColumn.CellTemplate>
 					<DataGridTemplateColumn.CellEditingTemplate>
@@ -227,7 +227,7 @@
 							<ComboBox VerticalAlignment="Center"
                                       HorizontalContentAlignment="Center"
                                       ItemsSource="{Binding Source={utils:EnumBindingSource {x:Type enums:EnumCameraType}}}"
-                                      SelectedItem="{Binding Category, Mode=TwoWay, Converter={StaticResource EnumCameraTypeToValueConverter}, UpdateSourceTrigger=PropertyChanged}">
+                                      SelectedItem="{Binding Category, Mode=TwoWay,  UpdateSourceTrigger=PropertyChanged}">
 								<ComboBox.ItemsPanel>
 									<ItemsPanelTemplate>
 										<VirtualizingStackPanel />

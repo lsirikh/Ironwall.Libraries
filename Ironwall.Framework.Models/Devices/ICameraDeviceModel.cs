@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Ironwall.Libraries.Enums;
+using System.Collections.Generic;
 
 namespace Ironwall.Framework.Models.Devices
 {
@@ -8,7 +9,7 @@ namespace Ironwall.Framework.Models.Devices
         int Port { get; set; }
         string UserName { get; set; }
         string Password { get; set; }
-        int Category { get; set; }
+        EnumCameraType Category { get; set; }
         List<CameraPresetModel> Presets { get; set; }
         List<CameraProfileModel> Profiles { get; set; }
         string DeviceModel { get; set; }

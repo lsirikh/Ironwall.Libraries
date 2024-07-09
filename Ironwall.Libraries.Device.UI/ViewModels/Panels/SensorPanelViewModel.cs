@@ -22,7 +22,6 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Panels
         public SensorPanelViewModel(IEventAggregator eventAggregator)
             : base(eventAggregator)
         {
-
         }
         #endregion
         #region - Implementation of Interface -

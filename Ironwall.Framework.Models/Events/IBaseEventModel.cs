@@ -1,12 +1,12 @@
 ﻿using Ironwall.Framework.Models.Devices;
+using Ironwall.Libraries.Enums;
 using System;
 
 namespace Ironwall.Framework.Models.Events
 {
-    public interface IBaseEventModel
+    public interface IBaseEventModel : IBaseModel
     {
-        string Id { get; set; }
-        
+        EnumEventType? MessageType { get; set; }
         DateTime DateTime { get; set; }
     }
 }

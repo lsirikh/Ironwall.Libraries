@@ -21,7 +21,7 @@ namespace Ironwall.Libraries.Device.UI.ViewModels
         {
             _model = new BaseDeviceModel();
         }
-        public DeviceViewModel(IBaseDeviceModel model)
+        public DeviceViewModel(IBaseDeviceModel model) : base(model)
         {
             _model = model;
         }
@@ -34,6 +34,7 @@ namespace Ironwall.Libraries.Device.UI.ViewModels
             _model = new BaseDeviceModel();
             GC.Collect();
         }
+
         #endregion
         #region - Binding Methods -
         #endregion

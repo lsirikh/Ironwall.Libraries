@@ -1,4 +1,7 @@
 ﻿using Ironwall.Framework.Models.Devices;
+using Ironwall.Framework.ViewModels;
+using Ironwall.Libraries.Enums;
+using System;
 using System.Collections.Generic;
 using System.Windows.Documents;
 
@@ -21,10 +24,9 @@ namespace Ironwall.Libraries.Device.UI.ViewModels
         {
             _model = new CameraDeviceModel();
         }
-
+        
         public CameraDeviceViewModel(ICameraDeviceModel model) : base(model)
         {
-
         }
         #endregion
         #region - Implementation of Interface -
@@ -78,7 +80,7 @@ namespace Ironwall.Libraries.Device.UI.ViewModels
             }
         }
 
-        public int Category
+        public EnumCameraType Category
         {
             get { return (_model as ICameraDeviceModel).Category; }
             set
@@ -147,7 +149,6 @@ namespace Ironwall.Libraries.Device.UI.ViewModels
                 NotifyOfPropertyChange(() => Mode);
             }
         }
-
         #endregion
         #region - Attributes -
         #endregion

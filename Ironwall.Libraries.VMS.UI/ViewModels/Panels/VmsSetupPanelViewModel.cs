@@ -25,11 +25,15 @@ namespace Ironwall.Libraries.VMS.UI.ViewModels.Panels
         #region - Ctors -
         public VmsSetupPanelViewModel(ILogService log
                                     , IEventAggregator eventAggregator
-                                    , VmsApiSetupViewModel vmsApiSetupViewModel)
+                                    , VmsApiSetupViewModel vmsApiSetupViewModel
+                                    , VmsEventMappingSetupViewModel vmsEventMappingSetupViewModel
+                                    , VmsSensorSetupViewModel vmsEventSensorSetupViewModel)
                                     :base(eventAggregator)
         {
             _log = log;
             VmsApiSetupViewModel = vmsApiSetupViewModel;
+            VmsEventMappingSetupViewModel = vmsEventMappingSetupViewModel;
+            VmsSensorSetupViewModel = vmsEventSensorSetupViewModel;
 
         }
         #endregion
@@ -71,27 +75,22 @@ namespace Ironwall.Libraries.VMS.UI.ViewModels.Panels
                 {
                     selectedViewModel = VmsApiSetupViewModel;
                 }
-                //else if (contentControl?.Content is SurvEventSetupView
-                //    || contentControl is SurvEventSetupView)
-                //{
-                //    selectedViewModel = SurvEventSetupViewModel;
-                //}
-                //else if (contentControl?.Content is SurvMappingSetupView
-                //    || contentControl is SurvMappingSetupView)
-                //{
-                //    selectedViewModel = SurvMappingSetupViewModel;
-                //}
-                //else if (contentControl?.Content is SurvSensorSetupView
-                //    || contentControl is SurvSensorSetupView)
-                //{
-                //    selectedViewModel = SurvSensorSetupViewModel;
-                //}
+                else if (contentControl?.Content is VmsEventMappingSetupView
+                    || contentControl is VmsEventMappingSetupView)
+                {
+                    selectedViewModel = VmsEventMappingSetupViewModel;
+                }
+                else if (contentControl?.Content is VmsSensorSetupView
+                    || contentControl is VmsSensorSetupView)
+                {
+                    selectedViewModel = VmsSensorSetupViewModel;
+                }
 
                 await selectedViewModel.ActivateAsync();
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Raised Exception in {nameof(OnActiveTab)} : {ex.Message}");
+                _log.Error($"Raised Exception in {nameof(OnActiveTab)} : {ex.Message}");
             }
 
         }
@@ -100,6 +99,8 @@ namespace Ironwall.Libraries.VMS.UI.ViewModels.Panels
         #endregion
         #region - Properties -
         public VmsApiSetupViewModel VmsApiSetupViewModel { get; }
+        public VmsSensorSetupViewModel VmsSensorSetupViewModel { get; }
+        public VmsEventMappingSetupViewModel VmsEventMappingSetupViewModel { get; }
         #endregion
         #region - Attributes -
         private BaseViewModel selectedViewModel;

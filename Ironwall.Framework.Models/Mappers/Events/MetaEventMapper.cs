@@ -22,22 +22,13 @@ namespace Ironwall.Framework.Models.Mappers
         public MetaEventMapper(IMetaEventModel model) : base (model)
         {
             EventGroup = model.EventGroup;
-            MessageType = model.MessageType;
+            MessageType = (int)model.MessageType;
             Device = model.Device.Id;
-            Status = model.Status;
-        }
-
-        public MetaEventMapper(IBaseEventMessageModel model, IBaseDeviceModel device) : base(model)
-        {
-            EventGroup = model.Group;
-            MessageType = EnumHelper.GetEventType(model.Command);
-            Status = model.Status;
-            Device = device.Id;
+            Status = EnumHelper.GetStatusType(model.Status);
         }
 
         public string EventGroup { get; set; }
-        public EnumEventType? MessageType { get; set; }
-        public int Status { get; set; }
         public int Device { get; set; }
+        public bool Status { get; set; }
     }
 }

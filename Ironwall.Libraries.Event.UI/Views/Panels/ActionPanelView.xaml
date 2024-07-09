@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Ironwall.Libraries.Event.UI.Views.Panels"
-			 xmlns:enums="clr-namespace:Ironwall.Libraries.Enums;assembly=Ironwall.Libraries.Enums"
+            			 xmlns:enums="clr-namespace:Ironwall.Libraries.Enums;assembly=Ironwall.Libraries.Enums"
              xmlns:utils="clr-namespace:Ironwall.Libraries.Utils;assembly=Ironwall.Libraries.Utils"
              xmlns:cal="http://caliburnmicro.com"
 			 xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
@@ -134,7 +134,7 @@
 						  EnableColumnVirtualization="True"
 						  ScrollViewer.VerticalScrollBarVisibility="Auto"
 						  Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
-						  ItemsSource="{Binding ActionViewModelProvider.CollectionEntity, UpdateSourceTrigger=PropertyChanged}">
+						  ItemsSource="{Binding ViewModelProvider, UpdateSourceTrigger=PropertyChanged}">
 					<DataGrid.Resources>
 						<utils:BindingProxy x:Key="ItemDataProxy" Data="{Binding}" />
 					</DataGrid.Resources>
@@ -144,7 +144,7 @@
 
 						<DataGridTextColumn Header="Origin Event"
 											Binding="{Binding Path=FromEvent.Id, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
-						
+
 						<DataGridTextColumn Header="Origin Event Type"
 											Binding="{Binding Path=FromEvent.MessageType, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
 
@@ -184,6 +184,7 @@
 						<ColumnDefinition Width="1*"/>
 						<ColumnDefinition Width="1.5*"/>
 						<ColumnDefinition Width="1*"/>
+						<ColumnDefinition Width="20*"/>
 					</Grid.ColumnDefinitions>
 					<TextBlock 
 							VerticalAlignment="Center"
@@ -198,7 +199,7 @@
 							Margin="5 0"
 							Grid.Column="1"
 							Style="{StaticResource MaterialDesignCaptionTextBlock}"
-							Text="{Binding ActionViewModelProvider.CollectionEntity.Count, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+							Text="{Binding ViewModelProvider.Count, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
 
 				</Grid>
 			</Grid>
@@ -206,3 +207,4 @@
 		</md:TransitioningContent>
 	</StackPanel>
 </UserControl>
+

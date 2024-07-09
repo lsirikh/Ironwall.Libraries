@@ -1,4 +1,6 @@
-﻿namespace Ironwall.Framework.Models.Accounts
+﻿using System;
+
+namespace Ironwall.Framework.Models.Accounts
 {
     public class LoginUserModel 
         : LoginBaseModel
@@ -17,7 +19,7 @@
             Mode = model.Mode;
         }
 
-        public LoginUserModel(string userId, int userLevel, int clientId, int mode, string timeCreated)
+        public LoginUserModel(string userId, int userLevel, int clientId, int mode, DateTime timeCreated)
             : base(userId, timeCreated)
         {
             UserLevel = userLevel;
@@ -28,7 +30,7 @@
         public int UserLevel { get; set; }
         public int ClientId { get; set; }
         public int Mode { get; set; }
-        public void Insert(string userId, int userLevel, int clientId, int mode, string timeCreated)
+        public void Insert(string userId, int userLevel, int clientId, int mode, DateTime timeCreated)
         {
             UserId = userId;
             UserLevel = userLevel;

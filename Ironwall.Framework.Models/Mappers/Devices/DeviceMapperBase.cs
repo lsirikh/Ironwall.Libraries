@@ -30,7 +30,7 @@ namespace Ironwall.Framework.Models.Mappers
         public string DeviceName { get; set; }
         public EnumDeviceType DeviceType { get; set; }
         public string Version { get; set; }
-        public int Status { get; set; }
+        public EnumDeviceStatus Status { get; set; }
 
     }
 }

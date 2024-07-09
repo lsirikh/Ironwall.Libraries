@@ -19,17 +19,13 @@ namespace Ironwall.Framework.Models.Devices
         public SensorDeviceModel(IDeviceMapperBase model) : base(model)
         {
         }
+
         public SensorDeviceModel(IDeviceMapperBase model, IControllerDeviceModel controller): base(model)
         {
-            Controller = controller;
+            Controller = controller as ControllerDeviceModel;
         }
 
-        //public SensorDeviceModel(ISensorDeviceViewModel model) : base(model)
-        //{
-        //    Controller = ModelFactory.Build<ControllerDeviceModel>(model.Controller);
-        //}
-
         [JsonProperty("controller", Order = 6)]
-        public IControllerDeviceModel Controller { get; set; }
+        public ControllerDeviceModel Controller { get; set; }
     }
 }

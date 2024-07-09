@@ -5,6 +5,6 @@ namespace Ironwall.Framework.Models.Communications.Devices
 {
     public interface ICameraPresetResponseModel : IResponseModel
     {
-        List<CameraPresetModel> List { get; set; }
+        List<CameraPresetModel> Body { get; set; }
     }
 }

@@ -49,7 +49,7 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Components
                     //NameArea = viewModel.NameArea,
                     //NameDevice = viewModel.NameDevice,
                     //NameAreaSpeaker = viewModel.NameAreaSpeaker,
-                    //EventId = actionModel.FromEvent.Id,
+                    //Id = actionModel.FromEvent.Id,
                     //DateTimeAction = actionModel.DateTime,
                     //ActionContents = actionModel.Content,
                     //IdUser = actionModel.User,

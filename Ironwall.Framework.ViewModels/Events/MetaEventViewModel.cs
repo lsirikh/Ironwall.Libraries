@@ -64,8 +64,8 @@ namespace Ironwall.Framework.ViewModels.Events
             }
         }
         
-        private int _status;
-        public int Status
+        private EnumTrueFalse _status;
+        public EnumTrueFalse Status
         {
             get { return _status; }
             set

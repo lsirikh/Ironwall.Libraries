@@ -1,9 +1,10 @@
-﻿namespace Ironwall.Framework.Models.Communications.Events
-{
-    public interface IDetectionRequestModel : IBaseEventMessageModel
-    {
-        DetectionDetailModel Detail { get; set; }
+﻿using Ironwall.Framework.Models.Events;
 
-        //void Insert(string id, string group, int controller, int sensor, int uType, DetectionDetailModel detail, string dateTime);
+namespace Ironwall.Framework.Models.Communications.Events
+{
+    public interface IDetectionRequestModel : IBaseMessageModel
+    {
+        DetectionEventModel Body { get; set; }
+
     }
 }

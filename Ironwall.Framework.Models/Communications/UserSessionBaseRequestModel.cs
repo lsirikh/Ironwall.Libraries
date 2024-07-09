@@ -1,4 +1,5 @@
 ﻿using Ironwall.Framework.Models.Accounts;
+using Ironwall.Libraries.Enums;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,15 @@ namespace Ironwall.Framework.Models.Communications
 
         }
 
-        public UserSessionBaseRequestModel(ILoginSessionModel model)
+        public UserSessionBaseRequestModel( ILoginSessionModel model)
+        {
+            UserId = model.UserId;
+            Token = model.Token;
+            TimeCreated = model.TimeCreated;
+            TimeExpired = model.TimeExpired;
+        }
+
+        public UserSessionBaseRequestModel(ILoginSessionModel model, EnumCmdType cmd) : base(cmd)
         {
             UserId = model.UserId;
             Token = model.Token;
@@ -31,9 +40,9 @@ namespace Ironwall.Framework.Models.Communications
         [JsonProperty("token", Order = 2)]
         public string Token { get; private set; }
         [JsonProperty("time_created", Order = 3)]
-        public string TimeCreated { get; private set; }
+        public DateTime TimeCreated { get; private set; }
         [JsonProperty("time_expired", Order = 4)]
-        public string TimeExpired { get; private set; }
+        public DateTime TimeExpired { get; private set; }
     }
 
 }

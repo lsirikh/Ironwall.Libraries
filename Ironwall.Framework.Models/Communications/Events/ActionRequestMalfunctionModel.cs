@@ -10,25 +10,21 @@ using System.Threading.Tasks;
 namespace Ironwall.Framework.Models.Communications.Events
 {
     public class ActionRequestMalfunctionModel
-        : ActionRequestModel, IActionRequestMalfunctionModel
+        : ActionBaseRequestModel<MalfunctionEventModel>, IActionRequestMalfunctionModel
     {
         public ActionRequestMalfunctionModel()
         {
-            Command = EnumCmdType.EVENT_MALFUNCTION_REQUEST;
+            Command = EnumCmdType.EVENT_ACTION_MALFUNCTION_REQUEST;
         }
 
-        [JsonProperty("detail", Order = 9)]
-        MalfunctionDetailModel Detail { get; set; }
+        public ActionRequestMalfunctionModel(string content, string user, IMalfunctionEventModel model)
+            : base(EnumCmdType.EVENT_ACTION_MALFUNCTION_REQUEST, content, user, model as MalfunctionEventModel)
+        {
+        }
 
-        //public void Insert(string id, string group, int controller, int sensor, int uType, string eventId, string content, string user, MalfunctionDetailModel detail, string dateTime)
-        //{
-        //    base.Insert(id, group, controller, sensor, uType, eventId, content, user, dateTime);
-        //    Detail = detail;
-        //}
-
-        //public void Insert(ActionRequestMalfunctionModel model)
-        //{
-        //    Insert(model.Id, model.GroupId, model.CONTROLLER, model.Sensor, model.UnitType, model.EventId, model.Content, model.User, model.Detail, model.DateTime);
-        //}
+        public ActionRequestMalfunctionModel(IActionEventModel model) : base(EnumCmdType.EVENT_ACTION_MALFUNCTION_REQUEST, model)
+        {
+            
+        }
     }
 }

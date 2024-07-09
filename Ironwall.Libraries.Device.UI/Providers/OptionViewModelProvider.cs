@@ -8,6 +8,8 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Ironwall.Libraries.Base.Services;
+using Ironwall.Libraries.Devices.Providers;
+using Ironwall.Libraries.Devices.Providers.Models;
 
 namespace Ironwall.Libraries.Device.UI.Providers
 {
@@ -20,102 +22,17 @@ namespace Ironwall.Libraries.Device.UI.Providers
         Email        : lsirikh@naver.com                                         
      ****************************************************************************/
 
-    public abstract class OptionViewModelProvider<T> : BaseCommonProvider<T>, ILoadable where T : ICameraOptionViewModel
+    public class OptionViewModelProvider : WrapperOptionViewModelProvider<IBaseOptionModel, CameraOptionViewModel>
     {
-
         #region - Ctors -
-        public OptionViewModelProvider()
+        public OptionViewModelProvider(CameraOptionProvider provider) : base(provider)
         {
-            ClassName = nameof(OptionViewModelProvider<T>);
+            ClassName = nameof(OptionViewModelProvider);
         }
-
         #endregion
         #region - Implementation of Interface -
-        public abstract Task<bool> Initialize(CancellationToken token = default);
-        public abstract void Uninitialize();
         #endregion
         #region - Overrides -
-        public override async Task<bool> Finished()
-        {
-            try
-            {
-                if (Refresh == null)
-                    return false;
-
-                bool ret = await Refresh.Invoke();
-                return ret;
-
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Raised Exception in {nameof(Finished)}({ClassName}) : ", ex.Message);
-                return false;
-            }
-        }
-
-        public override async Task<bool> InsertedItem(T item)
-        {
-            try
-            {
-                Add(item);
-
-                if (Inserted == null)
-                    return false;
-
-                bool ret = await Inserted.Invoke(item);
-                return ret;
-
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Raised Exception in {nameof(InsertedItem)}({ClassName}) : ", ex.Message);
-                return false;
-            }
-        }
-        public override async Task<bool> UpdatedItem(T item)
-        {
-            try
-            {
-                var searchedItem = CollectionEntity.Where(t => t.Id == item.Id).FirstOrDefault();
-                if (searchedItem != null)
-                    searchedItem = item;
-
-                if (Updated == null)
-                    return false;
-
-                bool ret = await Updated.Invoke(item);
-            }
-            catch (Exception ex)
-            {
-
-                Debug.WriteLine($"Raised Exception in {nameof(UpdatedItem)}({ClassName}) : ", ex.Message);
-                return false;
-            }
-
-            return true;
-        }
-
-        public override async Task<bool> DeletedItem(T item)
-        {
-            try
-            {
-                var searchedItem = CollectionEntity.Where(t => t.Id == item.Id).FirstOrDefault();
-                if (searchedItem != null)
-                    Remove(searchedItem);
-
-                if (Deleted == null)
-                    return false;
-
-                bool ret = await Deleted.Invoke(item);
-            }
-            catch (Exception ex)
-            {
-
-                Debug.WriteLine($"Raised Exception in {nameof(DeletedItem)}({ClassName}) : ", ex.Message);
-                return false;
-            }
-            return true;
-        }
         #endregion
         #region - Binding Methods -
         #endregion
@@ -126,10 +43,6 @@ namespace Ironwall.Libraries.Device.UI.Providers
         #region - Properties -
         #endregion
         #region - Attributes -
-        public override event RefreshItems Refresh;
-        public override event Insert Inserted;
-        public override event Update Updated;
-        public override event Delete Deleted;
         #endregion
     }
 }

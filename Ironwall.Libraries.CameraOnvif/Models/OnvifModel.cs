@@ -51,7 +51,7 @@ namespace Ironwall.Libraries.CameraOnvif.Models
         public OnvifControl OnvifControl { get; set; }
         public PtzPresetProvider PtzPresetProvider { get; set; }
         public bool IsMoving { get; set; } // Moving   :true
-                                           // Idle     :false
+                                    // Idle     :false
         #endregion
         #region - Attributes -
         #endregion

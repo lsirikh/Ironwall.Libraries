@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Ironwall.Libraries.Enums
 {
-    public enum EnumCameraStatus : int
+    public enum  EnumCameraStatus : int
     {
         NONE = 0,
         ACTIVE = 1,

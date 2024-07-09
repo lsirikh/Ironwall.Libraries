@@ -140,6 +140,10 @@
       <Project>{cc34c433-38a8-4092-b172-d89db0e632be}</Project>
       <Name>Ironwall.Framework</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Ironwall.Libraries.Base\Ironwall.Libraries.Base.csproj">
+      <Project>{9d2531fc-7a97-478b-9303-9b0a3d223551}</Project>
+      <Name>Ironwall.Libraries.Base</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Ironwall.Libraries.Enums\Ironwall.Libraries.Enums.csproj">
       <Project>{848ae203-d3b4-4e73-8ef0-1a18d88a040c}</Project>
       <Name>Ironwall.Libraries.Enums</Name>

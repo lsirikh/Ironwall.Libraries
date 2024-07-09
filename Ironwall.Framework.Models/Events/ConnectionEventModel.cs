@@ -16,20 +16,13 @@ namespace Ironwall.Framework.Models.Events
     {
         public ConnectionEventModel()
         {
-
         }
 
         public ConnectionEventModel(IConnectionEventMapper model, IBaseDeviceModel device)
             : base(model, device)
         {
         }
-        public ConnectionEventModel(IConnectionRequestModel model, IBaseDeviceModel device)
-            : base(model, device)
-        {
-        }
+     
 
-        //public ConnectionEventModel(IConnectionEventViewModel model) : base(model)
-        //{
-        //}
     }
 }

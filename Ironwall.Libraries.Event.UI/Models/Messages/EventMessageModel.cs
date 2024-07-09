@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Documents;
 
 namespace Ironwall.Libraries.Event.UI.Models.Messages
 {
@@ -20,6 +21,15 @@ namespace Ironwall.Libraries.Event.UI.Models.Messages
     public class OpenPostEventFaultDetailsDialogMessageModel : EventMessageModel<PostEventViewModel> { }
 
     public class OpenCameraPopupMessageModel : EventMessageModel<PreEventViewModel> { }
+
+    public class ActionReportRequestMessageModel<T>
+    {
+        public ActionReportRequestMessageModel(T requestModel)
+        {
+            Model = requestModel;
+        }
+        public T Model { get; set; }
+    }
 
     public class ActionReportRequestMessageModel
     {
@@ -41,7 +51,7 @@ namespace Ironwall.Libraries.Event.UI.Models.Messages
         public IActionResponseModel Model { get; set; }
     }
 
-    
+
 
 
     public class SearchEventMessageModel : IMessageModel
@@ -67,6 +77,15 @@ namespace Ironwall.Libraries.Event.UI.Models.Messages
             Model = responseModel;
         }
         public IResponseModel Model { get; private set; }
+    }
+
+    public class SearchEventListMessageModel<T>
+    {
+        public SearchEventListMessageModel(List<T> list)
+        {
+            Lists = list;
+        }
+        public List<T> Lists { get; private set; }
     }
 
     public class ResultMessageModel

@@ -29,28 +29,28 @@ using Ironwall.Libraries.Common.Providers;
 using Ironwall.Libraries.Tcp.Server.Models;
 using Ironwall.Libraries.Base.DataProviders;
 using Ironwall.Framework.ViewModels;
+using Ironwall.Libraries.Base.Services;
 
 namespace Ironwall.Libraries.Account.Server.Services
 {
-    public abstract class AccountServerService
-        : TcpServer
-        , IAccountServerService
+    public abstract class AccountServerService : TcpServer, IAccountServerService
     {
         #region - Ctors -
         public AccountServerService(
-            AccountSetupModel accountSetupModel
-            , TcpSetupModel tcpSetupModel
-            , TcpServerSetupModel tcpServerSetupModel
-            , SessionProvider sessionProvider
-            , TcpClientProvider tcpClientProvider
-            , LoginProvider loginProvider
-            , UserProvider userProvider
-            , LoginUserProvider loginUserProvider
-            , AccountDbService accountDbService
-            , TcpUserProvider tcpUserProvider
-            , LogProvider logProvider 
-            )
-            : base(tcpSetupModel, tcpServerSetupModel, logProvider)
+                                    ILogService log
+                                    , AccountSetupModel accountSetupModel
+                                    , TcpSetupModel tcpSetupModel
+                                    , TcpServerSetupModel tcpServerSetupModel
+                                    , SessionProvider sessionProvider
+                                    , TcpClientProvider tcpClientProvider
+                                    , LoginProvider loginProvider
+                                    , UserProvider userProvider
+                                    , LoginUserProvider loginUserProvider
+                                    , AccountDbService accountDbService
+                                    , TcpUserProvider tcpUserProvider
+                                    , LogProvider logProvider 
+                                    )
+                                    : base(log, tcpSetupModel, tcpServerSetupModel, logProvider)
         {
 
             AccountSetupModel = accountSetupModel;
@@ -175,13 +175,13 @@ namespace Ironwall.Libraries.Account.Server.Services
                 }
                 catch (SocketSendException ex)
                 {
-                    Debug.WriteLine($"({model.UserId})Raised SocketSendException in Login : {ex.Message}");
+                    _log.Error($"({model.UserId})Raised SocketSendException in Login : {ex.Message}");
                     AcceptedClient_Event($"({model.UserId})Raised SocketSendException in Login : {ex.Message}", endPoint, EnumTcpCommunication.COMMUNICATION_ERROR);
                     return false;
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised an exception in Login : {ex.Message}");
+                    _log.Error($"Raised an exception in Login : {ex.Message}");
                     await SendLoginResponse(false, $"{ex.Message}", endPoint);
                     return false;
                 }
@@ -217,23 +217,23 @@ namespace Ironwall.Libraries.Account.Server.Services
                 }
                 catch (SocketSendException ex)
                 {
-                    Debug.WriteLine($"Raised SocketSendException in Logout : {ex.Message}");
+                    _log.Error($"Raised SocketSendException in Logout : {ex.Message}");
                     AcceptedClient_Event($"Raised SocketSendException in Logout : {ex.Message}", endPoint, EnumTcpCommunication.COMMUNICATION_ERROR);
                     return false;
                 }
                 catch (NullReferenceException ex)
                 {
-                    Debug.WriteLine($"Raised NullReferenceException in KeepAlive : {ex.Message}");
+                    _log.Error($"Raised NullReferenceException in KeepAlive : {ex.Message}");
                     //Response message to the Client
-                    await SendKeepAliveResponse(false, "token was not matched!", null, endPoint);
+                    await SendKeepAliveResponse(false, "token was not matched!", DateTime.Now, endPoint);
                     AcceptedClient_Event("token was not matched!", endPoint, EnumTcpCommunication.COMMUNICATION_ERROR);
                     return false;
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception in KeepAlive : {ex.Message}");
+                    _log.Error($"Raised Exception in KeepAlive : {ex.Message}");
                     //Response message to the Client
-                    await SendKeepAliveResponse(false, $"Raised Exception in KeepAlive : {ex.Message}", null, endPoint);
+                    await SendKeepAliveResponse(false, $"Raised Exception in KeepAlive : {ex.Message}", DateTime.Now, endPoint);
                     AcceptedClient_Event("token was not matched!", endPoint, EnumTcpCommunication.COMMUNICATION_ERROR);
                     return false;
                 }
@@ -261,8 +261,8 @@ namespace Ironwall.Libraries.Account.Server.Services
                     if (model != null)
                     {
                         //[1]Get LoginSessionModel instance which was matched with LogoutRequestModel.Token
-                        Debug.WriteLine($"Logout Process was started!");
-                        Debug.WriteLine($"Model ==> Id : {model.UserId}, token : {model.Token}");
+                        _log.Info($"Logout Process was started!");
+                        _log.Info($"Model ==> Id : {model.UserId}, token : {model.Token}");
 
                         var sessionModel = GetLoginSessionModel(model.Token);
                         if(sessionModel == null)
@@ -282,7 +282,7 @@ namespace Ironwall.Libraries.Account.Server.Services
 
                         //[6]Save LoginAccountModel in DB
                         await AccountDbService.SaveLogin(loginAccount);
-                        Debug.WriteLine($"Logout : {loginAccount}");
+                        _log.Info($"Logout : {loginAccount}");
 
                         //[7]Get IPEndPoint instance
                         if (endPoint == null)
@@ -333,19 +333,19 @@ namespace Ironwall.Libraries.Account.Server.Services
                 }
                 catch (SocketSendException ex)
                 {
-                    Debug.WriteLine($"Raised SocketSendException in Logout : {ex.Message}");
+                    _log.Error($"Raised SocketSendException in Logout : {ex.Message}");
                     return false;
                 }
                 catch (NullReferenceException ex)
                 {
-                    Debug.WriteLine($"Raised NullReferenceException in Logout : {ex.Message}");
+                    _log.Error($"Raised NullReferenceException in Logout : {ex.Message}");
                     //await SendLogoutResponse(false, "Token was not matched!", endPoint);
                     await SendLogoutResponse(false, ex.Message, endPoint);
                     return false;
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception in Logout : {ex.Message}");
+                    _log.Error($"Raised Exception in Logout : {ex.Message}");
                     await SendLogoutResponse(false, $"Raised Exception in Logout : {ex.Message}", endPoint);
                     return false;
                 }
@@ -383,12 +383,12 @@ namespace Ironwall.Libraries.Account.Server.Services
                 }
                 catch (SocketSendException ex)
                 {
-                    Debug.WriteLine($"({model.IdUser}) Raised SocketSendException in {nameof(CheckIdAccount)} : {ex.Message}");
+                    _log.Error($"({model.IdUser}) Raised SocketSendException in {nameof(CheckIdAccount)} : {ex.Message}");
                     AcceptedClient_Event($"({model.IdUser}) Raised SocketSendException in {nameof(CheckIdAccount)} : {ex.Message}", endPoint);
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"({model.IdUser}) Raised Exception in {nameof(CheckIdAccount)} : {ex.Message}");
+                    _log.Error($"({model.IdUser}) Raised Exception in {nameof(CheckIdAccount)} : {ex.Message}");
                     await SendRegisterResponse(false, $"({model.IdUser}) Raised Exception in {nameof(CheckIdAccount)} : {ex.Message}", null, endPoint);
                 }
             });
@@ -436,18 +436,18 @@ namespace Ironwall.Libraries.Account.Server.Services
                 }
                 catch (UserRegisterException ex)
                 {
-                    Debug.WriteLine($"{ex.Message}");
+                    _log.Error($"{ex.Message}");
                     AcceptedClient_Event(ex.Message, endPoint);
                     await SendRegisterResponse(false, ex.Message, null, endPoint);
                 }
                 catch (SocketSendException ex)
                 {
-                    Debug.WriteLine($"({model.IdUser}) Raised SocketSendException in {nameof(RegisterAccount)} : {ex.Message}");
+                    _log.Error($"({model.IdUser}) Raised SocketSendException in {nameof(RegisterAccount)} : {ex.Message}");
                     AcceptedClient_Event($"({model.IdUser}) Raised SocketSendException in {nameof(RegisterAccount)} : {ex.Message}", endPoint, EnumTcpCommunication.COMMUNICATION_ERROR);
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"({model.IdUser}) Raised Exception in {nameof(RegisterAccount)} : {ex.Message}");
+                    _log.Error($"({model.IdUser}) Raised Exception in {nameof(RegisterAccount)} : {ex.Message}");
                     await SendRegisterResponse(false, $"({model.IdUser}) Raised Exception in {nameof(RegisterAccount)} : {ex.Message}", null, endPoint);
                 }
             });
@@ -502,12 +502,12 @@ namespace Ironwall.Libraries.Account.Server.Services
                 }
                 catch (SocketSendException ex)
                 {
-                    Debug.WriteLine($"({model?.UserId}) Raised SocketSendException in DeleteAccount : {ex.Message}");
+                    _log.Error($"({model?.UserId}) Raised SocketSendException in DeleteAccount : {ex.Message}");
                     AcceptedClient_Event($"({model?.UserId}) Raised SocketSendException in DeleteAccount : {ex.Message}", endPoint, EnumTcpCommunication.COMMUNICATION_ERROR);
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception in DeleteAccount : {ex.Message}");
+                    _log.Error($"Raised Exception in DeleteAccount : {ex.Message}");
                     await SendDeleteAccountResponse(false, ex.Message, endPoint);
                     AcceptedClient_Event($"({model?.UserId}) Raised SocketSendException in DeleteAccount : {ex.Message}", endPoint, EnumTcpCommunication.COMMUNICATION_ERROR);
                 }
@@ -581,12 +581,12 @@ namespace Ironwall.Libraries.Account.Server.Services
                 }
                 catch (SocketSendException ex)
                 {
-                    Debug.WriteLine($"({model?.UserId}) Raised SocketSendException in DeleteAccount : {ex.Message}");
+                    _log.Error($"({model?.UserId}) Raised SocketSendException in DeleteAccount : {ex.Message}");
                     AcceptedClient_Event($"({model?.UserId}) Raised SocketSendException in DeleteAccount : {ex.Message}", endPoint, EnumTcpCommunication.COMMUNICATION_ERROR);
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception in DeleteAccount : {ex.Message}");
+                    _log.Error($"Raised Exception in DeleteAccount : {ex.Message}");
                     await SendDeleteAccountResponse(false, ex.Message, endPoint);
                     AcceptedClient_Event($"({model?.UserId}) Raised SocketSendException in DeleteAccount : {ex.Message}", endPoint, EnumTcpCommunication.COMMUNICATION_ERROR);
                 }
@@ -632,12 +632,12 @@ namespace Ironwall.Libraries.Account.Server.Services
                 }
                 catch (SocketSendException ex)
                 {
-                    Debug.WriteLine($"({model.IdUser}) Raised SocketSendException in EditAccount : {ex.Message}");
+                    _log.Error($"({model.IdUser}) Raised SocketSendException in EditAccount : {ex.Message}");
                     AcceptedClient_Event($"({model.IdUser}) Raised SocketSendException in EditAccount : {ex.Message}", endPoint, EnumTcpCommunication.COMMUNICATION_ERROR);
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"({model.IdUser}) Raised Exception in EditAccount : {ex.Message}");
+                    _log.Error($"({model.IdUser}) Raised Exception in EditAccount : {ex.Message}");
                     await SendEditRegisterResponse(false, ex.Message, null, endPoint);
                     AcceptedClient_Event($"({model.IdUser}) Raised Exception in EditAccount : {ex.Message}", endPoint, EnumTcpCommunication.COMMUNICATION_ERROR);
                 }
@@ -673,12 +673,12 @@ namespace Ironwall.Libraries.Account.Server.Services
                 }
                 catch (SocketSendException ex)
                 {
-                    Debug.WriteLine($"({model.IdUser}) Raised SocketSendException in {nameof(FetchAccount)} : {ex.Message}");
+                    _log.Error($"({model.IdUser}) Raised SocketSendException in {nameof(FetchAccount)} : {ex.Message}");
                     AcceptedClient_Event($"({model.IdUser}) Raised SocketSendException in {nameof(FetchAccount)} : {ex.Message}", endPoint, EnumTcpCommunication.COMMUNICATION_ERROR);
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"({model.IdUser}) Raised Exception in {nameof(FetchAccount)} : {ex.Message}");
+                    _log.Error($"({model.IdUser}) Raised Exception in {nameof(FetchAccount)} : {ex.Message}");
                     await SendEditRegisterResponse(false, ex.Message, null, endPoint);
                     AcceptedClient_Event($"({model.IdUser}) Raised Exception in {nameof(FetchAccount)} : {ex.Message}", endPoint, EnumTcpCommunication.COMMUNICATION_ERROR);
                 }
@@ -714,12 +714,12 @@ namespace Ironwall.Libraries.Account.Server.Services
                 }
                 catch (SocketSendException ex)
                 {
-                    Debug.WriteLine($"({model.IdUser}) Raised SocketSendException in {nameof(FetchAccount)} : {ex.Message}");
+                    _log.Error($"({model.IdUser}) Raised SocketSendException in {nameof(FetchAccount)} : {ex.Message}");
                     AcceptedClient_Event($"({model.IdUser}) Raised SocketSendException in {nameof(FetchAccount)} : {ex.Message}", endPoint, EnumTcpCommunication.COMMUNICATION_ERROR);
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"({model.IdUser}) Raised Exception in {nameof(FetchAccount)} : {ex.Message}");
+                    _log.Error($"({model.IdUser}) Raised Exception in {nameof(FetchAccount)} : {ex.Message}");
                     await SendEditRegisterResponse(false, ex.Message, null, endPoint);
                     AcceptedClient_Event($"({model.IdUser}) Raised Exception in {nameof(FetchAccount)} : {ex.Message}", endPoint, EnumTcpCommunication.COMMUNICATION_ERROR);
                 }
@@ -742,7 +742,7 @@ namespace Ironwall.Libraries.Account.Server.Services
 
                         var detailModel = ResponseFactory.Build<AccountDetailModel>(userModel);
 
-                        loginResponseResultModel = ResponseFactory.Build<LoginResultModel>(loginSessionModel.UserId
+                        loginResponseResultModel = new LoginResultModel(loginSessionModel.UserId
                             , loginSessionModel.Token
                             , loginAccountModel.ClientId
                             , loginAccountModel.UserLevel
@@ -765,7 +765,7 @@ namespace Ironwall.Libraries.Account.Server.Services
             });
         }
 
-        private Task SendKeepAliveResponse(bool success, string msg, string timeExpired, IPEndPoint endPoint)
+        private Task SendKeepAliveResponse(bool success, string msg, DateTime timeExpired, IPEndPoint endPoint)
         {
             return Task.Run(async () =>
             {
@@ -1041,7 +1041,7 @@ namespace Ironwall.Libraries.Account.Server.Services
             }
             catch (NullReferenceException ex)
             {
-                Debug.WriteLine(ex.Message);
+                _log.Error(ex.Message);
                 return null;
             }
             catch (Exception)
@@ -1106,12 +1106,12 @@ namespace Ironwall.Libraries.Account.Server.Services
             //Get LoginAccountModel instance
             var loginUserModel = LoginProvider.Where(entity => (entity as ILoginUserModel).UserId == idUser).FirstOrDefault() as ILoginUserModel;
             //Create LoginUserModel instance
-            var loginAccount = ModelFactory.Build<LoginUserModel>
+            var loginAccount = new LoginUserModel
                 (loginUserModel.UserId,
                 loginUserModel.UserLevel,
                 loginUserModel.ClientId,
                 mode,
-                DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+                DateTime.Now);
 
             return loginAccount;
         }
@@ -1122,13 +1122,13 @@ namespace Ironwall.Libraries.Account.Server.Services
         {
             return Task.Run(async () =>
             {
-                var loginSessionModel = ModelFactory.Build<LoginSessionModel>(
+                var loginSessionModel =new LoginSessionModel(
                     ProviderHelper.GetMaxId(SessionProvider) + 1
                     , userAccount.IdUser
                     , userAccount.Password
                     , await CreateToken()
-                    , DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
-                    , (DateTime.Now + TimeSpan.FromSeconds(AccountSetupModel.SessionTimeout)).ToString("yyyy-MM-dd HH:mm:ss"));
+                    , DateTime.Now
+                    , (DateTime.Now + TimeSpan.FromSeconds(AccountSetupModel.SessionTimeout)));
 
                 return loginSessionModel;
             });
@@ -1157,8 +1157,8 @@ namespace Ironwall.Libraries.Account.Server.Services
 
             if (sessionModel == null) throw new NullReferenceException();
 
-            sessionModel.TimeCreated = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-            sessionModel.TimeExpired = (DateTime.Now + TimeSpan.FromSeconds(AccountSetupModel.SessionTimeout)).ToString("yyyy-MM-dd HH:mm:ss");
+            sessionModel.TimeCreated = DateTime.Now;
+            sessionModel.TimeExpired = DateTime.Now + TimeSpan.FromSeconds(AccountSetupModel.SessionTimeout);
 
             return sessionModel;
         }
@@ -1192,7 +1192,7 @@ namespace Ironwall.Libraries.Account.Server.Services
         #region - Overrides -
         private void SessionTick(object sender, ElapsedEventArgs e)
         {
-            //Debug.WriteLine($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.ff")}][{nameof(SessionTick)}] TICK...");
+            //_log.Error($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.ff")}][{nameof(SessionTick)}] TICK...");
 
             //Periodic process for checking Session
             foreach (var item in Sessions.ToList())
@@ -1207,10 +1207,10 @@ namespace Ironwall.Libraries.Account.Server.Services
                 if (!(date is DateTime time))
                     continue;
 
-                //Debug.WriteLine($"[{DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss")}][TcpServer][Tick] Session({item.Key}) is in Dictionary({Sessions.Count()})");
+                //_log.Info($"[{DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss")}][TcpServer][Tick] Session({item.Key})[Expired:{item.Value.TimeExpired}] is in Dictionary({Sessions.Count()})");
 
                 //Check the expiration date of a session
-                if (DateTime.Now - DateTime.Parse(sessionModel.TimeExpired) > TimeSpan.Zero)
+                if (DateTime.Now - sessionModel.TimeExpired > TimeSpan.Zero)
                 {
                     lock (_locker)
                     {
@@ -1218,11 +1218,11 @@ namespace Ironwall.Libraries.Account.Server.Services
                         //Create LogoutRequestModel instance
                         var logoutRequestModel = InstanceFactory.Build<LogoutRequestModel>();
                         //Insert data
-                        logoutRequestModel.Insert(EnumCmdType.LOGOUT_REQUEST_TIMEOUT, item.Value.UserId, item.Value.Token);
+                        logoutRequestModel.Insert(EnumCmdType.LOGOUT_REQUEST_TIMEOUT, sessionModel.UserId, sessionModel.Token);
                         //Execute Logout process
                         Logout(logoutRequestModel).Wait();
 
-                        Debug.WriteLine($"[{DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss")}][TcpServer][Tick] Session({item.Key}) was expired and cleared!!({Sessions.Count()})");
+                        _log.Info($"[{DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss")}][TcpServer][Tick] Session({item.Key}) was expired and cleared!!({Sessions.Count()})");
                     }
                 }
             }

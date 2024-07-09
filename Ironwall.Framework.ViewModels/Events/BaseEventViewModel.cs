@@ -29,8 +29,8 @@ namespace Ironwall.Framework.ViewModels.Events
         #region - IHanldes -
         #endregion
         #region - Properties -
-        private string _id;
-        public string Id
+        private int _id;
+        public int Id 
         {
             get { return _id; }
             set

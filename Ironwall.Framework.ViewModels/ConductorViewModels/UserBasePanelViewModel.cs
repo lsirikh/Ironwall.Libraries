@@ -77,7 +77,7 @@ namespace Ironwall.Framework.ViewModels.ConductorViewModels
         public virtual void Insert(IUserModel model, ILoginSessionModel loginSessionModel)
         {
             Model = model;
-            SessionModel = ModelFactory.Build<LoginSessionModel>(
+            SessionModel = new LoginSessionModel(
                 0
                 , loginSessionModel.UserId
                 , model.Password
@@ -137,7 +137,7 @@ namespace Ironwall.Framework.ViewModels.ConductorViewModels
             set
             {
                 Model.Name = value;
-                //NotifyOfPropertyChange(() => GroupId);
+                //NotifyOfPropertyChange(() => MappingGroup);
                 Refresh();
             }
         }

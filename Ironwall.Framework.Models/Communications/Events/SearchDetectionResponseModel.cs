@@ -3,6 +3,7 @@ using Ironwall.Libraries.Enums;
 using Newtonsoft.Json;
 
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Ironwall.Framework.Models.Communications.Events
 {
@@ -23,11 +24,11 @@ namespace Ironwall.Framework.Models.Communications.Events
         {
             Command = EnumCmdType.SEARCH_EVENT_DETECTION_RESPONSE;
         }
-        public SearchDetectionResponseModel(bool success, string msg, List<DetectionRequestModel> events)
+        public SearchDetectionResponseModel(bool success, string msg, List<IDetectionEventModel> body)
              : base(success, msg)
         {
             Command = EnumCmdType.SEARCH_EVENT_DETECTION_RESPONSE;
-            Events = events;
+            Body = body.OfType<DetectionEventModel>().ToList();
         }
         #endregion
         #region - Implementation of Interface -
@@ -41,8 +42,8 @@ namespace Ironwall.Framework.Models.Communications.Events
         #region - IHanldes -
         #endregion
         #region - Properties -
-        [JsonProperty("detection_events", Order = 4)]
-        public List<DetectionRequestModel> Events { get; set; }
+        [JsonProperty("body", Order = 4)]
+        public List<DetectionEventModel> Body { get; set; }
         #endregion
         #region - Attributes -
         #endregion

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Ironwall.Framework.Models
 {
-    class EntityShapeTypeModel
+    public class EntityShapeTypeModel
     {
     }
 }

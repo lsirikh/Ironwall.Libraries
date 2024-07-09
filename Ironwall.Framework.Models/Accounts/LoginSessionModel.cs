@@ -1,4 +1,5 @@
 ﻿using Ironwall.Framework.Models.Communications.Accounts;
+using System;
 
 namespace Ironwall.Framework.Models.Accounts
 {
@@ -10,7 +11,7 @@ namespace Ironwall.Framework.Models.Accounts
         public string UserPass { get; set; }
         public string Token { get; set; }
         //public string TimeCreated { get; set; }
-        public string TimeExpired { get; set; }
+        public DateTime TimeExpired { get; set; }
 
         public LoginSessionModel()
         {
@@ -30,32 +31,14 @@ namespace Ironwall.Framework.Models.Accounts
             int id,
             string userId, 
             string userPass, 
-            string token, 
-            string timeCreated, 
-            string timeExpired)
+            string token,
+            DateTime timeCreated,
+            DateTime timeExpired)
             : base(id, userId, timeCreated)
         {
             UserPass = userPass;
             Token = token;
             TimeExpired = timeExpired;
         }
-
-        //public void Insert(string userId, string userPass, string token, string timeCreated, string timeExpired)
-        //{
-        //    UserId = userId;
-        //    UserPass = userPass;
-        //    Token = token;
-        //    TimeCreated = timeCreated;
-        //    TimeExpired = timeExpired;
-        //}
-
-        //public void Insert(ILoginSessionModel model)
-        //{
-        //    UserId = model.UserId;
-        //    UserPass = model.UserPass;
-        //    Token = model.Token;
-        //    TimeCreated = model.TimeCreated;
-        //    TimeExpired = model.TimeExpired;
-        //}
     }
 }

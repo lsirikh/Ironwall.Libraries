@@ -3,12 +3,12 @@ using Ironwall.Framework.Models.Vms;
 using Sensorway.Events.Base.Models;
 using System;
 
-namespace Ironwall.Libraries.VMS.Common.Providers.Models
+namespace Ironwall.Libraries.VMS.Common.Models.Providers
 {
     /****************************************************************************
        Purpose      :                                                          
        Created By   : GHLee                                                
-       Created On   : 6/12/2024 3:18:41 PM                                                    
+       Created On   : 7/4/2024 1:34:19 PM                                                    
        Department   : SW Team                                                   
        Company      : Sensorway Co., Ltd.                                       
        Email        : lsirikh@naver.com                                         

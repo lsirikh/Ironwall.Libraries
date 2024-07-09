@@ -4,6 +4,7 @@ using Ironwall.Libraries.Enums;
 using Newtonsoft.Json;
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Documents;
 
 namespace Ironwall.Framework.Models.Communications.Devices
@@ -26,11 +27,10 @@ namespace Ironwall.Framework.Models.Communications.Devices
             Command = EnumCmdType.CAMERA_MAPPING_SAVE_REQUEST;
         }
 
-        public CameraMappingSaveRequestModel(ILoginSessionModel model, List<CameraMappingModel> mappings)
-         : base(model)
+        public CameraMappingSaveRequestModel(ILoginSessionModel model, List<ICameraMappingModel> mappings, EnumCmdType cmd = EnumCmdType.CAMERA_MAPPING_SAVE_REQUEST)
+         : base(model, cmd)
         {
-            Command = EnumCmdType.CAMERA_MAPPING_SAVE_REQUEST;
-            Mappings = mappings;
+            Body = mappings.OfType<CameraMappingModel>().ToList();
         }
         #endregion
         #region - Implementation of Interface -
@@ -44,8 +44,8 @@ namespace Ironwall.Framework.Models.Communications.Devices
         #region - IHanldes -
         #endregion
         #region - Properties -
-        [JsonProperty("mapping_list", Order = 5)]
-        public List<CameraMappingModel> Mappings { get; set; }
+        [JsonProperty("body", Order = 5)]
+        public List<CameraMappingModel> Body { get; set; }
         #endregion
         #region - Attributes -
         #endregion

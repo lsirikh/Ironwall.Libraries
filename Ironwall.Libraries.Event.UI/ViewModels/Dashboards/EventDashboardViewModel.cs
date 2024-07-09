@@ -11,6 +11,7 @@ using System.Diagnostics;
 using System.Windows.Controls;
 using Ironwall.Libraries.Event.UI.Views.Panels;
 using System.Linq;
+using Ironwall.Libraries.Base.Services;
 
 namespace Ironwall.Libraries.Event.UI.ViewModels.Dashboards
 {
@@ -26,12 +27,14 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Dashboards
     public class EventDashboardViewModel : ConductorOneViewModel
     {
         #region - Ctors -
-        public EventDashboardViewModel(IEventAggregator eventAggregator
+        public EventDashboardViewModel(ILogService log
+                                    , IEventAggregator eventAggregator
                                     , DetectionPanelViewModel detectionPanelViewModel
                                     , MalfunctionPanelViewModel malfunctionPanelViewModel
                                     , ActionPanelViewModel actionPanelViewModel
                                     ) : base(eventAggregator)
         {
+            _log = log;
             DetectionPanelViewModel = detectionPanelViewModel;
             MalfunctionPanelViewModel = malfunctionPanelViewModel;
             ActionPanelViewModel = actionPanelViewModel;
@@ -43,7 +46,7 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Dashboards
         protected override async Task OnActivateAsync(CancellationToken cancellationToken)
         {
 
-            await ActivateItemAsync(DetectionPanelViewModel);
+            //await ActivateItemAsync(DetectionPanelViewModel);
             await base.OnActivateAsync(cancellationToken);
         }
         #endregion
@@ -88,13 +91,14 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Dashboards
         #region - IHanldes -
         #endregion
         #region - Properties -
-        public DetectionPanelViewModel DetectionPanelViewModel { get; private set; }
-        public MalfunctionPanelViewModel MalfunctionPanelViewModel { get; private set; }
-        public ActionPanelViewModel ActionPanelViewModel { get; private set; }
+        public DetectionPanelViewModel DetectionPanelViewModel { get; set; }
+        public MalfunctionPanelViewModel MalfunctionPanelViewModel { get; set; }
+        public ActionPanelViewModel ActionPanelViewModel { get; set; }
 
         #endregion
         #region - Attributes -
-        BaseViewModel selectedViewModel;
+        private BaseViewModel selectedViewModel;
+        private ILogService _log;
         #endregion
     }
 }

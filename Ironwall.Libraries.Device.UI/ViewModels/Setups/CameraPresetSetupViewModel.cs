@@ -7,6 +7,7 @@ using Ironwall.Framework.Models.Devices;
 using Ironwall.Framework.Models.Messages;
 using Ironwall.Framework.Services;
 using Ironwall.Framework.ViewModels;
+using Ironwall.Libraries.Base.Services;
 using Ironwall.Libraries.Device.UI.Messages;
 using Ironwall.Libraries.Device.UI.Providers;
 using Ironwall.Libraries.Devices.Providers.Models;
@@ -36,9 +37,11 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Setups
     {
 
         #region - Ctors -
-        public CameraPresetSetupViewModel(IEventAggregator eventAggregator) 
+        public CameraPresetSetupViewModel(IEventAggregator eventAggregator
+                                        , ILogService log) 
                                         : base(eventAggregator)
         {
+            _log = log;
             ViewModelProvider = new ObservableCollection<CameraPresetViewModel>();
             BooleanComboList = new List<bool> { false, true };
         }
@@ -55,35 +58,70 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Setups
 
         protected override Task Uninitialize()
         {
-            ViewModelProvider.CollectionChanged -= ViewModelProvider_CollectionChanged;
             base.Uninitialize();
             return Task.CompletedTask;
         }
 
         public override async void OnClickInsertButton(object sender, RoutedEventArgs e)
         {
-            int id = 0;
-            //if(_provider.Count > 0)
-            //    id = GetIdHelper.GetOptionId(_provider.LastOrDefault().Id);
-
-            //var preset = ModelFactory.Build<CameraPresetModel>($"o{id + 1}");
-            //var preset = CameraPresetModel();
-
-            //var viewModel = ViewModelFactory.Build<CameraPresetViewModel>(preset);
-            //await viewModel.ActivateAsync();
-            //ViewModelProvider.Add(viewModel);
+            var model = new CameraPresetModel();
+            var viewModel = new CameraPresetViewModel(model);
+            await viewModel.ActivateAsync();
+            ViewModelProvider.Add(viewModel);
         }
 
-        public override async void OnClickDeleteButton(object sender, RoutedEventArgs e)
+        public override void OnClickDeleteButton(object sender, RoutedEventArgs e)
         {
-            foreach (var item in _provider.OfType<CameraPresetViewModel>().ToList())
+            DispatcherService.Invoke((System.Action)(async () =>
             {
-                if (item.IsSelected)
-                    ViewModelProvider.Remove(item);
-            }
-            await SelectAll(false);
+                foreach (var item in ViewModelProvider.ToList())
+                {
+                    if (item.IsSelected)
+                        ViewModelProvider.Remove(item);
+                }
+
+                await SelectAll(false);
+            }));
         }
 
+        public override async void OnClickSaveButton(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (_pCancellationTokenSource.IsCancellationRequested)
+                    _pCancellationTokenSource = new CancellationTokenSource();
+
+                await _eventAggregator.PublishOnUIThreadAsync(new OpenProgressPopupMessageModel(), _cancellationTokenSource.Token);
+
+                var list = new List<ICameraPresetModel>();
+                foreach (var item in ViewModelProvider)
+                {
+                    list.Add(item.Model as ICameraPresetModel);
+                }
+                ///송신 로직
+                await _eventAggregator.PublishOnUIThreadAsync(new RequestPresetInsertMessage(list));
+
+
+                await Task.Delay(ACTION_TOKEN_TIMEOUT, _pCancellationTokenSource.Token);
+                await _eventAggregator.PublishOnUIThreadAsync(new ClosePopupMessageModel(), _pCancellationTokenSource.Token);
+            }
+            catch (TaskCanceledException ex)
+            {
+                await _eventAggregator.PublishOnUIThreadAsync(new ClosePopupMessageModel());
+                Debug.WriteLine($"Rasied {nameof(TaskCanceledException)}({nameof(OnClickSaveButton)} in {ClassName}): {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Rasied {nameof(Exception)}({nameof(OnClickSaveButton)} in {ClassName}): {ex.Message}");
+                var explain = ex.Message;
+
+                await _eventAggregator.PublishOnUIThreadAsync(new OpenInfoPopupMessageModel
+                {
+                    Explain = explain
+                }, _pCancellationTokenSource.Token);
+            }
+        }
+        
         public override async void OnClickReloadButton(object sender, RoutedEventArgs e)
         {
             try
@@ -116,39 +154,6 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Setups
                 }, _pCancellationTokenSource.Token);
             }
         }
-
-        public override async void OnClickSaveButton(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                if (_pCancellationTokenSource.IsCancellationRequested)
-                    _pCancellationTokenSource = new CancellationTokenSource();
-
-                await _eventAggregator.PublishOnUIThreadAsync(new OpenProgressPopupMessageModel(), _cancellationTokenSource.Token);
-
-                ///송신 로직
-                await _eventAggregator.PublishOnUIThreadAsync(new RequestPresetInsertMessage());
-
-
-                await Task.Delay(ACTION_TOKEN_TIMEOUT, _pCancellationTokenSource.Token);
-                await _eventAggregator.PublishOnUIThreadAsync(new ClosePopupMessageModel(), _pCancellationTokenSource.Token);
-            }
-            catch (TaskCanceledException ex)
-            {
-                await _eventAggregator.PublishOnUIThreadAsync(new ClosePopupMessageModel());
-                Debug.WriteLine($"Rasied {nameof(TaskCanceledException)}({nameof(OnClickSaveButton)} in {ClassName}): {ex.Message}");
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Rasied {nameof(Exception)}({nameof(OnClickSaveButton)} in {ClassName}): {ex.Message}");
-                var explain = ex.Message;
-
-                await _eventAggregator.PublishOnUIThreadAsync(new OpenInfoPopupMessageModel
-                {
-                    Explain = explain
-                }, _pCancellationTokenSource.Token);
-            }
-        }
         #endregion
         #region - Binding Methods -
         #endregion
@@ -170,7 +175,7 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Setups
                     
                     _provider = IoC.Get<PresetViewModelProvider>();
 
-                    ViewModelProvider.CollectionChanged -= ViewModelProvider_CollectionChanged;
+                    //ViewModelProvider.CollectionChanged -= ViewModelProvider_CollectionChanged;
                     DispatcherService.Invoke((System.Action)(() =>
                     {
                         ViewModelProvider.Clear();
@@ -179,7 +184,7 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Setups
                             ViewModelProvider.Add(item);
                         }
                     }));
-                    ViewModelProvider.CollectionChanged += ViewModelProvider_CollectionChanged;
+                    //ViewModelProvider.CollectionChanged += ViewModelProvider_CollectionChanged;
                     NotifyOfPropertyChange(() => ViewModelProvider);
                     IsVisible = true;
                 }
@@ -190,54 +195,53 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Setups
             });
         }
 
-        private async void ViewModelProvider_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            var provider = IoC.Get<CameraPresetProvider>();
-            switch (e.Action)
-            {
-                case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
-                    // New items added
-                    foreach (CameraPresetViewModel newItem in e.NewItems)
-                    {
-                        provider.Add(newItem.Model as CameraPresetModel);
-                        _provider.Add(newItem);
-                    }
-                    break;
+        //private void ViewModelProvider_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        //{
+        //    var provider = IoC.Get<CameraPresetProvider>();
+        //    switch (e.Action)
+        //    {
+        //        case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
+        //            // New items added
+        //            foreach (CameraPresetViewModel newItem in e.NewItems)
+        //            {
+        //                provider.Add(newItem.Model as CameraPresetModel);
+        //                _provider.Add(newItem);
+        //            }
+        //            break;
 
-                case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
-                    // Items removed
-                    foreach (CameraPresetViewModel newItem in e.OldItems)
-                    {
-                        provider.Remove(newItem.Model as CameraPresetModel);
-                        _provider.Remove(newItem);
-                    }
-                    break;
+        //        case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
+        //            // Items removed
+        //            foreach (CameraPresetViewModel newItem in e.OldItems)
+        //            {
+        //                provider.Remove(newItem.Model as CameraPresetModel);
+        //                _provider.Remove(newItem);
+        //            }
+        //            break;
 
-                case System.Collections.Specialized.NotifyCollectionChangedAction.Replace:
-                    // Some items replaced
-                    foreach (CameraPresetViewModel oldItem in e.OldItems)
-                    {
-                        provider.Remove(oldItem.Model as CameraPresetModel);
-                        _provider.Remove(oldItem);
-                    }
-                    foreach (CameraPresetViewModel newItem in e.NewItems)
-                    {
-                        provider.Add(newItem.Model as CameraPresetModel);
-                        _provider.Add(newItem);
-                    }
-                    break;
+        //        case System.Collections.Specialized.NotifyCollectionChangedAction.Replace:
+        //            // Some items replaced
+        //            foreach (CameraPresetViewModel oldItem in e.OldItems)
+        //            {
+        //                provider.Remove(oldItem.Model as CameraPresetModel);
+        //                _provider.Remove(oldItem);
+        //            }
+        //            foreach (CameraPresetViewModel newItem in e.NewItems)
+        //            {
+        //                provider.Add(newItem.Model as CameraPresetModel);
+        //                _provider.Add(newItem);
+        //            }
+        //            break;
 
-                case System.Collections.Specialized.NotifyCollectionChangedAction.Reset:
-                    // The whole list is refreshed
-                    await provider.ClearData();
-                    foreach (CameraPresetViewModel item in ViewModelProvider)
-                    {
-                        provider.Add(item.Model as CameraPresetModel);
-                    }
-                    await provider.Finished();
-                    break;
-            }
-        }
+        //        case System.Collections.Specialized.NotifyCollectionChangedAction.Reset:
+        //            // The whole list is refreshed
+        //            provider.Clear();
+        //            foreach (CameraPresetViewModel item in ViewModelProvider)
+        //            {
+        //                provider.Add(item.Model as CameraPresetModel);
+        //            }
+        //            break;
+        //    }
+        //}
 
 
         #endregion
@@ -245,7 +249,6 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Setups
         public async Task HandleAsync(ResponsePresetReloadMessage message, CancellationToken cancellationToken)
         {
             _pCancellationTokenSource.Cancel();
-            await Task.Delay(500);
 
             await DataInitialize(_cancellationTokenSource.Token);
 
@@ -258,7 +261,8 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Setups
         public async Task HandleAsync(ResponsePresetInsertMessage message, CancellationToken cancellationToken)
         {
             _pCancellationTokenSource.Cancel();
-            await Task.Delay(500);
+
+            await DataInitialize(_cancellationTokenSource.Token);
 
             await _eventAggregator.PublishOnUIThreadAsync(new OpenInfoPopupMessageModel
             {
@@ -269,10 +273,10 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Setups
         #region - Properties -
         public List<int> CameraComboList { get; set; }
         public List<bool> BooleanComboList { get; set; }
-
         #endregion
         #region - Attributes -
         private PresetViewModelProvider _provider;
+        private ILogService _log;
 
         #endregion
     }

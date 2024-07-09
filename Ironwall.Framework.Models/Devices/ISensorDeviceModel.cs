@@ -2,6 +2,6 @@
 {
     public interface ISensorDeviceModel : IBaseDeviceModel
     {
-        IControllerDeviceModel Controller { get; set; }
+        ControllerDeviceModel Controller { get; set; }
     }
 }

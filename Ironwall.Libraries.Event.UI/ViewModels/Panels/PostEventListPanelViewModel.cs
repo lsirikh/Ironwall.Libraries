@@ -36,7 +36,7 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Panels
         #region - Binding Methods -
         #endregion
         #region - Processes -
-        public void OnClickButtonPrevActionAll(object sender, RoutedEventArgs e)
+        void OnClickButtonPrevActionAll(object sender, RoutedEventArgs e)
         {
             
         }

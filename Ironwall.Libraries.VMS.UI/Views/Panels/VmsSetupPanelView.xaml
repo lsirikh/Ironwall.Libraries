@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Ironwall.Libraries.VMS.UI.Views.Panels"
-                         xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
 			 xmlns:cal="http://caliburnmicro.com"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
@@ -40,7 +40,7 @@
 				</StackPanel>
 			</TabItem.Header>
 			<!-- Content -->
-			<!--<ContentControl  x:Name="SurvMappingSetupViewModel" />-->
+			<ContentControl  x:Name="VmsEventMappingSetupViewModel" />
 		</TabItem>
 
 		<!-- VmsEventSensorSetupViewModel -->
@@ -67,7 +67,7 @@
 				</StackPanel>
 			</TabItem.Header>
 			<!-- Content -->
-			<ContentControl  x:Name="VmsEventSensorSetupViewModel" />
+			<ContentControl  x:Name="VmsSensorSetupViewModel" />
 		</TabItem>
 		<!-- VmsApiSetupViewModel -->
 		

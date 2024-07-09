@@ -1,5 +1,6 @@
 ﻿using Ironwall.Libraries.Enums;
 using Newtonsoft.Json;
+using System;
 
 namespace Ironwall.Framework.Models.Communications.Accounts
 {
@@ -11,7 +12,7 @@ namespace Ironwall.Framework.Models.Communications.Accounts
             Command = EnumCmdType.SESSION_REFRESH_RESPONSE;
         }
 
-        public KeepAliveResponseModel(bool success, string msg, string expiredTime)
+        public KeepAliveResponseModel(bool success, string msg, DateTime expiredTime)
             : base(success, msg)
         {
             Command = EnumCmdType.SESSION_REFRESH_RESPONSE;
@@ -19,9 +20,9 @@ namespace Ironwall.Framework.Models.Communications.Accounts
         }
 
         [JsonProperty("expired_time", Order = 3)]
-        public string TimeExpired { get; set; }
+        public DateTime TimeExpired { get; set; }
 
-        public void Insert(bool success, string msg, string expiredTime)
+        public void Insert(bool success, string msg, DateTime expiredTime)
         {
             Success = success;
             Message = msg;

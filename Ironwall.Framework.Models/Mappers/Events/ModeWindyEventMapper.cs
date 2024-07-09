@@ -1,5 +1,6 @@
 ﻿using Ironwall.Framework.Models.Communications.Events;
 using Ironwall.Framework.Models.Events;
+using Ironwall.Libraries.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,6 +28,6 @@ namespace Ironwall.Framework.Models.Mappers
             ModeWindy = model.ModeWindy;
         }
 
-        public int ModeWindy { get; set; }
+        public EnumWindyMode ModeWindy { get; set; }
     }
 }

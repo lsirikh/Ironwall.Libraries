@@ -15,7 +15,6 @@ namespace Ironwall.Libraries.Events.Models
         public int LengthMaxEventPrev => Properties.Settings.Default.LengthMaxEventPrev;
         public int LengthMinEventPrev => Properties.Settings.Default.LengthMinEventPrev;
 
-
         public bool EventMapChange
         {
             get => _eventMapChange;

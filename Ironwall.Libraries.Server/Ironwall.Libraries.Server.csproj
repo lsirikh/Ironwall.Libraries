@@ -70,6 +70,9 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Dotnet.OnvifSolution.Base">
+      <HintPath>..\Ironwall.Framework.Models\Exts\Dotnet.OnvifSolution.Base.dll</HintPath>
+    </Reference>
     <Reference Include="Ironwall.Message.Base">
       <HintPath>..\Ironwall.Framework\Exts\Ironwall.Message.Base.dll</HintPath>
     </Reference>
@@ -80,6 +83,18 @@
       <HintPath>..\..\Ironwall.Monitoring.Server\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
+    <Reference Include="Sensorway.Accounts.Base">
+      <HintPath>..\Ironwall.Framework.Models\Exts\Sensorway.Accounts.Base.dll</HintPath>
+    </Reference>
+    <Reference Include="Sensorway.Events.Base">
+      <HintPath>..\Ironwall.Framework.Models\Exts\Sensorway.Events.Base.dll</HintPath>
+    </Reference>
+    <Reference Include="Sensorway.Framework.Models">
+      <HintPath>..\Ironwall.Framework.Models\Exts\Sensorway.Framework.Models.dll</HintPath>
+    </Reference>
+    <Reference Include="Sensorway.VMS.Messages">
+      <HintPath>..\Ironwall.Framework.Models\Exts\Sensorway.VMS.Messages.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -151,6 +166,10 @@
     <ProjectReference Include="..\Ironwall.Libraries.Utils\Ironwall.Libraries.Utils.csproj">
       <Project>{14220279-9b26-4383-bf1e-a0da31726758}</Project>
       <Name>Ironwall.Libraries.Utils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ironwall.Libraries.VMS.Common\Ironwall.Libraries.VMS.Common.csproj">
+      <Project>{82169ce4-697e-4533-b6e3-29d50f6b398d}</Project>
+      <Name>Ironwall.Libraries.VMS.Common</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

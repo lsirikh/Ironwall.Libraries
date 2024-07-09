@@ -1,6 +1,8 @@
 ﻿using Ironwall.Framework.Helpers;
 using Ironwall.Framework.Models.Communications;
 using Ironwall.Framework.Models.Events;
+using Ironwall.Libraries.Enums;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Ironwall.Framework.Models.Mappers
 {
-    public abstract class EventMapperBase : IEventMapperBase
+    public abstract class EventMapperBase : BaseModel, IEventMapperBase
     {
 
         public EventMapperBase()
@@ -17,20 +19,20 @@ namespace Ironwall.Framework.Models.Mappers
             DateTime = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.ff");
         }
 
-        public EventMapperBase(IBaseEventModel model)
+        public EventMapperBase(IBaseEventModel model) : base(model.Id)
         {
-            EventId = model.Id != null ? model.Id : IdCodeGenerator.GenIdCode();
+            MessageType = (int)model.MessageType;
             DateTime = model.DateTime.ToString("yyyy-MM-dd HH:mm:ss.ff");
         }
 
-        public EventMapperBase(IBaseEventMessageModel model)
+        public EventMapperBase(IBaseEventMessageModel model) : base(model.Id)
         {
-            EventId = model.Id;
-            DateTime = model.DateTime;
+            MessageType = (int)EnumHelper.GetEventType(model.Command);
+            DateTime = model.DateTime.ToString("yyyy-MM-dd HH:mm:ss.ff");
         }
-
-        public string EventId { get; set; }
-        
+        [JsonProperty("type_event", Order = 2)]
+        public int MessageType { get; set; }
+        [JsonProperty("datetime", Order = 3)]
         public string DateTime { get; set; }
     }
 }

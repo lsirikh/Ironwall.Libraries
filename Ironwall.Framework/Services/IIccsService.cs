@@ -3,7 +3,7 @@ using Newtonsoft.Json.Linq;
 
 namespace Ironwall.Framework.Services
 {
-    public interface IIccsService 
+    interface IIccsService 
         : IService
     {
         void BuildLookupTabel();

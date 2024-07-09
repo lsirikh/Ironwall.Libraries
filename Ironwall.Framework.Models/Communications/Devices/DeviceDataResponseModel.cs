@@ -23,9 +23,8 @@ namespace Ironwall.Framework.Models.Communications.Devices
             , List<ControllerDeviceModel> controllers
             , List<SensorDeviceModel> sensors
             , List<CameraDeviceModel> cameras)
-            : base(success, content)
+            : base(EnumCmdType.DEVICE_DATA_RESPONSE, success, content)
         {
-            Command = EnumCmdType.DEVICE_DATA_RESPONSE;
             Controllers = controllers;
             Sensors = sensors;
             Cameras = cameras;

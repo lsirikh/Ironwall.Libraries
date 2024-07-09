@@ -1,16 +1,22 @@
-﻿using Ironwall.Framework.Models.Events;
+﻿using Ironwall.Framework.Models.Devices;
+using Ironwall.Framework.Models.Events;
+using Ironwall.Framework.ViewModels;
+using Ironwall.Framework.ViewModels.Devices;
+using Ironwall.Libraries.Enums;
 using System;
-using System.Windows;
 
 namespace Ironwall.Libraries.Event.UI.ViewModels.Events
 {
-    public interface IBaseEventViewModel<T> where T : IBaseEventModel
+    /****************************************************************************
+       Purpose      :                                                          
+       Created By   : GHLee                                                
+       Created On   : 6/26/2024 3:44:17 PM                                                    
+       Department   : SW Team                                                   
+       Company      : Sensorway Co., Ltd.                                       
+       Email        : lsirikh@naver.com                                         
+    ****************************************************************************/
+    public interface IBaseEventViewModel<T> : IBaseCustomViewModel<T> where T : IBaseEventModel
     {
-        string Id { get; set; }
         DateTime DateTime { get; set; }
-
-        void Dispose();
-        void OnLoaded(object sender, SizeChangedEventArgs e);
-        void UpdateModel(T model);
     }
 }

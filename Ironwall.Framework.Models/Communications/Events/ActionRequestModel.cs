@@ -18,44 +18,14 @@ namespace Ironwall.Framework.Models.Communications.Events
             Command = EnumCmdType.EVENT_ACTION_REQUEST;
         }
 
-        public ActionRequestModel(string content, string user, IDetectionEventModel model) 
-            : base(model)
-        {
-            Id = IdCodeGenerator.GenIdCode();
-            Command = EnumCmdType.EVENT_ACTION_REQUEST;
-            EventId = model.Id;
-            Content = content;
-            User = user;
-            DateTime = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.ff");
-        }
-
-        public ActionRequestModel(string content, string user, IMalfunctionEventModel model) 
-            : base(model)
-        {
-            Id = IdCodeGenerator.GenIdCode();
-            Command = EnumCmdType.EVENT_ACTION_REQUEST;
-            EventId = model.Id;
-            Content = content;
-            User = user;
-            DateTime = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.ff");
-        }
-
         public ActionRequestModel(IActionEventModel model)
-            : base(model.FromEvent)
+            : base(EnumCmdType.EVENT_ACTION_REQUEST)
         {
-            Id = model.Id;
-            Command = EnumCmdType.EVENT_ACTION_REQUEST;
-            EventId = model.FromEvent.Id;
-            Content = model.Content;
-            User = model.User;
+            Body = model as ActionEventModel;
         }
 
-        [JsonProperty("event_id", Order = 6)]
-        public string EventId { get; set; }
-        [JsonProperty("content", Order = 7)]
-        public string Content { get; set; }
-        [JsonProperty("user", Order = 8)]
-        public string User { get; set; }
+        [JsonProperty("body", Order = 6)]
+        public ActionEventModel Body { get; set; }
 
     }
 }

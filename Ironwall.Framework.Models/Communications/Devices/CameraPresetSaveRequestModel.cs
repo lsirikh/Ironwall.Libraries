@@ -4,6 +4,7 @@ using Ironwall.Libraries.Enums;
 using Newtonsoft.Json;
 
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Ironwall.Framework.Models.Communications.Devices
 {
@@ -25,11 +26,11 @@ namespace Ironwall.Framework.Models.Communications.Devices
             Command = EnumCmdType.CAMERA_PRESET_SAVE_REQUEST;
         }
 
-        public CameraPresetSaveRequestModel(ILoginSessionModel model, List<CameraPresetModel> presets)
+        public CameraPresetSaveRequestModel(ILoginSessionModel model, List<ICameraPresetModel> presets)
          : base(model)
         {
             Command = EnumCmdType.CAMERA_PRESET_SAVE_REQUEST;
-            Presets = presets;
+            Body = presets.OfType<CameraPresetModel>().ToList();
         }
 
         #endregion
@@ -44,8 +45,8 @@ namespace Ironwall.Framework.Models.Communications.Devices
         #region - IHanldes -
         #endregion
         #region - Properties -
-        [JsonProperty("preset_list", Order = 5)]
-        public List<CameraPresetModel> Presets { get; set; }
+        [JsonProperty("body", Order = 5)]
+        public List<CameraPresetModel> Body { get; set; }
         #endregion
         #region - Attributes -
         #endregion

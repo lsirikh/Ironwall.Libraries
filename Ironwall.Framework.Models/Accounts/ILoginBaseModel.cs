@@ -1,8 +1,10 @@
-﻿namespace Ironwall.Framework.Models.Accounts
+﻿using System;
+
+namespace Ironwall.Framework.Models.Accounts
 {
     public interface ILoginBaseModel : IAccountBaseModel
     {
-        string TimeCreated { get; set; }
+        DateTime TimeCreated { get; set; }
         string UserId { get; set; }
     }
 }

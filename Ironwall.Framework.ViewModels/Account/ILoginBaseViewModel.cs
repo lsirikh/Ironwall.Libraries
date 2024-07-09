@@ -1,8 +1,10 @@
-﻿namespace Ironwall.Framework.ViewModels.Account
+﻿using System;
+
+namespace Ironwall.Framework.ViewModels.Account
 {
     public interface ILoginBaseViewModel : IAccountBaseViewModel
     {
-        string TimeCreated { get; set; }
+        DateTime TimeCreated { get; set; }
         string UserId { get; set; }
     }
 }

@@ -1,8 +1,10 @@
-﻿namespace Ironwall.Framework.ViewModels.Account
+﻿using System;
+
+namespace Ironwall.Framework.ViewModels.Account
 {
     public interface ILoginSessionViewModel : ILoginBaseViewModel
     {
-        string TimeExpired { get; set; }
+        DateTime TimeExpired { get; set; }
         string Token { get; set; }
         string UserPass { get; set; }
     }

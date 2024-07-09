@@ -111,13 +111,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\CameraViewModelProvider.cs" />
     <Compile Include="Providers\ControllerViewModelProvider.cs" />
-    <Compile Include="Providers\DeviceBaseViewModelProvider.cs" />
     <Compile Include="Providers\DeviceViewModelProvider.cs" />
     <Compile Include="Providers\MappingViewModelProvider.cs" />
     <Compile Include="Providers\OptionViewModelProvider.cs" />
     <Compile Include="Providers\PresetViewModelProvider.cs" />
     <Compile Include="Providers\ProfileViewModelProvider.cs" />
     <Compile Include="Providers\SensorViewModelProvider.cs" />
+    <Compile Include="Providers\WrapperDeviceViewModelProvider.cs" />
     <Compile Include="ViewModels\BaseDeviceViewModel.cs" />
     <Compile Include="ViewModels\BaseOptionViewModel.cs" />
     <Compile Include="ViewModels\CameraDeviceViewModel.cs" />
@@ -147,7 +147,7 @@
     <Compile Include="ViewModels\Setups\CameraPresetSetupViewModel.cs" />
     <Compile Include="ViewModels\Dashboards\DeviceDashBoardViewModel.cs" />
     <Compile Include="ViewModels\Setups\CameraSetupViewModel.cs" />
-    <Compile Include="ViewModels\ViewModelFactory.cs" />
+    <Compile Include="Providers\WrapperOptionViewModelProvider.cs" />
     <Compile Include="Views\Dialogs\MappingInsertDialogView.xaml.cs">
       <DependentUpon>MappingInsertDialogView.xaml</DependentUpon>
     </Compile>
@@ -177,6 +177,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

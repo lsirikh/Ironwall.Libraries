@@ -9,9 +9,7 @@ using System.Threading.Tasks;
 
 namespace Ironwall.Framework.Models.Mappers
 {
-    public class DetectionEventMapper
-        : MetaEventMapper
-        , IDetectionEventMapper
+    public class DetectionEventMapper : MetaEventMapper, IDetectionEventMapper
     {
 
         public DetectionEventMapper()
@@ -24,11 +22,6 @@ namespace Ironwall.Framework.Models.Mappers
             Result = model.Result;
         }
 
-        public DetectionEventMapper(IDetectionRequestModel model, IBaseDeviceModel device) 
-            : base(model, device)
-        {
-            Result = model.Detail.Result;
-        }
 
         public int Result { get; set; }
     }

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Ironwall.Libraries.Enums;
+using Newtonsoft.Json;
 using System;
 
 namespace Ironwall.Framework.Models.Vms
@@ -11,9 +12,26 @@ namespace Ironwall.Framework.Models.Vms
        Company      : Sensorway Co., Ltd.                                       
        Email        : lsirikh@naver.com                                         
     ****************************************************************************/
-    public class VmsMappingModel : BasicModel, IVmsMappingModel
+    public class VmsMappingModel : BaseModel, IVmsMappingModel
     {
         #region - Ctors -
+        public VmsMappingModel()
+        {
+        }
+
+        public VmsMappingModel(int id, int groupNumber, int eventId, EnumTrueFalse status) : base(id)
+        {
+            GroupNumber = groupNumber;
+            EventId = eventId;
+            Status = status;
+        }
+
+        public VmsMappingModel(IVmsMappingModel model) : base(model)
+        {
+            GroupNumber = model.GroupNumber;
+            EventId = model.EventId;
+            Status = model.Status;
+        }
         #endregion
         #region - Implementation of Interface -
         #endregion
@@ -30,6 +48,8 @@ namespace Ironwall.Framework.Models.Vms
         public int GroupNumber { get; set; }
         [JsonProperty("event_id", Order = 3)]
         public int EventId { get; set; }
+        [JsonProperty("status", Order = 4)]
+        public EnumTrueFalse Status { get; set; } = EnumTrueFalse.True;
         #endregion
         #region - Attributes -
         #endregion

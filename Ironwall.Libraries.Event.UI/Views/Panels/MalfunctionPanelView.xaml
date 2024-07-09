@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Ironwall.Libraries.Event.UI.Views.Panels"
-             xmlns:enums="clr-namespace:Ironwall.Libraries.Enums;assembly=Ironwall.Libraries.Enums"
+                          xmlns:enums="clr-namespace:Ironwall.Libraries.Enums;assembly=Ironwall.Libraries.Enums"
              xmlns:utils="clr-namespace:Ironwall.Libraries.Utils;assembly=Ironwall.Libraries.Utils"
              xmlns:cal="http://caliburnmicro.com"
 			 xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
@@ -45,7 +45,7 @@
 										FontWeight="Bold"
 										FontSize="15"
 										Text="Malfunction Event"/>
-				
+
 
 				<Grid Grid.Row="2" Margin="5">
 					<Grid.ColumnDefinitions>
@@ -133,7 +133,7 @@
 						  EnableColumnVirtualization="True"
 						  ScrollViewer.VerticalScrollBarVisibility="Auto"
 						  Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
-						  ItemsSource="{Binding MalfunctionViewModelProvider.CollectionEntity}">
+						  ItemsSource="{Binding ViewModelProvider}">
 					<DataGrid.RowStyle>
 						<Style TargetType="DataGridRow">
 							<Style.Triggers>
@@ -154,18 +154,18 @@
 										Binding="{Binding Path=EventGroup, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
 
 						<DataGridTemplateColumn Header="Device Type"
-										SortMemberPath="UnitType"
-										CanUserSort="True">
+												SortMemberPath="UnitType"
+												CanUserSort="True">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate>
-									<TextBlock Text="{Binding Device.DeviceType, Converter={StaticResource EnumDeviceTypeToTextConverter}, UpdateSourceTrigger=LostFocus}" />
+									<TextBlock Text="{Binding Device.DeviceType, UpdateSourceTrigger=LostFocus}" />
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 							<DataGridTemplateColumn.CellEditingTemplate>
 								<DataTemplate>
 									<ComboBox VerticalAlignment="Center"
-										ItemsSource="{Binding Source={utils:EnumBindingSource {x:Type enums:EnumDeviceType}}}"
-										SelectedItem="{Binding TypeDevice, Mode=TwoWay, Converter={StaticResource EnumDeivceTypeToValueConverter}, UpdateSourceTrigger=LostFocus}">
+												ItemsSource="{Binding Source={utils:EnumBindingSource {x:Type enums:EnumDeviceType}}}"
+												SelectedItem="{Binding Device.DeviceType, Mode=TwoWay, UpdateSourceTrigger=LostFocus}">
 										<ComboBox.ItemsPanel>
 											<ItemsPanelTemplate>
 												<VirtualizingStackPanel />
@@ -219,6 +219,7 @@
 						<ColumnDefinition Width="1*"/>
 						<ColumnDefinition Width="1.5*"/>
 						<ColumnDefinition Width="1*"/>
+						<ColumnDefinition Width="20*"/>
 					</Grid.ColumnDefinitions>
 					<TextBlock 
 							VerticalAlignment="Center"
@@ -268,4 +269,3 @@
 		</md:TransitioningContent>
 	</StackPanel>
 </UserControl>
-

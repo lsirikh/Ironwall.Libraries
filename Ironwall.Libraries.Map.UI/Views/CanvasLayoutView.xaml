@@ -38,7 +38,8 @@
 						TileMode="Tile" Viewport="0,0,0.032,0.05" ViewportUnits="RelativeToBoundingBox" />
 		</Grid.Background>
 
-		<ContentControl Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="3"  x:Name="CanvasViewModel"/>
+		<ContentControl Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="3" 
+						x:Name="CanvasViewModel"/>
 
 
 		<!-- Editing Menu Bar -->

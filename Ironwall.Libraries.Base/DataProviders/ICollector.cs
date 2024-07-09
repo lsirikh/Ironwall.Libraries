@@ -8,10 +8,10 @@ namespace Ironwall.Libraries.Base.DataProviders
 {
     public interface ICollector<T> : IEnumerable<T>
     {
-        public void Add(T item);
-        public void Remove(T item);
-        public int Count { get; }
-        public void Clear();
-        public void MoveItem(int oldIndex, int newIndex);
+        void Add(T item);
+        void Remove(T item);
+        int Count { get; }
+        void Clear();
+        void MoveItem(int oldIndex, int newIndex);
     }
 }

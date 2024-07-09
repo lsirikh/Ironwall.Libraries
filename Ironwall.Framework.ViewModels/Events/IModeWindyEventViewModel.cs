@@ -1,7 +1,9 @@
-﻿namespace Ironwall.Framework.ViewModels.Events
+﻿using Ironwall.Libraries.Enums;
+
+namespace Ironwall.Framework.ViewModels.Events
 {
     public interface IModeWindyEventViewModel : IBaseEventViewModel
     {
-        int ModeWindy { get; set; }
+        EnumWindyMode ModeWindy { get; set; }
     }
 }

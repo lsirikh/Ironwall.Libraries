@@ -1,8 +1,11 @@
-﻿namespace Ironwall.Framework.Models.Vms
+﻿using Ironwall.Libraries.Enums;
+
+namespace Ironwall.Framework.Models.Vms
 {
-    public interface IVmsMappingModel: IBasicModel
+    public interface IVmsMappingModel: IBaseModel
     {
-        int EventId { get; set; }
         int GroupNumber { get; set; }
+        int EventId { get; set; }
+        EnumTrueFalse Status { get; set; }
     }
 }

@@ -16,11 +16,11 @@ namespace Ironwall.Libraries.Event.UI.Helpers
     {
         public DataTemplate SensorTemplate { get; set; }
         public DataTemplate ControllerTemplate { get; set; }
-        //public DataTemplate DetectionTemplate { get; set; }
-        //public DataTemplate ConnectionTemplate { get; set; }
-        //public DataTemplate MalfunctionTemplate { get; set; }
-        //public DataTemplate ActionTemplate { get; set; }
-        //public DataTemplate UserTemplate { get; set; }
+        //DataTemplate DetectionTemplate { get; set; }
+        //DataTemplate ConnectionTemplate { get; set; }
+        //DataTemplate MalfunctionTemplate { get; set; }
+        //DataTemplate ActionTemplate { get; set; }
+        //DataTemplate UserTemplate { get; set; }
 
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
         {

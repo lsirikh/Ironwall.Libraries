@@ -1,4 +1,5 @@
 ﻿using Ironwall.Framework.Models.Devices;
+using System;
 
 namespace Ironwall.Libraries.Device.UI.ViewModels
 {
@@ -11,15 +12,16 @@ namespace Ironwall.Libraries.Device.UI.ViewModels
         Email        : lsirikh@naver.com                                         
      ****************************************************************************/
 
-    public abstract class CameraOptionViewModel : BaseOptionViewModel<IOptionBaseModel>, ICameraOptionViewModel
+    public class CameraOptionViewModel : BaseOptionViewModel<IBaseOptionModel>, ICameraOptionViewModel
     {
 
         #region - Ctors -
         public CameraOptionViewModel()
         {
+            _model = new BaseOptionModel();
         }
 
-        public CameraOptionViewModel(IOptionBaseModel model) : base(model)
+        public CameraOptionViewModel(IBaseOptionModel model) : base(model)
         {
             _model = model;
         }
@@ -27,6 +29,11 @@ namespace Ironwall.Libraries.Device.UI.ViewModels
         #region - Implementation of Interface -
         #endregion
         #region - Overrides -
+        public override void Dispose()
+        {
+            _model = new BaseOptionModel();
+            GC.Collect();
+        }
         #endregion
         #region - Binding Methods -
         #endregion

@@ -1,5 +1,6 @@
 ﻿using Ironwall.Framework.Models.Accounts;
 using Newtonsoft.Json;
+using System;
 
 namespace Ironwall.Framework.Models.Communications.Accounts
 {
@@ -18,8 +19,8 @@ namespace Ironwall.Framework.Models.Communications.Accounts
             int userLevel,
             int sessionTimeOut,
             IUserModel details,
-            string createdTime,
-            string expiredTime)
+            DateTime createdTime,
+            DateTime expiredTime)
         {
             UserId = userId;
             Token = token;
@@ -50,10 +51,10 @@ namespace Ironwall.Framework.Models.Communications.Accounts
         public AccountDetailModel Details { get; set; }
 
         [JsonProperty("created_time", Order = 7)]
-        public string TimeCreated { get; set; }
+        public DateTime TimeCreated { get; set; }
 
         [JsonProperty("expired_time", Order = 8)]
-        public string TimeExpired { get; set; }
+        public DateTime TimeExpired { get; set; }
 
         public void Insert(string userId,
             string token,
@@ -61,8 +62,8 @@ namespace Ironwall.Framework.Models.Communications.Accounts
             int userLevel,
             int sessionTimeOut,
             AccountDetailModel details,
-            string createdTime,
-            string expiredTime
+            DateTime createdTime,
+            DateTime expiredTime
             )
         {
             UserId = userId;

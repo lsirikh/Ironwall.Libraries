@@ -1,5 +1,8 @@
 ﻿using Ironwall.Framework.Models.Devices;
 using Ironwall.Libraries.Enums;
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Ironwall.Framework.Models.Communications.Devices
 {
@@ -21,10 +24,10 @@ namespace Ironwall.Framework.Models.Communications.Devices
             Command = EnumCmdType.CAMERA_PRESET_SAVE_RESPONSE;
         }
 
-        public CameraPresetSaveResponseModel(bool success, string content)
-            : base(success, content)
+        public CameraPresetSaveResponseModel(List<ICameraPresetModel> presets, bool success, string content)
+            : base(EnumCmdType.CAMERA_PRESET_SAVE_RESPONSE, success, content)
         {
-            Command = EnumCmdType.CAMERA_PRESET_SAVE_RESPONSE;
+            Body = presets.OfType<CameraPresetModel>().ToList();
         }
         #endregion
         #region - Implementation of Interface -
@@ -38,6 +41,8 @@ namespace Ironwall.Framework.Models.Communications.Devices
         #region - IHanldes -
         #endregion
         #region - Properties -
+        [JsonProperty("body", Order = 4)]
+        public List<CameraPresetModel> Body { get; set; }
         #endregion
         #region - Attributes -
         #endregion

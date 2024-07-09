@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Ironwall.Framework.Services
 {
-    public interface IMessageService
+    interface IMessageService
         : IService
     {   
         event EventHandler<ChannelMessage> Channel1EventHandler;

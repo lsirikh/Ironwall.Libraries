@@ -75,7 +75,7 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Components.Parts
                 NotifyOfPropertyChange();
             }
         }
-        public int Status 
+        public EnumDeviceStatus Status 
         {
             get => DeviceModel.Status;
             set

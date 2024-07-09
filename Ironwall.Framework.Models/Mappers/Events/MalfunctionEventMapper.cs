@@ -27,15 +27,15 @@ namespace Ironwall.Framework.Models.Mappers
             SecondEnd = model.SecondEnd;
         }
 
-        public MalfunctionEventMapper(IMalfunctionRequestModel model, IBaseDeviceModel device) 
-            : base(model, device)
-        {
-            Reason = model.Detail.Reason;
-            FirstStart = model.Detail.FirstStart;
-            FirstEnd = model.Detail.FirstEnd;
-            SecondStart = model.Detail.SecondStart;
-            SecondEnd = model.Detail.SecondEnd;
-        }
+        //public MalfunctionEventMapper(IMalfunctionRequestModel model, IBaseDeviceModel device) 
+        //    : base(model, device)
+        //{
+        //    Reason = model.Detail.Reason;
+        //    FirstStart = model.Detail.FirstStart;
+        //    FirstEnd = model.Detail.FirstEnd;
+        //    SecondStart = model.Detail.SecondStart;
+        //    SecondEnd = model.Detail.SecondEnd;
+        //}
 
         public EnumFaultType Reason { get; set; }
         public int FirstStart { get; set; }

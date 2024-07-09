@@ -1,6 +1,6 @@
 ﻿namespace Ironwall.Framework.Models.Vms
 {
-    public interface IVmsApiModel : IBasicModel
+    public interface IVmsApiModel : IBaseModel
     {
         string ApiAddress { get; set; }
         uint ApiPort { get; set; }

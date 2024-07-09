@@ -17,6 +17,8 @@ using Ironwall.Libraries.Devices.Providers;
 using Ironwall.Libraries.Enums;
 using System.Linq;
 using Ironwall.Framework.ViewModels;
+using System.Collections.ObjectModel;
+using Ironwall.Libraries.Base.Services;
 
 namespace Ironwall.Libraries.Event.UI.ViewModels.Panels
 {
@@ -29,19 +31,56 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Panels
         Email        : lsirikh@naver.com                                         
      ****************************************************************************/
 
-    public sealed class ActionPanelViewModel : EventBasePanelViewModel
-         , IHandle<SearchEventResultMessageModel>
+    public sealed class ActionPanelViewModel : EventBasePanelViewModel<IActionEventModel>
+                                             , IHandle<SearchEventListMessageModel<IActionEventModel>>
     {
 
         #region - Ctors -
-        public ActionPanelViewModel(IEventAggregator eventAggregator
+        public ActionPanelViewModel(ILogService log
+                                    , IEventAggregator eventAggregator
                                     ) : base(eventAggregator)
         {
+            _log = log;
         }
         #endregion
         #region - Implementation of Interface -
         #endregion
         #region - Overrides -
+        protected override Task EventInitialize()
+        {
+            return Task.Run(async () =>
+            {
+                try
+                {
+                    if (_cancellationTokenSource != null)
+                        _cancellationTokenSource.Cancel();
+
+                    _cancellationTokenSource = new CancellationTokenSource();
+
+                    IsVisible = false;
+
+                    await _eventAggregator.PublishOnUIThreadAsync(new SearchEventMessageModel(StartDate.ToString("yyyy-MM-dd HH:mm:ss.ff"), EndDate.ToString("yyyy-MM-dd HH:mm:ss.ff"), Enums.EnumEventType.Action));
+
+                    await Task.Delay(ACTION_TOKEN_TIMEOUT, _cancellationTokenSource.Token);
+                    IsVisible = true;
+                }
+                catch (NotSupportedException)
+                {
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+
+            });
+        }
+
+        protected override void EventClear()
+        {
+            ViewModelProvider?.Clear();
+            NotifyOfPropertyChange(() => ViewModelProvider);
+            Total = 0;
+        }
         #endregion
         #region - Binding Methods -
         #endregion
@@ -59,19 +98,19 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Panels
                 IsVisible = false;
 
                 await Task.Delay(500, _cancellationTokenSource.Token);
-                await _eventAggregator.PublishOnUIThreadAsync(new SearchEventMessageModel(StartDate.ToString(), EndDate.ToString(), Enums.EnumEventType.Action));
+                await _eventAggregator.PublishOnUIThreadAsync(new SearchEventMessageModel(StartDate.ToString("yyyy-MM-dd HH:mm:ss.ff"), EndDate.ToString("yyyy-MM-dd HH:mm:ss.ff"), Enums.EnumEventType.Action));
                 await Task.Delay(ACTION_TOKEN_TIMEOUT, _cancellationTokenSource.Token);
 
                 IsVisible = true;
             }
             catch (TaskCanceledException ex)
             {
-                Debug.WriteLine(ex.Message);
+                _log.Error(ex.Message);
                 IsVisible = true;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Raised Exception in {nameof(ClickSearch)}({nameof(ActionPanelViewModel)}) : " + ex.Message);
+                _log.Error($"Raised Exception in {nameof(ClickSearch)}({nameof(ActionPanelViewModel)}) : " + ex.Message);
             }
         }
         public bool CanClickCancel => true;
@@ -89,90 +128,36 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Panels
             }
 
         }
-
-        protected override Task EventInitialize()
-        {
-            return Task.Run(() =>
-            {
-                try
-                {
-                    _actionProvider = IoC.Get<ActionEventProvider>();
-                    ActionViewModelProvider = new ActionViewModelProvider(_actionProvider);
-                    NotifyOfPropertyChange(() => ActionViewModelProvider);
-                }
-                catch (NotSupportedException)
-                {
-
-                }
-                catch (Exception)
-                {
-
-                    throw;
-                }
-
-            });
-        }
-
-        protected override void EventClear()
-        {
-            ActionViewModelProvider?.Clear();
-            NotifyOfPropertyChange(() => ActionViewModelProvider);
-        }
-
         #endregion
         #region - IHanldes -
-        public async Task HandleAsync(SearchEventResultMessageModel message, CancellationToken cancellationToken)
+        public Task HandleAsync(SearchEventListMessageModel<IActionEventModel> message, CancellationToken cancellationToken)
         {
             try
             {
+                if (_cancellationTokenSource != null)
+                    _cancellationTokenSource.Cancel();
 
-                if (!(message.Model is ISearchActionReponseModel response))
-                    throw new NullReferenceException(message: "Casted ResponseModel was null...");
+                ViewModelProvider = new ObservableCollection<IActionEventModel>(message.Lists);
+                NotifyOfPropertyChange(() => ViewModelProvider);
 
-                await _eventProvider?.ClearData();
-                await _actionProvider?.ClearData();
-                ActionViewModelProvider?.Uninitialize();
-
-                await CreateDetectionEvent(response.DetectionEvents);
-                await CreateMalfunctionEvent(response.MalfunctionEvents);
-
-                var deviceProvider = IoC.Get<DeviceProvider>();
-                foreach (IActionRequestModel item in response.ActionEvents.OrderBy(entity=>entity.DateTime).ToList())
-                {
-                    var eventModel = _eventProvider.Where(e => e.Id == item.EventId).FirstOrDefault();
-                    
-                    if (eventModel == null) continue;
-
-                    var actionModel = ModelFactory.Build<ActionEventModel>(item, eventModel);
-                    _actionProvider.Add(actionModel);
-                }
-
-                ActionViewModelProvider = new ActionViewModelProvider(_actionProvider);
-                await ActionViewModelProvider.Initialize();
-                NotifyOfPropertyChange(() => ActionViewModelProvider);
-                Total = ActionViewModelProvider.Count();
-
-                _cancellationTokenSource.Cancel();
+                Total = ViewModelProvider.Count();
                 IsVisible = true;
-            }
-            catch (NullReferenceException ex)
-            {
-                Debug.WriteLine($"Rasied Exception in {nameof(HandleAsync)} for {nameof(SearchEventResultMessageModel)} : {ex.Message}");
+
+
+                return Task.CompletedTask;
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
         #endregion
         #region - Properties -
-
         public ActionViewModelProvider ActionViewModelProvider { get; private set; }
-
         #endregion
         #region - Attributes -
         private ActionEventProvider _actionProvider;
+        private ILogService _log;
         #endregion
     }
 }

@@ -30,7 +30,7 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Dialogs
         #region - IHanldes -
         #endregion
         #region - Properties -
-        public string Id => FromEventModel.Id;
+        public int Id => FromEventModel.Id;
 
         public DateTime DateTime => FromEventModel.DateTime;
 
@@ -54,7 +54,7 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Dialogs
 
         public string Content => EventViewModel.Content;
 
-        public string ActionId => EventViewModel.Id;
+        public int ActionId => EventViewModel.Id;
 
         public DateTime ActionDateTime => EventViewModel.DateTime;
 

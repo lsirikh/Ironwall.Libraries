@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using Ironwall.Framework.Models.Events;
+using System.Collections.Generic;
 
 namespace Ironwall.Framework.Models.Communications.Events
 {
     public interface ISearchMalfunctionResponseModel : IResponseModel
     {
-        List<MalfunctionRequestModel> Events { get; set; }
+        List<MalfunctionEventModel> Body { get; set; }
     }
 }

@@ -20,7 +20,7 @@ namespace Ironwall.Framework.ViewModels
 {
     public static class ModelFactory
     {
-        #region - Static Base Procedures -
+        #region - public static Base Procedures -
         public static T Build<T>() where T : class, new()
         {
             var instance = (T)Activator.CreateInstance(typeof(T));
@@ -58,7 +58,7 @@ namespace Ironwall.Framework.ViewModels
             return instance;
         }
 
-        public static T Build<T>(IReportEventMapper model, IMetaEventModel eventModel) where T : ActionEventModel, new()
+        public static T Build<T>(IActionEventMapper model, IMetaEventModel eventModel) where T : ActionEventModel, new()
         {
             var instance = (T)Activator.CreateInstance(typeof(T), new object[] { model, eventModel });
             return instance;
@@ -117,11 +117,6 @@ namespace Ironwall.Framework.ViewModels
             return instance;
         }
 
-        public static T Build<T>(IContactRequestModel model, IBaseDeviceModel deviceModel) where T : ContactEventModel, new()
-        {
-            var instance = (T)Activator.CreateInstance(typeof(T), new object[] { model, deviceModel });
-            return instance;
-        }
 
         public static T Build<T>(IActionRequestModel model, IMetaEventModel eventModel) where T : ActionEventModel, new()
         {
@@ -277,7 +272,7 @@ namespace Ironwall.Framework.ViewModels
             return instance;
         }
 
-        public static T Build<T>(IControllerInfoResponseModel model) where T : List<ControllerDeviceModel>, new()
+        public static T Build<T>(IControllerInfoResponseModel model) where T : Body<ControllerDeviceModel>, new()
         {
             var instance = (T)Activator.CreateInstance(typeof(T), new object[] { model });
             return instance;

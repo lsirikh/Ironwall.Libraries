@@ -12,19 +12,13 @@ namespace Ironwall.Framework.Models.Communications.Devices
         Email        : lsirikh@naver.com                                         
      ****************************************************************************/
 
-    public class CameraMappingRequestModel : UserSessionBaseRequestModel, ICameraMappingRequestModel
+    public class CameraMappingRequestModel : BaseMessageModel, ICameraMappingRequestModel
     {
 
         #region - Ctors -
-        public CameraMappingRequestModel()
+        public CameraMappingRequestModel(EnumCmdType command = EnumCmdType.CAMERA_MAPPING_DATA_REQUEST)
+         : base(command)
         {
-            Command = EnumCmdType.CAMERA_MAPPING_DATA_REQUEST;
-        }
-
-        public CameraMappingRequestModel(ILoginSessionModel model)
-         : base(model)
-        {
-            Command = EnumCmdType.CAMERA_MAPPING_DATA_REQUEST;
         }
         #endregion
         #region - Implementation of Interface -

@@ -81,6 +81,7 @@ namespace Ironwall.Libraries.Map.UI.ViewModels.Panels
                 NotifyOfPropertyChange(() => IsOnEditable);
             }
         }
+
         public SymbolPropertyViewModel SymbolPropertyViewModel { get; }
         #endregion
         #region - Attributes -

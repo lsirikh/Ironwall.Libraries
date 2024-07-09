@@ -14,7 +14,7 @@ namespace Ironwall.Framework.Models.Accounts
         {
 
         }
-        public LoginBaseModel(string userId, string timeCreated)
+        public LoginBaseModel(string userId, DateTime timeCreated)
         {
             UserId = userId;
             TimeCreated = timeCreated;
@@ -27,7 +27,7 @@ namespace Ironwall.Framework.Models.Accounts
             TimeCreated = model.TimeCreated;
         }
 
-        public LoginBaseModel(int id, string userId, string timeCreated)
+        public LoginBaseModel(int id, string userId, DateTime timeCreated)
             : base(id)
         {
             UserId = userId;
@@ -36,6 +36,6 @@ namespace Ironwall.Framework.Models.Accounts
 
 
         public string UserId { get; set; }
-        public string TimeCreated { get; set; }
+        public DateTime TimeCreated { get; set; }
     }
 }

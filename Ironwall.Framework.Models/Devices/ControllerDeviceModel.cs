@@ -30,11 +30,6 @@ namespace Ironwall.Framework.Models.Devices
             Port = model.Port;
         }
 
-        //public ControllerDeviceModel(IControllerDeviceViewModel model) : base(model)
-        //{
-        //    IpAddress = model.IpAddress;
-        //    Port = model.Port;
-        //}
 
         [JsonProperty("ip_address", Order = 6)]
         public string IpAddress { get; set; }

@@ -1,4 +1,5 @@
 ﻿using Ironwall.Framework.Models.Events;
+using Ironwall.Libraries.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,7 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Events
         #region - Ctors -
         public ModeWindyEventViewModel()
         {
+            _model = new ModeWindyEventModel();
         }
 
         public ModeWindyEventViewModel(IModeWindyEventModel model)
@@ -37,7 +39,7 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Events
         #endregion
         #region - Properties -
 
-        public int ModeWindy
+        public EnumWindyMode ModeWindy
         {
             get { return _model.ModeWindy; }
             set

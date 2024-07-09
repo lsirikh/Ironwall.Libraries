@@ -24,10 +24,17 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Dashboards
         #region - Ctors -
         public DeviceDashBoardViewModel(IEventAggregator eventAggregator
                                         , DeviceProvider deviceProvider
+                                        , ControllerViewModelProvider controllerViewModelProvider
+                                        , SensorViewModelProvider sensorViewModelProvider
+                                        , CameraViewModelProvider camearViewModelProvider
                                         
             ) : base(eventAggregator)
         {
             _deviceProvider = deviceProvider;
+            _controllerViewModelProvider = controllerViewModelProvider;
+            _sensorViewModelProvider = sensorViewModelProvider;
+            _camearViewModelProvider = camearViewModelProvider;
+
         }
         #endregion
         #region - Implementation of Interface -
@@ -123,19 +130,19 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Dashboards
         {
             return Task.Run(async () =>
             {
-                Controller = DeviceProvider.OfType<IControllerDeviceViewModel>().Count();
+                Controller = _controllerViewModelProvider.Count();
                 await Task.Delay(200, cancellationToken);
-                MultiSensor = DeviceProvider.OfType<ISensorDeviceViewModel>().Where(t => t.DeviceType == EnumDeviceType.Multi).Count();
+                MultiSensor = _sensorViewModelProvider.Where(t => t.DeviceType == EnumDeviceType.Multi).Count();
                 await Task.Delay(200, cancellationToken);
-                FenseSensor = DeviceProvider.OfType<ISensorDeviceViewModel>().Where(t => t.DeviceType == EnumDeviceType.Fence).Count();
+                FenseSensor = _sensorViewModelProvider.Where(t => t.DeviceType == EnumDeviceType.Fence).Count();
                 await Task.Delay(200, cancellationToken);
-                ContactSensor = DeviceProvider.OfType<ISensorDeviceViewModel>().Where(t => t.DeviceType == EnumDeviceType.Contact).Count();
-                UndergroundSensor = DeviceProvider.OfType<ISensorDeviceViewModel>().Where(t => t.DeviceType == EnumDeviceType.Underground).Count();
-                PIRSensor = DeviceProvider.OfType<ISensorDeviceViewModel>().Where(t => t.DeviceType == EnumDeviceType.PIR).Count();
-                IOController = DeviceProvider.OfType<ISensorDeviceViewModel>().Where(t => t.DeviceType == EnumDeviceType.IoController).Count();
-                LaserSensor = DeviceProvider.OfType<ISensorDeviceViewModel>().Where(t => t.DeviceType == EnumDeviceType.Laser).Count();
+                ContactSensor = _sensorViewModelProvider.Where(t => t.DeviceType == EnumDeviceType.Contact).Count();
+                UndergroundSensor = _sensorViewModelProvider.Where(t => t.DeviceType == EnumDeviceType.Underground).Count();
+                PIRSensor = _sensorViewModelProvider.Where(t => t.DeviceType == EnumDeviceType.PIR).Count();
+                IOController = _sensorViewModelProvider.Where(t => t.DeviceType == EnumDeviceType.IoController).Count();
+                LaserSensor = _sensorViewModelProvider.Where(t => t.DeviceType == EnumDeviceType.Laser).Count();
                 await Task.Delay(200, cancellationToken);
-                IPCamera = DeviceProvider.OfType<ICameraDeviceViewModel>().Count();
+                IPCamera = _camearViewModelProvider.Count();
             });
         }
 
@@ -246,7 +253,10 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Dashboards
         private int _laserSensor;
         private int _ipCamera;
         private DeviceProvider _deviceProvider;
-        BaseViewModel selectedViewModel;
+        private ControllerViewModelProvider _controllerViewModelProvider;
+        private SensorViewModelProvider _sensorViewModelProvider;
+        private CameraViewModelProvider _camearViewModelProvider;
+        public BaseViewModel selectedViewModel;
         #endregion
     }
 }

@@ -25,14 +25,6 @@ namespace Ironwall.Framework.Models.Mappers
             ContactSignal = model.ContactSignal;
         }
 
-        public ContactEventMapper(IContactRequestModel model, IBaseDeviceModel device)
-            : base(model, device)
-        {
-            ReadWrite = model.Detail.ReadWrite;
-            ContactNumber = model.Detail.ContactNumber;
-            ContactSignal = model.Detail.ContactSignal;
-        }
-
         public int ReadWrite { get; set; }
         public int ContactNumber { get; set; }
         public int ContactSignal { get; set; }

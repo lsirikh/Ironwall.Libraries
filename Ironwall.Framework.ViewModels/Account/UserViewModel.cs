@@ -81,7 +81,7 @@ namespace Ironwall.Framework.ViewModels.Account
             return $"Id:{Id}," +
                 $"IdUser:{IdUser}," +
                 $"Password:{Password}," +
-                $"GroupId:{Name}," +
+                $"MappingGroup:{Name}," +
                 $"EmployeeNumber:{EmployeeNumber}," +
                 $"Birth:{Birth}," +
                 $"Phone:{Phone}," +

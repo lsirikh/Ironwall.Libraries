@@ -12,121 +12,120 @@ using System.Threading.Tasks;
 
 namespace Ironwall.Framework.Models.Communications
 {
-    public abstract class BaseEventMessageModel
-        : BaseMessageModel, IBaseEventMessageModel
+    public abstract class BaseEventMessageModel : BaseMessageModel, IBaseEventMessageModel
     {
 
-        public BaseEventMessageModel()
+        //public BaseEventMessageModel()
+        //{
+        //}
+
+        //public BaseEventMessageModel(EnumCmdType cmd, IMetaEventModel model) : base(cmd)
+        //{
+        //    Id = model.Id;
+        //    Group = model.EventGroup;
+        //    switch (model.Device.DeviceType)
+        //    {
+        //        case EnumDeviceType.NONE:
+        //            break;
+        //        case EnumDeviceType.Controller:
+        //            {
+        //                Controller = (model.Device as IControllerDeviceModel).DeviceNumber;
+        //            }
+        //            break;
+        //        case EnumDeviceType.Multi:
+        //        case EnumDeviceType.Fence:
+        //        case EnumDeviceType.Underground:
+        //        case EnumDeviceType.Contact:
+        //        case EnumDeviceType.PIR:
+        //        case EnumDeviceType.IoController:
+        //        case EnumDeviceType.Laser:
+        //            {
+        //                Controller = (model.Device as ISensorDeviceModel).Controller.DeviceNumber;
+        //                Sensor = (model.Device as ISensorDeviceModel).DeviceNumber;
+        //            }
+        //            break;
+        //        case EnumDeviceType.Cable:
+        //            break;
+        //        case EnumDeviceType.IpCamera:
+        //            break;
+        //        default:
+        //            break;
+        //    }
+        //    UnitType = model.Device.DeviceType;
+        //    Status = model.Status;
+        //    DateTime = model.DateTime.ToString("yyyy-MM-dd HH:mm:ss.ff");
+        //}
+        //public BaseEventMessageModel(EnumCmdType cmd, BrkDectection brk) : base(cmd)
+        //{
+        //    //Id = IdCodeGenerator.GenIdCode();
+
+        //    Group = brk.IdGroup.ToString();
+        //    Controller = brk.IdController;
+        //    Sensor = brk.IdSensor;
+        //    UnitType = (EnumDeviceType)brk.TypeDevice;
+
+        //    DateTime = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.ff");
+        //}
+
+        //public BaseEventMessageModel(EnumCmdType cmd, BrkMalfunction brk) : base(cmd)
+        //{
+        //    //Id = IdCodeGenerator.GenIdCode();
+
+        //    Group = brk.IdGroup.ToString();
+        //    Controller = brk.IdController;
+        //    Sensor = brk.IdSensor;
+        //    UnitType = (EnumDeviceType)brk.TypeDevice;
+
+        //    DateTime = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.ff");
+        //}
+
+        //public BaseEventMessageModel(EnumCmdType cmd, BrkConnection brk) : base(cmd)
+        //{
+        //    //Id = IdCodeGenerator.GenIdCode();
+
+        //    Group = brk.IdGroup.ToString();
+        //    Controller = brk.IdController;
+        //    Sensor = brk.IdSensor;
+        //    UnitType = (EnumDeviceType)brk.TypeDevice;
+
+        //    DateTime = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.ff");
+        //}
+
+        //public BaseEventMessageModel(EnumCmdType cmd, BrkContactOut brk) : base(cmd)
+        //{
+        //    //Id = IdCodeGenerator.GenIdCode();
+
+        //    Group = brk.IdGroup.ToString();
+        //    Controller = brk.IdController;
+        //    Sensor = brk.IdSensor;
+        //    UnitType = EnumDeviceType.Contact;
+
+        //    DateTime = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.ff");
+        //}
+        protected BaseEventMessageModel()
         {
-
-        }
-
-        public BaseEventMessageModel(IMetaEventModel model)
-        {
-            Id = model.Id != null ? model.Id : IdCodeGenerator.GenIdCode();
-
-            Group = model.EventGroup;
-            switch ((EnumDeviceType)model.Device.DeviceType)
-            {
-                case EnumDeviceType.NONE:
-                    break;
-                case EnumDeviceType.Controller:
-                    {
-                        Controller = (model.Device as IControllerDeviceModel).DeviceNumber;
-                    }
-                    break;
-                case EnumDeviceType.Multi:
-                case EnumDeviceType.Fence:
-                case EnumDeviceType.Underground:
-                case EnumDeviceType.Contact:
-                case EnumDeviceType.PIR:
-                case EnumDeviceType.IoController:
-                case EnumDeviceType.Laser:
-                    {
-                        Controller = (model.Device as ISensorDeviceModel).Controller.DeviceNumber;
-                        Sensor = (model.Device as ISensorDeviceModel).DeviceNumber;
-                    }
-                    break;
-                case EnumDeviceType.Cable:
-                    break;
-                case EnumDeviceType.IpCamera:
-                    break;
-                default:
-                    break;
-            }
-            UnitType = model.Device.DeviceType;
-            Status = model.Status;
-            DateTime = model.DateTime.ToString("yyyy-MM-dd HH:mm:ss.ff");
-        }
-        public BaseEventMessageModel(BrkDectection brk)
-        {
-            Id = IdCodeGenerator.GenIdCode();
-
-            Group = brk.IdGroup.ToString();
-            Controller = brk.IdController;
-            Sensor = brk.IdSensor;
-            UnitType = (EnumDeviceType)brk.TypeDevice;
-
-            DateTime = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.ff");
-        }
-
-        public BaseEventMessageModel(BrkMalfunction brk)
-        {
-            Id = IdCodeGenerator.GenIdCode();
-
-            Group = brk.IdGroup.ToString();
-            Controller = brk.IdController;
-            Sensor = brk.IdSensor;
-            UnitType = (EnumDeviceType)brk.TypeDevice;
-
-            DateTime = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.ff");
-        }
-
-        public BaseEventMessageModel(BrkConnection brk)
-        {
-            Id = IdCodeGenerator.GenIdCode();
-
-            Group = brk.IdGroup.ToString();
-            Controller = brk.IdController;
-            Sensor = brk.IdSensor;
-            UnitType = (EnumDeviceType)brk.TypeDevice;
-
-            DateTime = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.ff");
-        }
-
-        public BaseEventMessageModel(BrkContactOut brk)
-        {
-            Id = IdCodeGenerator.GenIdCode();
-
             
-            Group = brk.IdGroup.ToString();
-            Controller = brk.IdController;
-            Sensor = brk.IdSensor;
-            UnitType = EnumDeviceType.Contact;
-
-            DateTime = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.ff");
+        }
+        protected BaseEventMessageModel(EnumCmdType cmd) : base(cmd)
+        {
+            
+        }
+        protected BaseEventMessageModel(int id, DateTime dateTime, EnumCmdType cmd) : base(cmd)
+        {
+            Id = id;
+            DateTime = dateTime;
+        }
+        protected BaseEventMessageModel(IBaseEventMessageModel model):base(model)
+        {
+            Id = model.Id;
+            DateTime = model.DateTime;
         }
 
         [JsonProperty("id", Order = 1)]
-        public string Id { get; set; }
-
-        [JsonProperty("group", Order = 2)]
-        public string Group { get; set; }
-
-        [JsonProperty("controller", Order = 3)]
-        public int Controller { get; set; }
-
-        [JsonProperty("sensor", Order = 4)]
-        public int Sensor { get; set; }
-
-        [JsonProperty("unit_type", Order = 5)]
-        public EnumDeviceType UnitType { get; set; }
-
-        [JsonProperty("status", Order = 6)]
-        public int Status { get; set; }
+        public int Id { get; set; }
 
         [JsonProperty("date_time", Order = 99)]
-        public string DateTime { get; set; }
+        public DateTime DateTime { get; set; } = DateTime.Now;
 
        
     }

@@ -1,4 +1,5 @@
-﻿using Ironwall.Libraries.Enums;
+﻿using Ironwall.Framework.Models.Events;
+using Ironwall.Libraries.Enums;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -16,16 +17,16 @@ namespace Ironwall.Framework.Models.Communications.Events
             Command = EnumCmdType.EVENT_ACTION_RESPONSE;
         }
 
-        public ActionResponseModel(bool success, string msg, IActionRequestModel model = null)
-            : base(success, msg)
+        public ActionResponseModel(bool success, string msg, IActionEventModel model = default)
+            : base(EnumCmdType.EVENT_ACTION_RESPONSE, success, msg)
         {
             Command = EnumCmdType.EVENT_ACTION_RESPONSE;
-            RequestModel = model as ActionRequestModel;
+            Body = model as ActionEventModel;
         }
 
 
         [JsonProperty("request_model", Order = 4)]
-        public ActionRequestModel RequestModel { get; set; }
+        public ActionEventModel Body { get; set; }
 
         
 

@@ -1,5 +1,8 @@
-﻿using Ironwall.Framework.Models.Vms;
+﻿using Caliburn.Micro;
+using Ironwall.Framework.Models.Devices;
+using Ironwall.Framework.Models.Vms;
 using Ironwall.Framework.ViewModels;
+using Ironwall.Libraries.Enums;
 using System;
 
 namespace Ironwall.Libraries.VMS.UI.ViewModels
@@ -12,7 +15,7 @@ namespace Ironwall.Libraries.VMS.UI.ViewModels
        Company      : Sensorway Co., Ltd.                                       
        Email        : lsirikh@naver.com                                         
     ****************************************************************************/
-    public class VmsApiViewModel : VmsBaseViewModel<IVmsApiModel>
+    public class VmsApiViewModel : BaseCustomViewModel<IVmsApiModel>, IVmsApiViewModel
     {
         #region - Ctors -
         public VmsApiViewModel(IVmsApiModel model) : base(model)
@@ -22,6 +25,11 @@ namespace Ironwall.Libraries.VMS.UI.ViewModels
         #region - Implementation of Interface -
         #endregion
         #region - Overrides -
+        public override void Dispose()
+        {
+            _model = new VmsApiModel();
+            GC.Collect();
+        }
         #endregion
         #region - Binding Methods -
         #endregion
@@ -69,6 +77,7 @@ namespace Ironwall.Libraries.VMS.UI.ViewModels
                 NotifyOfPropertyChange(() => Password);
             }
         }
+
         #endregion
         #region - Attributes -
         #endregion

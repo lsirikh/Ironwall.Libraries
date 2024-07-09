@@ -3,6 +3,7 @@ using Ironwall.Framework.Models.Communications.Events;
 using Ironwall.Framework.Models.Devices;
 using Ironwall.Framework.Models.Mappers;
 using Ironwall.Framework.Models.Mappers.Events;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,32 +41,25 @@ namespace Ironwall.Framework.Models.Events
             ContactSignal = model.ContactSignal;
         }
 
-        public ContactEventModel(IContactRequestModel model, IBaseDeviceModel device) : base(model, device)
-        {
-            ReadWrite = model.Detail.ReadWrite;
-            ContactNumber = model.Detail.ContactNumber;
-            ContactSignal = model.Detail.ContactSignal;
-        }
-
-        //public ContactEventModel(IContactEventViewModel model) : base(model)
+        //public ContactEventModel(IContactOnRequestModel model, IBaseDeviceModel device) : base(model, device)
         //{
-        //    try
-        //    {
-        //        ReadWrite = model.ReadWrite;
-        //        ContactNumber = model.ContactNumber;
-        //        ContactSignal = model.ContactSignal;
-
-        //        //Device = ModelFactory.Build<SensorDeviceModel>(model.Device as ISensorDeviceViewModel);
-        //        Device = ModelTypeHelper.GetDevice(model.Device);
-        //    }
-        //    catch (Exception)
-        //    {
-        //        throw;
-        //    }
+        //    ReadWrite = model.Detail.ReadWrite;
+        //    ContactNumber = model.Detail.ContactNumber;
+        //    ContactSignal = model.Detail.ContactSignal;
         //}
 
+        //public ContactEventModel(IContactOffRequestModel model, IBaseDeviceModel device) : base(model, device)
+        //{
+        //    ReadWrite = model.Detail.ReadWrite;
+        //    ContactNumber = model.Detail.ContactNumber;
+        //    ContactSignal = model.Detail.ContactSignal;
+        //}
+
+        [JsonProperty("read_write", Order = 6)]
         public int ReadWrite { get; set; }
+        [JsonProperty("contact_number", Order = 7)]
         public int ContactNumber { get; set; }
+        [JsonProperty("contact_signal", Order = 8)]
         public int ContactSignal { get; set; }
     }
 }

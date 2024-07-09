@@ -1,4 +1,5 @@
 ﻿using Ironwall.Libraries.Enums;
+using System;
 
 namespace Ironwall.Framework.Models.Devices
 {
@@ -9,6 +10,6 @@ namespace Ironwall.Framework.Models.Devices
         string DeviceName { get; set; }
         EnumDeviceType DeviceType { get; set; }
         string Version { get; set; }
-        int Status { get; set; }
+        EnumDeviceStatus Status { get; set; }
     }
 }

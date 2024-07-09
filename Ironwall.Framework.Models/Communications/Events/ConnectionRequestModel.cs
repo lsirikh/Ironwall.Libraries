@@ -18,16 +18,13 @@ namespace Ironwall.Framework.Models.Communications.Events
             Command = EnumCmdType.EVENT_DETECTION_REQUEST;
         }
 
-        public ConnectionRequestModel(BrkConnection brk) : base(brk)
+
+        public ConnectionRequestModel(IConnectionEventModel model)
+            : base(EnumCmdType.EVENT_DETECTION_REQUEST)
         {
-            Command = EnumCmdType.EVENT_CONNECTION_REQUEST;
-
+            Body = model as ConnectionEventModel;
         }
-
-        public ConnectionRequestModel(IConnectionEventModel model) : base(model)
-        {
-            Command = EnumCmdType.EVENT_CONNECTION_REQUEST;
-        }
-
+        [JsonProperty("body", Order = 6)]
+        public ConnectionEventModel Body { get; set; }
     }
 }

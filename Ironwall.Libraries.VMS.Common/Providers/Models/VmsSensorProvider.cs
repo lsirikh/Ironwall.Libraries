@@ -13,7 +13,7 @@ namespace Ironwall.Libraries.VMS.Common.Providers.Models
        Company      : Sensorway Co., Ltd.                                       
        Email        : lsirikh@naver.com                                         
     ****************************************************************************/
-    public class VmsSensorProvider : EntityCollectionProvider<IBaseDeviceModel>
+    public class VmsSensorProvider : EntityCollectionProvider<IVmsSensorModel>
     {
         #region - Ctors -
         #endregion

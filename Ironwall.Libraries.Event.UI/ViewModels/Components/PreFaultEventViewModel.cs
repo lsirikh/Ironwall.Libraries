@@ -32,7 +32,7 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Components
         }
         #endregion
         #region - Overrides -
-        public override async Task TaskFinal() => await SendAction();
+        public override async Task TaskFinal() => await SendAction(Contents, IdUser);
         public override Task SendAction(string content = null, string idUser = null)
         {
             if (content == null)
@@ -73,9 +73,9 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Components
                     //    if (item.IsActive && dialog.ClassName.Equals(targetViewModel))
                     //    {
                     //        var viewModel = item as PreEventRemoveDialogViewModel;
-                    //        if ((Reason == ((PreFaultEventViewModel)viewModel.EventViewModel).Reason)
-                    //        && (IdController == viewModel.EventViewModel.IdController)
-                    //        && (IdSensor == viewModel.EventViewModel.IdSensor))
+                    //        if ((Reason == ((PreFaultEventViewModel)viewModel.ExEventViewModel).Reason)
+                    //        && (IdController == viewModel.ExEventViewModel.IdController)
+                    //        && (IdSensor == viewModel.ExEventViewModel.IdSensor))
                     //        {
                     //            await EventAggregator?.PublishOnCurrentThreadAsync(new CloseDialogMessageModel());
                     //            break;

@@ -16,6 +16,9 @@ using Ironwall.Framework.Models.Events;
 using Ironwall.Framework.Models;
 using System.Linq;
 using Ironwall.Libraries.Enums;
+using Ironwall.Libraries.Event.UI.ViewModels.Events;
+using Ironwall.Libraries.Base.Services;
+using System.Collections.ObjectModel;
 
 namespace Ironwall.Libraries.Event.UI.ViewModels.Panels
 {
@@ -28,19 +31,56 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Panels
         Email        : lsirikh@naver.com                                         
      ****************************************************************************/
 
-    public sealed class MalfunctionPanelViewModel : EventBasePanelViewModel
-        , IHandle<SearchEventResultMessageModel>
+    public sealed class MalfunctionPanelViewModel : EventBasePanelViewModel<IMalfunctionEventModel>
+                                                , IHandle<SearchEventListMessageModel<IMalfunctionEventModel>>
     {
 
         #region - Ctors -
         public MalfunctionPanelViewModel(IEventAggregator eventAggregator
-                                    ) : base(eventAggregator)
+                                        , ILogService log
+                                        ) : base(eventAggregator)
         {
+            _log = log;
         }
         #endregion
         #region - Implementation of Interface -
         #endregion
         #region - Overrides -
+        protected override Task EventInitialize()
+        {
+            return Task.Run(async () =>
+            {
+                try
+                {
+                    if (_cancellationTokenSource != null)
+                        _cancellationTokenSource.Cancel();
+
+                    _cancellationTokenSource = new CancellationTokenSource();
+
+                    IsVisible = false;
+
+                    await _eventAggregator.PublishOnUIThreadAsync(new SearchEventMessageModel(StartDate.ToString("yyyy-MM-dd HH:mm:ss.ff"), EndDate.ToString("yyyy-MM-dd HH:mm:ss.ff"), Enums.EnumEventType.Fault));
+
+                    await Task.Delay(ACTION_TOKEN_TIMEOUT, _cancellationTokenSource.Token);
+                    IsVisible = true;
+                }
+                catch (NotSupportedException)
+                {
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+
+            });
+        }
+        protected override void EventClear()
+        {
+            ViewModelProvider?.Clear();
+            NotifyOfPropertyChange(() => ViewModelProvider);
+            Total = 0;
+            Reported = 0;
+        }
         #endregion
         #region - Binding Methods -
         #endregion
@@ -57,19 +97,19 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Panels
                 IsVisible = false;
 
                 await Task.Delay(500, _cancellationTokenSource.Token);
-                await _eventAggregator.PublishOnUIThreadAsync(new SearchEventMessageModel(StartDate.ToString(), EndDate.ToString(), Enums.EnumEventType.Fault));
+                await _eventAggregator.PublishOnUIThreadAsync(new SearchEventMessageModel(StartDate.ToString("yyyy-MM-dd HH:mm:ss.ff"), EndDate.ToString("yyyy-MM-dd HH:mm:ss.ff"), Enums.EnumEventType.Fault));
                 await Task.Delay(ACTION_TOKEN_TIMEOUT, _cancellationTokenSource.Token);
 
                 IsVisible = true;
             }
             catch (TaskCanceledException ex)
             {
-                Debug.WriteLine(ex.Message);
+                _log.Error(ex.Message);
                 IsVisible = true;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Raised Exception in {nameof(ClickSearch)}({nameof(MalfunctionPanelViewModel)}) : " + ex.Message);
+                _log.Error($"Raised Exception in {nameof(ClickSearch)}({nameof(MalfunctionPanelViewModel)}) : " + ex.Message);
             }
         }
         public bool CanClickCancel => true;
@@ -88,64 +128,27 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Panels
 
         }
 
-        protected override Task EventInitialize()
-        {
-            return Task.Run(() =>
-            {
-                try
-                {
-                    MalfunctionViewModelProvider = new MalfunctionViewModelProvider(_eventProvider);
-                    NotifyOfPropertyChange(() => MalfunctionViewModelProvider);
-                }
-                catch (NotSupportedException)
-                {
-
-                }
-                catch (Exception)
-                {
-
-                    throw;
-                }
-
-            });
-        }
-
-        protected override void EventClear()
-        {
-            MalfunctionViewModelProvider?.Clear();
-            NotifyOfPropertyChange(() => MalfunctionViewModelProvider);
-            Total = 0;
-            Reported = 0;
-        }
+       
 
         #endregion
         #region - IHanldes -
-        public async Task HandleAsync(SearchEventResultMessageModel message, CancellationToken cancellationToken)
+        public Task HandleAsync(SearchEventListMessageModel<IMalfunctionEventModel> message, CancellationToken cancellationToken)
         {
             try
             {
-                if (!(message.Model is ISearchMalfunctionResponseModel response))
-                    throw new NullReferenceException(message: "Casted ResponseModel was null...");
+                if (_cancellationTokenSource != null)
+                    _cancellationTokenSource.Cancel();
 
-                await _eventProvider?.ClearData();
-                MalfunctionViewModelProvider?.Uninitialize();
+                ViewModelProvider = new ObservableCollection<IMalfunctionEventModel>(message.Lists);
+                NotifyOfPropertyChange(() => ViewModelProvider);
 
-                await CreateMalfunctionEvent(response.Events);
-
-                MalfunctionViewModelProvider = new MalfunctionViewModelProvider(_eventProvider);
-                await MalfunctionViewModelProvider.Initialize();
-                NotifyOfPropertyChange(() => MalfunctionViewModelProvider);
-                
-                Total = MalfunctionViewModelProvider.Count();
-                Reported = MalfunctionViewModelProvider.Where(entity => entity.Status == 1).Count();
+                Total = ViewModelProvider.Count();
+                Reported = ViewModelProvider.Where(entity => entity.Status == EnumTrueFalse.True).Count();
                 NotifyOfPropertyChange(() => UnReported);
-
-                _cancellationTokenSource.Cancel();
                 IsVisible = true;
-            }
-            catch (NullReferenceException ex)
-            {
-                Debug.WriteLine($"Rasied Exception in {nameof(HandleAsync)} for {nameof(SearchEventResultMessageModel)} : {ex.Message}");
+
+
+                return Task.CompletedTask;
             }
             catch (Exception)
             {
@@ -173,6 +176,7 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Panels
         #endregion
         #region - Attributes -
         private int _reported;
+        private ILogService _log;
         #endregion
     }
 }

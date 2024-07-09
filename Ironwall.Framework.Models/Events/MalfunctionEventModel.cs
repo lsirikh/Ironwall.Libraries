@@ -31,26 +31,14 @@ namespace Ironwall.Framework.Models.Events
             SecondEnd = model.SecondEnd;
         }
 
-        public MalfunctionEventModel(IMalfunctionRequestModel model, IBaseDeviceModel device) : base(model, device)
-        {
-            Reason = model.Detail.Reason;
-            FirstStart = model.Detail.FirstStart;
-            FirstEnd = model.Detail.FirstEnd;
-            SecondStart = model.Detail.SecondStart;
-            SecondEnd = model.Detail.SecondEnd;
-        }
-
-        //public MalfunctionEventModel(IMalfunctionEventViewModel model) : base(model)
+        //public MalfunctionEventModel(IMalfunctionRequestModel model, IBaseDeviceModel device) : base(model, device)
         //{
-        //    Reason = model.Reason;
-        //    FirstStart = model.FirstStart;
-        //    FirstEnd = model.FirstEnd;
-        //    SecondStart = model.SecondStart;
-        //    SecondEnd = model.SecondEnd;
-        //    Device = ModelTypeHelper.GetDevice(model.Device);
+        //    Reason = model.Detail.Reason;
+        //    FirstStart = model.Detail.FirstStart;
+        //    FirstEnd = model.Detail.FirstEnd;
+        //    SecondStart = model.Detail.SecondStart;
+        //    SecondEnd = model.Detail.SecondEnd;
         //}
-
-        
 
         public EnumFaultType Reason { get; set; }
         public int FirstStart { get; set; }

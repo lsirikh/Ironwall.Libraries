@@ -9,6 +9,26 @@ namespace Ironwall.Framework.Helpers
 {
     public static class EnumHelper
     {
+        public static bool GetStatusType(EnumTrueFalse type)
+        {
+            switch (type)
+            {
+                case EnumTrueFalse.False:
+                    return false;
+                case EnumTrueFalse.True:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        public static EnumTrueFalse SetStatusType(bool type)
+        {
+            if (type)
+                return EnumTrueFalse.True;
+            else
+                return EnumTrueFalse.False;
+        }
 
         public static EnumEventType? GetEventType(EnumCmdType type)
         {

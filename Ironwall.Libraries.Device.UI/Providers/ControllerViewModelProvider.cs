@@ -21,134 +21,28 @@ namespace Ironwall.Libraries.Device.UI.Providers
         Email        : lsirikh@naver.com                                         
      ****************************************************************************/
 
-    public sealed class ControllerViewModelProvider : DeviceBaseViewModelProvider<IControllerDeviceViewModel>
+    public sealed class ControllerViewModelProvider : WrapperDeviceViewModelProvider<IControllerDeviceModel, ControllerDeviceViewModel>
     {
 
         #region - Ctors -
-        public ControllerViewModelProvider(DeviceProvider provider)
+        public ControllerViewModelProvider(DeviceProvider provider) : base(provider)
         {
             ClassName = nameof(ControllerViewModelProvider);
-            _provider = provider;
         }
         #endregion
         #region - Implementation of Interface -
-        public override Task<bool> Initialize(CancellationToken token = default)
-        {
-            _provider.Refresh += Provider_Initialize;
-            _provider.Inserted += Provider_Insert;
-            _provider.Updated += Provider_Update;
-            _provider.Deleted += Provider_Delete;
-
-            return Provider_Initialize();
-        }
-
-        public override void Uninitialize()
-        {
-            _provider.Refresh -= Provider_Initialize;
-            _provider.Inserted -= Provider_Insert;
-            _provider.Updated -= Provider_Update;
-            _provider.Deleted -= Provider_Delete;
-            _provider = null;
-
-            Clear();
-
-            GC.Collect();
-        }
         #endregion
         #region - Overrides -
         #endregion
         #region - Binding Methods -
         #endregion
         #region - Processes -
-        private async Task<bool> Provider_Initialize()
-        {
-            try
-            {
-                Clear();
-
-                foreach (IBaseDeviceModel item in _provider.ToList())
-                {
-                    if (!(item is IControllerDeviceModel model)) continue;
-
-                    var viewModel = ViewModelFactory.Build<ControllerDeviceViewModel>(model);
-                    await viewModel.ActivateAsync();
-                    Add(viewModel);
-                }
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Raised Exception in {nameof(Provider_Initialize)}({ClassName}) : {ex.Message}");
-                return false;
-            }
-        }
-
-        private async Task<bool> Provider_Insert(IBaseDeviceModel item)
-        {
-            try
-            {
-                if (!(item is IControllerDeviceModel model)) return false;
-
-                var viewModel = ViewModelFactory.Build<ControllerDeviceViewModel>(model);
-                await viewModel.ActivateAsync();
-                Add(viewModel);
-                return true;
-
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Raised Exception in {nameof(Provider_Insert)}({ClassName}) : {ex.Message}");
-                return false;
-            }
-        }
-
-        private async Task<bool> Provider_Update(IBaseDeviceModel item)
-        {
-            try
-            {
-                if (!(item is IControllerDeviceModel model)) return false;
-
-                var viewModel = ViewModelFactory.Build<ControllerDeviceViewModel>(model);
-                await viewModel.ActivateAsync();
-                var searchedItem = CollectionEntity.Where(t => t.Id == item.Id).FirstOrDefault();
-
-                if (searchedItem != null)
-                    searchedItem = viewModel;
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Raised Exception in {nameof(Provider_Update)}({ClassName}) : {ex.Message}");
-                return false;
-            }
-        }
-
-        private Task<bool> Provider_Delete(IBaseDeviceModel item)
-        {
-            try
-            {
-                var searchedItem = CollectionEntity.Where(t => t.Id == item.Id).FirstOrDefault();
-                if (searchedItem != null)
-                {
-                    Remove(searchedItem);
-                }
-                return Task.FromResult(true);
-
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Raised Exception in {nameof(Provider_Delete)}({ClassName}) : {ex.Message}");
-                return Task.FromResult(false);
-            }
-        }
         #endregion
         #region - IHanldes -
         #endregion
         #region - Properties -
         #endregion
         #region - Attributes -
-        private DeviceProvider _provider;
         #endregion
     }
 }

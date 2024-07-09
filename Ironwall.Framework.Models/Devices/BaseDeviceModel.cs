@@ -37,18 +37,6 @@ namespace Ironwall.Framework.Models.Devices
             Status = model.Status;
         }
 
-        //public BaseDeviceModel(IBaseDeviceViewModel model) : base(model.Id)
-        //{
-        //    Id = model.Id;
-        //    DeviceGroup = model.DeviceGroup;
-        //    DeviceNumber = model.DeviceNumber;
-        //    DeviceName = model.DeviceName;
-        //    DeviceType = model.DeviceType;
-        //    Version = model.Version;
-        //    Status = model.Status;
-        //}
-
-
         [JsonProperty("device_number", Order = 2)]
         public int DeviceGroup { get; set; }
         [JsonProperty("device_group", Order = 3)]
@@ -59,14 +47,7 @@ namespace Ironwall.Framework.Models.Devices
         public EnumDeviceType DeviceType { get; set; }
         [JsonProperty("version", Order = 6)]
         public string Version { get; set; }
-        
-        /// <summary>
-        /// 0: Normal
-        /// 1: Error
-        /// 2: Deactivate
-        /// </summary>
         [JsonIgnore]
-        public int Status { get; set; }
-        
+        public EnumDeviceStatus Status { get; set; }
     }
 }

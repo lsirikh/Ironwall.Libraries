@@ -11,7 +11,7 @@ namespace Ironwall.Libraries.Device.UI.ViewModels
         Email        : lsirikh@naver.com                                         
      ****************************************************************************/
 
-    public interface ICameraOptionViewModel : IBaseOptionViewModel<IOptionBaseModel>
+    public interface ICameraOptionViewModel : IBaseOptionViewModel<IBaseOptionModel>
     {
 
         

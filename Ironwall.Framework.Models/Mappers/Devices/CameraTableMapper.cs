@@ -1,4 +1,5 @@
 ﻿using Ironwall.Framework.Models.Devices;
+using Ironwall.Libraries.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,7 +38,7 @@ namespace Ironwall.Framework.Models.Mappers
         public string Password { get; set; }
         //public string Preset { get; set; }
         //public string Profile { get; set; }
-        public int Category { get; set; }
+        public EnumCameraType Category { get; set; }
         public string DeviceModel { get; set; }
         public string RtspUri { get; set; }
         public int RtspPort { get; set; }

@@ -12,19 +12,13 @@ namespace Ironwall.Framework.Models.Communications.Devices
         Email        : lsirikh@naver.com                                         
      ****************************************************************************/
 
-    public class CameraPresetRequestModel : UserSessionBaseRequestModel, ICameraPresetRequestModel
+    public class CameraPresetRequestModel : BaseMessageModel, ICameraPresetRequestModel
     {
 
         #region - Ctors -
-        public CameraPresetRequestModel()
+        public CameraPresetRequestModel(EnumCmdType command = EnumCmdType.CAMERA_PRESET_DATA_REQUEST)
+         : base(command)
         {
-            Command = EnumCmdType.CAMERA_PRESET_DATA_REQUEST;
-        }
-
-        public CameraPresetRequestModel(ILoginSessionModel model)
-         : base(model)
-        {
-            Command = EnumCmdType.CAMERA_PRESET_DATA_REQUEST;
         }
         #endregion
         #region - Implementation of Interface -

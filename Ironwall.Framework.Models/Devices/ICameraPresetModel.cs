@@ -1,6 +1,6 @@
 ﻿namespace Ironwall.Framework.Models.Devices
 {
-    public interface ICameraPresetModel : IOptionBaseModel
+    public interface ICameraPresetModel : IBaseOptionModel
     {
         string PresetName { get; set; }
         bool IsHome { get; set; }

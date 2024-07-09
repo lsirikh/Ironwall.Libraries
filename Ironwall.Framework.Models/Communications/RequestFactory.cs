@@ -64,17 +64,6 @@ namespace Ironwall.Framework.Models.Communications
             return instance;
         }
 
-        /// <summary>
-        /// Create ContactRequestModel Instance from IContactEventModel Model
-        /// </summary>
-        /// <typeparam name="T">ContactRequestModel</typeparam>
-        /// <param name="model">IContactEventModel</param>
-        /// <returns></returns>
-        public static T Build<T>(IContactEventModel model) where T : ContactRequestModel, new()
-        {
-            var instance = (T)Activator.CreateInstance(typeof(T), new object[] { model });
-            return instance;
-        }
 
         /// <summary>
         /// Create ActionRequestModel Instance from IDetectionEventModel Model
@@ -197,18 +186,7 @@ namespace Ironwall.Framework.Models.Communications
             var instance = (T)Activator.CreateInstance(typeof(T), new object[] { model });
             return instance;
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        public static T Build<T>(BrkContactOut model) where T : ContactRequestModel, new()
-        {
-            var instance = (T)Activator.CreateInstance(typeof(T), new object[] { model });
-            return instance;
-        }
-
+       
         #endregion
 
         #region -  From Device Model to Device Request Model -
@@ -235,7 +213,7 @@ namespace Ironwall.Framework.Models.Communications
         #region - From User Model to Symbol Request Model -
         public static T Build<T>(
             ILoginSessionModel model
-            //, List<MapModel> maps
+            //, Body<MapModel> maps
             , List<PointClass> points
             , List<SymbolModel> symbols
             , List<ShapeSymbolModel> shapes

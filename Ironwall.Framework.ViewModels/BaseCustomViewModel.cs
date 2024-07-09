@@ -20,10 +20,11 @@ namespace Ironwall.Framework.ViewModels
     {
 
         #region - Ctors -
-        public BaseCustomViewModel()
+        protected BaseCustomViewModel()
         {
+            
         }
-        public BaseCustomViewModel(T model)
+        protected BaseCustomViewModel(T model)
         {
             _eventAggregator = IoC.Get<IEventAggregator>();
             _model = model;

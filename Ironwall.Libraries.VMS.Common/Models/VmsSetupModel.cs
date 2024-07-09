@@ -13,7 +13,12 @@ namespace Ironwall.Libraries.VMS.Common.Models
     public class VmsSetupModel
     {
         public string TableVmsApiSetting => "vms_api_setting";
-        public string TableVmsApiEvent => "vms_api_event";
+        public string TableVmsApiSensor => "vms_api_sensor";
         public string TableVmsApiMapping => "vms_api_mapping";
+
+        public string IpAddress { get; set; }
+        public int Port { get; set; }
+        public string Username { get; set; }
+        public string Password { get; set; }
     }
 }

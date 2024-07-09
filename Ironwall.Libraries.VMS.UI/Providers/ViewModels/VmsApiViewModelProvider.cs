@@ -23,7 +23,7 @@ namespace Ironwall.Libraries.VMS.UI.Providers.ViewModels
     ****************************************************************************/
     public class VmsApiViewModelProvider : EntityCollectionProvider<VmsApiViewModel>, ILoadable
     {
-        
+
         #region - Ctors -
         public VmsApiViewModelProvider(VmsApiProvider provider)
         {

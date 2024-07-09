@@ -2,7 +2,7 @@
 {
     public interface IMappingTableMapper : IBaseModel
     {
-        string GroupId { get; set; }
+        string MappingGroup { get; set; }
         int Sensor { get; set; }
         int? FirstPreset { get; set; }
         int? SecondPreset { get; set; }

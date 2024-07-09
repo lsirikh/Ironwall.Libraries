@@ -27,8 +27,8 @@ namespace Ironwall.Framework.ViewModels.Account
             string userId,
             string userPass,
             string token,
-            string timeCreated,
-            string timeExpired)
+            DateTime timeCreated,
+            DateTime timeExpired)
             : base(id, userId, timeCreated)
         {
             UserPass = userPass;
@@ -69,7 +69,7 @@ namespace Ironwall.Framework.ViewModels.Account
         }
 
 
-        public string TimeExpired
+        public DateTime TimeExpired
         {
             get { return _timeExpired; }
             set
@@ -82,7 +82,7 @@ namespace Ironwall.Framework.ViewModels.Account
 
         private string _userPass;
         private string _token;
-        private string _timeExpired;
+        private DateTime _timeExpired;
 
         
     }

@@ -11,7 +11,7 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Components
     {
         public abstract void Visit(PreIntrusionEventViewModel viewModel, ActionEventModel actionModel);
         public abstract void Visit(PreFaultEventViewModel viewModel, ActionEventModel actionModel);
-        //public abstract void Visit(PostIntrusionEventViewModel viewModel);
-        //public abstract void Visit(PostFaultEventViewModel viewModel);
+        //abstract void Visit(PostIntrusionEventViewModel viewModel);
+        //abstract void Visit(PostFaultEventViewModel viewModel);
     }
 }

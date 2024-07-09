@@ -8,18 +8,11 @@ using System.Threading.Tasks;
 
 namespace Ironwall.Framework.Models.Communications.Devices
 {
-    public class CameraDataRequestModel
-        : UserSessionBaseRequestModel, ICameraDataRequestModel
+    public class CameraDataRequestModel : BaseMessageModel, ICameraDataRequestModel
     {
-        public CameraDataRequestModel()
+        public CameraDataRequestModel(EnumCmdType command = EnumCmdType.CAMERA_DATA_REQUEST)
+            :base(EnumCmdType.CAMERA_DATA_REQUEST)
         {
-            Command = EnumCmdType.CAMERA_DATA_REQUEST;
-        }
-
-        public CameraDataRequestModel(ILoginSessionModel model)
-            : base(model)
-        {
-            Command = EnumCmdType.CAMERA_DATA_REQUEST;
         }
     }
 }

@@ -8,7 +8,7 @@ namespace Ironwall.Libraries.Enums
 {
     public enum EnumTrueFalse
     {
-        True,
         False,
+        True,
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Ironwall.Framework.Models.Communications.Events;
+using Ironwall.Libraries.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,9 +8,7 @@ using System.Threading.Tasks;
 
 namespace Ironwall.Framework.Models.Events
 {
-    public class ModeWindyEventModel
-        : BaseEventModel
-        , IModeWindyEventModel
+    public class ModeWindyEventModel : BaseEventModel , IModeWindyEventModel
     {
         public ModeWindyEventModel()
         {
@@ -23,6 +22,6 @@ namespace Ironwall.Framework.Models.Events
 
 
 
-        public int ModeWindy { get; set; }
+        public EnumWindyMode ModeWindy { get; set; }
     }
 }

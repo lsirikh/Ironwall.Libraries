@@ -17,7 +17,7 @@ namespace Ironwall.Libraries.Account.Common.Providers.ViewModels
     public class SessionViewModelProvider
         : AccountBaseViewModelProvider
     {
-        
+
         #region - Ctors -
         public SessionViewModelProvider(SessionProvider provider)
         {

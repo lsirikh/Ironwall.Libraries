@@ -9,6 +9,6 @@ namespace Ironwall.Framework.ViewModels.Events
         IBaseDeviceViewModel Device { get; set; }
         string EventGroup { get; set; }
         EnumEventType? MessageType { get; set; }
-        int Status { get; set; }
+        EnumTrueFalse Status { get; set; }
     }
 }

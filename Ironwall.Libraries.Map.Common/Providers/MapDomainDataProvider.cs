@@ -46,7 +46,7 @@ namespace Ironwall.Libraries.Map.Common.Providers
 
         protected override Task ExitTask(CancellationToken token = default)
         {
-            throw new NotImplementedException();
+            return Task.CompletedTask;
         }
         #endregion
         #region - Binding Methods -
