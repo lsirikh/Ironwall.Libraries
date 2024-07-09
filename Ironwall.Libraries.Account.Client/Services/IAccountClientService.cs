@@ -2,12 +2,13 @@
 using Ironwall.Framework.Models.Accounts;
 using Ironwall.Framework.Models.Communications;
 using Ironwall.Framework.Models.Communications.Accounts;
+using Ironwall.Libraries.Tcp.Client.Services;
 using System.Net;
 using System.Threading.Tasks;
 
 namespace Ironwall.Libraries.Account.Client.Services
 {
-    public interface IAccountClientService
+    interface IAccountClientService : ITcpClient
     {
         LoginSessionModel LoginSessionModel { get; set; }
         int SessionTimeOut { get; }

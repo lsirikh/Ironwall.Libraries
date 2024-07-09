@@ -9,12 +9,12 @@
         Email        : lsirikh@naver.com                                         
      ****************************************************************************/
 
-    public enum EnumDeviceCategory : int
+    public enum EnumDeviceCategory
     {
-        None = 0,
-        Controller = 1,
-        Sensor = 2,
-        Camera = 3,
-        Etc = 4,
+        None,
+        Controller,
+        Sensor,
+        Camera,
+        Etc,
     }
 }

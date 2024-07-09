@@ -1,4 +1,5 @@
 ﻿using Ironwall.Framework.Models.Devices;
+using Ironwall.Framework.ViewModels;
 using System.Net;
 
 namespace Ironwall.Libraries.Device.UI.ViewModels

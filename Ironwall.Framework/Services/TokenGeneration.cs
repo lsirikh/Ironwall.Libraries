@@ -112,7 +112,7 @@ namespace Ironwall.Framework.Services
         private string _token;
         private DateTime _expire;
         private int _session;
-        const int Period = 60; //Expire Duration 1 Hour By Default
+        public const int Period = 60; //Expire Duration 1 Hour By Default
         private Timer timer;
         public event ITokenGeneration.TokenTimeoutHandler TokenTimeoutEvent;
         #endregion

@@ -63,11 +63,11 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Components
         #region - IHanldes -
         #endregion
         #region - Properties -
-        //public int Reason { get; set; }
-        //public int CutFirstStart { get; set; }
-        //public int CutFirstEnd { get; set; }
-        //public int CutSecondStart { get; set; }
-        //public int CutSecondEnd { get; set; }
+        //int Reason { get; set; }
+        //int CutFirstStart { get; set; }
+        //int CutFirstEnd { get; set; }
+        //int CutSecondStart { get; set; }
+        //int CutSecondEnd { get; set; }
         #endregion
         #region - Attributes -
         #endregion

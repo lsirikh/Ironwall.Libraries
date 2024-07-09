@@ -71,6 +71,7 @@ namespace Ironwall.Libraries.Map.UI.Providers.ViewModels
                         if (item.Map != SelectedMapNumber) continue;
                         Add(item);
                     }
+                    Completed?.Invoke();
                 }
                 catch (Exception ex)
                 {
@@ -150,6 +151,7 @@ namespace Ironwall.Libraries.Map.UI.Providers.ViewModels
         #endregion
         #region - Attributes -
         private SymbolViewModelProvider _provider;
+        public event Action Completed;
         #endregion
     }
 }

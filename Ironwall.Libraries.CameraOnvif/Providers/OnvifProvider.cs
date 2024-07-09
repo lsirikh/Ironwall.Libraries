@@ -1,9 +1,14 @@
-﻿using Ironwall.Framework.Models.Devices;
+﻿using Ironwall.Framework.DataProviders;
+using Ironwall.Framework.Models.Devices;
+using Ironwall.Libraries.Base.Services;
 using Ironwall.Libraries.CameraOnvif.Models;
 using Ironwall.Libraries.Devices.Providers;
 using System;
+using System.Collections.Specialized;
 using System.Diagnostics;
+using System.IdentityModel.Metadata;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Ironwall.Libraries.CameraOnvif.Providers
@@ -17,7 +22,7 @@ namespace Ironwall.Libraries.CameraOnvif.Providers
         Email        : lsirikh@naver.com                                         
      ****************************************************************************/
 
-    public sealed class OnvifProvider : OnvifBaseProvider
+    public class OnvifProvider : BaseProvider<IOnvifModel>, ILoadable
     {
 
         #region - Ctors -
@@ -25,84 +30,90 @@ namespace Ironwall.Libraries.CameraOnvif.Providers
         {
             ClassName = nameof(OnvifProvider);
             _provider = provider;
-
-            _provider.Refresh += Provider_Initialize;
-            _provider.Inserted += Provider_Insert;
-            _provider.Deleted += Provider_Delete;
+            _provider.CollectionEntity.CollectionChanged += CollectionEntity_CollectionChanged;
         }
+
         #endregion
         #region - Implementation of Interface -
+        public Task<bool> Initialize(CancellationToken token = default)
+        {
+            try
+            {
+                Clear();
+                foreach (var item in _provider.OfType<ICameraDeviceModel>().ToList())
+                {
+                    var model = new OnvifModel(item);
+                    Add(model);
+                }
+
+                return Task.FromResult(true);
+            }
+            catch (System.Exception ex)
+            {
+                Debug.WriteLine($"Raised exception in {nameof(Initialize)} of {ClassName}: {ex.Message} ");
+                return Task.FromResult(false);
+            }
+        }
+
+        public void Uninitialize()
+        {
+            _provider.CollectionEntity.CollectionChanged -= CollectionEntity_CollectionChanged;
+            Clear();
+        }
         #endregion
         #region - Overrides -
         #endregion
         #region - Binding Methods -
         #endregion
         #region - Processes -
-        private Task<bool> Provider_Initialize()
+        private void CollectionEntity_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            return Task.Run(() =>
+            switch (e.Action)
             {
-                try
-                {
-                    Debug.WriteLine($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.ffffff")}]{nameof(Provider_Initialize)}({ClassName}) was executed!!!");
-                    Clear();
-                    foreach (var item in _provider.ToList())
+                case NotifyCollectionChangedAction.Add:
+                    // New items added
+                    foreach (CameraDeviceModel newItem in e.NewItems)
                     {
-                        if (!(item is ICameraDeviceModel model)) continue;
-
-                        Add(new OnvifModel(model));
+                        var item = new OnvifModel(newItem);
+                        Add(item);
                     }
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"Raised Exception in {nameof(Provider_Initialize)}({ClassName}) : {ex.Message}");
-                    return false;
-                }
+                    break;
 
-            });
-        }
-
-        private Task<bool> Provider_Insert(IBaseDeviceModel item)
-        {
-            return Task.Run(() =>
-            {
-                try
-                {
-                    //Debug.WriteLine($"[{model.Id}]{ClassName} was executed({CollectionEntity.Count()})!!!");
-                    Add(new OnvifModel(item as ICameraDeviceModel));
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"Raised Exception in {nameof(Provider_Insert)}({ClassName}) : {ex.Message}");
-                    return false;
-                }
-            });
-        }
-
-        private Task<bool> Provider_Delete(IBaseDeviceModel item)
-        {
-            bool ret = false;
-            return Task.Run(() =>
-            {
-                try
-                {
-                    var searchedItem = CollectionEntity.Where(t => t == item as ICameraDeviceModel).FirstOrDefault();
-                    if (searchedItem != null)
+                case NotifyCollectionChangedAction.Remove:
+                    // Items removed
+                    foreach (CameraDeviceModel oldItem in e.OldItems)
                     {
-                        Remove(searchedItem);
-                        ret = true;
+                        var item = CollectionEntity.Where(entity => entity.CameraDeviceModel.Id == oldItem.Id).FirstOrDefault();
+                        Remove(item);
                     }
-                    return ret;
+                    break;
 
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"Raised Exception in {nameof(Provider_Delete)}({ClassName}) : {ex.Message}");
-                    return ret;
-                }
-            });
+                case NotifyCollectionChangedAction.Replace:
+                    // Some items replaced
+                    int index = 0;
+                    foreach (CameraDeviceModel oldItem in e.OldItems)
+                    {
+                        var item = CollectionEntity.Where(entity => entity.CameraDeviceModel.Id == oldItem.Id).FirstOrDefault();
+                        index = CollectionEntity.IndexOf(item);
+                        Remove(item);
+                    }
+                    foreach (CameraDeviceModel newItem in e.NewItems)
+                    {
+                        var item = new OnvifModel(newItem);
+                        Add(item, index);
+                    }
+                    break;
+
+                case NotifyCollectionChangedAction.Reset:
+                    // The whole list is refreshed
+                    CollectionEntity.Clear();
+                    foreach (var newItem in _provider.OfType<ICameraDeviceModel>().ToList())
+                    {
+                        var item = new OnvifModel(newItem);
+                        Add(item);
+                    }
+                    break;
+            }
         }
         #endregion
         #region - IHanldes -

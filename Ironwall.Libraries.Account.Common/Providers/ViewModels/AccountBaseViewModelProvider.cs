@@ -20,7 +20,7 @@ namespace Ironwall.Libraries.Account.Common.Providers.ViewModels
             ClassName = nameof(AccountBaseViewModelProvider);
         }
 
-        
+
         #endregion
         #region - Implementation of Interface -
         public override async Task<bool> Finished()

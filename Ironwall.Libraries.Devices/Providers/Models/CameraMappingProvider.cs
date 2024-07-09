@@ -1,4 +1,7 @@
-﻿namespace Ironwall.Libraries.Devices.Providers.Models
+﻿using Ironwall.Framework.DataProviders;
+using Ironwall.Framework.Models.Devices;
+
+namespace Ironwall.Libraries.Devices.Providers.Models
 {
     /****************************************************************************
         Purpose      :                                                           
@@ -9,9 +12,8 @@
         Email        : lsirikh@naver.com                                         
      ****************************************************************************/
 
-    public class CameraMappingProvider : CameraMappingBaseProvider
+    public class CameraMappingProvider : BaseProvider<ICameraMappingModel>
     {
-
         #region - Ctors -
         public CameraMappingProvider()
         {

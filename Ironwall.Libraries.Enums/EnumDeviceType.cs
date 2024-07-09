@@ -6,26 +6,26 @@ using System.Threading.Tasks;
 
 namespace Ironwall.Libraries.Enums
 {
-    public enum EnumDeviceType : int
+    public enum EnumDeviceType
     {
-        NONE = 0,
-        Controller = 1,
-        Multi = 2,
-        Fence = 3,
-        Underground = 4,
-        Contact = 5,
-        PIR = 6,
-        IoController = 7,
-        Laser = 8,
+        NONE,
+        Controller,
+        Multi,
+        Fence,
+        Underground,
+        Contact,
+        PIR,
+        IoController,
+        Laser,
 
-        Cable = 9,
-        IpCamera = 10,
+        Cable,
+        IpCamera,
 
-        IpSpeaker = 11,
-        Radar = 12,
-        OpticalCable = 13,
+        IpSpeaker,
+        Radar,
+        OpticalCable,
 
-        Fence_Line = 20,
+        Fence_Line,
     }
     
 }

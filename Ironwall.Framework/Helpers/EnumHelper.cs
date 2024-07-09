@@ -9,90 +9,102 @@ namespace Ironwall.Framework.Helpers
 {
     public static class EnumHelper
     {
-
-        public static int GetEventType(int type)
+        public static bool GetStatusType(EnumTrueFalse type)
         {
+            switch (type)
+            {
+                case EnumTrueFalse.False:
+                    return false;
+                case EnumTrueFalse.True:
+                    return true;
+                default:
+                    return false;
+            }
+        }
 
-            int returnValue = 0;
+        public static EnumTrueFalse SetStatusType(bool type)
+        {
+            if (type)
+                return EnumTrueFalse.True;
+            else
+                return EnumTrueFalse.False;
+        }
+
+        public static EnumEventType? GetEventType(EnumCmdType type)
+        {
 
             switch (type)
             {
-                case (int)EnumCmdType.LOGIN_REQUEST:
-                case (int)EnumCmdType.LOGIN_REQUEST_FORCE:
-                case (int)EnumCmdType.LOGIN_RESPONSE:
+                case EnumCmdType.LOGIN_REQUEST:
+                case EnumCmdType.LOGIN_REQUEST_FORCE:
+                case EnumCmdType.LOGIN_RESPONSE:
                     {
                     }
                     break;
-                case (int)EnumCmdType.LOGOUT_REQUEST:
-                case (int)EnumCmdType.LOGOUT_REQUEST_FORCE_LOGIN:
-                case (int)EnumCmdType.LOGOUT_REQUEST_TIMEOUT:
-                case (int)EnumCmdType.LOGOUT_RESPONSE:
-                    {
-
-                    }
-                    break;
-                case (int)EnumCmdType.SESSION_REFRESH_REQUEST:
-                case (int)EnumCmdType.SESSION_REFRESH_RESPONSE:
+                case EnumCmdType.LOGOUT_REQUEST:
+                case EnumCmdType.LOGOUT_REQUEST_FORCE_LOGIN:
+                case EnumCmdType.LOGOUT_REQUEST_TIMEOUT:
+                case EnumCmdType.LOGOUT_RESPONSE:
                     {
 
                     }
                     break;
-                case (int)EnumCmdType.USER_ACCOUNT_ADD_REQUEST:
-                case (int)EnumCmdType.USER_ACCOUNT_ADD_RESPONSE:
+                case EnumCmdType.SESSION_REFRESH_REQUEST:
+                case EnumCmdType.SESSION_REFRESH_RESPONSE:
+                    {
+
+                    }
+                    break;
+                case EnumCmdType.USER_ACCOUNT_ADD_REQUEST:
+                case EnumCmdType.USER_ACCOUNT_ADD_RESPONSE:
                     {
 
                     }
                     break;
 
-                case (int)EnumCmdType.USER_ACCOUNT_EDIT_REQUEST:
-                case (int)EnumCmdType.USER_ACCOUNT_EDIT_RESPONSE:
+                case EnumCmdType.USER_ACCOUNT_EDIT_REQUEST:
+                case EnumCmdType.USER_ACCOUNT_EDIT_RESPONSE:
                     {
 
                     }
                     break;
-                case (int)EnumCmdType.USER_ACCOUNT_DELETE_REQUEST:
-                case (int)EnumCmdType.USER_ACCOUNT_DELETE_RESPONSE:
+                case EnumCmdType.USER_ACCOUNT_DELETE_REQUEST:
+                case EnumCmdType.USER_ACCOUNT_DELETE_RESPONSE:
                     {
 
                     }
                     break;
-                case (int)EnumCmdType.USER_ACCOUNT_INFO_REQUEST:
-                case (int)EnumCmdType.USER_ACCOUNT_INFO_RESPONSE:
+                case EnumCmdType.USER_ACCOUNT_INFO_REQUEST:
+                case EnumCmdType.USER_ACCOUNT_INFO_RESPONSE:
                     {
                     }
                     break;
                 
-                case (int)EnumCmdType.EVENT_DETECTION_REQUEST:
-                case (int)EnumCmdType.EVENT_DETECTION_RESPONSE:
+                case EnumCmdType.EVENT_DETECTION_REQUEST:
+                case EnumCmdType.EVENT_DETECTION_RESPONSE:
                     {
-                        returnValue = (int)EnumEventType.Intrusion;
+                        return EnumEventType.Intrusion;
                     }
-                    break;
-                
-                case (int)EnumCmdType.EVENT_MALFUNCTION_REQUEST:
-                case (int)EnumCmdType.EVENT_MALFUNCTION_RESPONSE:
+                case EnumCmdType.EVENT_MALFUNCTION_REQUEST:
+                case EnumCmdType.EVENT_MALFUNCTION_RESPONSE:
                     {
-                        returnValue = (int)EnumEventType.Fault;
+                        return EnumEventType.Fault;
                     }
-                    break;
-                case (int)EnumCmdType.EVENT_ACTION_REQUEST:
-                case (int)EnumCmdType.EVENT_ACTION_RESPONSE:
+                case EnumCmdType.EVENT_ACTION_REQUEST:
+                case EnumCmdType.EVENT_ACTION_RESPONSE:
                     {
-                        returnValue = (int)EnumEventType.Action;
+                        return EnumEventType.Action;
                     }
-                    break;
-                case (int)EnumCmdType.EVENT_CONNECTION_REQUEST:
-                case (int)EnumCmdType.EVENT_CONNECTION_RESPONSE:
+                case EnumCmdType.EVENT_CONNECTION_REQUEST:
+                case EnumCmdType.EVENT_CONNECTION_RESPONSE:
                     {
-                        returnValue = (int)EnumEventType.Connection;
+                        return EnumEventType.Connection;
                     }
-                    break;
-                
                 default:
                     break;
             }
 
-            return returnValue;
+            return null;
         }
     }
 }

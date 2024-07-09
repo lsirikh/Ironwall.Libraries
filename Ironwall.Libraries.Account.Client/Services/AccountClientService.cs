@@ -3,10 +3,13 @@ using Ironwall.Framework.Models;
 using Ironwall.Framework.Models.Accounts;
 using Ironwall.Framework.Models.Communications;
 using Ironwall.Framework.Models.Communications.Accounts;
+using Ironwall.Framework.ViewModels;
 using Ironwall.Libraries.Base.DataProviders;
+using Ironwall.Libraries.Base.Services;
 using Ironwall.Libraries.Tcp.Client.Services;
 using Ironwall.Libraries.Tcp.Common.Models;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -22,10 +25,9 @@ namespace Ironwall.Libraries.Account.Client.Services
     public abstract class AccountClientService : TcpClient, IAccountClientService
     {
         #region - Ctors -
-        public AccountClientService
-            (TcpSetupModel tcpSetupModel)
-            : base(tcpSetupModel)
+        protected AccountClientService(ILogService log, TcpSetupModel tcpSetupModel): base(log, tcpSetupModel)
         {
+            
         }
         #endregion
         #region - Implementation of Interface -
@@ -33,22 +35,19 @@ namespace Ironwall.Libraries.Account.Client.Services
         {
             try
             {
-                //Debug.WriteLine($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.ff")}][{nameof(SessionTick)}] TICK...{(int)(DateTime.Parse(LoginSessionModel?.TimeExpired) - DateTime.Now).Seconds}");
-
-                if ((DateTime.Parse(LoginSessionModel?.TimeExpired) - DateTime.Now) < TimeSpan.FromSeconds(20))
-                //if (DateTime.Now - DateTime.Parse(LoginSessionModel?.TimeExpired) > TimeSpan.Zero)
+                if ((LoginSessionModel?.TimeExpired - DateTime.Now) < TimeSpan.FromSeconds(30))
                 {
-                    Debug.WriteLine($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}]Request Session Updated...");
+                    _log.Info($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}]Request Session Updated...");
 
                     var requestModel = RequestFactory.Build<KeepAliveRequestModel>(LoginSessionModel.Token);
-                    var msg = JsonConvert.SerializeObject(requestModel);
+                    var msg = JsonConvert.SerializeObject(requestModel, _settings);
 
                     await SendRequest(msg);
                 }
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Raised Exception in Tick : {ex.Message}");
+                _log.Error($"Raised Exception in Tick : {ex.Message}");
                 SetSessionTimerStop();
                 InitSessionTimer();
                 CallRefresh?.Invoke();
@@ -61,13 +60,13 @@ namespace Ironwall.Libraries.Account.Client.Services
             {
                 try
                 {
-                    var msg = JsonConvert.SerializeObject(requestModel);
+                    var msg = JsonConvert.SerializeObject(requestModel, _settings);
                     await SendRequest(msg);
                     return true;
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception in {nameof(LoginRequest)} : {ex.Message}");
+                    _log.Error($"Raised Exception in {nameof(LoginRequest)} : {ex.Message}");
                     return false;
                 }
             });
@@ -92,7 +91,7 @@ namespace Ironwall.Libraries.Account.Client.Services
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception in Login : {ex.Message}");
+                    _log.Error($"Raised Exception in Login : {ex.Message}");
                     return false;
                 }
             });
@@ -104,13 +103,13 @@ namespace Ironwall.Libraries.Account.Client.Services
             {
                 try
                 {
-                    var msg = JsonConvert.SerializeObject(requestModel);
+                    var msg = JsonConvert.SerializeObject(requestModel, _settings);
                     await SendRequest(msg);
                     return true;
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception in {nameof(CheckIdRequest)} : {ex.Message}");
+                    _log.Error($"Raised Exception in {nameof(CheckIdRequest)} : {ex.Message}");
                     return false;
                 }
             });
@@ -130,7 +129,7 @@ namespace Ironwall.Libraries.Account.Client.Services
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception in {nameof(CheckIdResponse)} : {ex.Message}");
+                    _log.Error($"Raised Exception in {nameof(CheckIdResponse)} : {ex.Message}");
                     return false;
                 }
             });
@@ -145,13 +144,13 @@ namespace Ironwall.Libraries.Account.Client.Services
                     if (LoginSessionModel == null)
                         return false;
 
-                    var msg = JsonConvert.SerializeObject(requestModel);
+                    var msg = JsonConvert.SerializeObject(requestModel, _settings);
                     await SendRequest(msg);
                     return true;
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception in {nameof(KeepAliveRequest)} : {ex.Message}");
+                    _log.Error($"Raised Exception in {nameof(KeepAliveRequest)} : {ex.Message}");
                     return false;
                 }
             });
@@ -166,7 +165,7 @@ namespace Ironwall.Libraries.Account.Client.Services
                     if (LoginSessionModel == null)
                         return false;
 
-                    if (!response.Success)
+                    if (response == null || !response.Success)
                     {
                         SetSessionTimerStop();
                         InitSessionTimer();
@@ -174,12 +173,12 @@ namespace Ironwall.Libraries.Account.Client.Services
                         return false;
                     }
 
-                    LoginSessionModel.TimeExpired = response?.TimeExpired;
+                    LoginSessionModel.TimeExpired = response.TimeExpired;
                     return true;
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception in {nameof(KeepAliveResponse)} : {ex.Message}");
+                    _log.Error($"Raised Exception in {nameof(KeepAliveResponse)} : {ex.Message}");
                     return false;
                 }
             });
@@ -194,7 +193,7 @@ namespace Ironwall.Libraries.Account.Client.Services
                     if (LoginSessionModel == null)
                         return false;
 
-                    var msg = JsonConvert.SerializeObject(requestModel);
+                    var msg = JsonConvert.SerializeObject(requestModel, _settings);
                     await SendRequest(msg);
 
                     CallRefresh?.Invoke();
@@ -202,7 +201,7 @@ namespace Ironwall.Libraries.Account.Client.Services
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception in {nameof(LogoutRequest)} : {ex.Message}");
+                    _log.Error($"Raised Exception in {nameof(LogoutRequest)} : {ex.Message}");
                     return false;
                 }
             });
@@ -229,7 +228,7 @@ namespace Ironwall.Libraries.Account.Client.Services
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception in Login : {ex.Message}");
+                    _log.Error($"Raised Exception in Login : {ex.Message}");
                     return false;
                 }
             });
@@ -244,13 +243,13 @@ namespace Ironwall.Libraries.Account.Client.Services
                     //if (LoginSessionModel == null)
                     //    return false;
 
-                    var msg = JsonConvert.SerializeObject(requestModel);
+                    var msg = JsonConvert.SerializeObject(requestModel, _settings);
                     await SendRequest(msg);
                     return true;
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception in {nameof(RegisterRequest)} : {ex.Message}");
+                    _log.Error($"Raised Exception in {nameof(RegisterRequest)} : {ex.Message}");
                     return false;
                 }
             });
@@ -270,7 +269,7 @@ namespace Ironwall.Libraries.Account.Client.Services
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception in RegisterResponse : {ex.Message}");
+                    _log.Error($"Raised Exception in RegisterResponse : {ex.Message}");
                     return false;
                 }
             });
@@ -285,13 +284,13 @@ namespace Ironwall.Libraries.Account.Client.Services
                     if (LoginSessionModel == null)
                         return false;
 
-                    var msg = JsonConvert.SerializeObject(requestModel);
+                    var msg = JsonConvert.SerializeObject(requestModel, _settings);
                     await SendRequest(msg);
                     return true;
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception in {nameof(AccountAllRequest)} : {ex.Message}");
+                    _log.Error($"Raised Exception in {nameof(AccountAllRequest)} : {ex.Message}");
                     return false;
                 }
             });
@@ -314,7 +313,7 @@ namespace Ironwall.Libraries.Account.Client.Services
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception in RegisterResponse : {ex.Message}");
+                    _log.Error($"Raised Exception in RegisterResponse : {ex.Message}");
                     return false;
                 }
             });
@@ -329,13 +328,13 @@ namespace Ironwall.Libraries.Account.Client.Services
                     if (LoginSessionModel == null)
                         return false;
 
-                    var msg = JsonConvert.SerializeObject(requestModel);
+                    var msg = JsonConvert.SerializeObject(requestModel, _settings);
                     await SendRequest(msg);
                     return true;
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception in {nameof(AccountInfoRequest)} : {ex.Message}");
+                    _log.Error($"Raised Exception in {nameof(AccountInfoRequest)} : {ex.Message}");
                     return false;
                 }
             });
@@ -361,7 +360,7 @@ namespace Ironwall.Libraries.Account.Client.Services
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception in RegisterResponse : {ex.Message}");
+                    _log.Error($"Raised Exception in RegisterResponse : {ex.Message}");
                     return false;
                 }
             });
@@ -376,13 +375,13 @@ namespace Ironwall.Libraries.Account.Client.Services
                     if (LoginSessionModel == null)
                         return false;
 
-                    var msg = JsonConvert.SerializeObject(requestModel);
+                    var msg = JsonConvert.SerializeObject(requestModel, _settings);
                     await SendRequest(msg);
                     return true;
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception in {nameof(EditRequest)} : {ex.Message}");
+                    _log.Error($"Raised Exception in {nameof(EditRequest)} : {ex.Message}");
                     return false;
                 }
             });
@@ -409,7 +408,7 @@ namespace Ironwall.Libraries.Account.Client.Services
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception in RegisterResponse : {ex.Message}");
+                    _log.Error($"Raised Exception in RegisterResponse : {ex.Message}");
                     return false;
                 }
             });
@@ -424,13 +423,13 @@ namespace Ironwall.Libraries.Account.Client.Services
                     if (LoginSessionModel == null)
                         return false;
 
-                    var msg = JsonConvert.SerializeObject(requestModel);
+                    var msg = JsonConvert.SerializeObject(requestModel, _settings);
                     await SendRequest(msg);
                     return true;
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception in {nameof(DeleteRequest)} : {ex.Message}");
+                    _log.Error($"Raised Exception in {nameof(DeleteRequest)} : {ex.Message}");
                     return false;
                 }
             });
@@ -457,7 +456,7 @@ namespace Ironwall.Libraries.Account.Client.Services
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception in RegisterResponse : {ex.Message}");
+                    _log.Error($"Raised Exception in RegisterResponse : {ex.Message}");
                     return false;
                 }
             });
@@ -472,13 +471,13 @@ namespace Ironwall.Libraries.Account.Client.Services
                     if (LoginSessionModel == null)
                         return false;
 
-                    var msg = JsonConvert.SerializeObject(requestModel);
+                    var msg = JsonConvert.SerializeObject(requestModel, _settings);
                     await SendRequest(msg);
                     return true;
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception in {nameof(AccountDeleteAllRequest)} : {ex.Message}");
+                    _log.Error($"Raised Exception in {nameof(AccountDeleteAllRequest)} : {ex.Message}");
                     return false;
                 }
             });

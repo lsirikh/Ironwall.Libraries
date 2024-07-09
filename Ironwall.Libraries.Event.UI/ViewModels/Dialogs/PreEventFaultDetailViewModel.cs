@@ -1,6 +1,7 @@
 ﻿using Caliburn.Micro;
 using Ironwall.Framework.Models.Devices;
 using Ironwall.Framework.Models.Events;
+using Ironwall.Libraries.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,13 +29,13 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Dialogs
         #region - IHanldes -
         #endregion
         #region - Properties -
-        public string Id => _eventViewModel.Id;
+        public int Id => _eventViewModel.Id;
 
         public DateTime DateTime => _eventViewModel.DateTime;
 
         public string EventGroup => _eventViewModel.EventGroup;
 
-        public int Reason => MalfunctionEventModel.Reason;
+        public EnumFaultType Reason => MalfunctionEventModel.Reason;
 
         public int FirstStart => MalfunctionEventModel.FirstStart;
         
@@ -44,7 +45,7 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Dialogs
 
         public int SecondEnd => MalfunctionEventModel.SecondEnd;
 
-        public int Status => _eventViewModel.Status;
+        public EnumTrueFalse Status => _eventViewModel.Status;
 
         public string TagFault => EventViewModel.TagFault;
 

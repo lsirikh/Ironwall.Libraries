@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Ironwall.Libraries.Devices.Providers
 {
-    class DapperTestClass
+    public class DapperTestClass
     { }
     /*: TaskService, IDataProviderService
     {
@@ -20,7 +20,7 @@ namespace Ironwall.Libraries.Devices.Providers
             , CameraDeviceProvider cameraDeviceProvider
             )
         {
-            _dbConnection = dbConnection;
+            _conn = dbConnection;
             _setupModel = setupModel;
 
             _controllerDeivceProvider = controllerDeviceProvider;
@@ -61,10 +61,10 @@ namespace Ironwall.Libraries.Devices.Providers
         {
             try
             {
-                if (_dbConnection.State != ConnectionState.Open)
-                    await (_dbConnection as DbConnection).OpenAsync();
+                if (_conn.State != ConnectionState.Open)
+                    await (_conn as DbConnection).OpenAsync();
 
-                using var cmd = _dbConnection.CreateCommand();
+                using var cmd = _conn.CreateCommand();
 
                 //Create TableDevice Device DB Table
                 var dbTable = _setupModel.TableDevice;
@@ -127,7 +127,7 @@ namespace Ironwall.Libraries.Devices.Providers
                                            )";
                 cmd.ExecuteNonQuery();*//*
 
-                _dbConnection.Close();
+                _conn.Close();
             }
             catch (Exception ex)
             {
@@ -139,15 +139,15 @@ namespace Ironwall.Libraries.Devices.Providers
         {
             try
             {
-                if (_dbConnection.State != ConnectionState.Open)
-                    await (_dbConnection as DbConnection).OpenAsync();
+                if (_conn.State != ConnectionState.Open)
+                    await (_conn as DbConnection).OpenAsync();
 
                 //제어기 등록
                 await Task.Run(async () =>
                 {
                     try
                     {
-                        var conn = _dbConnection as SQLiteConnection;
+                        var conn = _conn as SQLiteConnection;
 
                         for (int i = 1; i < 10; i++)
                         {
@@ -155,7 +155,7 @@ namespace Ironwall.Libraries.Devices.Providers
                             int id = 1;
                             try
                             {
-                                id = (await _dbConnection
+                                id = (await _conn
                                         .QueryAsync<int>($"SELECT MAX(id) FROM {_setupModel.TableDevice};"))
                                         .FirstOrDefault() + 1;
                             }
@@ -174,7 +174,7 @@ namespace Ironwall.Libraries.Devices.Providers
                             await conn.ExecuteAsync(sql);
 
                             //Get controller Id
-                            var conId = (await _dbConnection
+                            var conId = (await _conn
                                         .QueryAsync<int>($@"
                                         SELECT d.id 
                                         FROM {_setupModel.TableDevice} d
@@ -203,7 +203,7 @@ namespace Ironwall.Libraries.Devices.Providers
                 {
                     try
                     {
-                        var conn = _dbConnection as SQLiteConnection;
+                        var conn = _conn as SQLiteConnection;
 
                         for (int i = 1; i < 10; i++)
                         {
@@ -213,7 +213,7 @@ namespace Ironwall.Libraries.Devices.Providers
                                 int id = 1;
                                 try
                                 {
-                                    id = (await _dbConnection
+                                    id = (await _conn
                                             .QueryAsync<int>($"SELECT MAX(id) FROM {_setupModel.TableDevice};"))
                                             .FirstOrDefault() + 1;
                                 }
@@ -231,7 +231,7 @@ namespace Ironwall.Libraries.Devices.Providers
                                 await conn.ExecuteAsync(sql);
 
                                 //Get controller Id
-                                var conId = (await _dbConnection
+                                var conId = (await _conn
                                             .QueryAsync<int>($@"
                                         SELECT d.id 
                                         FROM {_setupModel.TableController} d
@@ -255,7 +255,7 @@ namespace Ironwall.Libraries.Devices.Providers
                     }
                 });
 
-                _dbConnection.Close();
+                _conn.Close();
             }
             catch (Exception)
             {
@@ -268,8 +268,8 @@ namespace Ironwall.Libraries.Devices.Providers
         {
             try
             {
-                if (_dbConnection.State != ConnectionState.Open)
-                    await (_dbConnection as DbConnection).OpenAsync();
+                if (_conn.State != ConnectionState.Open)
+                    await (_conn as DbConnection).OpenAsync();
 
                 ///////////////////////////////////////////////////////////////////
                 ///                   CONTROLLER Device
@@ -282,14 +282,14 @@ namespace Ironwall.Libraries.Devices.Providers
                             INNER JOIN {_setupModel.TableDevice} d ON d.id = c.controller
                             ";
 
-                foreach (var model in (_dbConnection
+                foreach (var model in (_conn
                     .Query<ControllerDeviceModel>(sql).ToList()))
                 {
                     _controllerDeivceProvider.Add(model);
                 }
 
                 ///////////////////////////////////////////////////////////////////
-                ///                   Camera Device
+                ///                   Body Device
                 ///////////////////////////////////////////////////////////////////
 
                 //DeviceType에 따라서 다른 방식으로 Fetch해온다.
@@ -299,7 +299,7 @@ namespace Ironwall.Libraries.Devices.Providers
                         INNER JOIN {_setupModel.TableCamera} a ON d.id = a.camera
                         WHERE devicetype = '10'";
 
-                foreach (var model in (_dbConnection
+                foreach (var model in (_conn
                     .Query<CameraDeviceModel>(sql).ToList()))
                 {
                     _cameraDeviceProvider.Add(model);
@@ -310,7 +310,7 @@ namespace Ironwall.Libraries.Devices.Providers
                 ///////////////////////////////////////////////////////////////////
                 *//*sql = $@"SELECT * FROM {_setupModel.TableSensor}";
 
-                foreach (var model in (_dbConnection
+                foreach (var model in (_conn
                     .Query<SensorDeviceModel>(sql).ToList()))
                 {
                     _sensorDeviceProvider.Add(model);
@@ -333,7 +333,7 @@ namespace Ironwall.Libraries.Devices.Providers
                          ;";
 
                 var dt = new DataTable();
-                using (var cmd = _dbConnection.CreateCommand())
+                using (var cmd = _conn.CreateCommand())
                 {
                     cmd.CommandText = $@"SELECT *
                          FROM {_setupModel.TableDevice} d 
@@ -348,7 +348,7 @@ namespace Ironwall.Libraries.Devices.Providers
                     Debug.WriteLine($"{item["id"] as int?}");
                 }
 
-                *//*foreach (var model in await (_dbConnection
+                *//*foreach (var model in await (_conn
                     .QueryAsync<SensorDeviceModel, ControllerDeviceModel, SensorDeviceModel>(sql, (sensor, controller) =>
                     //.QueryAsync<SensorDeviceModel>(sql)))
                     {
@@ -360,7 +360,7 @@ namespace Ironwall.Libraries.Devices.Providers
                 }*//*
 
 
-                _dbConnection.Close();
+                _conn.Close();
             }
             catch (Exception)
             {
@@ -378,7 +378,7 @@ namespace Ironwall.Libraries.Devices.Providers
         private ControllerDeviceProvider _controllerDeivceProvider;
         private SensorDeviceProvider _sensorDeviceProvider;
         private CameraDeviceProvider _cameraDeviceProvider;
-        private IDbConnection _dbConnection;
+        private IDbConnection _conn;
         #endregion
 
 

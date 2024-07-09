@@ -28,7 +28,7 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Components
             //Status = model.Status;
         }
 
-        //public PostIntrusionEventViewModel(ActionEventModel actionModel)
+        //PostIntrusionEventViewModel(ActionEventModel actionModel)
         //    : base(actionModel.FromEvent)
         //{
 

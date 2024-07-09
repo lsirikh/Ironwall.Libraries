@@ -2,7 +2,7 @@
 
 namespace Ironwall.Libraries.Device.UI.ViewModels
 {
-    public interface ICameraProfileViewModel : ICameraOptionViewModel
+    interface ICameraProfileViewModel : ICameraOptionViewModel
     {
         string Profile { get; set; }
 

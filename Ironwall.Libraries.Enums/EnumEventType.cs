@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Ironwall.Libraries.Enums
 {
-    public enum EnumEventType : int
+    public enum EnumEventType
     {
         // 침입 (90: 0x5A)
         Intrusion = 0x5A,

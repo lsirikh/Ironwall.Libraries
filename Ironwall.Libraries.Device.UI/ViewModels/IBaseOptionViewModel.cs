@@ -4,8 +4,8 @@ using System.Windows;
 
 namespace Ironwall.Libraries.Device.UI.ViewModels
 {
-    public interface IBaseOptionViewModel<T> : IBaseCustomViewModel<T> where T : IOptionBaseModel
+    public interface IBaseOptionViewModel<T> : IBaseCustomViewModel<T> where T : IBaseOptionModel
     {
-        string ReferenceId { get; set; }
+        int ReferenceId { get; set; }
     }
 }

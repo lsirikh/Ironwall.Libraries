@@ -105,41 +105,34 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Panels
 
         public Task HandleAsync(ActionReportResultMessageModel message, CancellationToken cancellationToken)
         {
-            //return Task.Run(() => 
-            //{
+            return Task.Run(() =>
+            {
+
+                IActionEventModel model = message.Model.Body;
+                try
+                {
+                    foreach (var item in PreEventProvider.ToList())
+                    {
+                        if (item.Id == model.FromEvent.Id)
+                        {
+                            var visitor = new EventViewModelVisitor(PreEventProvider, PostEventProvider, _eventSetupModel);
+                            //item.Id = message.Model.Body.Id;
+
+                            var actionModel = ActionEventProvider.Where(t => t.Id == model.Id).FirstOrDefault() as ActionEventModel;
+
+                            ///Visitor 패턴에 추가 파라미터 붙이기!!!!!!!!!!!!!!!
+                            ((IEventViewModelVisitee)item).Accept(visitor, actionModel);
+                        }
+                    }
 
 
-            //    try
-            //    {
-            //        foreach (var item in PreEventProvider.ToList())
-            //        {
-            //            if (item.Id == message.Model.RequestModel.EventId)
-            //            {
-            //                var visitor = new EventViewModelVisitor(PreEventProvider, PostEventProvider, _eventSetupModel);
-            //                //item.Id = message.Model.RequestModel.EventId;
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Raised Exception in {nameof(HandleAsync)} of {nameof(ActionReportResultMessageModel)} in {nameof(PreEventListPanelViewModel)} : {ex.Message}");
+                }
+            });
 
-            //                var actionModel = ActionEventProvider.Where(t => t.Id == message.Model.RequestModel.Id).FirstOrDefault() as ActionEventModel;
-            //                //item.ActionId = message.Model.RequestModel.Id;
-            //                //DateTime actionReportDateTime;
-            //                //DateTime.TryParse(message.Model.RequestModel.DateTime, out actionReportDateTime);
-            //                //item.DateTimeAction = actionReportDateTime;
-
-            //                ///Visitor 패턴에 추가 파라미터 붙이기!!!!!!!!!!!!!!!
-            //                ((IEventViewModelVisitee)item).Accept(visitor, actionModel);
-            //            }
-            //        }
-
-
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        Debug.WriteLine($"Raised Exception in {nameof(HandleAsync)} of {nameof(ActionReportResultMessageModel)} in {nameof(PreEventListPanelViewModel)} : {ex.Message}");
-            //    }
-            //});
-            
-            var eventViewModel = PreEventProvider.Where(entity => entity.EventModel.Id == message.Model.RequestModel.EventId).FirstOrDefault();
-            eventViewModel.ExecuteActionEvent(message.Model);
-            return Task.CompletedTask;
         }
         #endregion
         #region - IHanldes -

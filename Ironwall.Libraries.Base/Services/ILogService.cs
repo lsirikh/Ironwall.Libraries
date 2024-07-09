@@ -2,8 +2,8 @@
 {
     public interface ILogService
     {
-        void Error(string msg, bool debug = true);
-        void Info(string msg, bool debug = true);
-        void Warning(string msg, bool debug = true);
+        public void Error(string msg, bool debug = true);
+        public void Info(string msg, bool debug = true);
+        public void Warning(string msg, bool debug = true);
     }
 }

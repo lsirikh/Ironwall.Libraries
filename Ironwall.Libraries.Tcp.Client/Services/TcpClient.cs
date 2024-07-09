@@ -2,6 +2,7 @@
 using Ironwall.Framework.Models.Accounts;
 using Ironwall.Framework.Models.Communications;
 using Ironwall.Framework.Models.Communications.Settings;
+using Ironwall.Libraries.Base.Services;
 using Ironwall.Libraries.Enums;
 using Ironwall.Libraries.Tcp.Common;
 using Ironwall.Libraries.Tcp.Common.Defines;
@@ -9,6 +10,7 @@ using Ironwall.Libraries.Tcp.Common.Models;
 using Ironwall.Libraries.Tcp.Packets.Models;
 using Ironwall.Libraries.Tcp.Packets.Services;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -23,19 +25,20 @@ using static Ironwall.Libraries.Tcp.Common.Defines.ITcpCommon;
 
 namespace Ironwall.Libraries.Tcp.Client.Services
 {
-    public abstract class TcpClient
-        : TcpSocket, ITcpClient, ITcpDataModel
+    public abstract class TcpClient : TcpSocket, ITcpClient, ITcpDataModel
     {
         #region - Ctors -
-        public TcpClient()
+        protected TcpClient(ILogService log, TcpSetupModel tcpSetupModel)
         {
-
-        }
-        public TcpClient(TcpSetupModel tcpSetupModel)
-        {
+            _log = log;
             _tcpSetupModel = tcpSetupModel;
            
             _locker = new object();
+            _settings = new JsonSerializerSettings
+            {
+                Converters = new List<JsonConverter> { new StringEnumConverter() },
+                DateFormatString = "yyyy-MM-ddTHH:mm:ss.ff"
+            };
         }
         #endregion
         #region - Implementation of Interface -
@@ -63,7 +66,7 @@ namespace Ironwall.Libraries.Tcp.Client.Services
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Raised Exception in {nameof(InitSocket)} of {nameof(TcpClient)} : {ex.Message}");
+                _log.Error($"Raised Exception in {nameof(InitSocket)} of {nameof(TcpClient)} : {ex.Message}");
             }
         }
 
@@ -102,7 +105,7 @@ namespace Ironwall.Libraries.Tcp.Client.Services
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Raised Exception in {nameof(CloseSocket)} of {nameof(TcpClient)} : {ex.Message}");
+                _log.Error($"Raised Exception in {nameof(CloseSocket)} of {nameof(TcpClient)} : {ex.Message}");
             }
         }
 
@@ -126,7 +129,7 @@ namespace Ironwall.Libraries.Tcp.Client.Services
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Raised Exception in {nameof(SendRequest)} of {nameof(TcpClient)} : {ex.Message}");
+                _log.Error($"Raised Exception in {nameof(SendRequest)} of {nameof(TcpClient)} : {ex.Message}");
             }
         }
 
@@ -157,7 +160,7 @@ namespace Ironwall.Libraries.Tcp.Client.Services
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Raised Exception in {nameof(SendMapDataRequest)} of {nameof(TcpClient)} : {ex.Message}");
+                _log.Error($"Raised Exception in {nameof(SendMapDataRequest)} of {nameof(TcpClient)} : {ex.Message}");
             }
         }
 
@@ -172,7 +175,7 @@ namespace Ironwall.Libraries.Tcp.Client.Services
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Raised Exception in {nameof(SendProfileDataRequest)} of {nameof(TcpClient)} : {ex.Message}");
+                _log.Error($"Raised Exception in {nameof(SendProfileDataRequest)} of {nameof(TcpClient)} : {ex.Message}");
             }
         }
 
@@ -189,7 +192,7 @@ namespace Ironwall.Libraries.Tcp.Client.Services
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception in {nameof(SendVideoDataRequest)} of {nameof(TcpClient)} : {ex.Message}");
+                    _log.Error($"Raised Exception in {nameof(SendVideoDataRequest)} of {nameof(TcpClient)} : {ex.Message}");
                 }
             });
         }
@@ -262,7 +265,7 @@ namespace Ironwall.Libraries.Tcp.Client.Services
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Raised Exception in {nameof(CreateSocket)} of {nameof(TcpClient)} : {ex.Message}");
+                _log.Error($"Raised Exception in {nameof(CreateSocket)} of {nameof(TcpClient)} : {ex.Message}");
             }
         }
 
@@ -273,7 +276,7 @@ namespace Ironwall.Libraries.Tcp.Client.Services
             //Socket Main Error Check 
             if (e.SocketError == System.Net.Sockets.SocketError.ConnectionRefused)
             {
-                Debug.WriteLine("Server Connection was Refused!");
+                _log.Info("Server Connection was Refused!");
                 TcpEvent?.Invoke("Server Connection was Refused!", null, EnumTcpCommunication.COMMUNICATION_ERROR);
                 CloseSocket();
 
@@ -281,7 +284,7 @@ namespace Ironwall.Libraries.Tcp.Client.Services
             }
             else if (e.SocketError == System.Net.Sockets.SocketError.AddressAlreadyInUse)
             {
-                Debug.WriteLine("IP Address is already in use!");
+                _log.Info("IP Address is already in use!");
                 TcpEvent?.Invoke("IP Address is already in use!", null, EnumTcpCommunication.COMMUNICATION_ERROR);
                 CloseSocket();
 
@@ -324,7 +327,7 @@ namespace Ironwall.Libraries.Tcp.Client.Services
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Raised Exception in {nameof(Connect_Completed)} of {nameof(TcpClient)} : {ex.Message}");
+                _log.Error($"Raised Exception in {nameof(Connect_Completed)} of {nameof(TcpClient)} : {ex.Message}");
             }
 
         }
@@ -364,7 +367,7 @@ namespace Ironwall.Libraries.Tcp.Client.Services
                 }
                 else
                 {
-                    Debug.WriteLine($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.ff")}]연결도 없고 받는 데이터도 없어서 끊김");
+                    _log.Info($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.ff")}]연결도 없고 받는 데이터도 없어서 끊김");
                     CloseSocket();
                 }
 
@@ -372,13 +375,13 @@ namespace Ironwall.Libraries.Tcp.Client.Services
                 {
                     // Disconnected 이벤트 알림
                     //AcceptedClientDisconnected?.Invoke(this);
-                    Debug.WriteLine($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.ff")}]연결 끊겨서 종료!!!!!!!!!!!!!!!!!");
+                    _log.Info($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.ff")}]연결 끊겨서 종료!!!!!!!!!!!!!!!!!");
                     CloseSocket();
                 }
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Raised Exception in {nameof(Recieve_Completed)} : {ex.Message}");
+                _log.Error($"Raised Exception in {nameof(Recieve_Completed)} : {ex.Message}");
             }
         }
 
@@ -417,7 +420,7 @@ namespace Ironwall.Libraries.Tcp.Client.Services
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Raised Exception in {nameof(Disconnect_Complete)} : {ex.Message}");
+                _log.Error($"Raised Exception in {nameof(Disconnect_Complete)} : {ex.Message}");
             }
         }
 
@@ -425,13 +428,13 @@ namespace Ironwall.Libraries.Tcp.Client.Services
         {
             Mode = 0;
 
-            Debug.WriteLine($"{nameof(TcpClient)} socket({Socket.GetHashCode()}) was disconnected in {nameof(Disconnect_Complete)}");
+            _log.Info($"{nameof(TcpClient)} socket({Socket.GetHashCode()}) was disconnected in {nameof(Disconnect_Complete)}");
             //Socket Close to finish using socket
             Socket?.Close();
-            Debug.WriteLine($"{nameof(TcpClient)} socket({Socket.GetHashCode()}) was closed in {nameof(Disconnect_Complete)}");
+            _log.Info($"{nameof(TcpClient)} socket({Socket.GetHashCode()}) was closed in {nameof(Disconnect_Complete)}");
             //Socket Dispose to release resources
             Socket?.Dispose();
-            Debug.WriteLine($"{nameof(TcpClient)} socket({Socket.GetHashCode()}) was disposed in {nameof(Disconnect_Complete)}");
+            _log.Info($"{nameof(TcpClient)} socket({Socket.GetHashCode()}) was disposed in {nameof(Disconnect_Complete)}");
         }
 
         public void SetServerIPEndPoint(ITcpServerModel model)
@@ -446,15 +449,16 @@ namespace Ironwall.Libraries.Tcp.Client.Services
                 //Debug.WriteLine($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.ff")}][{nameof(ConnectionTick)}] TICK...{(HeartBeatExpireTime - DateTime.Now).Seconds}");
                 //Debug.WriteLine($"[{HeartBeatExpireTime.ToString("yyyy-MM-dd HH:mm:ss.ff")} - {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.ff")}]");
                 bool isHeartBeatSent = false;
-                if ((HeartBeatExpireTime - DateTimeHelper.GetCurrentTimeWithoutMS()) < TimeSpan.FromSeconds(5))
+                if ((HeartBeatExpireTime - DateTimeHelper.GetCurrentTimeWithoutMS()) < TimeSpan.FromSeconds(10))
                 {
+                    _log.Info($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}]##############Start TCP HeartBeat!#############");
                     isHeartBeatSent = await SendHeartBeat();
-                    Debug.WriteLine($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}]UpdateHeartBeat!!!!! result : {isHeartBeatSent}");
+                    _log.Info($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}]#############Finish TCP HeartBeat!#############");
                 }
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Raised Exception in {nameof(ConnectionTick)} : {ex.Message}");
+                _log.Error($"Raised Exception in {nameof(ConnectionTick)} : {ex.Message}");
             }
         }
 
@@ -465,10 +469,11 @@ namespace Ironwall.Libraries.Tcp.Client.Services
                 DateTime timeData;
                 DateTime.TryParse(updatedTime, out timeData);
                 HeartBeatExpireTime = timeData;
+                _log.Info($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}]Tcp client HeartBeat was update[Expired : {HeartBeatExpireTime.ToString("yyyy-MM-dd HH:mm:ss")}]");
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Raised Exception in {nameof(UpdateHeartBeat)} : {ex.Message}");
+                _log.Error($"Raised Exception in {nameof(UpdateHeartBeat)} : {ex.Message}");
             }
         }
 
@@ -480,20 +485,20 @@ namespace Ironwall.Libraries.Tcp.Client.Services
                 {
                     if (!Socket.Connected)
                     {
-                        Debug.WriteLine($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}]Socket is connected :{Socket.Connected} in {nameof(SendHeartBeat)}");
+                        _log.Info($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}]Socket is connected :{Socket.Connected} in {nameof(SendHeartBeat)}");
                         return false;
                     }
 
                     var iPEndPoint = Socket.LocalEndPoint as IPEndPoint;
-                    var requestModel = RequestFactory.Build<HeartBeatRequestModel>(iPEndPoint.Address.ToString(), iPEndPoint.Port);
-                    var msg = JsonConvert.SerializeObject(requestModel);
+                    var requestModel = new HeartBeatRequestModel(iPEndPoint.Address.ToString(), iPEndPoint.Port);
+                    var msg = JsonConvert.SerializeObject(requestModel, _settings);
                     await SendRequest(msg);
                     //HeartBeatExpireTime += TimeSpan.FromSeconds(_tcpSetupModel.HeartBeat);
                     return true;
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception in {nameof(SendHeartBeat)} : {ex.Message}");
+                    _log.Error($"Raised Exception in {nameof(SendHeartBeat)} : {ex.Message}");
                     return false;
                 }
             });
@@ -518,6 +523,8 @@ namespace Ironwall.Libraries.Tcp.Client.Services
         public event TcpEvent_dele TcpEvent;
         public event TcpDisconnect_dele Disconnected;
         private object _locker;
+        protected JsonSerializerSettings _settings;
+        protected ILogService _log;
 
         //private bool inReceiveProcess;
         public TcpSetupModel _tcpSetupModel;

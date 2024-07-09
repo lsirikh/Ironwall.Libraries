@@ -1,5 +1,7 @@
 ﻿using Ironwall.Framework.DataProviders;
+using Ironwall.Framework.Models.Devices;
 using Ironwall.Framework.Models.Events;
+using Ironwall.Libraries.Devices.Providers;
 using Ironwall.Libraries.Enums;
 using System;
 using System.Collections.Generic;
@@ -10,12 +12,12 @@ using System.Threading.Tasks;
 
 namespace Ironwall.Libraries.Events.Providers
 {
-    public class EventProvider : EventBaseProvider
+    public class EventProvider : BaseProvider<IMetaEventModel>
     {
         #region - Ctors -
         public EventProvider()
         {
-            ClassName = nameof(EventProvider);
+            ClassName = nameof(DeviceProvider);
         }
         #endregion
         #region - Implementation of Interface -

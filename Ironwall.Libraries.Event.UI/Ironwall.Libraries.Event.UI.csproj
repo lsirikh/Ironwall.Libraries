@@ -118,7 +118,6 @@
   <ItemGroup>
     <Compile Include="Helpers\TypeTemplateSelector.cs" />
     <Compile Include="Models\Messages\EventMessageModel.cs" />
-    <Compile Include="Providers\ViewModels\ActionBaseViewModelProvider.cs" />
     <Compile Include="Providers\ViewModels\ActionViewModelProvider.cs" />
     <Compile Include="Providers\ViewModels\DetectionViewModelProvider.cs" />
     <Compile Include="Providers\ViewModels\EventBaseViewModelProvider.cs" />
@@ -126,6 +125,9 @@
     <Compile Include="Providers\ViewModels\PendingEventProvider.cs" />
     <Compile Include="Providers\ViewModels\PostEventProvider.cs" />
     <Compile Include="Providers\ViewModels\PreEventProvider.cs" />
+    <Compile Include="Providers\ViewModels\WrapperActionViewModelProvider.cs" />
+    <Compile Include="Providers\ViewModels\WrapperEventViewModelProvider.cs" />
+    <Compile Include="ViewModels\Events\BaseEventViewModel.cs" />
     <Compile Include="ViewModels\Components\EventViewModelVisitor.cs" />
     <Compile Include="ViewModels\Components\EventVisitor.cs" />
     <Compile Include="ViewModels\Components\IEventViewModelVisitee.cs" />
@@ -142,12 +144,10 @@
     <Compile Include="ViewModels\Dialogs\PreEventRemoveAllViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\PreEventRemoveViewModel.cs" />
     <Compile Include="ViewModels\Events\IActionEventViewModel.cs" />
-    <Compile Include="ViewModels\Events\IBaseEventViewModel.cs" />
     <Compile Include="ViewModels\Events\IMetaEventViewModel.cs" />
-    <Compile Include="ViewModels\EventTimerViewModel.cs" />
-    <Compile Include="ViewModels\EventViewModel.cs" />
+    <Compile Include="ViewModels\Ex\EventTimerViewModel.cs" />
+    <Compile Include="ViewModels\Ex\BaseExEventViewModel.cs" />
     <Compile Include="ViewModels\Events\ActionEventViewModel.cs" />
-    <Compile Include="ViewModels\Events\BaseEventViewModel.cs" />
     <Compile Include="ViewModels\Events\ConnectionEventViewModel.cs" />
     <Compile Include="ViewModels\Events\ContactEventViewModel.cs" />
     <Compile Include="ViewModels\Events\DetectionEventViewModel.cs" />
@@ -159,24 +159,27 @@
     <Compile Include="ViewModels\Events\MalfunctionEventViewModel.cs" />
     <Compile Include="ViewModels\Events\MetaEventViewModel.cs" />
     <Compile Include="ViewModels\Events\ModeWindyEventViewModel.cs" />
-    <Compile Include="ViewModels\IEventTimerViewModel.cs" />
-    <Compile Include="ViewModels\IEventViewModel.cs" />
+    <Compile Include="ViewModels\Events\IBaseEventViewModel.cs" />
+    <Compile Include="ViewModels\Ex\ExBaseEventViewModel.cs" />
+    <Compile Include="ViewModels\Ex\IEventTimerViewModel.cs" />
+    <Compile Include="ViewModels\Ex\IBaseExEventViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ViewModels\BaseEventListPanelViewModel.cs" />
-    <Compile Include="ViewModels\ExEventTimerViewModel.cs" />
-    <Compile Include="ViewModels\ExEventViewModel.cs" />
-    <Compile Include="ViewModels\IExEventTimerViewModel.cs" />
-    <Compile Include="ViewModels\IExEventViewModel.cs" />
-    <Compile Include="ViewModels\IPostEventViewModel.cs" />
+    <Compile Include="ViewModels\Ex\BaseEventListPanelViewModel.cs" />
+    <Compile Include="ViewModels\Ex\ExEventTimerViewModel.cs" />
+    <Compile Include="ViewModels\Ex\ExEventViewModel.cs" />
+    <Compile Include="ViewModels\Ex\IExBaseEventViewModel.cs" />
+    <Compile Include="ViewModels\Ex\IExEventTimerViewModel.cs" />
+    <Compile Include="ViewModels\Ex\IExEventViewModel.cs" />
+    <Compile Include="ViewModels\Ex\IPostEventViewModel.cs" />
     <Compile Include="ViewModels\Dashboards\EventDashboardViewModel.cs" />
     <Compile Include="ViewModels\Panels\ActionPanelViewModel.cs" />
     <Compile Include="ViewModels\Panels\DetectionPanelViewModel.cs" />
     <Compile Include="ViewModels\Panels\EventBasePanelViewModel.cs" />
     <Compile Include="ViewModels\Panels\MalfunctionPanelViewModel.cs" />
     <Compile Include="ViewModels\Panels\PostEventListPanelViewModel.cs" />
-    <Compile Include="ViewModels\PostEventViewModel.cs" />
+    <Compile Include="ViewModels\Ex\PostEventViewModel.cs" />
     <Compile Include="ViewModels\Panels\PreEventListPanelViewModel.cs" />
-    <Compile Include="ViewModels\PreEventViewModel.cs" />
+    <Compile Include="ViewModels\Ex\PreEventViewModel.cs" />
     <Compile Include="ViewModels\ViewModelFactory.cs" />
     <Compile Include="Views\Components\Parts\ControllerDevicePartView.xaml.cs">
       <DependentUpon>ControllerDevicePartView.xaml</DependentUpon>
@@ -193,6 +196,9 @@
     <Compile Include="Views\Components\PreIntrusionEventView.xaml.cs">
       <DependentUpon>PreIntrusionEventView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Dashboards\EventDashboardView.xaml.cs">
+      <DependentUpon>EventDashboardView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Dialogs\PostEventDetailView.xaml.cs">
       <DependentUpon>PostEventDetailView.xaml</DependentUpon>
     </Compile>
@@ -208,17 +214,14 @@
     <Compile Include="Views\Dialogs\PreEventRemoveView.xaml.cs">
       <DependentUpon>PreEventRemoveView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Dashboards\EventDashboardView.xaml.cs">
-      <DependentUpon>EventDashboardView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\Panels\ActionPanelView.xaml.cs">
       <DependentUpon>ActionPanelView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Panels\DetectionPanelView.xaml.cs">
-      <DependentUpon>DetectionPanelView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\Panels\MalfunctionPanelView.xaml.cs">
       <DependentUpon>MalfunctionPanelView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Panels\DetectionPanelView.xaml.cs">
+      <DependentUpon>DetectionPanelView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Panels\PostEventListPanelView.xaml.cs">
       <DependentUpon>PostEventListPanelView.xaml</DependentUpon>
@@ -227,10 +230,24 @@
       <DependentUpon>PreEventListPanelView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Providers\Models\" />
-  </ItemGroup>
-  <ItemGroup>
+    <ProjectReference Include="..\Ironwall.Framework.Models\Ironwall.Framework.Models.csproj">
+      <Project>{3e640a4b-ddb5-47d0-bed9-8187f01b1d6b}</Project>
+      <Name>Ironwall.Framework.Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ironwall.Framework.ViewModels\Ironwall.Framework.ViewModels.csproj">
+      <Project>{7da0d9f1-e2f8-4c6e-91b2-43deebd3c3fe}</Project>
+      <Name>Ironwall.Framework.ViewModels</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ironwall.Framework\Ironwall.Framework.csproj">
+      <Project>{cc34c433-38a8-4092-b172-d89db0e632be}</Project>
+      <Name>Ironwall.Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ironwall.Libraries.Base\Ironwall.Libraries.Base.csproj">
+      <Project>{9d2531fc-7a97-478b-9303-9b0a3d223551}</Project>
+      <Name>Ironwall.Libraries.Base</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Ironwall.Libraries.Device.UI\Ironwall.Libraries.Device.UI.csproj">
       <Project>{011e7e98-189a-4152-84b1-8a07b40f39f1}</Project>
       <Name>Ironwall.Libraries.Device.UI</Name>
@@ -285,6 +302,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Dashboards\EventDashboardView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Dialogs\PostEventDetailView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -305,19 +326,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Dashboards\EventDashboardView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\Panels\ActionPanelView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Panels\DetectionPanelView.xaml">
+    <Page Include="Views\Panels\MalfunctionPanelView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Panels\MalfunctionPanelView.xaml">
+    <Page Include="Views\Panels\DetectionPanelView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

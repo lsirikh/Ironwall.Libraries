@@ -1,32 +1,20 @@
-﻿using Ironwall.Framework.Models.Devices;
-using Ironwall.Framework.Models.Events;
+﻿using Ironwall.Framework.Models.Events;
 using Ironwall.Libraries.Enums;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Ironwall.Libraries.Event.UI.ViewModels.Events
 {
-    public class ActionEventViewModel
-        : BaseEventViewModel<IActionEventModel>, IActionEventViewModel
+    public class ActionEventViewModel : BaseEventViewModel<IActionEventModel>, IActionEventViewModel
     {
         #region - Ctors -
         public ActionEventViewModel()
         {
+            _model = new ActionEventModel();
         }
 
         public ActionEventViewModel(IActionEventModel model) : base(model)
         {
-            try
-            {
-                FromEvent = EventBuilder(model);
-            }
-            catch 
-            {
-            }
+            FromEvent = EventBuilder(model.FromEvent);
 
             Content = model.Content;
             User = model.User;
@@ -45,42 +33,53 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Events
         #region - Binding Methods -
         #endregion
         #region - Processes -
-        private MetaEventViewModel EventBuilder(IActionEventModel model)
+        private MetaEventViewModel EventBuilder(IMetaEventModel model)
         {
-            MetaEventViewModel eventViewModel = null;
-            switch ((EnumEventType)model.FromEvent.MessageType)
+            try
             {
-                case EnumEventType.Intrusion:
-                    {
-                        eventViewModel = ViewModelFactory.Build<DetectionEventViewModel>(model.FromEvent);
-                    }
-                    break;
-                case EnumEventType.Fault:
-                    {
-                        eventViewModel = ViewModelFactory.Build<MalfunctionEventViewModel>(model.FromEvent);
-                    }
-                    break;
-                case EnumEventType.ContactOn:
-                    break;
-                case EnumEventType.ContactOff:
-                    break;
-                case EnumEventType.Connection:
-                    break;
-                case EnumEventType.Action:
-                    break;
-                case EnumEventType.WindyMode:
-                    break;
-                default:
-                    break;
+                if (model == null) return null;
+
+                MetaEventViewModel eventViewModel = null;
+                switch (model.MessageType)
+                {
+                    case EnumEventType.Intrusion:
+                        {
+                            eventViewModel = new DetectionEventViewModel(model as IDetectionEventModel);
+                        }
+                        break;
+                    case EnumEventType.Fault:
+                        {
+                            eventViewModel = new MalfunctionEventViewModel(model as IMalfunctionEventModel);
+                        }
+                        break;
+                    case EnumEventType.ContactOn:
+                        break;
+                    case EnumEventType.ContactOff:
+                        break;
+                    case EnumEventType.Connection:
+                        break;
+                    case EnumEventType.Action:
+                        break;
+                    case EnumEventType.WindyMode:
+                        break;
+                    default:
+                        break;
+                }
+
+                return eventViewModel;
             }
-            return eventViewModel;
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
         #endregion
         #region - IHanldes -
         #endregion
         #region - Properties -
-        private MetaEventViewModel _fromEvent;
-        public MetaEventViewModel FromEvent
+        private IMetaEventViewModel _fromEvent;
+        public IMetaEventViewModel FromEvent
         {
             get { return _fromEvent; }
             set
@@ -109,9 +108,6 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Events
                 NotifyOfPropertyChange(() => User);
             }
         }
-
-
-
         #endregion
         #region - Attributes -
         #endregion

@@ -9,8 +9,7 @@ using System.Threading.Tasks;
 
 namespace Ironwall.Libraries.Devices.Providers
 {
-    public class DeviceProvider
-    : DeviceBaseProvider
+    public class DeviceProvider : BaseProvider<IBaseDeviceModel>
     {
         #region - Ctors -
         public DeviceProvider()

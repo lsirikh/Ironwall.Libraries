@@ -173,6 +173,9 @@ namespace Ironwall.Libraries.Account.Common.Services
                         if (token.IsCancellationRequested)
                             break;
 
+                        var isExist = _sessionProvider.Any(entity => (entity as ILoginSessionModel).Token == model.Token);
+                        if (isExist) continue;
+
                         _sessionProvider.Add(model);
                     }
 

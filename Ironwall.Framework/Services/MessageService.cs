@@ -36,7 +36,7 @@ namespace Ironwall.Framework.Services
             try
             {
                 // RedisChannel with Pattern
-                RedisChannel patternChannel = RedisChannel.Pattern("Channel*");
+                RedisChannel patternChannel = RedisChannel.Pattern("Stream*");
                 Subscriber.Subscribe(patternChannel, CommandFlags.PreferMaster).OnMessage(channelMessage =>
                 {
                     RedisSubscribeEvent?.Invoke(this, channelMessage);

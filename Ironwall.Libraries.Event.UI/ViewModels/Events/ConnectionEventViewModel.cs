@@ -10,14 +10,12 @@ using System.Threading.Tasks;
 
 namespace Ironwall.Libraries.Event.UI.ViewModels.Events
 {
-    public class ConnectionEventViewModel
-        : MetaEventViewModel
-        , IConnectionEventViewModel
+    public class ConnectionEventViewModel : MetaEventViewModel, IConnectionEventViewModel
     {
         #region - Ctors -
         public ConnectionEventViewModel()
         {
-
+            _model = new ConnectionEventModel();
         }
 
         public ConnectionEventViewModel(IConnectionEventModel model)

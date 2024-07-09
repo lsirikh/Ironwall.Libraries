@@ -25,7 +25,7 @@ namespace Ironwall.Framework.Services
             }
         }
 
-        void TrulyObservableCollection_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        public void TrulyObservableCollection_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.NewItems != null)
             {
@@ -43,7 +43,7 @@ namespace Ironwall.Framework.Services
             }
         }
 
-        void ItemPropertyChanged(object sender, PropertyChangedEventArgs e)
+        public void ItemPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             /*NotifyCollectionChangedEventArgs a = new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset);
             OnCollectionChanged(a);*/

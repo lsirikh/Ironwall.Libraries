@@ -1,5 +1,6 @@
 ﻿using Ironwall.Framework.DataProviders;
 using Ironwall.Libraries.Base.DataProviders;
+using Ironwall.Libraries.Base.Services;
 using Ironwall.Libraries.Common.Models;
 using Ironwall.Libraries.Common.Providers;
 using Ironwall.Libraries.Enums;
@@ -27,10 +28,12 @@ namespace Ironwall.Libraries.Tcp.Server.Services
     {
         #region - Ctors -
         public TcpServer(
-            TcpSetupModel tcpSetupModel
+            ILogService log
+            , TcpSetupModel tcpSetupModel
             , TcpServerSetupModel tcpServerSetupModel
             , LogProvider logProvider)
         {
+            _log = log;
             _tcpSetupModel = tcpSetupModel;
             _tcpServerSetupModel = tcpServerSetupModel;
             _logProvider = logProvider;
@@ -54,6 +57,8 @@ namespace Ironwall.Libraries.Tcp.Server.Services
                 sb = new StringBuilder();
                 ClientCount = 0;
                 ClientList = new List<TcpAcceptedClient>();
+                _log.Info($"Server SetupModel => ( IP : {_tcpServerSetupModel.Ip}, Port : {_tcpServerSetupModel.Port.ToString()})");
+                
                 var log = InstanceFactory.Build<LogModel>();
                 log.Info($"Server SetupModel => ( IP : {_tcpServerSetupModel.Ip}, Port : {_tcpServerSetupModel.Port.ToString()})");
                 _logProvider.Add(log);
@@ -72,7 +77,7 @@ namespace Ironwall.Libraries.Tcp.Server.Services
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Raised Exception in {nameof(InitSocket)} : {ex.Message}");
+                _log.Error($"Raised Exception in {nameof(InitSocket)} : {ex.Message}");
             }
         }
         public override Task SendRequest(string msg, IPEndPoint endPoint = null)
@@ -99,7 +104,7 @@ namespace Ironwall.Libraries.Tcp.Server.Services
                     }
                     catch (Exception ex)
                     {
-                        Debug.WriteLine($"Raised Exception in {nameof(SendRequest)} : {ex.Message}");
+                        _log.Error($"Raised Exception in {nameof(SendRequest)} : {ex.Message}");
                     }
                 });
             }
@@ -132,7 +137,7 @@ namespace Ironwall.Libraries.Tcp.Server.Services
                     }
                     catch (Exception ex)
                     {
-                        Debug.WriteLine($"Raised Exception in {nameof(SendRequest)} : {ex.Message}");
+                        _log.Error($"Raised Exception in {nameof(SendRequest)} : {ex.Message}");
                     }
                 });
             }
@@ -164,7 +169,7 @@ namespace Ironwall.Libraries.Tcp.Server.Services
                     }
                     catch (Exception ex)
                     {
-                        Debug.WriteLine($"Raised Exception in {nameof(SendMapDataRequest)} : {ex.Message}");
+                        _log.Error($"Raised Exception in {nameof(SendMapDataRequest)} : {ex.Message}");
                     }
                 });
             }
@@ -196,7 +201,7 @@ namespace Ironwall.Libraries.Tcp.Server.Services
                     }
                     catch (Exception ex)
                     {
-                        Debug.WriteLine($"Raised Exception in {nameof(SendProfileDataRequest)} : {ex.Message}");
+                        _log.Error($"Raised Exception in {nameof(SendProfileDataRequest)} : {ex.Message}");
                     }
                 });
             }
@@ -228,7 +233,7 @@ namespace Ironwall.Libraries.Tcp.Server.Services
                     }
                     catch (Exception ex)
                     {
-                        Debug.WriteLine($"Raised Exception in {nameof(SendVideoDataRequest)} : {ex.Message}");
+                        _log.Error($"Raised Exception in {nameof(SendVideoDataRequest)} : {ex.Message}");
                     }
                 });
             }
@@ -258,22 +263,22 @@ namespace Ironwall.Libraries.Tcp.Server.Services
                 if (Socket.Connected)
                 {
                     Socket.Disconnect(false);
-                    Debug.WriteLine($"Server socket({Socket.GetHashCode()}) was disconnected in {nameof(CloseSocket)}");
+                    _log.Info($"Server socket({Socket.GetHashCode()}) was disconnected in {nameof(CloseSocket)}");
                 }
                 ///Timer Task Dispose
                 DisposeTimer();
 
                 ///Socket Closed
                 Socket.Close();
-                Debug.WriteLine($"{nameof(TcpServer)} socket({Socket.GetHashCode()}) was closed in {nameof(CloseSocket)}");
+                _log.Info($"{nameof(TcpServer)} socket({Socket.GetHashCode()}) was closed in {nameof(CloseSocket)}");
 
                 //Mode Created
                 Mode = 0;
-                Debug.WriteLine($"{nameof(TcpServer)} socket({Socket.GetHashCode()}) was disposed in {nameof(CloseSocket)}");
+                _log.Info($"{nameof(TcpServer)} socket({Socket.GetHashCode()}) was disposed in {nameof(CloseSocket)}");
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Raised Exception in {nameof(CloseSocket)} : {ex.Message}");
+                _log.Error($"Raised Exception in {nameof(CloseSocket)} : {ex.Message}");
             }
         }
         protected void Accept_Completed(object sender, SocketAsyncEventArgs e)
@@ -297,7 +302,7 @@ namespace Ironwall.Libraries.Tcp.Server.Services
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Raised Exception in {nameof(Accept_Completed)} : {ex.Message}");
+                _log.Error($"Raised Exception in {nameof(Accept_Completed)} : {ex.Message}");
             }
         }
         protected void AcceptedClient_Conncted(object cli)
@@ -310,7 +315,7 @@ namespace Ironwall.Libraries.Tcp.Server.Services
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Raised Exception in {nameof(AcceptedClient_Conncted)} : {ex.Message}");
+                _log.Error($"Raised Exception in {nameof(AcceptedClient_Conncted)} : {ex.Message}");
             }
         }
         protected void AcceptedClient_Event(string data, IPEndPoint endPoint = null, EnumTcpCommunication type = EnumTcpCommunication.MSG_PACKET_RECEIVING)
@@ -337,14 +342,13 @@ namespace Ironwall.Libraries.Tcp.Server.Services
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Rasied Exception in {nameof(AcceptedClient_Disconnected)} : {ex.Message}");
+                    _log.Error($"Rasied Exception in {nameof(AcceptedClient_Disconnected)} : {ex.Message}");
                 }
             });
         }
 
         #endregion
         #region - Binding Methods -
-        
         #endregion
         #region - Processes -
         private void CreateSocket(IPEndPoint ipep)
@@ -382,7 +386,7 @@ namespace Ironwall.Libraries.Tcp.Server.Services
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"{ex.Message}");
+                _log.Error($"{ex.Message}");
             }
         }
 
@@ -399,7 +403,6 @@ namespace Ironwall.Libraries.Tcp.Server.Services
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
@@ -416,7 +419,6 @@ namespace Ironwall.Libraries.Tcp.Server.Services
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
@@ -440,6 +442,7 @@ namespace Ironwall.Libraries.Tcp.Server.Services
         private LogProvider _logProvider;
         public SocketAsyncEventArgs _hearingEvent;
         private object _locker;
+        protected ILogService _log;
         #endregion
     }
 }

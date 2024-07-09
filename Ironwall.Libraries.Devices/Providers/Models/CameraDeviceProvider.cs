@@ -1,25 +1,25 @@
-﻿using Ironwall.Framework.Models.Devices;
+﻿using Ironwall.Framework.DataProviders;
+using Ironwall.Framework.Models.Devices;
+using Ironwall.Libraries.Base.Services;
+using Ironwall.Libraries.Devices.Providers.Models;
 using Ironwall.Libraries.Enums;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Ironwall.Libraries.Devices.Providers
 {
-    public sealed class CameraDeviceProvider
-        : DeviceBaseProvider
+    public sealed class CameraDeviceProvider : WrapperDeviceProvider<CameraDeviceModel>
     {
         #region - Ctors -
-        public CameraDeviceProvider(DeviceProvider provider)
+        public CameraDeviceProvider(DeviceProvider provider) : base(provider)
         {
             ClassName = nameof(CameraDeviceProvider);
-            _deviceProvider = provider;
-            _deviceProvider.Refresh += Provider_Initialize;
-            _deviceProvider.Inserted += Provider_Insert;
-            _deviceProvider.Deleted += Provider_Delete;
         }
         #endregion
         #region - Implementation of Interface -
@@ -29,89 +29,112 @@ namespace Ironwall.Libraries.Devices.Providers
         #region - Binding Methods -
         #endregion
         #region - Processes -
-        private Task<bool> Provider_Initialize()
-        {
-            bool ret = false;
-            return Task.Run(async () =>
-            {
-                try
-                {
-                    Debug.WriteLine($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.ffffff")}]{nameof(Provider_Initialize)}({ClassName}) was executed!!!");
-                    Clear();
-                    foreach (BaseDeviceModel item in _deviceProvider
-                    .Where(entity => entity.DeviceType == (int)EnumDeviceType.IpCamera)
-                    .ToList())
-                    {
-                        if (!(item is ICameraDeviceModel model)) continue;
-
-                        Add(model);
-                    }
-
-                    ret = await Finished();
-                    return ret;
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"Raised Exception in {nameof(Provider_Initialize)}({ClassName}) : {ex.Message}");
-                    return ret;
-                }
-                
-            });
-        }
-
-        private Task<bool> Provider_Insert(IBaseDeviceModel item)
-        {
-            bool ret = false;
-            return Task.Run(async () =>
-            {
-                try
-                {
-                    if (item.DeviceType == (int)EnumDeviceType.IpCamera)
-                    {
-                        if (!(item is ICameraDeviceModel model)) return false;
-
-                        Debug.WriteLine($"[{model.Id}]{ClassName} was executed({CollectionEntity.Count()})!!!");
-                        ret = await InsertedItem(model);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"Raised Exception in {nameof(Provider_Insert)}({ClassName}) : {ex.Message}");
-                    return ret;
-                }
-                return ret;
-            });
-        }
-
-        private Task<bool> Provider_Delete(IBaseDeviceModel item)
-        {
-            bool ret = false;
-            return Task.Run(async () =>
-            {
-                try
-                {
-                    var searchedItem = CollectionEntity.Where(t => t.Id == item.Id).FirstOrDefault();
-                    if (searchedItem != null)
-                    {
-                        ret = await DeletedItem(searchedItem);
-                    }
-                    return ret;
-
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"Raised Exception in {nameof(Provider_Delete)}({ClassName}) : {ex.Message}");
-                    return ret;
-                }
-            });
-        }
         #endregion
         #region - IHanldes -
         #endregion
         #region - Properties -
         #endregion
         #region - Attributes -
-        private DeviceProvider _deviceProvider;
         #endregion
     }
+
+
+
+    //    : BaseProvider<ICameraDeviceModel>, ILoadable
+    //{
+    //    #region - Ctors -
+    //    public CameraDeviceProvider(DeviceProvider provider)
+    //    {
+    //        ClassName = nameof(CameraDeviceProvider);
+    //        _provider = provider;
+    //        _provider.CollectionEntity.CollectionChanged += CollectionEntity_CollectionChanged;
+    //    }
+    //    #endregion
+    //    #region - Implementation of Interface -
+    //    public Task<bool> Initialize(CancellationToken token = default)
+    //    {
+    //        try
+    //        {
+    //            Clear();
+    //            foreach (var item in _provider.OfType<ICameraDeviceModel>().ToList())
+    //            {
+    //                var model = new CameraDeviceModel(item);
+    //                Add(model);
+    //            }
+
+    //            return Task.FromResult(true);
+    //        }
+    //        catch (System.Exception ex)
+    //        {
+    //            Debug.WriteLine($"Raised exception in {nameof(Initialize)} of {ClassName}: {ex.Message} ");
+    //            return Task.FromResult(false);
+    //        }
+    //    }
+
+    //    public void Uninitialize()
+    //    {
+    //        _provider.CollectionEntity.CollectionChanged -= CollectionEntity_CollectionChanged;
+    //        Clear();
+    //    }
+    //    #endregion
+    //    #region - Overrides -
+    //    #endregion
+    //    #region - Binding Methods -
+    //    #endregion
+    //    #region - Processes -
+    //    private void CollectionEntity_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    //    {
+    //        switch (e.Action)
+    //        {
+    //            case NotifyCollectionChangedAction.Add:
+    //                // New items added
+    //                foreach (var newItem in e.NewItems.OfType<ICameraDeviceModel>().ToList())
+    //                {
+    //                    Add(newItem);
+    //                }
+    //                break;
+
+    //            case NotifyCollectionChangedAction.Remove:
+    //                // Items removed
+    //                foreach (var oldItem in e.OldItems.OfType<ICameraDeviceModel>().ToList())
+    //                {
+    //                    var entity = CollectionEntity.Where(entity => entity.Id == oldItem.Id).FirstOrDefault();
+    //                    Remove(entity);
+    //                }
+    //                break;
+
+    //            case NotifyCollectionChangedAction.Replace:
+    //                // Some items replaced
+    //                int index = 0;
+    //                foreach (var oldItem in e.OldItems.OfType<ICameraDeviceModel>().ToList())
+    //                {
+    //                    var entity = CollectionEntity.Where(entity => entity.Id == oldItem.Id).FirstOrDefault();
+    //                    index = CollectionEntity.IndexOf(entity);
+    //                    Remove(entity);
+    //                }
+    //                foreach (var newItem in e.NewItems.OfType<ICameraDeviceModel>().ToList())
+    //                {
+    //                    Add(newItem, index);
+    //                }
+    //                break;
+
+    //            case NotifyCollectionChangedAction.Reset:
+    //                // The whole list is refreshed
+    //                CollectionEntity.Clear();
+    //                foreach (var newItem in _provider.OfType<ICameraDeviceModel>().ToList())
+    //                {
+    //                    Add(newItem);
+    //                }
+    //                break;
+    //        }
+    //    }
+    //    #endregion
+    //    #region - IHanldes -
+    //    #endregion
+    //    #region - Properties -
+    //    #endregion
+    //    #region - Attributes -
+    //    private DeviceProvider _provider;
+    //    #endregion
+    //}
 }

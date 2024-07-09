@@ -111,7 +111,7 @@ namespace Ironwall.Libraries.Map.UI.Providers.ViewModels
             return true;
         }
 
-        
+
         #endregion
         #region - Processes -
         #endregion

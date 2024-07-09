@@ -6,6 +6,7 @@ using Ironwall.Libraries.Base.Services;
 using Ironwall.Libraries.Device.UI.ViewModels;
 using Ironwall.Libraries.Devices.Providers.Models;
 using System;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
@@ -22,41 +23,40 @@ namespace Ironwall.Libraries.Device.UI.Providers
         Email        : lsirikh@naver.com                                         
      ****************************************************************************/
 
-    public class MappingViewModelProvider : EntityCollectionProvider<ICameraMappingViewModel>, ILoadable
+    public class MappingViewModelProvider : BaseProvider<CameraMappingViewModel>, ILoadable
     {
-
         #region - Ctors -
         public MappingViewModelProvider(CameraMappingProvider provider)
         {
-            ClassName = nameof(PresetViewModelProvider);
+            ClassName = nameof(MappingViewModelProvider);
             _provider = provider;
+            _provider.CollectionEntity.CollectionChanged += CollectionEntity_CollectionChanged;
         }
-
         #endregion
         #region - Implementation of Interface -
         public Task<bool> Initialize(CancellationToken token = default)
         {
-            _provider.Refresh += Provider_Initialize;
-            _provider.Inserted += Provider_Insert;
-            _provider.Updated += Provider_Update;
-            _provider.Deleted += Provider_Delete;
+            try
+            {
+                Clear();
+                foreach (var item in _provider.ToList())
+                {
+                    Add(new CameraMappingViewModel(item));
+                }
 
-            return Provider_Initialize();
+                return Task.FromResult(true);
+            }
+            catch (System.Exception ex)
+            {
+                Debug.WriteLine($"Raised exception in {nameof(Initialize)} of {ClassName}: {ex.Message} ");
+                return Task.FromResult(false);
+            }
         }
-
-        
 
         public void Uninitialize()
         {
-            _provider.Refresh -= Provider_Initialize;
-            _provider.Inserted -= Provider_Insert;
-            _provider.Updated -= Provider_Update;
-            _provider.Deleted -= Provider_Delete;
-            _provider = null;
-
+            _provider.CollectionEntity.CollectionChanged -= CollectionEntity_CollectionChanged;
             Clear();
-
-            GC.Collect();
         }
         #endregion
         #region - Overrides -
@@ -64,91 +64,60 @@ namespace Ironwall.Libraries.Device.UI.Providers
         #region - Binding Methods -
         #endregion
         #region - Processes -
-        private async Task<bool> Provider_Initialize()
+        private void CollectionEntity_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            try
+            switch (e.Action)
             {
-                Clear();
+                case NotifyCollectionChangedAction.Add:
+                    // New items added
+                    foreach (CameraMappingModel newItem in e.NewItems)
+                    {
+                        Add(new CameraMappingViewModel(newItem));
+                    }
+                    break;
 
-                foreach (var item in _provider.ToList())
-                {
-                    var viewModel = ViewModelFactory.Build<CameraMappingViewModel>(item);
-                    await viewModel.ActivateAsync();
-                    Add(viewModel);
-                }
+                case NotifyCollectionChangedAction.Remove:
+                    // Items removed
+                    foreach (CameraMappingModel oldItem in e.OldItems)
+                    {
+                        var instance = CollectionEntity.Where(entity => entity.Id == oldItem.Id).FirstOrDefault();
+                        Remove(instance);
+                    }
+                    break;
 
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Raised Exception in {nameof(Provider_Initialize)}({ClassName}) : {ex.Message}");
-                return false;
-            }
-            
-        }
+                case NotifyCollectionChangedAction.Replace:
+                    // Some items replaced
+                    int index = 0;
+                    foreach (CameraMappingModel oldItem in e.OldItems)
+                    {
+                        var instance = CollectionEntity.Where(entity => entity.Id == oldItem.Id).FirstOrDefault();
+                        var entity = CollectionEntity.Where(entity => entity.Id == oldItem.Id).FirstOrDefault();
+                        index = CollectionEntity.IndexOf(entity);
+                        Remove(instance);
+                    }
+                    foreach (CameraMappingModel newItem in e.NewItems)
+                    {
+                        Add(new CameraMappingViewModel(newItem), index);
+                    }
+                    break;
 
-        private Task<bool> Provider_Insert(ICameraMappingModel item)
-        {
-                try
-                {
-                    var viewModel = ViewModelFactory.Build<CameraMappingViewModel>(item);
-                    Add(viewModel);
-                    return Task.FromResult(true);
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"Raised Exception in {nameof(Provider_Insert)}({ClassName}) : {ex.Message}");
-                    return Task.FromResult(false);
-                }
-        }
-
-        private async Task<bool> Provider_Update(ICameraMappingModel item)
-        {
-                try
-                {
-                    var viewModel = ViewModelFactory.Build<CameraMappingViewModel>(item);
-                    await viewModel.ActivateAsync();
-                    var searchedItem = CollectionEntity.Where(t => t.Id == item.Id).FirstOrDefault();
-                    if (searchedItem != null)
-                        searchedItem = viewModel;
-                    
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"Raised Exception in {nameof(Provider_Update)}({ClassName}) : {ex.Message}");
-                    return false;
-                }
-        }
-
-        private Task<bool> Provider_Delete(ICameraMappingModel item)
-        {
-            try
-            {
-                var searchedItem = CollectionEntity.Where(t => t.Id == item.Id).FirstOrDefault();
-                if (searchedItem != null)
-                {
-                    Remove(searchedItem);
-                }
-                
-                return Task.FromResult(true);
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Raised Exception in {nameof(Provider_Update)}({ClassName}) : {ex.Message}");
-                return Task.FromResult(false);
+                case NotifyCollectionChangedAction.Reset:
+                    // The whole list is refreshed
+                    CollectionEntity.Clear();
+                    foreach (CameraMappingModel newItem in _provider.ToList())
+                    {
+                        Add(new CameraMappingViewModel(newItem));
+                    }
+                    break;
             }
         }
-
         #endregion
         #region - IHanldes -
         #endregion
         #region - Properties -
-        public string ClassName { get; }
         #endregion
         #region - Attributes -
         private CameraMappingProvider _provider;
-
         #endregion
     }
 }

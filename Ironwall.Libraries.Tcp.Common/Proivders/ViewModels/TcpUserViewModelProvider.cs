@@ -1,6 +1,4 @@
 ﻿using Ironwall.Framework.Models.Accounts;
-using Ironwall.Framework.ViewModels.Account;
-using Ironwall.Framework.ViewModels;
 using Ironwall.Libraries.Tcp.Common.Proivders.Models;
 using System;
 using System.Collections.Generic;
@@ -91,7 +89,7 @@ namespace Ironwall.Libraries.Tcp.Common.Proivders.ViewModels
                     //{
                     //    searchedItem.IdUser = viewModel.IdUser;
                     //    searchedItem.Password = viewModel.Password;
-                    //    searchedItem.GroupId = viewModel.GroupId;
+                    //    searchedItem.MappingGroup = viewModel.MappingGroup;
                     //    searchedItem.EmployeeNumber = viewModel.EmployeeNumber;
                     //    searchedItem.Birth = viewModel.Birth;
                     //    searchedItem.Phone = viewModel.Phone;

@@ -20,6 +20,9 @@ using Ironwall.Framework.Models.Events;
 using Ironwall.Libraries.Devices.Providers;
 using System.Linq;
 using Ironwall.Framework.Models.Devices;
+using Ironwall.Libraries.Enums;
+using System.Collections.ObjectModel;
+using Ironwall.Libraries.Base.Services;
 
 
 namespace Ironwall.Libraries.Event.UI.ViewModels.Panels
@@ -33,20 +36,57 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Panels
         Email        : lsirikh@naver.com                                         
      ****************************************************************************/
 
-    public sealed class DetectionPanelViewModel : EventBasePanelViewModel
-        , IHandle<SearchEventResultMessageModel>
-
+    public sealed class DetectionPanelViewModel : EventBasePanelViewModel<IDetectionEventModel>
+                                                , IHandle<SearchEventListMessageModel<IDetectionEventModel>>
     {
 
         #region - Ctors -
-        public DetectionPanelViewModel(IEventAggregator eventAggregator
+        public DetectionPanelViewModel(ILogService log
+                                    , IEventAggregator eventAggregator
                                     ) : base(eventAggregator)
         {
+            _log = log;
         }
         #endregion
         #region - Implementation of Interface -
         #endregion
         #region - Overrides -
+        protected override Task EventInitialize()
+        {
+            return Task.Run(async () =>
+            {
+                try
+                {
+                    if (_cancellationTokenSource != null)
+                        _cancellationTokenSource.Cancel();
+
+                    _cancellationTokenSource = new CancellationTokenSource();
+
+                    IsVisible = false;
+
+                    await _eventAggregator.PublishOnUIThreadAsync(new SearchEventMessageModel(StartDate.ToString("yyyy-MM-dd HH:mm:ss.ff"), EndDate.ToString("yyyy-MM-dd HH:mm:ss.ff"), Enums.EnumEventType.Intrusion));
+
+                    await Task.Delay(ACTION_TOKEN_TIMEOUT, _cancellationTokenSource.Token);
+                    IsVisible = true;
+                }
+                catch (NotSupportedException)
+                {
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+
+            });
+        }
+
+        protected override void EventClear()
+        {
+            ViewModelProvider?.Clear();
+            NotifyOfPropertyChange(() => ViewModelProvider);
+            Total = 0;
+            Reported = 0;
+        }
         #endregion
         #region - Binding Methods -
         #endregion
@@ -63,20 +103,19 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Panels
 
                 IsVisible = false;
 
-                await Task.Delay(500, _cancellationTokenSource.Token);
-                await _eventAggregator.PublishOnUIThreadAsync(new SearchEventMessageModel(StartDate.ToString(), EndDate.ToString(), Enums.EnumEventType.Intrusion));
+                await _eventAggregator.PublishOnUIThreadAsync(new SearchEventMessageModel(StartDate.ToString("yyyy-MM-dd HH:mm:ss.ff"), EndDate.ToString("yyyy-MM-dd HH:mm:ss.ff"), Enums.EnumEventType.Intrusion));
                 await Task.Delay(ACTION_TOKEN_TIMEOUT, _cancellationTokenSource.Token);
                 
                 IsVisible = true;
             }
             catch (TaskCanceledException ex)
             {
-                Debug.WriteLine(ex.Message);
+                _log.Error(ex.Message);
                 IsVisible = true;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Raised Exception in {nameof(ClickSearch)}({nameof(DetectionPanelViewModel)}) : " + ex.Message);
+                _log.Error($"Raised Exception in {nameof(ClickSearch)}({nameof(DetectionPanelViewModel)}) : " + ex.Message);
             }
 
         }
@@ -85,6 +124,7 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Panels
         {
             try
             {
+
                 if (_cancellationTokenSource == null && _cancellationTokenSource.IsCancellationRequested)
                     return;
 
@@ -95,76 +135,31 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Panels
             }
 
         }
-
-        protected override Task EventInitialize()
-        {
-            return Task.Run(() =>
-            {
-                try
-                {
-                    _eventProvider = IoC.Get<EventProvider>();
-                    
-                    DetectionViewModelProvider = new DetectionViewModelProvider(_eventProvider);
-                    NotifyOfPropertyChange(() => DetectionViewModelProvider);
-                }
-                catch (NotSupportedException)
-                {
-
-                }
-                catch (Exception)
-                {
-
-                    throw;
-                }
-
-            });
-        }
-
-        protected override void EventClear()
-        {
-            DetectionViewModelProvider?.Clear();
-            NotifyOfPropertyChange(() => DetectionViewModelProvider);
-            Total = 0;
-            Reported = 0;
-        }
-
-
         #endregion
         #region - IHanldes -
-        public async Task HandleAsync(SearchEventResultMessageModel message, CancellationToken cancellationToken)
+        public Task HandleAsync(SearchEventListMessageModel<IDetectionEventModel> message, CancellationToken cancellationToken)
         {
-
             try
             {
-                if(!(message.Model is ISearchDetectionResponseModel response))
-                    throw new NullReferenceException(message: "Casted ResponseModel was null...");
+                if (!_cancellationTokenSource.IsCancellationRequested)
+                    _cancellationTokenSource.Cancel();
 
-                await _eventProvider?.ClearData();
-                DetectionViewModelProvider?.Uninitialize();
+                ViewModelProvider = new ObservableCollection<IDetectionEventModel>(message.Lists);
+                NotifyOfPropertyChange(()=> ViewModelProvider);
 
-                await CreateDetectionEvent(response.Events);
-
-                DetectionViewModelProvider = new DetectionViewModelProvider(_eventProvider);
-                await DetectionViewModelProvider.Initialize();
-                NotifyOfPropertyChange(() => DetectionViewModelProvider);
-
-                Total = DetectionViewModelProvider.Count();
-                Reported = DetectionViewModelProvider.Where(entity => entity.Status == 1).Count();
+                Total = ViewModelProvider.Count();
+                Reported = ViewModelProvider.Where(entity => entity.Status == EnumTrueFalse.True).Count();
                 NotifyOfPropertyChange(() => UnReported);
-                _cancellationTokenSource.Cancel();
                 IsVisible = true;
-            }
-            catch (NullReferenceException ex)
-            {
-                Debug.WriteLine($"Rasied Exception in {nameof(HandleAsync)} for {nameof(SearchEventResultMessageModel)} : {ex.Message}");
+                
+                
+                return Task.CompletedTask;
             }
             catch (Exception)
             {
 
                 throw;
             }
-            
-
         }
         #endregion
         #region - Properties -
@@ -184,6 +179,7 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Panels
         #endregion
         #region - Attributes -
         private int _reported;
+        private ILogService _log;
         #endregion
     }
 }

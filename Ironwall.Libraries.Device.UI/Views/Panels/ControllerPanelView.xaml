@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Ironwall.Libraries.Device.UI.Views.Panels"
-             xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+                         xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:utils="clr-namespace:Ironwall.Libraries.Utils;assembly=Ironwall.Libraries.Utils"
 			 xmlns:enums="clr-namespace:Ironwall.Libraries.Enums;assembly=Ironwall.Libraries.Enums"
 			 xmlns:ctrls="clr-namespace:Ironwall.Libraries.UI.Controls.UserControls;assembly=Ironwall.Libraries.UI.Controls"
@@ -118,18 +118,21 @@
 										Binding="{Binding Path=DeviceName, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
 
 						<DataGridTemplateColumn Header="Device Type"
-											SortMemberPath="UnitType"
-											CanUserSort="True">
+												SortMemberPath="UnitType"
+												CanUserSort="True">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate>
-									<TextBlock Text="{Binding DeviceType, Mode=TwoWay, Converter={StaticResource EnumDeviceTypeToTextConverter}, UpdateSourceTrigger=LostFocus}" />
+									<TextBlock VerticalAlignment="Center"
+											   TextAlignment="Center"
+											   Text="{Binding DeviceType, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 							<DataGridTemplateColumn.CellEditingTemplate>
 								<DataTemplate>
+									<!--{Binding Source={utils:EnumBindingSource {x:Type enums:EnumCameraType}}}-->
 									<ComboBox VerticalAlignment="Center"
-										  ItemsSource="{Binding Source={utils:EnumBindingSource {x:Type enums:EnumDeviceType}}}"
-										  SelectedItem="{Binding TypeDevice, Mode=TwoWay, Converter={StaticResource EnumDeivceTypeToValueConverter}, UpdateSourceTrigger=LostFocus}">
+											  ItemsSource="{Binding Source={utils:EnumBindingSource {x:Type enums:EnumDeviceType}}}"
+											  SelectedItem="{Binding DeviceType, Mode=TwoWay, UpdateSourceTrigger=LostFocus}">
 										<ComboBox.ItemsPanel>
 											<ItemsPanelTemplate>
 												<VirtualizingStackPanel />
@@ -140,29 +143,53 @@
 												<TextBlock Text="{Binding}" />
 											</DataTemplate>
 										</ComboBox.ItemTemplate>
-										<!--<ComboBox.ItemContainerStyle>
-											<Style TargetType="{x:Type ComboBoxItem}">
-												<Setter Property="IsEnabled"
-													Value="{Binding  Converter={StaticResource EnumDeviceTypeToAllowedDeviceConverter}, ConverterParameter='Controller'}" />
-											</Style>
-										</ComboBox.ItemContainerStyle>-->
 									</ComboBox>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellEditingTemplate>
 						</DataGridTemplateColumn>
 
+
+
 						<DataGridTextColumn Header="IpAddress"
-										Binding="{Binding Path=IpAddress, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+											Binding="{Binding Path=IpAddress, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
 
 						<DataGridTextColumn Header="Port"
-										IsReadOnly="True"
-										Binding="{Binding Path=Port, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+											IsReadOnly="True"
+											Binding="{Binding Path=Port, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
 
 						<DataGridTextColumn Header="Version"
-										Binding="{Binding Path=Version, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+											Binding="{Binding Path=Version, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
 
-						<DataGridTextColumn Header="Status"
-										Binding="{Binding Path=Status, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+						<DataGridTemplateColumn Header="Status"
+												SortMemberPath="Status"
+												CanUserSort="True">
+							<DataGridTemplateColumn.CellTemplate>
+								<DataTemplate>
+									<TextBlock VerticalAlignment="Center"
+											   TextAlignment="Center"
+											   Text="{Binding Status, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+								</DataTemplate>
+							</DataGridTemplateColumn.CellTemplate>
+							<DataGridTemplateColumn.CellEditingTemplate>
+								<DataTemplate>
+									<!--{Binding Source={utils:EnumBindingSource {x:Type enums:EnumCameraType}}}-->
+									<ComboBox VerticalAlignment="Center"
+											  ItemsSource="{Binding Source={utils:EnumBindingSource {x:Type enums:EnumDeviceStatus}}}"
+											  SelectedItem="{Binding Status, Mode=TwoWay, UpdateSourceTrigger=LostFocus}">
+										<ComboBox.ItemsPanel>
+											<ItemsPanelTemplate>
+												<VirtualizingStackPanel />
+											</ItemsPanelTemplate>
+										</ComboBox.ItemsPanel>
+										<ComboBox.ItemTemplate>
+											<DataTemplate>
+												<TextBlock Text="{Binding}" />
+											</DataTemplate>
+										</ComboBox.ItemTemplate>
+									</ComboBox>
+								</DataTemplate>
+							</DataGridTemplateColumn.CellEditingTemplate>
+						</DataGridTemplateColumn>
 
 					</DataGrid.Columns>
 				</DataGrid>

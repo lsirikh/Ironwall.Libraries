@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Windows;
 using Ironwall.Framework.ViewModels;
+using Ironwall.Libraries.Enums;
 
 namespace Ironwall.Libraries.Device.UI.ViewModels
 {
@@ -20,16 +21,14 @@ namespace Ironwall.Libraries.Device.UI.ViewModels
 
     public abstract class BaseDeviceViewModel<T> : BaseCustomViewModel<T>, IBaseDeviceViewModel<T> where T : IBaseDeviceModel
     {
-
         #region - Ctors -
         public BaseDeviceViewModel()
         {
         }
 
-        public BaseDeviceViewModel(T model)
+        public BaseDeviceViewModel(T model) : base(model)
         {
             _eventAggregator = IoC.Get<IEventAggregator>();
-            _model = model;
         }
         #endregion
         #region - Implementation of Interface -
@@ -73,7 +72,7 @@ namespace Ironwall.Libraries.Device.UI.ViewModels
             }
         }
 
-        public int DeviceType
+        public EnumDeviceType DeviceType
         {
             get { return _model.DeviceType; }
             set
@@ -82,6 +81,7 @@ namespace Ironwall.Libraries.Device.UI.ViewModels
                 NotifyOfPropertyChange(() => DeviceType);
             }
         }
+              
 
         public string Version
         {
@@ -93,7 +93,7 @@ namespace Ironwall.Libraries.Device.UI.ViewModels
             }
         }
 
-        public int Status
+        public EnumDeviceStatus Status
         {
             get { return _model.Status; }
             set

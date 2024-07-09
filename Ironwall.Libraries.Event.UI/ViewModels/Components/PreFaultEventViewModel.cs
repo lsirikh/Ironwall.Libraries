@@ -22,7 +22,7 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Components
         
         public PreFaultEventViewModel(IMalfunctionEventModel model) : base(model)
         {
-            MessageType = (int)EnumEventType.Fault;
+            MessageType = EnumEventType.Fault;
         }
         #endregion
         #region - Implementation of Interface -
@@ -32,7 +32,7 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Components
         }
         #endregion
         #region - Overrides -
-        public override async Task TaskFinal() => await SendAction();
+        public override async Task TaskFinal() => await SendAction(Contents, IdUser);
         public override Task SendAction(string content = null, string idUser = null)
         {
             if (content == null)
@@ -73,9 +73,9 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Components
                     //    if (item.IsActive && dialog.ClassName.Equals(targetViewModel))
                     //    {
                     //        var viewModel = item as PreEventRemoveDialogViewModel;
-                    //        if ((Reason == ((PreFaultEventViewModel)viewModel.EventViewModel).Reason)
-                    //        && (IdController == viewModel.EventViewModel.IdController)
-                    //        && (IdSensor == viewModel.EventViewModel.IdSensor))
+                    //        if ((Reason == ((PreFaultEventViewModel)viewModel.ExEventViewModel).Reason)
+                    //        && (IdController == viewModel.ExEventViewModel.IdController)
+                    //        && (IdSensor == viewModel.ExEventViewModel.IdSensor))
                     //        {
                     //            await EventAggregator?.PublishOnCurrentThreadAsync(new CloseDialogMessageModel());
                     //            break;
@@ -111,7 +111,7 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Components
         //public string NameAreaSpeaker { get; set; }
         //public string Action { get; set; }
         public string Type { get; set; }
-        public int Reason
+        public EnumFaultType Reason
         {
             get => (EventModel as IMalfunctionEventModel).Reason;
             set
@@ -134,7 +134,7 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Components
             get => (EventModel as IMalfunctionEventModel).FirstEnd;
             set
             {
-                (EventModel as IMalfunctionEventModel).Reason = value;
+                (EventModel as IMalfunctionEventModel).FirstEnd = value;
                 NotifyOfPropertyChange(() => CutFirstEnd);
             }
         }

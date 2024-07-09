@@ -76,7 +76,7 @@ namespace Ironwall.Libraries.CameraOnvif.Services
                     IOnvifModel model2 = null;
 
                     foreach (var item in _onvifProvider
-                        .Where(entity => entity.CameraDeviceModel.DeviceType == (int)EnumDeviceType.IpCamera).ToList())
+                        .Where(entity => entity.CameraDeviceModel.DeviceType == EnumDeviceType.IpCamera).ToList())
                     {
                         if (item.CameraDeviceModel.Id == model.FirstPreset.ReferenceId
                         && IsModeCheck(item.CameraDeviceModel, EnumCameraMode.ONVIF))
@@ -192,7 +192,7 @@ namespace Ironwall.Libraries.CameraOnvif.Services
 
         private bool IsModeCheck(ICameraDeviceModel item, EnumCameraMode onvif)
         {
-            //CameraDeviceProvider에서 API로 세팅된 Camera 찾기
+            //CameraDeviceProvider에서 API로 세팅된 Body 찾기
             return _deviceProvider.Where(entity => (entity.Id == item.Id) && (entity as ICameraDeviceModel).Mode == (int)onvif).Count() > 0 ? true : false;
         }
 

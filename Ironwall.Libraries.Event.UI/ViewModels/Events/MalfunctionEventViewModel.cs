@@ -11,66 +11,15 @@ using System.Threading.Tasks;
 
 namespace Ironwall.Libraries.Event.UI.ViewModels.Events
 {
-    public class MalfunctionEventViewModel
-        : MetaEventViewModel, IMalfunctionEventViewModel
+    public class MalfunctionEventViewModel : MetaEventViewModel, IMalfunctionEventViewModel
     {
         #region - Ctors -
         public MalfunctionEventViewModel()
         {
-
+            _model = new MalfunctionEventModel();
         }
         public MalfunctionEventViewModel(IMalfunctionEventModel model) : base(model)
         {
-            //Reason = model.Reason;
-            //FirstStart = model.FirstStart;
-            //FirstEnd = model.FirstEnd;
-            //SecondStart = model.SecondStart;
-            //SecondEnd = model.SecondEnd;
-
-            //Device = GetDevice(model.Device);
-        }
-
-        private IDeviceViewModel GetDevice(IBaseDeviceModel device)
-        {
-            IDeviceViewModel model = null;
-            try
-            {
-                switch ((EnumDeviceType)device.DeviceType)
-                {
-                    case EnumDeviceType.NONE:
-                        {
-
-                        }
-                        break;
-                    case EnumDeviceType.Controller:
-                        {
-                            model = Libraries.Device.UI.ViewModels.ViewModelFactory.Build<ControllerDeviceViewModel>(device as IControllerDeviceModel);
-                        }
-                        break;
-                    case EnumDeviceType.Multi:
-                    case EnumDeviceType.Fence:
-                    case EnumDeviceType.Underground:
-                    case EnumDeviceType.Contact:
-                    case EnumDeviceType.PIR:
-                    case EnumDeviceType.IoController:
-                    case EnumDeviceType.Laser:
-                    case EnumDeviceType.Cable:
-                        {
-                            model = Libraries.Device.UI.ViewModels.ViewModelFactory.Build<SensorDeviceViewModel>(device as ISensorDeviceModel);
-                        }
-                        break;
-                    case EnumDeviceType.IpCamera:
-                        break;
-                    default:
-                        break;
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"{ex.Message}");
-            }
-
-            return model;
         }
         #endregion
         #region - Implementation of Interface -
@@ -84,7 +33,7 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Events
         #region - IHanldes -
         #endregion
         #region - Properties -
-        public int Reason
+        public EnumFaultType Reason
         {
             get { return (_model as IMalfunctionEventModel).Reason; }
             set

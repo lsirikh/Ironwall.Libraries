@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Ironwall.Libraries.WatchDog
 {
-    class Program
+    public class Program
     {
         public static void Main(string[] args)
         {

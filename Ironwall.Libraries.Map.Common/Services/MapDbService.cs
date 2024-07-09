@@ -24,6 +24,7 @@ using System.Windows.Media;
 using Ironwall.Libraries.Map.Common.Helpers;
 using System.Windows.Documents;
 using Ironwall.Framework.Services;
+using Ironwall.Framework.ViewModels;
 
 namespace Ironwall.Libraries.Map.Common.Services
 {

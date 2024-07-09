@@ -1,4 +1,6 @@
-﻿namespace Ironwall.Libraries.Device.UI.ViewModels
+﻿using Ironwall.Framework.Models.Devices;
+
+namespace Ironwall.Libraries.Device.UI.ViewModels
 {
     public interface IControllerDeviceViewModel : IDeviceViewModel
     {

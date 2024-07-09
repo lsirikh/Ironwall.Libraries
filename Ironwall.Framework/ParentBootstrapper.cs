@@ -28,6 +28,9 @@ namespace Ironwall.Framework
         {
             CancellationTokenSourceHandler = new CancellationTokenSource();
             _log = new LogService();
+
+            string projectName = System.Reflection.Assembly.GetEntryAssembly().GetName().Name;
+            _log.Info($"############### Program{projectName} was started. ###############");
         }
 
         #region - Abstracts -
@@ -65,7 +68,6 @@ namespace Ironwall.Framework
                     DispatcherService.Invoke((System.Action)(async () =>
                     {
                         await service.Initialize(token).ConfigureAwait(false);
-                        //await service.Initialize(token);
 
                     }));
                 }
@@ -269,10 +271,6 @@ namespace Ironwall.Framework
         {
             Container.InjectProperties(instance);
         }
-
-       
-
-        
         #endregion
 
         #region - Fields -

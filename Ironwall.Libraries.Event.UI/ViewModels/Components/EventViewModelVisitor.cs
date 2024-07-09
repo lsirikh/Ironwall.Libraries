@@ -49,7 +49,7 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Components
                     //NameArea = viewModel.NameArea,
                     //NameDevice = viewModel.NameDevice,
                     //NameAreaSpeaker = viewModel.NameAreaSpeaker,
-                    //EventId = actionModel.FromEvent.Id,
+                    //Id = actionModel.FromEvent.Id,
                     //DateTimeAction = actionModel.DateTime,
                     //ActionContents = actionModel.Content,
                     //IdUser = actionModel.User,
@@ -80,12 +80,12 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Components
         {
             try
             {
-                Func<int, string> funcReason = (reasonType) =>
+                Func<EnumFaultType, string> funcReason = (reasonType) =>
                 {
                     return EnumLanguageHelper.GetEventType(LanguageConst.KOREAN, reasonType);
                 };
 
-                Func<int, string> funcType = (uType) =>
+                Func<EnumDeviceType, string> funcType = (uType) =>
                 {
                     return EnumLanguageHelper.GetDeviceType(LanguageConst.KOREAN, uType);
                 };

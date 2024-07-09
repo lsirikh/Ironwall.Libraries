@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Ironwall.Libraries.Event.UI.Views.Panels"
+             xmlns:local="clr-namespace:Ironwall.Libraries.Event.UI.Views.Dashboards"
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:cal="http://www.caliburnproject.org"
 			 xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
@@ -17,7 +17,7 @@
 		<Grid.RowDefinitions>
 			<RowDefinition Height="*" />
 		</Grid.RowDefinitions>
-		
+
 		<TabControl Grid.Row="0"
 					HorizontalContentAlignment="Stretch"
 					VerticalContentAlignment="Top"
@@ -111,3 +111,4 @@
 
 	</Grid>
 </UserControl>
+

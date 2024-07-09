@@ -12,11 +12,10 @@ namespace Ironwall.Libraries.Devices.Providers.Models
         Email        : lsirikh@naver.com                                         
      ****************************************************************************/
 
-    public class CameraProfileProvider : CameraOptionBaseProvider<ICameraProfileModel>
+    public class CameraProfileProvider : WrapperOptionProvider<CameraProfileModel>
     {
-
         #region - Ctors -
-        public CameraProfileProvider()
+        public CameraProfileProvider(CameraOptionProvider provider) : base(provider)
         {
             ClassName = nameof(CameraProfileProvider);
         }

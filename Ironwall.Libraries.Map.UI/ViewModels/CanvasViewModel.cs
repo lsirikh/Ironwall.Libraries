@@ -40,6 +40,7 @@ using ZoomAndPan;
 using System.Runtime.Remoting.Contexts;
 using System.Security.RightsManagement;
 using System.Runtime.Remoting.Messaging;
+using Ironwall.Libraries.Base.Services;
 
 namespace Ironwall.Libraries.Map.UI.ViewModels
 {
@@ -57,21 +58,16 @@ namespace Ironwall.Libraries.Map.UI.ViewModels
 
         #region - Ctors -
         public CanvasViewModel(IEventAggregator eventAggregator
-
-
-            //, MapDbService mapDbService
-            , SymbolCollectionViewModel symbolCollectionViewModel
-
-            ) : base(eventAggregator)
+                                , ILogService log
+                                //, MapDbService mapDbService
+                                , SymbolCollectionViewModel symbolCollectionViewModel
+                                ) : base(eventAggregator)
         {
-            //_mapDbService = mapDbService;
-
+            _log = log;
             SymbolCollectionViewModel = symbolCollectionViewModel;
             //MapViewModelProvider = mapViewModelProvider;
             //MapViewModelProvider.Refresh += MapViewModelProvider_Refresh;
         }
-
-
         #endregion
         #region - Implementation of Interface -
         #endregion
@@ -883,6 +879,7 @@ namespace Ironwall.Libraries.Map.UI.ViewModels
             }
         }
 
+        private ILogService _log;
 
         public SymbolCollectionViewModel SymbolCollectionViewModel { get; }
         public ISymbolModel SelectedSymbol { get; set; }

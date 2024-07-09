@@ -1,5 +1,6 @@
 ﻿using Ironwall.Framework.DataProviders;
 using Ironwall.Framework.Models.Events;
+using Ironwall.Libraries.Devices.Providers;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -9,15 +10,13 @@ using System.Threading.Tasks;
 
 namespace Ironwall.Libraries.Events.Providers
 {
-    public class ActionEventProvider
-        : ActionBaseProvider
+    public class ActionEventProvider : BaseProvider<IActionEventModel>
     {
         #region - Ctors -
         public ActionEventProvider()
         {
             ClassName = nameof(ActionEventProvider);
         }
-
         #endregion
         #region - Implementation of Interface -
         #endregion

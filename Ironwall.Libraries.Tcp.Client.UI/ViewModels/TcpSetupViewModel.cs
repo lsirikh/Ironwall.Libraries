@@ -9,6 +9,7 @@ using System;
 using Ironwall.Libraries.Tcp.Client.UI.Models.Messages;
 using Ironwall.Libraries.Tcp.Client.UI.Models;
 using Ironwall.Libraries.Tcp.Client.UI.Infos;
+using Ironwall.Libraries.Base.Services;
 
 namespace Ironwall.Libraries.Tcp.Client.UI.ViewModels
 {
@@ -25,13 +26,13 @@ namespace Ironwall.Libraries.Tcp.Client.UI.ViewModels
     {
 
         #region - Ctors -
-        public TcpSetupViewModel(
-            IEventAggregator eventAggregator
-            , TcpClientSetupModel tcpClientSetupModel
-            , ClientStatusViewModel clientStatusViewModel
-            ) : base(eventAggregator)
+        public TcpSetupViewModel(ILogService log
+                                , IEventAggregator eventAggregator
+                                , TcpClientSetupModel tcpClientSetupModel
+                                , ClientStatusViewModel clientStatusViewModel
+                                ) : base(eventAggregator)
         {
-
+            _log = log;
             _tcpClientSetupModel = tcpClientSetupModel;
 
             ClientStatusViewModel = clientStatusViewModel;
@@ -64,7 +65,7 @@ namespace Ironwall.Libraries.Tcp.Client.UI.ViewModels
                 await _eventAggregator.PublishOnCurrentThreadAsync(new OpenProgressPopupMessageModel(), _cancellationTokenSource.Token);
 
                 var model = MessageFactory.Build<ClientConnectionMessage>(_tcpClientSetupModel.ClientId, _tcpClientSetupModel.ServerIp, _tcpClientSetupModel.ServerPort, true);
-                await _eventAggregator.PublishOnUIThreadAsync(model);
+                await _eventAggregator.PublishOnUIThreadAsync(model, _cancellationTokenSource.Token);
 
                 await Task.Delay(ACTION_TOKEN_TIMEOUT, _cancellationTokenSource.Token);
                 await _eventAggregator.PublishOnUIThreadAsync(new ClosePopupMessageModel(), _cancellationTokenSource.Token);
@@ -91,7 +92,7 @@ namespace Ironwall.Libraries.Tcp.Client.UI.ViewModels
                 await _eventAggregator.PublishOnCurrentThreadAsync(new OpenProgressPopupMessageModel(), _cancellationTokenSource.Token);
 
                 var model = MessageFactory.Build<ClientConnectionMessage>(_tcpClientSetupModel.ClientId, _tcpClientSetupModel.ServerIp, _tcpClientSetupModel.ServerPort, false);
-                await _eventAggregator.PublishOnUIThreadAsync(model);
+                await _eventAggregator.PublishOnUIThreadAsync(model, _cancellationTokenSource.Token);
 
                 await Task.Delay(ACTION_TOKEN_TIMEOUT, _cancellationTokenSource.Token);
                 await _eventAggregator.PublishOnUIThreadAsync(new ClosePopupMessageModel(), _cancellationTokenSource.Token);
@@ -329,6 +330,7 @@ namespace Ironwall.Libraries.Tcp.Client.UI.ViewModels
         private string _serverClassC;
         private string _serverClassD;
         private bool _isEnable;
+        private ILogService _log;
         private TcpClientSetupModel _tcpClientSetupModel;
         public ClientStatusViewModel ClientStatusViewModel { get; private set; }
         #endregion

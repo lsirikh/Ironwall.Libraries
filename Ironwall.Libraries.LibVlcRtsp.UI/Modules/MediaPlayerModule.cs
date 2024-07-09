@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using Ironwall.Libraries.LibVlcRtsp.UI.ViewModels;
 using LibVLCSharp.Shared;
 
 namespace Ironwall.Libraries.LibVlcRtsp.UI.Modules
@@ -32,6 +33,7 @@ namespace Ironwall.Libraries.LibVlcRtsp.UI.Modules
                     return mediaPlayer;
                 })
                 .As<VlcMediaPlayer>();
+                builder.RegisterType<VlcComponentViewModel>().InstancePerDependency();
             }
             catch
             {

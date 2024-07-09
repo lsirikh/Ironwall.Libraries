@@ -133,18 +133,14 @@
     <Compile Include="Services\RedisService.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Ironwall.Libraries.Enums\Ironwall.Libraries.Enums.csproj">
-      <Project>{848ae203-d3b4-4e73-8ef0-1a18d88a040c}</Project>
-      <Name>Ironwall.Libraries.Enums</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Ironwall.Libraries.Utils\Ironwall.Libraries.Utils.csproj">
-      <Project>{14220279-9b26-4383-bf1e-a0da31726758}</Project>
-      <Name>Ironwall.Libraries.Utils</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Ironwall.Libraries.Base\Ironwall.Libraries.Base.csproj">
+      <Project>{9d2531fc-7a97-478b-9303-9b0a3d223551}</Project>
+      <Name>Ironwall.Libraries.Base</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\Sensorway.VMS.Solution.Server\packages\Microsoft.Extensions.Logging.Abstractions.6.0.0\build\Microsoft.Extensions.Logging.Abstractions.targets" Condition="Exists('..\..\Sensorway.VMS.Solution.Server\packages\Microsoft.Extensions.Logging.Abstractions.6.0.0\build\Microsoft.Extensions.Logging.Abstractions.targets')" />

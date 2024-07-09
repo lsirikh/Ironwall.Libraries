@@ -4,10 +4,13 @@ using Ironwall.Framework.Models.Messages;
 using Ironwall.Framework.Services;
 using Ironwall.Framework.ViewModels;
 using Ironwall.Framework.ViewModels.ConductorViewModels;
+using Ironwall.Libraries.Base.Services;
 using Ironwall.Libraries.Device.UI.Messages;
 using Ironwall.Libraries.Device.UI.Providers;
+using Ironwall.Libraries.Devices.Providers;
 using Ironwall.Libraries.Devices.Providers.Models;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
@@ -33,10 +36,12 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Setups
     {
 
         #region - Ctors -
-        public CameraMappingSetupViewModel(IEventAggregator eventAggregator)
+        public CameraMappingSetupViewModel(IEventAggregator eventAggregator
+                                        , ILogService log)
                                             : base(eventAggregator)
         {
             ViewModelProvider = new ObservableCollection<CameraMappingViewModel>();
+            _log = log;
         }
 
         #endregion
@@ -52,11 +57,9 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Setups
 
         }
 
-        protected override Task Uninitialize()
+        protected override async Task Uninitialize()
         {
-            ViewModelProvider.CollectionChanged -= ViewModelProvider_CollectionChanged;
-            base.Uninitialize();
-            return Task.CompletedTask;
+            await base.Uninitialize();
         }
 
         public override async void OnClickInsertButton(object sender, RoutedEventArgs e)
@@ -68,7 +71,7 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Setups
         {
             DispatcherService.Invoke((System.Action)(async () =>
             {
-                foreach (var item in _provider.OfType<CameraMappingViewModel>().ToList())
+                foreach (var item in ViewModelProvider.ToList())
                 {
                     if(item.IsSelected)
                         ViewModelProvider.Remove(item);
@@ -87,8 +90,13 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Setups
 
                 await _eventAggregator.PublishOnUIThreadAsync(new OpenProgressPopupMessageModel(), _cancellationTokenSource.Token);
 
+                var list = new List<ICameraMappingModel>();
+                foreach (var item in ViewModelProvider)
+                {
+                    list.Add(item.Model);
+                }
                 ///송신 로직
-                await _eventAggregator.PublishOnUIThreadAsync(new RequestMappingInsertMessage());
+                await _eventAggregator.PublishOnUIThreadAsync(new RequestMappingInsertMessage(list));
 
 
                 await Task.Delay(ACTION_TOKEN_TIMEOUT, _pCancellationTokenSource.Token);
@@ -97,11 +105,11 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Setups
             catch (TaskCanceledException ex)
             {
                 await _eventAggregator.PublishOnUIThreadAsync(new ClosePopupMessageModel());
-                Debug.WriteLine($"Rasied {nameof(TaskCanceledException)}({nameof(OnClickSaveButton)} in {ClassName}): {ex.Message}");
+                _log.Error($"Rasied {nameof(TaskCanceledException)}({nameof(OnClickSaveButton)} in {ClassName}): {ex.Message}");
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Rasied {nameof(Exception)}({nameof(OnClickSaveButton)} in {ClassName}): {ex.Message}");
+                _log.Error($"Rasied {nameof(Exception)}({nameof(OnClickSaveButton)} in {ClassName}): {ex.Message}");
                 var explain = ex.Message;
 
                 await _eventAggregator.PublishOnUIThreadAsync(new OpenInfoPopupMessageModel
@@ -132,11 +140,11 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Setups
             catch (TaskCanceledException ex)
             {
                 await _eventAggregator.PublishOnUIThreadAsync(new ClosePopupMessageModel());
-                Debug.WriteLine($"Rasied {nameof(TaskCanceledException)}({nameof(OnClickReloadButton)} in {ClassName}): {ex.Message}");
+                _log.Error($"Rasied {nameof(TaskCanceledException)}({nameof(OnClickReloadButton)} in {ClassName}): {ex.Message}");
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Rasied {nameof(Exception)}({nameof(OnClickReloadButton)} in {ClassName}): {ex.Message}");
+                _log.Error($"Rasied {nameof(Exception)}({nameof(OnClickReloadButton)} in {ClassName}): {ex.Message}");
                 var explain = ex.Message;
 
                 await _eventAggregator.PublishOnUIThreadAsync(new OpenInfoPopupMessageModel
@@ -163,11 +171,8 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Setups
                     if (cancellationToken.IsCancellationRequested) new TaskCanceledException("Task was cancelled!");
 
                     _provider = IoC.Get<MappingViewModelProvider>();
-
                     SensorViewModelProvider = IoC.Get<SensorViewModelProvider>();
                     PresetViewModelProvider = IoC.Get<PresetViewModelProvider>();
-
-                    ViewModelProvider.CollectionChanged -= ViewModelProvider_CollectionChanged;
 
                     DispatcherService.Invoke((System.Action)(() =>
                     {
@@ -179,101 +184,44 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Setups
 
                     }));
                     NotifyOfPropertyChange(() => ViewModelProvider);
-                    ViewModelProvider.CollectionChanged += ViewModelProvider_CollectionChanged;
                     
                     await Task.Delay(500, cancellationToken);
                     IsVisible = true;
                 }
                 catch (TaskCanceledException ex)
                 {
-                    Debug.WriteLine($"Raised {nameof(TaskCanceledException)}({nameof(DataInitialize)} in {ClassName}) : {ex.Message}");
+                    _log.Error($"Raised {nameof(TaskCanceledException)}({nameof(DataInitialize)} in {ClassName}) : {ex.Message}");
                 }
                 
             }, cancellationToken);
         }
 
-        private async void ViewModelProvider_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            var provider = IoC.Get<CameraMappingProvider>();
-            switch (e.Action)
-            {
-                case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
-                    // New items added
-                    foreach (CameraMappingViewModel newItem in e.NewItems)
-                    {
-                        //_provider.Add(newItem);
-                        //provider.Add(newItem.Model);
-                        await provider.InsertedItem(newItem.Model);
-                    }
-                    break;
-
-                case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
-                    // Items removed
-                    foreach (CameraMappingViewModel newItem in e.OldItems)
-                    {
-                        //_provider.Remove(newItem);
-                        //provider.Remove(newItem.Model);
-                        await provider.DeletedItem(newItem.Model);
-                    }
-                    break;
-
-                case System.Collections.Specialized.NotifyCollectionChangedAction.Replace:
-                    // Some items replaced
-                    foreach (CameraMappingViewModel oldItem in e.OldItems)
-                    {
-                        //_provider.Remove(oldItem);
-                        //provider.Remove(oldItem.Model);
-                        await provider.DeletedItem(oldItem.Model);
-                    }
-                    foreach (CameraMappingViewModel newItem in e.NewItems)
-                    {
-                        //_provider.Add(newItem);
-                        //provider.Add(newItem.Model);
-                        await provider.InsertedItem(newItem.Model);
-                    }
-                    break;
-
-                case System.Collections.Specialized.NotifyCollectionChangedAction.Reset:
-                    // The whole list is refreshed
-                    //_provider.Clear();
-                    //provider.Clear();
-                    await provider.ClearData();
-                    foreach (CameraMappingViewModel item in ViewModelProvider)
-                    {
-                        //_provider.Add(item);
-                        //provider.Add(item.Model);
-                        provider.Add(item.Model);
-                    }
-                    await provider.Finished();
-                    break;
-            }
-        }
-
-        public async Task HandleAsync(MappingAppliedMessage message, CancellationToken cancellationToken)
+        public Task HandleAsync(MappingAppliedMessage message, CancellationToken cancellationToken)
         {
             IsVisible = false;
             
-            await Task.Delay(500);
+            //await Task.Delay(500);
             
-            ViewModelProvider.CollectionChanged -= ViewModelProvider_CollectionChanged;
             DispatcherService.Invoke((System.Action)(() =>
             {
-                ViewModelProvider.Clear();
-                foreach (CameraMappingViewModel item in _provider)
+                foreach (var item in message.Mappings)
                 {
-                    ViewModelProvider.Add(item);
+                    ViewModelProvider.Add(new CameraMappingViewModel(item));
                 }
+
             }));
 
-            ViewModelProvider.CollectionChanged += ViewModelProvider_CollectionChanged;
             IsVisible = true;
 
+            return Task.CompletedTask;
         }
 
         public async Task HandleAsync(ResponseMappingInsertMessage message, CancellationToken cancellationToken)
         {
-            _pCancellationTokenSource.Cancel();
             await Task.Delay(500);
+            _pCancellationTokenSource.Cancel();
+
+            await DataInitialize(_cancellationTokenSource.Token);
 
             await _eventAggregator.PublishOnUIThreadAsync(new OpenInfoPopupMessageModel
             {
@@ -283,8 +231,8 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Setups
 
         public async Task HandleAsync(ResponseMappingReloadMessage message, CancellationToken cancellationToken)
         {
-            _pCancellationTokenSource.Cancel();
             await Task.Delay(500);
+            _pCancellationTokenSource.Cancel();
 
             await DataInitialize(_cancellationTokenSource.Token);
 
@@ -303,6 +251,7 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Setups
         #endregion
         #region - Attributes -
         public MappingViewModelProvider _provider;
+        private ILogService _log;
         #endregion
     }
 }

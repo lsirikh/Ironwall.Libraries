@@ -87,7 +87,7 @@ namespace Ironwall.Libraries.Account.Common.Providers.ViewModels
                     var searchedItem = CollectionEntity.Where(t => t.Id == item.Id).FirstOrDefault() as IUserViewModel;
 
                     //Debug.WriteLine($"<<<<<<<<<<<<{ClassName} {nameof(Provider_Updated)}>>>>>>>>>>>>>>>>>");
-                    //Debug.WriteLine($"{(searchedItem as IUserViewModel).GroupId}=====>{viewModel.GroupId}변경 ");
+                    //Debug.WriteLine($"{(searchedItem as IUserViewModel).MappingGroup}=====>{viewModel.MappingGroup}변경 ");
                     if (searchedItem != null)
                     {
                         searchedItem.IdUser  = viewModel.IdUser;
@@ -104,7 +104,7 @@ namespace Ironwall.Libraries.Account.Common.Providers.ViewModels
                         searchedItem.Company  = viewModel.Company;
                         searchedItem.Used  = viewModel.Used;
                         searchedItem.Level  = viewModel.Level;
-                        //Debug.WriteLine($"변경된 이름 ====>{searchedItem.GroupId}");
+                        //Debug.WriteLine($"변경된 이름 ====>{searchedItem.MappingGroup}");
                     }
                     
                 }

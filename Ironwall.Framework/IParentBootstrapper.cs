@@ -2,7 +2,7 @@
 
 namespace Ironwall.Framework
 {
-    public interface IParentBootstrapper
+    interface IParentBootstrapper
     {
         Task Start();
         void Stop();

@@ -29,7 +29,7 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Dialogs
 
         #region - Properties - 
         //ActionReport Id
-        public string Id
+        public int Id
         {
             get => _eventViewModel.Id;
             set 

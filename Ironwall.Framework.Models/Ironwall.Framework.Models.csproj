@@ -1,0 +1,524 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{3E640A4B-DDB5-47D0-BED9-8187F01B1D6B}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Ironwall.Framework.Models</RootNamespace>
+    <AssemblyName>Ironwall.Framework.Models</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Dotnet.OnvifSolution.Base, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Exts\Dotnet.OnvifSolution.Base.dll</HintPath>
+    </Reference>
+    <Reference Include="Ironwall.Message.Base, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Exts\Ironwall.Message.Base.dll</HintPath>
+    </Reference>
+    <Reference Include="Ironwall.Middleware.Message.Framework, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Exts\Ironwall.Middleware.Message.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Ironwall.Redis.Message.Framework, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Exts\Ironwall.Redis.Message.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\Ironwall.Monitoring.Client\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="Sensorway.Accounts.Base, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Exts\Sensorway.Accounts.Base.dll</HintPath>
+    </Reference>
+    <Reference Include="Sensorway.Events.Base, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Exts\Sensorway.Events.Base.dll</HintPath>
+    </Reference>
+    <Reference Include="Sensorway.Framework.Models, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Exts\Sensorway.Framework.Models.dll</HintPath>
+    </Reference>
+    <Reference Include="Sensorway.VMS.Messages, Version=1.7.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Exts\Sensorway.VMS.Messages.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Accounts\AccountBaseModel.cs" />
+    <Compile Include="Accounts\IAccountBaseModel.cs" />
+    <Compile Include="Accounts\ILoginBaseModel.cs" />
+    <Compile Include="Accounts\ILoginSessionModel.cs" />
+    <Compile Include="Accounts\ILoginUserModel.cs" />
+    <Compile Include="Accounts\IUserBaseModel.cs" />
+    <Compile Include="Accounts\IUserModel.cs" />
+    <Compile Include="Accounts\LoginBaseModel.cs" />
+    <Compile Include="Accounts\LoginSessionModel.cs" />
+    <Compile Include="Accounts\LoginUserModel.cs" />
+    <Compile Include="Accounts\UserBaseModel.cs" />
+    <Compile Include="Accounts\UserModel.cs" />
+    <Compile Include="BaseModel.cs" />
+    <Compile Include="Communications\Accounts\AccountAllRequestModel.cs" />
+    <Compile Include="Communications\Accounts\AccountAllResponseModel.cs" />
+    <Compile Include="Communications\Accounts\AccountDeleteAllRequestModel.cs" />
+    <Compile Include="Communications\Accounts\AccountDeleteAllResponseModel.cs" />
+    <Compile Include="Communications\Accounts\AccountDeleteRequestModel.cs" />
+    <Compile Include="Communications\Accounts\AccountDeleteResponseModel.cs" />
+    <Compile Include="Communications\Accounts\AccountDetailModel.cs" />
+    <Compile Include="Communications\Accounts\AccountEditRequestModel.cs" />
+    <Compile Include="Communications\Accounts\AccountEditResponseModel.cs" />
+    <Compile Include="Communications\Accounts\AccountIdCheckRequestModel.cs" />
+    <Compile Include="Communications\Accounts\AccountIdCheckResponseModel.cs" />
+    <Compile Include="Communications\Accounts\AccountInfoRequestModel.cs" />
+    <Compile Include="Communications\Accounts\AccountInfoResponseModel.cs" />
+    <Compile Include="Communications\Accounts\AccountRegisterRequestModel.cs" />
+    <Compile Include="Communications\Accounts\AccountRegisterResponseModel.cs" />
+    <Compile Include="Communications\Accounts\IAccountAllRequestModel.cs" />
+    <Compile Include="Communications\Accounts\IAccountAllResponseModel.cs" />
+    <Compile Include="Communications\Accounts\IAccountDeleteAllRequestModel.cs" />
+    <Compile Include="Communications\Accounts\IAccountDeleteAllResponseModel.cs" />
+    <Compile Include="Communications\Accounts\IAccountDeleteRequestModel.cs" />
+    <Compile Include="Communications\Accounts\IAccountDeleteResponseModel.cs" />
+    <Compile Include="Communications\Accounts\IAccountEditRequestModel.cs" />
+    <Compile Include="Communications\Accounts\IAccountEditResponseModel.cs" />
+    <Compile Include="Communications\Accounts\IAccountIdCheckRequestModel.cs" />
+    <Compile Include="Communications\Accounts\IAccountInfoRequestModel.cs" />
+    <Compile Include="Communications\Accounts\IAccountInfoResponseModel.cs" />
+    <Compile Include="Communications\Accounts\IAccountRegisterRequestModel.cs" />
+    <Compile Include="Communications\Accounts\IAccountRegisterResponseModel.cs" />
+    <Compile Include="Communications\Accounts\IKeepAliveRequestModel.cs" />
+    <Compile Include="Communications\Accounts\IKeepAliveResponseModel.cs" />
+    <Compile Include="Communications\Accounts\ILoginRequestModel.cs" />
+    <Compile Include="Communications\Accounts\ILoginResponseModel.cs" />
+    <Compile Include="Communications\Accounts\ILoginResultModel.cs" />
+    <Compile Include="Communications\Accounts\ILogoutRequestModel.cs" />
+    <Compile Include="Communications\Accounts\ILogoutResponseModel.cs" />
+    <Compile Include="Communications\Accounts\KeepAliveRequestModel.cs" />
+    <Compile Include="Communications\Accounts\KeepAliveResponseModel.cs" />
+    <Compile Include="Communications\Accounts\LoginRequestModel.cs" />
+    <Compile Include="Communications\Accounts\LoginResponseModel.cs" />
+    <Compile Include="Communications\Accounts\LoginResultModel.cs" />
+    <Compile Include="Communications\Accounts\LogoutRequestModel.cs" />
+    <Compile Include="Communications\Accounts\LogoutResponseModel.cs" />
+    <Compile Include="Communications\BaseEventMessageModel.cs" />
+    <Compile Include="Communications\BaseMessageModel.cs" />
+    <Compile Include="Communications\Devices\CameraDataRequestModel.cs" />
+    <Compile Include="Communications\Devices\CameraDataResponseModel.cs" />
+    <Compile Include="Communications\Devices\CameraDataSaveRequestModel.cs" />
+    <Compile Include="Communications\Devices\CameraDataSaveResponseModel.cs" />
+    <Compile Include="Communications\Devices\CameraMappingRequestModel.cs" />
+    <Compile Include="Communications\Devices\CameraMappingResponseModel.cs" />
+    <Compile Include="Communications\Devices\CameraMappingSaveRequestModel.cs" />
+    <Compile Include="Communications\Devices\CameraMappingSaveResponseModel.cs" />
+    <Compile Include="Communications\Devices\CameraOptionRequestModel.cs" />
+    <Compile Include="Communications\Devices\CameraOptionResponseModel.cs" />
+    <Compile Include="Communications\Devices\CameraPresetRequestModel.cs" />
+    <Compile Include="Communications\Devices\CameraPresetResponseModel.cs" />
+    <Compile Include="Communications\Devices\CameraPresetSaveRequestModel.cs" />
+    <Compile Include="Communications\Devices\CameraPresetSaveResponseModel.cs" />
+    <Compile Include="Communications\Devices\ControllerDataRequestModel.cs" />
+    <Compile Include="Communications\Devices\ControllerDataResponseModel.cs" />
+    <Compile Include="Communications\Devices\DeviceDataRequestModel.cs" />
+    <Compile Include="Communications\Devices\DeviceDataResponseModel.cs" />
+    <Compile Include="Communications\Devices\DeviceMaxIdRequestModel.cs" />
+    <Compile Include="Communications\Devices\DeviceMaxIdResponseModel.cs" />
+    <Compile Include="Communications\Devices\ICameraDataRequestModel.cs" />
+    <Compile Include="Communications\Devices\ICameraDataResponseModel.cs" />
+    <Compile Include="Communications\Devices\ICameraDataSaveRequestModel.cs" />
+    <Compile Include="Communications\Devices\ICameraDataSaveResponseModel.cs" />
+    <Compile Include="Communications\Devices\ICameraMappingRequestModel.cs" />
+    <Compile Include="Communications\Devices\ICameraMappingResponseModel.cs" />
+    <Compile Include="Communications\Devices\ICameraMappingSaveRequestModel.cs" />
+    <Compile Include="Communications\Devices\ICameraMappingSaveResponseModel.cs" />
+    <Compile Include="Communications\Devices\ICameraOptionRequestModel.cs" />
+    <Compile Include="Communications\Devices\ICameraOptionResponseModel.cs" />
+    <Compile Include="Communications\Devices\ICameraPresetRequestModel.cs" />
+    <Compile Include="Communications\Devices\ICameraPresetResponseModel.cs" />
+    <Compile Include="Communications\Devices\ICameraPresetSaveRequestModel.cs" />
+    <Compile Include="Communications\Devices\ICameraPresetSaveResponseModel.cs" />
+    <Compile Include="Communications\Devices\IControllerDataRequestModel.cs" />
+    <Compile Include="Communications\Devices\IControllerDataResponseModel.cs" />
+    <Compile Include="Communications\Devices\IDeviceDataRequestModel.cs" />
+    <Compile Include="Communications\Devices\IDeviceDataResponseModel.cs" />
+    <Compile Include="Communications\Devices\IDeviceInfoRequestModel.cs" />
+    <Compile Include="Communications\Devices\IDeviceInfoResponseModel.cs" />
+    <Compile Include="Communications\Devices\IDeviceMaxIdRequestModel.cs" />
+    <Compile Include="Communications\Devices\ISensorDataRequestModel.cs" />
+    <Compile Include="Communications\Devices\ISensorDataResponseModel.cs" />
+    <Compile Include="Communications\Devices\SensorDataRequestModel.cs" />
+    <Compile Include="Communications\Devices\SensorDataResponseModel.cs" />
+    <Compile Include="Communications\Events\ActionBaseRequestModel.cs" />
+    <Compile Include="Communications\Events\ActionBaseResponseModel.cs" />
+    <Compile Include="Communications\Events\ActionDetailModel.cs" />
+    <Compile Include="Communications\Events\ActionRequestDetectionModel.cs" />
+    <Compile Include="Communications\Events\ActionRequestMalfunctionModel.cs" />
+    <Compile Include="Communications\Events\ActionRequestModel.cs" />
+    <Compile Include="Communications\Events\ActionResponseDetectionModel.cs" />
+    <Compile Include="Communications\Events\ActionResponseMalfunctionModel.cs" />
+    <Compile Include="Communications\Events\ActionResponseModel.cs" />
+    <Compile Include="Communications\Events\ConnectionRequestModel.cs" />
+    <Compile Include="Communications\Events\ConnectionResponseModel.cs" />
+    <Compile Include="Communications\Events\ContactDetailModel.cs" />
+    <Compile Include="Communications\Events\ContactOffRequestModel.cs" />
+    <Compile Include="Communications\Events\ContactOffResponseModel.cs" />
+    <Compile Include="Communications\Events\ContactOnRequestModel.cs" />
+    <Compile Include="Communications\Events\ContactOnResponseModel.cs" />
+    <Compile Include="Communications\Events\DetectionDetailModel.cs" />
+    <Compile Include="Communications\Events\DetectionRequestModel.cs" />
+    <Compile Include="Communications\Events\DetectionResponseModel.cs" />
+    <Compile Include="Communications\Events\IActionBaseRequestModel.cs" />
+    <Compile Include="Communications\Events\IActionBaseResponseModel.cs" />
+    <Compile Include="Communications\Events\IActionDetailModel.cs" />
+    <Compile Include="Communications\Events\IActionRequestDetectionModel.cs" />
+    <Compile Include="Communications\Events\IActionRequestMalfunctionModel.cs" />
+    <Compile Include="Communications\Events\IActionRequestModel.cs" />
+    <Compile Include="Communications\Events\IActionResponseDetectionModel.cs" />
+    <Compile Include="Communications\Events\IActionResponseMalfunctionModel.cs" />
+    <Compile Include="Communications\Events\IActionResponseModel.cs" />
+    <Compile Include="Communications\Events\IConnectionRequestModel.cs" />
+    <Compile Include="Communications\Events\IConnectionResponseModel.cs" />
+    <Compile Include="Communications\Events\IContactDetailModel.cs" />
+    <Compile Include="Communications\Events\IContactOffRequestModel.cs" />
+    <Compile Include="Communications\Events\IContactOffResponseModel.cs" />
+    <Compile Include="Communications\Events\IContactOnRequestModel.cs" />
+    <Compile Include="Communications\Events\IContactOnResponseModel.cs" />
+    <Compile Include="Communications\Events\IDetectionDetailModel.cs" />
+    <Compile Include="Communications\Events\IDetectionRequestModel.cs" />
+    <Compile Include="Communications\Events\IDetectionResponseModel.cs" />
+    <Compile Include="Communications\Events\IMalfunctionDetailModel.cs" />
+    <Compile Include="Communications\Events\IMalfunctionRequestModel.cs" />
+    <Compile Include="Communications\Events\IMalfunctionResponseModel.cs" />
+    <Compile Include="Communications\Events\IModeWindyRequestModel.cs" />
+    <Compile Include="Communications\Events\IModeWindyResponseModel.cs" />
+    <Compile Include="Communications\Events\ISearchActionReponseModel.cs" />
+    <Compile Include="Communications\Events\ISearchActionRequestModel.cs" />
+    <Compile Include="Communications\Events\ISearchDetectionRequestModel.cs" />
+    <Compile Include="Communications\Events\ISearchDetectionResponseModel.cs" />
+    <Compile Include="Communications\Events\ISearchMalfunctionRequestModel.cs" />
+    <Compile Include="Communications\Events\ISearchMalfunctionResponseModel.cs" />
+    <Compile Include="Communications\Events\MalfunctionDetailModel.cs" />
+    <Compile Include="Communications\Events\MalfunctionRequestModel.cs" />
+    <Compile Include="Communications\Events\MalfunctionResponseModel.cs" />
+    <Compile Include="Communications\Events\ModeWindyRequestModel.cs" />
+    <Compile Include="Communications\Events\ModeWindyResponseModel.cs" />
+    <Compile Include="Communications\Events\SearchActionRequestModel.cs" />
+    <Compile Include="Communications\Events\SearchActionResponseModel.cs" />
+    <Compile Include="Communications\Events\SearchDetectionRequestModel.cs" />
+    <Compile Include="Communications\Events\SearchDetectionResponseModel.cs" />
+    <Compile Include="Communications\Events\SearchMalfunctionRequestModel.cs" />
+    <Compile Include="Communications\Events\SearchMalfunctionResponseModel.cs" />
+    <Compile Include="Communications\Helpers\DeviceModelConverter.cs" />
+    <Compile Include="Communications\Helpers\EventModelConverter.cs" />
+    <Compile Include="Communications\IBaseEventMessageModel.cs" />
+    <Compile Include="Communications\IBaseMessageModel.cs" />
+    <Compile Include="Communications\IResponseModel.cs" />
+    <Compile Include="Communications\IUserSessionBaseRequestModel.cs" />
+    <Compile Include="Communications\RequestFactory.cs" />
+    <Compile Include="Communications\ResponseFactory.cs" />
+    <Compile Include="Communications\ResponseModel.cs" />
+    <Compile Include="Communications\Settings\HeartBeatRequestModel.cs" />
+    <Compile Include="Communications\Settings\HeartBeatResponseModel.cs" />
+    <Compile Include="Communications\Settings\IHeartBeatRequestModel.cs" />
+    <Compile Include="Communications\Settings\IHeartBeatResponseModel.cs" />
+    <Compile Include="Communications\Symbols\IMapFileLoadRequestModel.cs" />
+    <Compile Include="Communications\Symbols\IMapFileLoadResponseModel.cs" />
+    <Compile Include="Communications\Symbols\IMapFileSaveRequestModel.cs" />
+    <Compile Include="Communications\Symbols\IMapFileSaveResponseModel.cs" />
+    <Compile Include="Communications\Symbols\IObjectShapeRequestModel.cs" />
+    <Compile Include="Communications\Symbols\IShapeSymbolRequestModel.cs" />
+    <Compile Include="Communications\Symbols\ISymbolDataLoadRequestModel.cs" />
+    <Compile Include="Communications\Symbols\ISymbolDataLoadResponseModel.cs" />
+    <Compile Include="Communications\Symbols\ISymbolDataSaveRequestModel.cs" />
+    <Compile Include="Communications\Symbols\ISymbolDataSaveResponseModel.cs" />
+    <Compile Include="Communications\Symbols\ISymbolInfoRequestModel.cs" />
+    <Compile Include="Communications\Symbols\ISymbolInfoResponseModel.cs" />
+    <Compile Include="Communications\Symbols\ISymbolRequestModel.cs" />
+    <Compile Include="Communications\Symbols\ISymbolResponseModel.cs" />
+    <Compile Include="Communications\Symbols\MapFileLoadRequestModel.cs" />
+    <Compile Include="Communications\Symbols\MapFileLoadResponseModel.cs" />
+    <Compile Include="Communications\Symbols\MapFileSaveRequestModel.cs" />
+    <Compile Include="Communications\Symbols\MapFileSaveResponseModel.cs" />
+    <Compile Include="Communications\Symbols\ObjectShapeRequestModel.cs" />
+    <Compile Include="Communications\Symbols\ObjectShapeResponseModel.cs" />
+    <Compile Include="Communications\Symbols\ShapeSymbolRequestModel.cs" />
+    <Compile Include="Communications\Symbols\ShapeSymbolResponseModel.cs" />
+    <Compile Include="Communications\Symbols\SymbolDataLoadRequestModel.cs" />
+    <Compile Include="Communications\Symbols\SymbolDataLoadResponseModel.cs" />
+    <Compile Include="Communications\Symbols\SymbolDataSaveRequestModel.cs" />
+    <Compile Include="Communications\Symbols\SymbolDataSaveResponseModel.cs" />
+    <Compile Include="Communications\Symbols\SymbolInfoRequestModel.cs" />
+    <Compile Include="Communications\Symbols\SymbolInfoResponseModel.cs" />
+    <Compile Include="Communications\Symbols\SymbolRequestModel.cs" />
+    <Compile Include="Communications\Symbols\SymbolResponseModel.cs" />
+    <Compile Include="Communications\UserSessionBaseRequestModel.cs" />
+    <Compile Include="Communications\VmsApis\IVmsApiGetEventListRequestModel.cs" />
+    <Compile Include="Communications\VmsApis\IVmsApiGetEventListResponseModel.cs" />
+    <Compile Include="Communications\VmsApis\IVmsApiKeepAliveRequestModel.cs" />
+    <Compile Include="Communications\VmsApis\IVmsApiKeepAliveResponseModel.cs" />
+    <Compile Include="Communications\VmsApis\IVmsApiLoginRequestModel.cs" />
+    <Compile Include="Communications\VmsApis\IVmsApiLoginResponseModel.cs" />
+    <Compile Include="Communications\VmsApis\IVmsApiLogoutRequestModel.cs" />
+    <Compile Include="Communications\VmsApis\IVmsApiLogoutResponseModel.cs" />
+    <Compile Include="Communications\VmsApis\IVmsApiMappingListRequestModel.cs" />
+    <Compile Include="Communications\VmsApis\IVmsApiMappingListResponseModel.cs" />
+    <Compile Include="Communications\VmsApis\IVmsApiMappingSaveRequestModel.cs" />
+    <Compile Include="Communications\VmsApis\IVmsApiMappingSaveResponseModel.cs" />
+    <Compile Include="Communications\VmsApis\IVmsApiSetActionEventRequestModel.cs" />
+    <Compile Include="Communications\VmsApis\IVmsApiSetActionEventResponseModel.cs" />
+    <Compile Include="Communications\VmsApis\VmsApiGetEventListRequestModel.cs" />
+    <Compile Include="Communications\VmsApis\VmsApiGetEventListResponseModel.cs" />
+    <Compile Include="Communications\VmsApis\VmsApiKeepAliveRequestModel.cs" />
+    <Compile Include="Communications\VmsApis\VmsApiKeepAliveResponseModel.cs" />
+    <Compile Include="Communications\VmsApis\VmsApiLoginRequestModel.cs" />
+    <Compile Include="Communications\VmsApis\VmsApiLoginResponseModel.cs" />
+    <Compile Include="Communications\VmsApis\VmsApiLogoutRequestModel.cs" />
+    <Compile Include="Communications\VmsApis\VmsApiLogoutResponseModel.cs" />
+    <Compile Include="Communications\VmsApis\VmsApiMappingListRequestModel.cs" />
+    <Compile Include="Communications\VmsApis\VmsApiMappingListResponseModel.cs" />
+    <Compile Include="Communications\VmsApis\VmsApiMappingSaveRequestModel.cs" />
+    <Compile Include="Communications\VmsApis\VmsApiMappingSaveResponseModel.cs" />
+    <Compile Include="Communications\VmsApis\VmsApiSetActionEventRequestModel.cs" />
+    <Compile Include="Communications\VmsApis\VmsApiSetActionEventResponseModel.cs" />
+    <Compile Include="Communications\VmsApis\VmsApiUserGetReponse.cs" />
+    <Compile Include="Communications\VmsApis\VmsApiUserGetRequest.cs" />
+    <Compile Include="Devices\BaseDeviceModel.cs" />
+    <Compile Include="Devices\CameraDeviceModel.cs" />
+    <Compile Include="Devices\CameraMappingModel.cs" />
+    <Compile Include="Devices\CameraPresetModel.cs" />
+    <Compile Include="Devices\CameraProfileModel.cs" />
+    <Compile Include="Devices\ControllerDeviceModel.cs" />
+    <Compile Include="Devices\DeviceDetailModel.cs" />
+    <Compile Include="Devices\DeviceInfoModel.cs" />
+    <Compile Include="Devices\IBaseDeviceModel.cs" />
+    <Compile Include="Devices\ICameraDeviceModel.cs" />
+    <Compile Include="Devices\ICameraMappingModel.cs" />
+    <Compile Include="Devices\ICameraPresetModel.cs" />
+    <Compile Include="Devices\ICameraProfileModel.cs" />
+    <Compile Include="Devices\IControllerDeviceModel.cs" />
+    <Compile Include="Devices\IDeviceDetailModel.cs" />
+    <Compile Include="Devices\IDeviceInfoModel.cs" />
+    <Compile Include="Devices\IMappingInfoModel.cs" />
+    <Compile Include="Devices\IBaseOptionModel.cs" />
+    <Compile Include="Devices\ISensorDeviceModel.cs" />
+    <Compile Include="Devices\MappingInfoModel.cs" />
+    <Compile Include="Devices\BaseOptionModel.cs" />
+    <Compile Include="Devices\SensorDeviceModel.cs" />
+    <Compile Include="DeviceTypeModel.cs" />
+    <Compile Include="EntityShapeTypeModel.cs" />
+    <Compile Include="EventArgsModel.cs" />
+    <Compile Include="EventMessageModel.cs" />
+    <Compile Include="EventModel.cs" />
+    <Compile Include="Events\ActionDetectionEventModel.cs" />
+    <Compile Include="Events\ActionEventModel.cs" />
+    <Compile Include="Events\ActionMalfunctionEventModel.cs" />
+    <Compile Include="Events\BaseEventModel.cs" />
+    <Compile Include="Events\ConnectionEventModel.cs" />
+    <Compile Include="Events\ContactEventModel.cs" />
+    <Compile Include="Events\DetectionEventModel.cs" />
+    <Compile Include="Events\IActionEventModel.cs" />
+    <Compile Include="Events\IBaseEventModel.cs" />
+    <Compile Include="Events\IConnectionEventModel.cs" />
+    <Compile Include="Events\IContactEventModel.cs" />
+    <Compile Include="Events\IDetectionEventModel.cs" />
+    <Compile Include="Events\IMalfunctionEventModel.cs" />
+    <Compile Include="Events\IMetaEventModel.cs" />
+    <Compile Include="Events\IModeWindyEventModel.cs" />
+    <Compile Include="Events\MalfunctionEventModel.cs" />
+    <Compile Include="Events\MetaEventModel.cs" />
+    <Compile Include="Events\ModeWindyEventModel.cs" />
+    <Compile Include="IBaseModel.cs" />
+    <Compile Include="IEntityModel.cs" />
+    <Compile Include="IEventMessageModel.cs" />
+    <Compile Include="IEventModel.cs" />
+    <Compile Include="IUpdateDetailBaseModel.cs" />
+    <Compile Include="Mappers\Devices\CameraTableMapper.cs" />
+    <Compile Include="Mappers\Devices\ControllerTableMapper.cs" />
+    <Compile Include="Mappers\Devices\DeviceInfoTableMapper.cs" />
+    <Compile Include="Mappers\Devices\DeviceMapperBase.cs" />
+    <Compile Include="Mappers\Devices\ICameraTableMapper.cs" />
+    <Compile Include="Mappers\Devices\IControllerTableMapper.cs" />
+    <Compile Include="Mappers\Devices\IDeviceInfoTableMapper.cs" />
+    <Compile Include="Mappers\Devices\IDeviceMapperBase.cs" />
+    <Compile Include="Mappers\Devices\IMappingTableMapper.cs" />
+    <Compile Include="Mappers\Devices\IOptionMapperBase.cs" />
+    <Compile Include="Mappers\Devices\IPresetTableMapper.cs" />
+    <Compile Include="Mappers\Devices\IProfileTableMapper.cs" />
+    <Compile Include="Mappers\Devices\ISensorTableMapper.cs" />
+    <Compile Include="Mappers\Devices\MappingTableMapper.cs" />
+    <Compile Include="Mappers\Devices\OptionMapperBase.cs" />
+    <Compile Include="Mappers\Devices\PresetTableMapper.cs" />
+    <Compile Include="Mappers\Devices\ProfileTableMapper.cs" />
+    <Compile Include="Mappers\Devices\SensorTableMapper.cs" />
+    <Compile Include="Mappers\Events\ActionDetectionEventMapper.cs" />
+    <Compile Include="Mappers\Events\ActionMalfunctionEventMapper.cs" />
+    <Compile Include="Mappers\Events\ConnectionEventMapper.cs" />
+    <Compile Include="Mappers\Events\ContactEventMapper.cs" />
+    <Compile Include="Mappers\Events\DetectionEventMapper.cs" />
+    <Compile Include="Mappers\Events\EventMapperBase.cs" />
+    <Compile Include="Mappers\Events\IConnectionEventMapper.cs" />
+    <Compile Include="Mappers\Events\IContactEventMapper.cs" />
+    <Compile Include="Mappers\Events\IDetectionEventMapper.cs" />
+    <Compile Include="Mappers\Events\IEventMapperBase.cs" />
+    <Compile Include="Mappers\Events\IMalfunctionEventMapper.cs" />
+    <Compile Include="Mappers\Events\IMetaEventMapper.cs" />
+    <Compile Include="Mappers\Events\IModeWindyEventMapper.cs" />
+    <Compile Include="Mappers\Events\IActionEventMapper.cs" />
+    <Compile Include="Mappers\Events\MalfunctionEventMapper.cs" />
+    <Compile Include="Mappers\Events\MetaEventMapper.cs" />
+    <Compile Include="Mappers\Events\ModeWindyEventMapper.cs" />
+    <Compile Include="Mappers\Events\ActionEventMapper.cs" />
+    <Compile Include="Mappers\IUpdateMapperBase.cs" />
+    <Compile Include="Mappers\MapperFactory.cs" />
+    <Compile Include="Mappers\Symbols\ISymbolInfoTableMapper.cs" />
+    <Compile Include="Mappers\Symbols\SymbolInfoTableMapper.cs" />
+    <Compile Include="Mappers\UpdateMapperBase.cs" />
+    <Compile Include="Mappers\Vms\IVmsSensorMapper.cs" />
+    <Compile Include="Mappers\Vms\VmsSensorMapper.cs" />
+    <Compile Include="Maps\IMapDetailModel.cs" />
+    <Compile Include="Maps\IMapModel.cs" />
+    <Compile Include="Maps\ISymbolDetailModel.cs" />
+    <Compile Include="Maps\ISymbolInfoModel.cs" />
+    <Compile Include="Maps\ISymbolMoreDetailModel.cs" />
+    <Compile Include="Maps\MapDetailModel.cs" />
+    <Compile Include="Maps\MapModel.cs" />
+    <Compile Include="Maps\SymbolDetailModel.cs" />
+    <Compile Include="Maps\SymbolInfoModel.cs" />
+    <Compile Include="Maps\SymbolMoreDetailModel.cs" />
+    <Compile Include="Maps\Symbols\IObjectShapeModel.cs" />
+    <Compile Include="Maps\Symbols\IShapeSymbolModel.cs" />
+    <Compile Include="Maps\Symbols\ISymbolModel.cs" />
+    <Compile Include="Maps\Symbols\ObjectShapeModel.cs" />
+    <Compile Include="Maps\Symbols\Points\IPointClass.cs" />
+    <Compile Include="Maps\Symbols\Points\PointClass.cs" />
+    <Compile Include="Maps\Symbols\Points\ShapePoints.cs" />
+    <Compile Include="Maps\Symbols\ShapeSymbolModel.cs" />
+    <Compile Include="Maps\Symbols\SymbolModel.cs" />
+    <Compile Include="Messages\CloseAllMessageModel.cs" />
+    <Compile Include="Messages\CloseDialogMessageModel.cs" />
+    <Compile Include="Messages\ClosePanelMessageModel.cs" />
+    <Compile Include="Messages\ClosePopupMessageModel.cs" />
+    <Compile Include="Messages\Common\CommonMessageModel.cs" />
+    <Compile Include="Messages\Common\ICommonMessageModel.cs" />
+    <Compile Include="Messages\ExitProgramMessageModel.cs" />
+    <Compile Include="Messages\IMessageModel.cs" />
+    <Compile Include="Messages\OpenConfirmPopupMessageModel.cs" />
+    <Compile Include="Messages\OpenInfoPopupMessageModel.cs" />
+    <Compile Include="Messages\OpenProgressPopupMessageModel.cs" />
+    <Compile Include="Messages\StatusMessageModel.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SelectableItemModel.cs" />
+    <Compile Include="Symbols\EntityPropertyModel.cs" />
+    <Compile Include="Symbols\IEntityPropertyModel.cs" />
+    <Compile Include="Symbols\IPropertyModel.cs" />
+    <Compile Include="Symbols\IShapePropertyModel.cs" />
+    <Compile Include="Symbols\PropertyModel.cs" />
+    <Compile Include="Symbols\ShapePropertyModel.cs" />
+    <Compile Include="UpdateDetailBaseModel.cs" />
+    <Compile Include="Vms\IVmsApiModel.cs" />
+    <Compile Include="Vms\IVmsMappingModel.cs" />
+    <Compile Include="Vms\IVmsSensorModel.cs" />
+    <Compile Include="Vms\VmsApiModel.cs" />
+    <Compile Include="Vms\VmsMappingModel.cs" />
+    <Compile Include="Vms\VmsSensorModel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Ironwall.Framework\Ironwall.Framework.csproj">
+      <Project>{cc34c433-38a8-4092-b172-d89db0e632be}</Project>
+      <Name>Ironwall.Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ironwall.Libraries.Enums\Ironwall.Libraries.Enums.csproj">
+      <Project>{848ae203-d3b4-4e73-8ef0-1a18d88a040c}</Project>
+      <Name>Ironwall.Libraries.Enums</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ironwall.Libraries.Utils\Ironwall.Libraries.Utils.csproj">
+      <Project>{14220279-9b26-4383-bf1e-a0da31726758}</Project>
+      <Name>Ironwall.Libraries.Utils</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Exts\Dotnet.OnvifSolution.Base.dll" />
+    <Content Include="Exts\Ironwall.Message.Base.dll" />
+    <Content Include="Exts\Ironwall.Middleware.Message.Framework.dll" />
+    <Content Include="Exts\Ironwall.Redis.Message.Framework.dll" />
+    <Content Include="Exts\Sensorway.Accounts.Base.dll" />
+    <Content Include="Exts\Sensorway.Events.Base.dll" />
+    <Content Include="Exts\Sensorway.Framework.Models.dll" />
+    <Content Include="Exts\Sensorway.VMS.Messages.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

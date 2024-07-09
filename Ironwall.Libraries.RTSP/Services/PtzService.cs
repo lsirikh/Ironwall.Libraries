@@ -1,5 +1,6 @@
 ﻿using Caliburn.Micro;
 using Ironwall.Framework.Services;
+using Ironwall.Libraries.Base.Services;
 using Ironwall.Libraries.Enums;
 using Ironwall.Libraries.Onvif.DataProviders;
 using Ironwall.Libraries.RTSP.DataProviders;
@@ -39,10 +40,11 @@ namespace Ironwall.Libraries.RTSP.Services
             return Task.CompletedTask;
         }
 
-        public void Stop()
+        public Task StopAsync(CancellationToken token = default)
         {
+            return Task.CompletedTask;
         }
-        
+
         #endregion
         #region - Overrides -
         #endregion
@@ -237,6 +239,8 @@ namespace Ironwall.Libraries.RTSP.Services
                 }
             });
         }
+
+        
 
 
         #endregion

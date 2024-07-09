@@ -9,10 +9,10 @@ namespace Ironwall.Framework.Helpers
 {
     public static class EnumLanguageHelper
     {
-        public static string GetEventType(string langCode, int enumId)
+        public static string GetEventType(string langCode, EnumFaultType enumId)
         {
             if (LanguageConst.ENGLISH == langCode)
-                switch ((EnumFaultType)enumId)
+                switch (enumId)
                 {
                     case EnumFaultType.FaultController:
                         return TypeConst_en.FAULT_CONTROLLER;
@@ -43,7 +43,7 @@ namespace Ironwall.Framework.Helpers
                 }
             
             else if (LanguageConst.KOREAN == langCode)
-                switch ((EnumFaultType)enumId)
+                switch (enumId)
                 {
                     case EnumFaultType.FaultController:
                         return TypeConst_kr.FAULT_CONTROLLER;
@@ -73,7 +73,7 @@ namespace Ironwall.Framework.Helpers
                         return "알 수 없음";
                 }
             else
-                switch ((EnumFaultType)enumId)
+                switch (enumId)
                 {
                     case EnumFaultType.FaultController:
                         return TypeConst_en.FAULT_CONTROLLER;
@@ -104,10 +104,10 @@ namespace Ironwall.Framework.Helpers
                 }
         }
 
-        public static string GetDeviceType(string langCode, int enumId)
+        public static string GetDeviceType(string langCode, EnumDeviceType enumId)
         {
             if (LanguageConst.ENGLISH == langCode)
-                switch ((EnumDeviceType)enumId)
+                switch (enumId)
                 {
                     case EnumDeviceType.Controller:
                         return UnitConst_en.CONTROLLER;
@@ -140,7 +140,7 @@ namespace Ironwall.Framework.Helpers
                         return "알 수 없음";
                 }
             else if (LanguageConst.KOREAN == langCode)
-                switch ((EnumDeviceType)enumId)
+                switch (enumId)
                 {
                     case EnumDeviceType.Controller:
                         return UnitConst_kr.CONTROLLER;
@@ -174,7 +174,7 @@ namespace Ironwall.Framework.Helpers
                         return "Unknown";
                 }
             else
-                switch ((EnumDeviceType)enumId)
+                switch (enumId)
                 {
                     case EnumDeviceType.Controller:
                         return UnitConst.CONTROLLER;

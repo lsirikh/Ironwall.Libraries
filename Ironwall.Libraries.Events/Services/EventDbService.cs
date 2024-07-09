@@ -1,13 +1,15 @@
-﻿using Caliburn.Micro;
-using Dapper;
+﻿using Dapper;
 using Ironwall.Framework.DataProviders;
 using Ironwall.Framework.Models;
 using Ironwall.Framework.Models.Devices;
 using Ironwall.Framework.Models.Events;
 using Ironwall.Framework.Models.Mappers;
 using Ironwall.Framework.Services;
+using Ironwall.Framework.ViewModels;
+using Ironwall.Libraries.Base.Services;
 using Ironwall.Libraries.Devices.Models;
 using Ironwall.Libraries.Devices.Providers;
+using Ironwall.Libraries.Devices.Providers.Models;
 using Ironwall.Libraries.Devices.Services;
 using Ironwall.Libraries.Enums;
 using Ironwall.Libraries.Events.Models;
@@ -25,11 +27,12 @@ using System.Threading.Tasks;
 
 namespace Ironwall.Libraries.Events.Services
 {
-    public class EventDbService
+    public class EventDbService : TaskService, IEventDbService
     {
         #region - Ctors -
         public EventDbService(
             IDbConnection dbConnection
+            , ILogService log
             , DetectionEventProvider detectionEventProvider
             , ActionEventProvider actionEventProvider
             , MalfunctionEventProvider malfunctionEventProvider
@@ -37,11 +40,11 @@ namespace Ironwall.Libraries.Events.Services
             , EventProvider eventProvider
             , EventSetupModel eventSetupModel
 
-            , ControllerDeviceProvider controllerDeviceProivder
-            , SensorDeviceProvider sensorDeviceProvider
+            , DeviceProvider deviceProvider
             )
         {
-            _dbConnection = dbConnection;
+            _conn = dbConnection;
+            _log = log;
             _setupModel = eventSetupModel;
 
             _detectionEventProvider = detectionEventProvider;
@@ -51,103 +54,358 @@ namespace Ironwall.Libraries.Events.Services
 
             _eventProvider = eventProvider;
 
-            _controllerProvider = controllerDeviceProivder;
-            _sensorProvider = sensorDeviceProvider;
+            _deviceProvider = deviceProvider;
+
+
+            TableNames = new List<string>
+            {
+                _setupModel.TableConnection,
+                _setupModel.TableDetection,
+                _setupModel.TableMalfunction,
+                _setupModel.TableAction
+            };
         }
         #endregion
         #region - Implementation of Interface -
-
-        public Task FetchDetectionEvent(string from = null, string to = null, CancellationToken token = default, bool isFinished = false)
+        protected override async Task RunTask(CancellationToken token = default)
         {
-            return Task.Run(async () =>
-            {
-                #region Deprecated code
-                /*try
-                {
-                    if (_dbConnection.State != ConnectionState.Open)
-                        await (_dbConnection as DbConnection).OpenAsync();
+            await BuildSchemeAsync(token);
 
-                    //Provider 초기화
-                    await Task.Run(() => _detectionEventProvider.Clear());
-
-                    var sql = $@"SELECT * FROM {_setupModel.TableDetection} d
-                         INNER JOIN {_deviceSetupModel.TableController} c ON d.controller = c.devicenumber
-                         INNER JOIN {_deviceSetupModel.TableSensor} s ON d.sensor = s.devicenumber AND d.controller = s.controller";
-
-                    foreach (var model in await (_dbConnection
-                        .QueryAsync<DetectionEventModel, SensorDeviceModel, ControllerDeviceModel, DetectionEventModel>(sql, (detection, sensor, controller) =>
-                        {
-                            detection.ControllerDeviceModel = controller;
-                            detection.SensorDeviceModel = sensor;
-                            return detection;
-                        })))
-                    {
-                        _detectionEventProvider.Add(model);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"Raised Exception for Task to fetch DB data in {nameof(FetchDetectionEvent)}: " + ex.Message);
-                }*/
-                #endregion
-                try
-                {
-                    string sql = "";
-                    if (from != null && to != null)
-                        sql = $@"SELECT * FROM {_setupModel.TableDetection} WHERE datetime BETWEEN '{from}' and '{to}'";
-                    else
-                        sql = $@"SELECT * FROM {_setupModel.TableDetection}";
-
-                    foreach (var model in (await _dbConnection
-                        .QueryAsync<DetectionEventMapper>(sql)).ToList())
-                    {
-
-                        if (token.IsCancellationRequested)
-                            break;
-
-                        var eventModel = _eventProvider?.Where(entity => entity.Id == model.EventId)?.FirstOrDefault();
-                        if (eventModel != null) continue;
-
-                        IBaseDeviceModel device = null;
-
-                        switch (model?.Device[0])
-                        {
-                            case 'c':
-                                device = _controllerProvider
-                                .Where(item => item.Id == model.Device)
-                                .FirstOrDefault() as ControllerDeviceModel;
-                                break;
-                            case 's':
-                                device = _sensorProvider
-                                .Where(item => item.Id == model.Device)
-                                .FirstOrDefault() as SensorDeviceModel;
-                                break;
-                            default:
-                                break;
-                        }
-
-                        var detection = ModelFactory.Build<DetectionEventModel>(model, device);
-
-
-                        _eventProvider.Add(detection);
-                    }
-                    //Console.WriteLine($"========> Event Detection : {_eventProvider.Count()}ea");
-
-                    if(isFinished)
-                        await _eventProvider.Finished();
-                }
-                catch (TaskCanceledException ex)
-                {
-                    Debug.WriteLine($"Task was cancelled in {nameof(FetchDetectionEvent)}: " + ex.Message);
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"Raised Exception for Task to fetch DB data in {nameof(FetchDetectionEvent)}: " + ex.Message);
-                }
-                
-            }, token);
+            await FetchFullInstanceAsync(token); 
         }
-        public Task SaveDetectionEvent(IDetectionEventModel model)
+
+        protected override Task ExitTask(CancellationToken token = default)
+        {
+            return Task.CompletedTask;
+        }
+
+        private async Task BuildSchemeAsync(CancellationToken token = default)
+        {
+            try
+            {
+                if (_conn.State != ConnectionState.Open)
+                    await (_conn as DbConnection).OpenAsync();
+
+                var cmd = _conn.CreateCommand();
+
+                //Create Connection Event DB Table
+                cmd.CommandText = $@"CREATE TABLE IF NOT EXISTS {_setupModel.TableConnection} (
+                                            id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ,
+                                            
+                                            eventgroup TEXT,
+                                            device INTEGER,
+                                            messagetype INTEGER,
+
+                                            status INTEGER,
+                                            datetime DATETIME NOT NULL DEFAULT (DATETIME('NOW', 'LOCALTIME'))
+                                           )";
+                cmd.ExecuteNonQuery();
+
+                cmd.CommandText = $@"CREATE TABLE IF NOT EXISTS {_setupModel.TableDetection} (
+                                            id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ,
+                                            
+                                            eventgroup TEXT,
+                                            device INTEGER,
+                                            messagetype INTEGER,
+
+                                            result INTEGER,
+                                            status INTEGER,
+                                            datetime DATETIME NOT NULL DEFAULT (DATETIME('NOW', 'LOCALTIME'))
+                                           )";
+                cmd.ExecuteNonQuery();
+
+                cmd.CommandText = $@"CREATE TABLE IF NOT EXISTS {_setupModel.TableMalfunction} (
+                                            id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ,
+
+                                            eventgroup TEXT,
+                                            device INTEGER,
+                                            messagetype INTEGER,
+
+                                            reason INTEGER, 
+                                            firststart INTEGER,  
+                                            firstend INTEGER, 
+                                            secondstart INTEGER, 
+                                            secondend INTEGER,
+
+                                            status INTEGER,
+                                            datetime DATETIME NOT NULL DEFAULT (DATETIME('NOW', 'LOCALTIME'))
+                                        )";
+                cmd.ExecuteNonQuery();
+
+                cmd.CommandText = $@"CREATE TABLE IF NOT EXISTS {_setupModel.TableAction} (
+                                            id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ,
+                                            
+                                            fromeventid INTEGER ,
+                                            content TEXT,
+                                            user TEXT,
+
+                                            datetime DATETIME NOT NULL DEFAULT (DATETIME('NOW', 'LOCALTIME'))
+                                           )";
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"Task was cancelled in {nameof(BuildSchemeAsync)}: " + ex.Message);
+            }
+        }
+
+        private async Task FetchFullInstanceAsync(CancellationToken token)
+        {
+            try
+            {
+                var startDate = (DateTime.Now - TimeSpan.FromDays(1)).ToString("yyyy-MM-dd HH:mm:ss");
+                var endDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+
+                var tcs = new TaskCompletionSource<bool>();
+                var detections = await FetchDetectionEvents(startDate, endDate, token, tcs);
+                var result = await tcs.Task;
+                if (!result) throw new Exception($"Fail to execute {nameof(FetchDetectionEvents)}!.");
+                foreach (var item in detections)
+                {
+                    _eventProvider.Add(item);
+                }
+
+                tcs = new TaskCompletionSource<bool>();
+                var malfunctions = await FetchMalfunctionEvents(startDate, endDate, token, tcs);
+                result = await tcs.Task;
+                if (!result) throw new Exception($"Fail to execute {nameof(FetchMalfunctionEvents)}!.");
+                foreach (var item in malfunctions)
+                {
+                    _eventProvider.Add(item);
+                }
+
+                tcs = new TaskCompletionSource<bool>();
+                var actions = await FetchActionEvents(startDate, endDate, token, tcs);
+                result = await tcs.Task;
+                if (!result) throw new Exception($"Fail to execute {nameof(FetchActionEvents)}!.");
+
+                foreach (var item in actions)
+                {
+                    _actionEventProvider.Add(item);
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+
+        }
+
+        #region DETECTION PART
+
+        public async Task<IMetaEventModel> FetchMetaEvent(int id, CancellationToken token = default, TaskCompletionSource<bool> tcs = default)
+        {
+            try
+            {
+                if (_conn.State != ConnectionState.Open)
+                    await (_conn as DbConnection).OpenAsync();
+
+                ///////////////////////////////////////////////////////////////////
+                ///                   FETCH META EVENT
+                ///////////////////////////////////////////////////////////////////
+                var table = await GetTableNameForId(id);
+
+                IMetaEventModel createdModel = null;
+                if (table == _setupModel.TableConnection)
+                {
+                    //Not defined yet!    
+                }
+                else if (table == _setupModel.TableDetection)
+                {
+
+                    createdModel = await CreateEventModel<DetectionEventMapper, DetectionEventModel>(id);
+                    //var fetchedModel = (await _conn.QueryAsync<DetectionEventMapper>(sql, parameter))
+                    //    .FirstOrDefault();
+                    //if (fetchedModel == null) throw new Exception(message: $"Event({id}) is not exist.");
+                    //var device = _deviceProvider.FirstOrDefault(entity => entity.Id == fetchedModel.Device);
+                    //createdModel = new DetectionEventModel(fetchedModel, device);
+                }
+                else if (table == _setupModel.TableMalfunction)
+                {
+                    createdModel = await CreateEventModel<MalfunctionEventMapper, MalfunctionEventModel>(id);
+                }
+
+                tcs?.SetResult(true);
+                return createdModel;
+
+            }
+            catch (TaskCanceledException ex)
+            {
+                _log.Error($"Task was cancelled in {nameof(FetchDetectionEvent)}: " + ex.Message);
+                tcs?.SetException(ex);
+                return null;
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchDetectionEvent)}: " + ex.Message);
+                tcs?.SetException(ex);
+                return null;
+            }
+        }
+
+        private async Task<T2> CreateEventModel<T1, T2>(int id) where T1 : MetaEventMapper
+        {
+            try
+            {
+                var table = await GetTableNameForId(id);
+                //Status는 조회 속성에서 제외한다.
+                string sql = @$"SELECT * FROM {table} 
+                                WHERE id = @Id
+                                ";
+                var parameter = new { Id = id };
+
+                var fetchedModel = (await _conn.QueryAsync<T1>(sql, parameter)).FirstOrDefault();
+                if (fetchedModel == null) throw new Exception(message: $"Event({id}) is not exist.");
+                var device = _deviceProvider.FirstOrDefault(entity => entity.Id == fetchedModel.Device);
+                var instance = (T2)Activator.CreateInstance(typeof(T2), new object[] { fetchedModel, device });
+                return instance;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task<IDetectionEventModel> FetchDetectionEvent(int id, CancellationToken token = default, TaskCompletionSource<bool> tcs = default)
+        {
+            try
+            {
+                if (_conn.State != ConnectionState.Open)
+                    await (_conn as DbConnection).OpenAsync();
+                var table = _setupModel.TableDetection;
+
+                ///////////////////////////////////////////////////////////////////
+                ///                   FETCH DETECTION EVENT
+                ///////////////////////////////////////////////////////////////////
+
+                //Status는 조회 속성에서 제외한다.
+                string sql = @$"SELECT *, FORMAT(datetime, 'yyyy-MM-ddTHH:mm:ss.ff') as datetime FROM {table} 
+                                WHERE id = @Id
+                                ";
+                var parameter = new { Id = id };
+                var fetchedModel = (await _conn.QueryAsync<DetectionEventMapper>(sql, parameter)).FirstOrDefault();
+                if (fetchedModel == null) throw new Exception(message: $"Event({id}) is not exist.");
+
+                var device = _deviceProvider.FirstOrDefault(entity => entity.Id == fetchedModel.Device);
+                var createdModel = new DetectionEventModel(fetchedModel, device);
+
+                tcs?.SetResult(true);
+                return createdModel;
+
+            }
+            catch (TaskCanceledException ex)
+            {
+                _log.Error($"Task was cancelled in {nameof(FetchDetectionEvent)}: " + ex.Message);
+                tcs?.SetException(ex);
+                return null;
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchDetectionEvent)}: " + ex.Message);
+                tcs?.SetException(ex);
+                return null;
+            }
+        }
+
+        public async Task<IDetectionEventModel> FetchDetectionEvent(IDetectionEventModel model, CancellationToken token = default, TaskCompletionSource<bool> tcs = default)
+        {
+            try
+            {
+                if (_conn.State != ConnectionState.Open)
+                    await (_conn as DbConnection).OpenAsync();
+                var table = _setupModel.TableDetection;
+
+                ///////////////////////////////////////////////////////////////////
+                ///                   FETCH DETECTION EVENT
+                ///////////////////////////////////////////////////////////////////
+
+                var mapper = new DetectionEventMapper(model);
+                //Status는 조회 속성에서 제외한다.
+                string sql = @$"SELECT *, FORMAT(datetime, 'yyyy-MM-ddTHH:mm:ss.ff') as datetime FROM {table} 
+                    WHERE eventgroup = @EventGroup
+                    AND device = @Device
+                    AND messagetype = @MessageType
+                    AND result = @Result
+                    AND datetime = @DateTime
+                ";
+
+                var fetchedModel = (await _conn.QueryAsync<DetectionEventMapper>(sql, mapper)).FirstOrDefault();
+                if (fetchedModel == null) throw new Exception(message: $"Event({model.Id}) is not exist.");
+
+                var device = _deviceProvider.FirstOrDefault(entity => entity.Id == fetchedModel.Device);
+                var createdModel = new DetectionEventModel(fetchedModel, device);
+
+                tcs?.SetResult(true);
+                return createdModel;
+
+            }
+            catch (TaskCanceledException ex)
+            {
+                _log.Error($"Task was cancelled in {nameof(FetchDetectionEvent)}: " + ex.Message);
+                tcs?.SetException(ex);
+                return null;
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchDetectionEvent)}: " + ex.Message);
+                tcs?.SetException(ex);
+                return null;
+            }
+        }
+
+        public async Task<List<IDetectionEventModel>> FetchDetectionEvents(string from = null, string to = null, CancellationToken token = default, TaskCompletionSource<bool> tcs = default)
+        {
+            try
+            {
+                if (_conn.State != ConnectionState.Open)
+                    await (_conn as DbConnection).OpenAsync();
+                var table = _setupModel.TableDetection;
+
+                ///////////////////////////////////////////////////////////////////
+                ///                   FETCH DETECTION EVENT
+                ///////////////////////////////////////////////////////////////////
+
+                string sql = "";
+                if (from != null && to != null)
+                    sql = $@"SELECT *, FORMAT(datetime, 'yyyy-MM-ddTHH:mm:ss.ff') as datetime FROM {table} WHERE datetime BETWEEN '{from}' and '{to}'";
+                else
+                    sql = $@"SELECT *, FORMAT(datetime, 'yyyy-MM-ddTHH:mm:ss.ff') as datetime FROM {table}";
+
+                List<IDetectionEventModel> fetches = new List<IDetectionEventModel>();
+
+                foreach (var model in (await _conn
+                    .QueryAsync<DetectionEventMapper>(sql)).ToList())
+                {
+                    if (token.IsCancellationRequested) break;
+
+                    var device = _deviceProvider.FirstOrDefault(entity => entity.Id == model.Device);
+
+                    var detection = new DetectionEventModel(model, device);
+
+                    fetches.Add(detection);
+                }
+                tcs?.SetResult(true);
+                return fetches;
+            }
+            catch (TaskCanceledException ex)
+            {
+                _log.Error($"Task was cancelled in {nameof(FetchDetectionEvent)}: " + ex.Message);
+                tcs?.SetException(ex);
+                return null;
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"Raised Exception for Task to fetch DB data in {nameof(FetchDetectionEvent)}: " + ex.Message);
+                tcs?.SetException(ex);
+                return null;
+            }
+        }
+
+
+        public Task<IDetectionEventModel> SaveDetectionEvent(IDetectionEventModel model, CancellationToken token = default, TaskCompletionSource<bool> tcs = default)
         {
             int commitResult = 0;
 
@@ -155,244 +413,53 @@ namespace Ironwall.Libraries.Events.Services
             {
                 try
                 {
-                    var conn = _dbConnection as SQLiteConnection;
+                    if (_conn.State != ConnectionState.Open)
+                        await (_conn as DbConnection).OpenAsync();
                     var table = _setupModel.TableDetection;
 
-                    var mapper = MapperFactory.Build<DetectionEventMapper>(model);
+                    ///////////////////////////////////////////////////////////////////
+                    ///                   SAVE DETECTION EVENT
+                    ///////////////////////////////////////////////////////////////////
 
-                    commitResult = await conn.ExecuteAsync(
+                    //model의 id는 없다.
+                    //공통 조회 테이블
+                    var getId = await GetEventMaxId();
+                    int id = 0;
+                    if (getId != null)
+                        id = (int)getId;
+                    model.Id = id + 1;
+
+                    var mapper = new DetectionEventMapper(model);
+
+                    commitResult = await _conn.ExecuteAsync(
                         $@"INSERT INTO {table} 
-                        (eventid, eventgroup, device, messagetype, result, status, datetime) 
+                        (id, eventgroup, device, messagetype, result, status, datetime) 
                         VALUES
-                        (@EventId, @EventGroup, @Device, @MessageType, @Result, @Status, @DateTime)", mapper);
+                        (@Id, @EventGroup, @Device, @MessageType, @Result, @Status, @DateTime)", mapper);
 
-                    Debug.WriteLine($"({commitResult}) rows was updated in DB[{table}] : {model}");
+                    _log.Info($"({commitResult}) rows was updated in DB[{table}] : {model}");
 
-                    await _eventProvider.InsertedItem(model);
-                }
-                catch (Exception ex)
-                {
-                    var result = ex.Message;
-                    Debug.WriteLine($"Raised Exception for Task to insert DB data in {nameof(SaveDetectionEvent)}: " + ex.Message);
-                }
-            });
-        }
-        public Task UpdateDetectionEvent(IDetectionEventModel model)
-        {
-            int commitResult = 0;
+                    var fetchedModel = await FetchDetectionEvent(model);
+                    if (fetchedModel == null) throw new Exception($"Fail to fetch an entity({model.Id}) from {table}");
 
-            return Task.Run(async () =>
-            {
-                try
-                {
-                    var conn = _dbConnection as SQLiteConnection;
-                    var table = _setupModel.TableDetection;
-
-                    var mapper = MapperFactory.Build<DetectionEventMapper>(model);
-
-                    commitResult = await conn.ExecuteAsync($@"UPDATE {table} SET
-                            eventgroup = @EventGroup, device = @Device
-                            , messagetype = @MessageType, result = @Result
-                            , status = @Status, datetime = @DateTime 
-                            WHERE eventid = @EventId", mapper);
-
-                    await _eventProvider.UpdatedItem(model);
-
-                    Debug.WriteLine($"({commitResult}) rows was updated in DB[{table}] : {model}");
-                }
-                catch (Exception ex)
-                {
-                    var result = ex.Message;
-                    Debug.WriteLine($"Raised Exception for Task to insert DB data in {nameof(UpdateDetectionEvent)}: " + ex.Message);
-                }
-            });
-        }
-        public Task FetchMalfunctionEvent(string from = null, string to = null, CancellationToken token = default, bool isFinished = false)
-        {
-            return Task.Run(async () =>
-            {
-
-                try
-                {
-                    if (_dbConnection.State != ConnectionState.Open)
-                        await (_dbConnection as DbConnection).OpenAsync();
-
-                    string sql = "";
-                    if (from != null && to != null)
-                        sql = $@"SELECT * FROM {_setupModel.TableMalfunction} WHERE datetime BETWEEN '{from}' and '{to}'";
-                    else
-                        sql = $@"SELECT * FROM {_setupModel.TableMalfunction}";
-
-
-                    var list = (await _dbConnection
-                        .QueryAsync<MalfunctionEventMapper>(sql)).ToList();
-                    
-                    foreach (var model in list)
-                    {
-                        if (token.IsCancellationRequested) break;
-
-                        var checkModel = _eventProvider?.Where(entity => entity.Id == model.EventId)?.FirstOrDefault();
-                        if (checkModel != null) continue;
-
-                        IBaseDeviceModel device = null;
-
-                        switch (model?.Device[0])
-                        {
-                            case 'c':
-                                device = _controllerProvider
-                                .Where(item => item.Id == model.Device)
-                                .FirstOrDefault() as ControllerDeviceModel;
-                                break;
-                            case 's':
-                                device = _sensorProvider
-                                .Where(item => item.Id == model.Device)
-                                .FirstOrDefault() as SensorDeviceModel;
-                                break;
-                            default:
-                                break;
-                        }
-
-                        var eventModel = ModelFactory.Build<MalfunctionEventModel>(model, device);
-                        _eventProvider.Add(eventModel);
-                    }
-                    if (isFinished)
-                        await _eventProvider.Finished();
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"Raised Exception for Task to fetch DB data in {nameof(FetchMalfunctionEvent)}: " + ex.Message);
-                }
-            }, token);
-        }
-        public Task SaveMalfunctionEvent(IMalfunctionEventModel model)
-        {
-            int commitResult = 0;
-            return Task.Run(async () =>
-            {
-                try
-                {
-                    var conn = _dbConnection as SQLiteConnection;
-                    var table = _setupModel.TableMalfunction;
-
-                    var mapper = MapperFactory.Build<MalfunctionEventMapper>(model);
-
-                    commitResult = await conn.ExecuteAsync($@"INSERT INTO {table} 
-                                        (eventid, eventgroup, device, messagetype, reason, firststart,  firstend, secondstart, secondend, status, datetime) 
-                                        VALUES
-                                        (@EventId, @EventGroup, @Device, @MessageType, @Reason, @FirstStart,  @FirstEnd, @SecondStart, @SecondEnd, @Status, @DateTime)", mapper);
-                    
-                    Debug.WriteLine($"({commitResult}) rows was updated in DB[{table}] : {model}");
-                    await _eventProvider.InsertedItem(model);
-                }
-                catch (Exception ex)
-                {
-                    var result = ex.Message;
-                    Debug.WriteLine($"Raised Exception for Task to insert DB data in {nameof(SaveMalfunctionEvent)}: " + ex.Message);
-                }
-            });
-        }
-        public Task UpdateMalfunctionEvent(IMalfunctionEventModel model)
-        {
-            int commitResult = 0;
-
-            return Task.Run(async () =>
-            {
-                try
-                {
-                    var conn = _dbConnection as SQLiteConnection;
-                    var table = _setupModel.TableMalfunction;
-
-                    var mapper = MapperFactory.Build<MalfunctionEventMapper>(model);
-                    //reason, firststart,  firstend, secondstart, secondend
-                    //@Reason, @FirstStart,  @FirstEnd, @SecondStart, @SecondEnd,
-                    commitResult = await conn.ExecuteAsync($@"UPDATE {table} SET
-                            eventgroup = @EventGroup, device = @Device
-                            , messagetype = @MessageType, reason = @Reason
-                            , firststart = @FirstStart, firstend = @FirstEnd
-                            , secondstart = @SecondStart, secondend = @SecondEnd
-                            , status = @Status, datetime = @DateTime 
-                            WHERE eventid = @EventId", mapper);
-
-                    await _eventProvider.UpdatedItem(model);
-
-                    Debug.WriteLine($"({commitResult}) rows was updated in DB[{table}] : {model}");
-                }
-                catch (Exception ex)
-                {
-                    var result = ex.Message;
-                    Debug.WriteLine($"Raised Exception for Task to insert DB data in {nameof(UpdateDetectionEvent)}: " + ex.Message);
-                }
-            });
-        }
-        public Task FetchActionEvent(string from = null, string to = null, CancellationToken token = default)
-        {
-            return Task.Run(async () =>
-            {
-                try
-                {
-                    if (_dbConnection.State != ConnectionState.Open)
-                        await (_dbConnection as DbConnection).OpenAsync();
-
-                    //await _actionEventProvider.ClearData();
-
-                    string sql = "";
-                    if (from != null && to != null)
-                        sql = $@"SELECT * FROM {_setupModel.TableAction} WHERE datetime BETWEEN '{from}' and '{to}'";
-                    else
-                        sql = $@"SELECT * FROM {_setupModel.TableAction}";
-
-                    foreach (var model in (await _dbConnection
-                        .QueryAsync<ReportEventMapper>(sql)).ToList())
-                    {
-                        if (token.IsCancellationRequested) break;
-
-                        var checkModel = _actionEventProvider.Where(entity => entity.Id == model.EventId).FirstOrDefault();
-                        if (checkModel != null) continue;
-
-                        var metaEvent = _eventProvider
-                                    .Where(item => item.Id == model.FromEventId)
-                                    .FirstOrDefault() as IMetaEventModel;
-
-                        if (metaEvent == null) continue;
-
-                        ActionEventModel action = null;
-                        switch (metaEvent?.MessageType)
-                        {
-                            case (int)EnumEventType.Intrusion:
-                                {
-                                    action = ModelFactory
-                                    .Build<ActionEventModel>(model, metaEvent as DetectionEventModel);
-                                }
-                                break;
-                            case (int)EnumEventType.Fault:
-                                {
-                                    action = ModelFactory
-                                    .Build<ActionEventModel>(model, metaEvent as MalfunctionEventModel);
-                                }
-                                break;
-                            default:
-                                break;
-                        }
-
-                        if (action == null)
-                            continue;
-
-                        _actionEventProvider.Add(action);
-                    }
-
-                    await _actionEventProvider.Finished();
+                    tcs?.SetResult(true);
+                    return fetchedModel;
                 }
                 catch (TaskCanceledException ex)
                 {
-                    Debug.WriteLine($"Task was cancelled in {nameof(FetchActionEvent)}: " + ex.Message);
+                    _log.Error($"Task was cancelled in {nameof(SaveDetectionEvent)}: " + ex.Message, true);
+                    tcs?.SetException(ex);
+                    return null;
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception for Task to fetch DB data in {nameof(FetchActionEvent)}: " + ex.Message);
+                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(SaveDetectionEvent)}: " + ex.Message);
+                    tcs?.SetException(ex);
+                    return null;
                 }
-            }, token);
+            });
         }
-        public Task SaveActionEvent(IActionEventModel model)
+        public Task UpdateDetectionEvent(IDetectionEventModel model, CancellationToken token = default, TaskCompletionSource<bool> tcs = default)
         {
             int commitResult = 0;
 
@@ -400,85 +467,803 @@ namespace Ironwall.Libraries.Events.Services
             {
                 try
                 {
-                    var conn = _dbConnection as SQLiteConnection;
+                    if (_conn.State != ConnectionState.Open)
+                        await (_conn as DbConnection).OpenAsync();
+                    var table = _setupModel.TableDetection;
+
+                    ///////////////////////////////////////////////////////////////////
+                    ///                   UPDATE DETECTION EVENT
+                    ///////////////////////////////////////////////////////////////////
+
+                    var mapper = new DetectionEventMapper(model);
+
+                    commitResult = await _conn.ExecuteAsync(
+                        $@"UPDATE {table} SET
+                            eventgroup = @EventGroup
+                            , device = @Device
+                            , result = @Result
+                            , status = @Status
+                            WHERE id = @Id", mapper);
+
+                    _log.Info($"({commitResult}) rows was updated in DB[{table}] : {model}");
+                    tcs?.SetResult(true);
+                }
+                catch (TaskCanceledException ex)
+                {
+                    _log.Error($"Task was cancelled in {nameof(UpdateDetectionEvent)}: " + ex.Message, true);
+                    tcs?.SetException(ex);
+                }
+                catch (Exception ex)
+                {
+                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(UpdateDetectionEvent)}: " + ex.Message, true);
+                    tcs?.SetException(ex);
+                }
+            });
+        }
+
+        public Task DeleteDetectionEvent(IDetectionEventModel model, CancellationToken token = default, TaskCompletionSource<bool> tcs = null)
+        {
+            return Task.Run(async () =>
+            {
+                try
+                {
+                    if (_conn.State != ConnectionState.Open)
+                        await (_conn as DbConnection).OpenAsync();
+                    var table = _setupModel.TableDetection;
+
+                    ///////////////////////////////////////////////////////////////////
+                    ///                   DELETE DETECTION EVENT
+                    ///////////////////////////////////////////////////////////////////
+
+                    await DeleteRecordOrTable(table, model.Id.ToString());
+
+                    tcs?.SetResult(true);
+                }
+                catch (TaskCanceledException ex)
+                {
+                    _log.Error($"Task was cancelled in {nameof(DeleteDetectionEvent)}: " + ex.Message, true);
+                    tcs?.SetException(ex);
+                }
+                catch (Exception ex)
+                {
+                    _log.Error($"Raised Exception for Task to delete DB data in {nameof(DeleteDetectionEvent)}: " + ex.Message, true);
+                    tcs?.SetException(ex);
+                }
+            });
+        }
+
+        #endregion
+
+        #region MALFUCTION PART
+        public async Task<IMalfunctionEventModel> FetchMalfunctionEvent(int id, CancellationToken token = default, TaskCompletionSource<bool> tcs = default)
+        {
+            try
+            {
+                if (_conn.State != ConnectionState.Open)
+                    await (_conn as DbConnection).OpenAsync();
+                var table = _setupModel.TableMalfunction;
+
+                ///////////////////////////////////////////////////////////////////
+                ///                   FETCH MALFUNCTION EVENT
+                ///////////////////////////////////////////////////////////////////
+
+                //Status는 조회 속성에서 제외한다.
+                string sql = @$"SELECT *, FORMAT(datetime, 'yyyy-MM-ddTHH:mm:ss.ff') as datetime FROM {table} 
+                                WHERE id = @Id
+                                ";
+                var parameter = new { Id = id };
+                var fetchedModel = (await _conn.QueryAsync<MalfunctionEventMapper>(sql, parameter)).FirstOrDefault();
+                if (fetchedModel == null) throw new Exception(message: $"Event({id}) is not exist.");
+
+                var device = _deviceProvider.FirstOrDefault(entity => entity.Id == fetchedModel.Device);
+                var createdModel = new MalfunctionEventModel(fetchedModel, device);
+
+                tcs?.SetResult(true);
+                return createdModel;
+
+            }
+            catch (TaskCanceledException ex)
+            {
+                _log.Error($"Task was cancelled in {nameof(FetchDetectionEvent)}: " + ex.Message);
+                tcs?.SetException(ex);
+                return null;
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchDetectionEvent)}: " + ex.Message);
+                tcs?.SetException(ex);
+                return null;
+            }
+        }
+
+        public async Task<IMalfunctionEventModel> FetchMalfunctionEvent(IMalfunctionEventModel model, CancellationToken token = default, TaskCompletionSource<bool> tcs = default)
+        {
+            try
+            {
+                if (_conn.State != ConnectionState.Open)
+                    await (_conn as DbConnection).OpenAsync();
+                var table = _setupModel.TableMalfunction;
+
+                ///////////////////////////////////////////////////////////////////
+                ///                   FETCH MALFUNCTION EVENT
+                ///////////////////////////////////////////////////////////////////
+
+                var mapper = new MalfunctionEventMapper(model);
+                //Status는 조회 속성에서 제외한다.
+                string sql = @$"SELECT *, FORMAT(datetime, 'yyyy-MM-ddTHH:mm:ss.ff') as datetime FROM {table} 
+                    WHERE eventgroup = @EventGroup
+                    AND device = @Device
+                    AND messagetype = @MessageType
+
+                    AND reason = @Result
+                    AND firststart = @Result
+                    AND firstend = @Result
+                    AND sencondstart = @Result
+                    AND secondend = @Result
+                    AND datetime = @DateTime
+                ";
+
+                var fetchedModel = (await _conn.QueryAsync<MalfunctionEventMapper>(sql, mapper)).FirstOrDefault();
+                if (fetchedModel == null) throw new Exception(message: $"Event({model.Id}) is not exist.");
+
+                var device = _deviceProvider.FirstOrDefault(entity => entity.Id == fetchedModel.Device);
+                var createdModel = new MalfunctionEventModel(fetchedModel, device);
+
+                tcs?.SetResult(true);
+                return createdModel;
+
+            }
+            catch (TaskCanceledException ex)
+            {
+                _log.Error($"Task was cancelled in {nameof(FetchMalfunctionEvent)}: " + ex.Message);
+                tcs?.SetException(ex);
+                return null;
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchMalfunctionEvent)}: " + ex.Message);
+                tcs?.SetException(ex);
+                return null;
+            }
+        }
+
+        public async Task<List<IMalfunctionEventModel>> FetchMalfunctionEvents(string from = null, string to = null, CancellationToken token = default, TaskCompletionSource<bool> tcs = default)
+        {
+            try
+            {
+                if (_conn.State != ConnectionState.Open)
+                    await (_conn as DbConnection).OpenAsync();
+                var table = _setupModel.TableMalfunction;
+
+                ///////////////////////////////////////////////////////////////////
+                ///                   FETCH MALFUNCTION EVENT
+                ///////////////////////////////////////////////////////////////////
+
+                string sql = "";
+                if (from != null && to != null)
+                    sql = $@"SELECT *, FORMAT(datetime, 'yyyy-MM-ddTHH:mm:ss.ff') as datetime FROM {table} WHERE datetime BETWEEN '{from}' and '{to}'";
+                else
+                    sql = $@"SELECT *, FORMAT(datetime, 'yyyy-MM-ddTHH:mm:ss.ff') as datetime FROM {table}";
+
+                List<IMalfunctionEventModel> fetches = new List<IMalfunctionEventModel>();
+
+                foreach (var model in (await _conn
+                    .QueryAsync<MalfunctionEventMapper>(sql)).ToList())
+                {
+                    if (token.IsCancellationRequested) break;
+
+                    var device = _deviceProvider.FirstOrDefault(entity => entity.Id == model.Device);
+
+                    var Malfunction = new MalfunctionEventModel(model, device);
+
+                    fetches.Add(Malfunction);
+                }
+                tcs?.SetResult(true);
+                return fetches;
+            }
+            catch (TaskCanceledException ex)
+            {
+                _log.Error($"Task was cancelled in {nameof(FetchMalfunctionEvent)}: " + ex.Message);
+                tcs?.SetException(ex);
+                return null;
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"Raised Exception for Task to fetch DB data in {nameof(FetchMalfunctionEvent)}: " + ex.Message);
+                tcs?.SetException(ex);
+                return null;
+            }
+        }
+
+
+        public Task<IMalfunctionEventModel> SaveMalfunctionEvent(IMalfunctionEventModel model, CancellationToken token = default, TaskCompletionSource<bool> tcs = default)
+        {
+            int commitResult = 0;
+
+            return Task.Run(async () =>
+            {
+                try
+                {
+                    if (_conn.State != ConnectionState.Open)
+                        await (_conn as DbConnection).OpenAsync();
+                    var table = _setupModel.TableMalfunction;
+
+                    ///////////////////////////////////////////////////////////////////
+                    ///                   SAVE MALFUNCTION EVENT
+                    ///////////////////////////////////////////////////////////////////
+
+                    //model의 id는 없다.
+                    //공통 조회 테이블
+                    var getId = await GetEventMaxId();
+                    int id = 0;
+                    if (getId != null)
+                        id = (int)getId;
+                    model.Id = id + 1;
+
+                    var mapper = new MalfunctionEventMapper(model);
+
+                    commitResult = await _conn.ExecuteAsync(
+                        $@"INSERT INTO {table} 
+                        (id, eventgroup, device, messagetype, reason, firststart, firstend, secondstart, secondend, status, datetime) 
+                        VALUES
+                        (@Id, @EventGroup, @Device, @MessageType, @Reason, @FisrtStart, @FirstEnd, @SecondStart, @SecondEnd, @Status, @DateTime)", mapper);
+
+                    _log.Info($"({commitResult}) rows was updated in DB[{table}] : {model}");
+
+                    var fetchedModel = await FetchMalfunctionEvent(model);
+                    if (fetchedModel == null) throw new Exception($"Fail to fetch an entity({model.Id}) from {table}");
+
+                    tcs?.SetResult(true);
+                    return fetchedModel;
+                }
+                catch (TaskCanceledException ex)
+                {
+                    _log.Error($"Task was cancelled in {nameof(SaveMalfunctionEvent)}: " + ex.Message, true);
+                    tcs?.SetException(ex);
+                    return null;
+                }
+                catch (Exception ex)
+                {
+                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(SaveMalfunctionEvent)}: " + ex.Message);
+                    tcs?.SetException(ex);
+                    return null;
+                }
+            });
+        }
+        public Task UpdateMalfunctionEvent(IMalfunctionEventModel model, CancellationToken token = default, TaskCompletionSource<bool> tcs = default)
+        {
+            int commitResult = 0;
+
+            return Task.Run(async () =>
+            {
+                try
+                {
+                    if (_conn.State != ConnectionState.Open)
+                        await (_conn as DbConnection).OpenAsync();
+                    var table = _setupModel.TableMalfunction;
+
+                    ///////////////////////////////////////////////////////////////////
+                    ///                   UPDATE MALFUNCTION EVENT
+                    ///////////////////////////////////////////////////////////////////
+
+                    var mapper = new MalfunctionEventMapper(model);
+
+                    commitResult = await _conn.ExecuteAsync(
+                        $@"UPDATE {table} SET
+                            eventgroup = @EventGroup
+                            , device = @Device
+
+                            , reason = @Reason
+                            , firststart = @FirstStart
+                            , firstend = @FirstEnd
+                            , secondstart = @SecondStart
+                            , secondend = @SecondEnd
+                            , status = @Status
+                            WHERE id = @Id", mapper);
+
+
+                    _log.Info($"({commitResult}) rows was updated in DB[{table}] : {model}");
+                    tcs?.SetResult(true);
+                }
+                catch (TaskCanceledException ex)
+                {
+                    _log.Error($"Task was cancelled in {nameof(UpdateMalfunctionEvent)}: " + ex.Message, true);
+                    tcs?.SetException(ex);
+                }
+                catch (Exception ex)
+                {
+                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(UpdateMalfunctionEvent)}: " + ex.Message, true);
+                    tcs?.SetException(ex);
+                }
+            });
+        }
+
+        public Task DeleteMalfunctionEvent(IMalfunctionEventModel model, CancellationToken token = default, TaskCompletionSource<bool> tcs = null)
+        {
+            return Task.Run(async () =>
+            {
+                try
+                {
+                    if (_conn.State != ConnectionState.Open)
+                        await (_conn as DbConnection).OpenAsync();
+                    var table = _setupModel.TableMalfunction;
+
+                    ///////////////////////////////////////////////////////////////////
+                    ///                   DELETE MALFUNCTION EVENT
+                    ///////////////////////////////////////////////////////////////////
+
+                    await DeleteRecordOrTable(table, model.Id.ToString());
+
+                    tcs?.SetResult(true);
+                }
+                catch (TaskCanceledException ex)
+                {
+                    _log.Error($"Task was cancelled in {nameof(DeleteMalfunctionEvent)}: " + ex.Message, true);
+                    tcs?.SetException(ex);
+                }
+                catch (Exception ex)
+                {
+                    _log.Error($"Raised Exception for Task to delete DB data in {nameof(DeleteMalfunctionEvent)}: " + ex.Message, true);
+                    tcs?.SetException(ex);
+                }
+            });
+        }
+
+        #endregion
+
+
+        #region ACTION PART
+
+        public async Task<IActionEventModel> FetchActionEvent(IActionEventModel model, CancellationToken token = default, TaskCompletionSource<bool> tcs = default)
+        {
+            try
+            {
+                if (_conn.State != ConnectionState.Open)
+                    await (_conn as DbConnection).OpenAsync();
+                var table = _setupModel.TableAction;
+
+                ///////////////////////////////////////////////////////////////////
+                ///                   FETCH Action EVENT
+                ///////////////////////////////////////////////////////////////////
+
+                var mapper = new ActionEventMapper(model);
+
+                //id, fromeventid, content, user, datetime
+                //Status는 조회 속성에서 제외한다.
+                string sql = @$"SELECT *, FORMAT(datetime, 'yyyy-MM-ddTHH:mm:ss.ff') as datetime  FROM {table} 
+                    WHERE id = @Id
+                    AND fromeventid = @FromEventId
+                    AND content = @Content
+                    AND user = @User
+                    AND datetime = @DateTime
+                ";
+
+                var fetchedModel = (await _conn.QueryAsync<ActionEventMapper>(sql, mapper)).FirstOrDefault();
+                if (fetchedModel == null) throw new Exception(message: $"Event({model.Id}) is not exist.");
+
+                var originEvent = await FetchMetaEvent(fetchedModel.FromEventId);
+                //var originEvent = _eventProvider.FirstOrDefault(entity => entity.Id == fetchedModel.FromEventId);
+                var createdModel = new ActionEventModel(fetchedModel, originEvent);
+
+                tcs?.SetResult(true);
+                return createdModel;
+
+            }
+            catch (TaskCanceledException ex)
+            {
+                _log.Error($"Task was cancelled in {nameof(FetchActionEvent)}: " + ex.Message);
+                tcs?.SetException(ex);
+                return null;
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchActionEvent)}: " + ex.Message);
+                tcs?.SetException(ex);
+                return null;
+            }
+        }
+
+        public async Task<List<IActionEventModel>> FetchActionEvents(string from = null, string to = null, CancellationToken token = default, TaskCompletionSource<bool> tcs = default)
+        {
+            try
+            {
+                if (_conn.State != ConnectionState.Open)
+                    await (_conn as DbConnection).OpenAsync();
+                var table = _setupModel.TableAction;
+
+                ///////////////////////////////////////////////////////////////////
+                ///                   FETCH Action EVENT
+                ///////////////////////////////////////////////////////////////////
+
+                string sql = "";
+                if (from != null && to != null)
+                    sql = $@"SELECT *, FORMAT(datetime, 'yyyy-MM-ddTHH:mm:ss.ff') as datetime FROM {table} WHERE datetime BETWEEN '{from}' and '{to}'";
+                else
+                    sql = $@"SELECT *, FORMAT(datetime, 'yyyy-MM-ddTHH:mm:ss.ff') as datetime FROM {table}";
+
+                List<IActionEventModel> fetches = new List<IActionEventModel>();
+
+                foreach (var model in (await _conn
+                    .QueryAsync<ActionEventMapper>(sql)).ToList())
+                {
+                    if (token.IsCancellationRequested) break;
+
+                    var referTable = await GetTableNameForId(model.FromEventId);
+                    IMetaEventModel metaEvent = null;
+                    if (referTable == _setupModel.TableConnection)
+                    {
+                        //metaEvent = await FetchConnectionEvent(model.FromEventId);
+                    }
+                    else if (referTable == _setupModel.TableDetection)
+                    {
+                        metaEvent = await FetchDetectionEvent(model.FromEventId);
+                    }
+                    else if (referTable == _setupModel.TableMalfunction)
+                    {
+                        metaEvent = await FetchMalfunctionEvent(model.FromEventId);
+                    }
+
+                    var Action = new ActionEventModel(model, metaEvent);
+                    fetches.Add(Action);
+                }
+                tcs?.SetResult(true);
+                return fetches;
+            }
+            catch (TaskCanceledException ex)
+            {
+                _log.Error($"Task was cancelled in {nameof(FetchActionEvent)}: " + ex.Message);
+                tcs?.SetException(ex);
+                return null;
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"Raised Exception for Task to fetch DB data in {nameof(FetchActionEvent)}: " + ex.Message);
+                tcs?.SetException(ex);
+                return null;
+            }
+        }
+
+
+        public Task<IActionEventModel> SaveActionEvent(IActionEventModel model, CancellationToken token = default, TaskCompletionSource<bool> tcs = default)
+        {
+            int commitResult = 0;
+
+            return Task.Run(async () =>
+            {
+                try
+                {
+                    if (_conn.State != ConnectionState.Open)
+                        await (_conn as DbConnection).OpenAsync();
                     var table = _setupModel.TableAction;
 
-                    #region Deprecated Code
-                    /*var sql = $@"INSERT INTO {table} 
-                                (eventid, fromeventid, content, user, datetime) 
-                                VALUES 
-                                ('{mapper.EventId}', '{mapper.FromEventId}', '{mapper.Content}', '{mapper.Content}', '{mapper.User}', '{mapper.DateTime}')";
-                    
-                    commitResult = await conn.ExecuteAsync(sql);*/
-                    #endregion
+                    ///////////////////////////////////////////////////////////////////
+                    ///                   SAVE Action EVENT
+                    ///////////////////////////////////////////////////////////////////
 
-                    var mapper = MapperFactory.Build<ReportEventMapper>(model);
+                    //model의 id는 없다.
+                    //공통 조회 테이블
+                    var getId = await GetMaxId(table);
+                    int id = 0;
+                    if (getId != null)
+                        id = (int)getId;
+                    model.Id = id + 1;
 
-                    commitResult = await conn.ExecuteAsync($@"INSERT INTO {table} 
-                                        (eventid, fromeventid, content, user, datetime) 
-                                        VALUES
-                                        (@EventId, @FromEventId, @Content, @User, @DateTime)", mapper);
+                    var mapper = new ActionEventMapper(model);
 
-                    //_actionEventProvider.Add(model);
-                    Debug.WriteLine($"({commitResult}) rows was updated in DB[{table}] : {model}");
-                    await _actionEventProvider.InsertedItem(model);
+                    commitResult = await _conn.ExecuteAsync(
+                        $@"INSERT INTO {table} 
+                        (id, fromeventid, content, user, datetime) 
+                        VALUES
+                        (@Id, @FromEventId, @Content, @User, @DateTime)", mapper);
+
+                    _log.Info($"({commitResult}) rows was updated in DB[{table}] : {model}");
+
+                    var fetchedModel = await FetchActionEvent(model);
+                    if (fetchedModel == null) throw new Exception($"Fail to fetch an entity({model.Id}) from {table}");
+
+                    tcs?.SetResult(true);
+                    return fetchedModel;
+                }
+                catch (TaskCanceledException ex)
+                {
+                    _log.Error($"Task was cancelled in {nameof(SaveActionEvent)}: " + ex.Message, true);
+                    tcs?.SetException(ex);
+                    return null;
                 }
                 catch (Exception ex)
                 {
-                    var result = ex.Message;
-                    Debug.WriteLine($"Raised Exception for Task to insert DB data in {nameof(SaveActionEvent)}: " + ex.Message);
+                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(SaveActionEvent)}: " + ex.Message);
+                    tcs?.SetException(ex);
+                    return null;
                 }
-                
+            });
+        }
+        public Task UpdateActionEvent(IActionEventModel model, CancellationToken token = default, TaskCompletionSource<bool> tcs = default)
+        {
+            int commitResult = 0;
+
+            return Task.Run(async () =>
+            {
+                try
+                {
+                    if (_conn.State != ConnectionState.Open)
+                        await (_conn as DbConnection).OpenAsync();
+                    var table = _setupModel.TableAction;
+
+                    ///////////////////////////////////////////////////////////////////
+                    ///                   UPDATE Action EVENT
+                    ///////////////////////////////////////////////////////////////////
+
+                    var mapper = new ActionEventMapper(model);
+
+                    commitResult = await _conn.ExecuteAsync(
+                        $@"UPDATE {table} SET
+                            fromeventid = @FromEventId
+                            , content = @Content
+                            , user = @User
+                            WHERE id = @Id", mapper);
+
+
+                    _log.Info($"({commitResult}) rows was updated in DB[{table}] : {model}");
+                    tcs?.SetResult(true);
+                }
+                catch (TaskCanceledException ex)
+                {
+                    _log.Error($"Task was cancelled in {nameof(UpdateActionEvent)}: " + ex.Message, true);
+                    tcs?.SetException(ex);
+                }
+                catch (Exception ex)
+                {
+                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(UpdateActionEvent)}: " + ex.Message, true);
+                    tcs?.SetException(ex);
+                }
             });
         }
 
-        public Task FetchEvent(string startDate = null, string endDate = null, CancellationToken token = default)
+        public Task DeleteActionEvent(IActionEventModel model, CancellationToken token = default, TaskCompletionSource<bool> tcs = null)
         {
             return Task.Run(async () =>
             {
                 try
                 {
-                    await _eventProvider.ClearData();
-                    await _actionEventProvider.ClearData();
+                    if (_conn.State != ConnectionState.Open)
+                        await (_conn as DbConnection).OpenAsync();
+                    var table = _setupModel.TableAction;
 
-                    await FetchDetectionEvent(startDate, endDate, token, true);
-                    await Task.Delay(500, token);
-                    await FetchMalfunctionEvent(startDate, endDate, token, true);
-                    await Task.Delay(500, token);
-                    await FetchActionEvent(startDate, endDate, token);
-                    await Task.Delay(500, token);
+                    ///////////////////////////////////////////////////////////////////
+                    ///                   DELETE Action EVENT
+                    ///////////////////////////////////////////////////////////////////
+
+                    await DeleteRecordOrTable(table, model.Id.ToString());
+
+                    tcs?.SetResult(true);
                 }
                 catch (TaskCanceledException ex)
                 {
-                    Debug.WriteLine($"Task was cancelled in {nameof(FetchEvent)}: " + ex.Message);
+                    _log.Error($"Task was cancelled in {nameof(DeleteActionEvent)}: " + ex.Message, true);
+                    tcs?.SetException(ex);
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception for Task to fetch DB data in {nameof(FetchEvent)}: " + ex.Message);
+                    _log.Error($"Raised Exception for Task to delete DB data in {nameof(DeleteActionEvent)}: " + ex.Message, true);
+                    tcs?.SetException(ex);
                 }
-            }, token);
+            });
         }
+
+        #endregion
         #endregion
         #region - Overrides -
         #endregion
         #region - Binding Methods -
         #endregion
         #region - Processes -
+        public async Task CheckTable(string table, int? id = null)
+        {
+            var commitResult = 0;
+            var conn = _conn as SQLiteConnection;
+
+            if (id != null)
+            {
+                var count = Convert.ToInt32(await conn.ExecuteScalarAsync($@"SELECT COUNT(*) 
+                                                                                FROM {table}
+                                                                                WHERE id = '{id}'"));
+                if (count > 0)
+                {
+                    commitResult = await conn.ExecuteAsync($@"DELETE FROM {table} 
+                                                                WHERE id = '{id}'");
+
+                    _log.Info($"DELETE a record in {table} for being replaced to new record in DB");
+                    if (!(commitResult > 0)) throw new Exception($"Raised exception during deleting Table({table}).");
+                }
+            }
+            else
+            {
+                var count = Convert.ToInt32(await conn.ExecuteScalarAsync($@"SELECT COUNT(*) 
+                                                                                FROM {table}"));
+
+                if (count > 0)
+                {
+                    commitResult = await conn.ExecuteAsync($@"DELETE FROM {table}");
+
+                    _log.Info($"DELETE a {table} for being replaced to new Table in DB");
+                    if (!(commitResult > 0)) throw new Exception($"Raised exception during deleting Table({table}).");
+                }
+
+            }
+
+        }
+
+        public async Task<int?> GetMaxId(string tableName)
+        {
+            try
+            {
+                var query = $@"SELECT MAX(id) FROM {tableName}";
+
+                var maxId = (await _conn.QueryAsync<int?>(query))?.FirstOrDefault();
+
+                return maxId;
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<int?> GetEventMaxId()
+        {
+            try
+            {
+                var query = $@"
+                            SELECT MAX(max_id)
+                            FROM (
+                                SELECT MAX(id) AS max_id FROM {_setupModel.TableConnection}
+                                UNION ALL
+                                SELECT MAX(id) AS max_id FROM {_setupModel.TableDetection}
+                                UNION ALL
+                                SELECT MAX(id) AS max_id FROM {_setupModel.TableMalfunction}
+                            ) AS combined_max_ids;";
+
+                var maxId = (await _conn.QueryAsync<int?>(query))?.FirstOrDefault();
+
+                return maxId;
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+
+        public async Task<bool> IsEventIdExists(int id)
+        {
+            try
+            {
+                var query = $@"
+                            SELECT EXISTS (
+                                SELECT 1 FROM {_setupModel.TableConnection} WHERE id = @Id
+                                UNION ALL
+                                SELECT 1 FROM {_setupModel.TableDetection} WHERE id = @Id
+                                UNION ALL
+                                SELECT 1 FROM {_setupModel.TableMalfunction} WHERE id = @Id
+                                
+                            ) AS id_exists;";
+
+                var exists = await _conn.QueryFirstOrDefaultAsync<bool>(query, new { Id = id });
+
+                return exists;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+
+        public async Task<string> GetTableNameForId(int id)
+        {
+            try
+            {
+
+
+                foreach (var tableName in TableNames)
+                {
+                    var query = $@"SELECT CASE WHEN EXISTS (SELECT 1 FROM {tableName} WHERE id = @Id) THEN @TableName ELSE NULL END";
+                    var result = await _conn.QueryFirstOrDefaultAsync<string>(query, new { Id = id, TableName = tableName });
+
+                    if (!string.IsNullOrEmpty(result))
+                    {
+                        return result;
+                    }
+                }
+
+                return null; // 해당하는 테이블이 없는 경우
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+
+        private Task DeleteRecordOrTable(string table, string id = default, string refer = "id")
+        {
+            try
+            {
+                if (id != null)
+                {
+                    DeleteRecordFromId(table, id, refer);
+                }
+                else
+                {
+                    DeleteTable(table);
+                }
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"Raised Exception for Task to insert DB data in {nameof(DeleteRecordOrTable)}: " + ex.Message);
+            }
+
+            return Task.CompletedTask;
+        }
+
+        private async void DeleteTable(string table)
+        {
+            var commitResult = 0;
+            var count = Convert.ToInt32(await _conn.ExecuteScalarAsync($@"SELECT COUNT(*) FROM {table}"));
+
+            if (count > 0)
+            {
+                commitResult = await _conn.ExecuteAsync($@"DELETE FROM {table}");
+
+                if (!(commitResult > 0)) throw new Exception($"Raised exception during deleting Table({table}).");
+            }
+            else
+            {
+                _log.Info($"No data from {table}");
+            }
+        }
+
+        private async void DeleteRecordFromId(string table, string id, string refer)
+        {
+            var commitResult = 0;
+            var count = Convert.ToInt32(await _conn.ExecuteScalarAsync($@"SELECT COUNT(*) 
+                                                                        FROM {table}
+                                                                        WHERE {refer} = '{id}'"));
+
+            if (count > 0)
+            {
+                commitResult = await _conn.ExecuteAsync($@"DELETE FROM {table} 
+                                                          WHERE {refer} = '{id}'");
+
+                if (!(commitResult > 0)) throw new Exception($"Raised exception during deleting Table({table}).");
+            }
+            else
+            {
+                _log.Info($"Not Exist for Matched ID({id})");
+            }
+        }
+
         #endregion
         #region - IHanldes -
         #endregion
         #region - Properties -
+        public List<string> TableNames { get; private set; }
         #endregion
         #region - Attributes -
-        private IDbConnection _dbConnection;
+        private IDbConnection _conn;
+        private ILogService _log;
         private EventSetupModel _setupModel;
-        private ControllerDeviceProvider _controllerProvider;
-        private SensorDeviceProvider _sensorProvider;
+        //private ControllerDeviceProvider _controllerProvider;
+        //private SensorDeviceProvider _sensorProvider;
         private DetectionEventProvider _detectionEventProvider;
         private ActionEventProvider _actionEventProvider;
         private MalfunctionEventProvider _malfunctionEventProvider;
         private ConnectionEventProvider _connectionEventProvider;
         private EventProvider _eventProvider;
+        private DeviceProvider _deviceProvider;
         #endregion
     }
 }

@@ -220,6 +220,18 @@ namespace Ironwall.Libraries.Map.UI.ViewModels.SymbolCollections
         }
         #endregion
         #region - Properties -
+        private bool _isVisible;
+
+        public bool IsVisible
+        {
+            get { return _isVisible; }
+            set
+            {
+                _isVisible = value;
+                NotifyOfPropertyChange(() => IsVisible);
+            }
+        }
+
         public SymbolProvider SymbolProvider { get; }
         public PointProvider PointProvider { get; }
         public SymbolViewModelProvider SymbolViewModelProvider { get; }

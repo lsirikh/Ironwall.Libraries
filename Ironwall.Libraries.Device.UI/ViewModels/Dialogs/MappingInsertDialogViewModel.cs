@@ -18,6 +18,8 @@ using Ironwall.Framework.Helpers;
 using Ironwall.Libraries.Devices.Providers;
 using Ironwall.Libraries.Devices.Providers.Models;
 using Ironwall.Libraries.Device.UI.Messages;
+using System.Windows.Documents;
+using System.Collections.Generic;
 
 namespace Ironwall.Libraries.Device.UI.ViewModels.Dialogs
 {
@@ -53,41 +55,36 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Dialogs
             {
                 try
                 {
-                    //if (_cancellationTokenSource.IsCancellationRequested)
-                    //    _cancellationTokenSource = new CancellationTokenSource();
-
                     await _eventAggregator.PublishOnUIThreadAsync(new OpenProgressPopupMessageModel(), _cancellationTokenSource.Token);
 
                     ///Validation Checkup
                     ///01.동일 그룹 체크
                     var mappingProvider = IoC.Get<CameraMappingProvider>();
 
-                    var matchedGroupCount = mappingProvider.Where(entity => entity.Group == Group).Count();
+                    var matchedGroupCount = mappingProvider.Where(entity => entity.MappingGroup == Group).Count();
                     if (matchedGroupCount > 0) throw new Exception(message: $"There is the same group name({Group})!");
 
-                    string mappingPreviewId = null;
+                    int mappingPreviewId = 0;
                     if(mappingProvider.Count > 0)
                        mappingPreviewId = mappingProvider.Select(entity => entity.Id).LastOrDefault();
 
-                    var mappingId = GetIdHelper.GetMappingId(mappingPreviewId) + 1;
-                    var sensorId = GetIdHelper.GetSensorId(SensorDeviceViewModel.Id);
+                    List<ICameraMappingModel> mappingList = new List<ICameraMappingModel>();
 
                     for (int i = 0; i < ItemCount; i++)
                     {
-                        var sensor = SensorProvider.Where(entity => entity.Id == $"s{sensorId + i}").FirstOrDefault();
-                        if (sensor == null) throw new NullReferenceException(message:$"s{sensorId + i} was not exist!");
-                        var model = new CameraMappingModel($"m{mappingId++}"
-                            , Group
-                            , sensor as SensorDeviceModel
+                        var sensor = SensorProvider.Where(entity => entity.Id == SensorDeviceViewModel.Id + i).FirstOrDefault();
+                        if (sensor == null) throw new NullReferenceException(message: $"s{SensorDeviceViewModel.Id + i} was not exist!");
+                        var model = new CameraMappingModel(
+                            Group
+                            , sensor
                             , SelectedFirstPreset
                             , SelectedSecondPreset);
 
-                        mappingProvider.Add(model);
+                        mappingList.Add(model);
 
                     }
-                    await mappingProvider.Finished();
 
-                    await _eventAggregator.PublishOnUIThreadAsync(new MappingAppliedMessage());
+                    await _eventAggregator.PublishOnUIThreadAsync(new MappingAppliedMessage(mappingList));
 
                     await _eventAggregator.PublishOnUIThreadAsync(new CloseDialogMessageModel());
 
@@ -161,6 +158,24 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Dialogs
                 NotifyOfPropertyChange(() => PresetProvider);
             });
         }
+
+        public void OnGroupComboChanged(object sendor, EventArgs e)
+        {
+
+            //if (SelectedGroupItem == null) return;
+
+            ItemCount = 0;
+
+        }
+
+        public void OnSensorComboChanged(object sendor, EventArgs e)
+        {
+
+            //if (SelectedSensorItem == null) return;
+
+            ItemCount = 0;
+
+        }
         #endregion
         #region - IHanldes -
         #endregion
@@ -195,7 +210,14 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Dialogs
             }
         }
 
-        public string Group { get; set; }
+
+        public string Group
+        {
+            get { return _group; }
+            set { _group = value; NotifyOfPropertyChange(() => Group); }
+        }
+
+
 
         public SensorDeviceModel SensorDeviceViewModel
         {
@@ -239,6 +261,7 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Dialogs
         private int _maximum;
         private int _tickFrequency;
         private int _itemCount;
+        private string _group;
 
         private SensorDeviceModel  _sensorDeviceViewModel;
         private CameraPresetModel _selectedFirstPreset;

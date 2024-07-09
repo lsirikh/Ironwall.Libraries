@@ -16,7 +16,7 @@ namespace Ironwall.Libraries.Device.UI.ViewModels
         Email        : lsirikh@naver.com                                         
      ****************************************************************************/
 
-    public abstract class BaseOptionViewModel<T> : BaseCustomViewModel<T>, IBaseOptionViewModel<T> where T : IOptionBaseModel
+    public abstract class BaseOptionViewModel<T> : BaseCustomViewModel<T>, IBaseOptionViewModel<T> where T : IBaseOptionModel
     {
 
         #region - Ctors -
@@ -25,10 +25,9 @@ namespace Ironwall.Libraries.Device.UI.ViewModels
 
         }
 
-        public BaseOptionViewModel(T model)
+        public BaseOptionViewModel(T model) : base(model)
         {
             _eventAggregator = IoC.Get<IEventAggregator>();
-            _model = model;
         }
        
         #endregion
@@ -43,7 +42,7 @@ namespace Ironwall.Libraries.Device.UI.ViewModels
         #region - IHanldes -
         #endregion
         #region - Properties -
-        public string ReferenceId
+        public int ReferenceId
         {
             get { return _model.ReferenceId; }
             set

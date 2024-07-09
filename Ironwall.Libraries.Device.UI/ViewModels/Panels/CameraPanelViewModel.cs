@@ -17,7 +17,6 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Panels
 
     public class CameraPanelViewModel : BaseViewModel
     {
-
         #region - Ctors -
         public CameraPanelViewModel(IEventAggregator eventAggregator)
             : base(eventAggregator)

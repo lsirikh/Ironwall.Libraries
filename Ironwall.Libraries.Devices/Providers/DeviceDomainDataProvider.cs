@@ -55,7 +55,7 @@ namespace Ironwall.Libraries.Devices.Providers
             { 
                 await Task.Run(() => { BuildSchemeAsync(); });
                 //await CreateEntity();
-                await FetchAsync();
+                //await FetchAsync();
             });
         }
 
@@ -81,13 +81,13 @@ namespace Ironwall.Libraries.Devices.Providers
                 //Create TableController Device DB Table
                 cmd.CommandText = $@"CREATE TABLE IF NOT EXISTS {_setupModel.TableController} (
                                             id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ,
-                                            deviceid TEXT UNIQUE NOT NULL ,
                                             devicegroup INTEGER,
                                             devicenumber INTEGER,
                                             devicename TEXT,
                                             devicetype INTEGER,
                                             version TEXT,
                                             status INTEGER,
+
                                             ipaddress TEXT,
                                             port INTEGER
                                            )";
@@ -96,21 +96,20 @@ namespace Ironwall.Libraries.Devices.Providers
                 //Create TableSensor Device DB Table
                 cmd.CommandText = $@"CREATE TABLE IF NOT EXISTS {_setupModel.TableSensor} (
                                             id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ,
-                                            deviceid TEXT UNIQUE NOT NULL ,
                                             devicegroup INTEGER,
-                                            controller INTEGER,  
                                             devicenumber INTEGER,
                                             devicename TEXT,
                                             devicetype INTEGER,
                                             version TEXT,
                                             status INTEGER
+
+                                            controller INTEGER,  
                                            )";
                 cmd.ExecuteNonQuery();
 
                 //Create TableCamera Device DB Table
                 cmd.CommandText = $@"CREATE TABLE IF NOT EXISTS {_setupModel.TableCamera} (
                                             id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ,
-                                            deviceid TEXT UNIQUE NOT NULL ,
                                             devicegroup INTEGER,
                                             devicenumber INTEGER,
                                             devicename TEXT,
@@ -133,8 +132,7 @@ namespace Ironwall.Libraries.Devices.Providers
                 //Create TableDeviceCameraProfile Device DB Table
                 cmd.CommandText = $@"CREATE TABLE IF NOT EXISTS {_setupModel.TableDeviceCameraProfile} (
                                             id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ,
-                                            optionid TEXT UNIQUE NOT NULL ,
-                                            referenceid TEXT NOT NULL ,
+                                            referenceid INTEGER ,
                                             profile TEXT
                                            )";
                 cmd.ExecuteNonQuery();
@@ -142,8 +140,7 @@ namespace Ironwall.Libraries.Devices.Providers
                 //Create TableDeviceCameraPreset Device DB Table
                 cmd.CommandText = $@"CREATE TABLE IF NOT EXISTS {_setupModel.TableDeviceCameraPreset} (
                                             id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ,
-                                            optionid TEXT UNIQUE NOT NULL ,
-                                            referenceid TEXT NOT NULL ,
+                                            referenceid INTEGER ,
                                             presetname TEXT,
                                             ishome INTEGER,
                                             pan REAL,
@@ -156,11 +153,10 @@ namespace Ironwall.Libraries.Devices.Providers
                 //Create TableDeviceCameraPreset Device DB Table
                 cmd.CommandText = $@"CREATE TABLE IF NOT EXISTS {_setupModel.TableCameraMapping} (
                                             id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ,
-                                            mapperid TEXT UNIQUE NOT NULL,
-                                            groupid TEXT,
-                                            sensor TEXT,
-                                            firstpreset TEXT,
-                                            secondpreset TEXT
+                                            group TEXT,
+                                            sensor INTEGER,
+                                            firstpreset INTEGER,
+                                            secondpreset INTEGER
                                            )";
                 cmd.ExecuteNonQuery();
 
@@ -180,7 +176,7 @@ namespace Ironwall.Libraries.Devices.Providers
                                            )";
                 cmd.ExecuteNonQuery();
 
-                //_dbConnection.Close();
+                //_conn.Close();
             }
             catch (Exception ex)
             {
@@ -226,7 +222,7 @@ namespace Ironwall.Libraries.Devices.Providers
                                 INSERT INTO {table} 
                                 (deviceid, devicegroup, devicenumber, devicename, devicetype, version, status, ipaddress, port) 
                                 VALUES 
-                                ('c{id + 1}', '0', '{i}', '{i}번_제어기', '1', 'v1.0', '1', '192.168.1.{i}', '80')
+                                ('{id + 1}', '0', '{i}', '{i}번_제어기', '1', 'v1.0', '1', '192.168.1.{i}', '80')
                                 ";
 
                     //SQL Execution
@@ -503,82 +499,6 @@ namespace Ironwall.Libraries.Devices.Providers
 
         }
 
-        private async Task FetchAsync()
-        {
-            try
-            {
-                TaskCompletionSource<bool> tcs = new TaskCompletionSource<bool>();
-                ///////////////////////////////////////////////////////////////////
-                ///                   Device Info
-                ///////////////////////////////////////////////////////////////////
-                Debug.WriteLine($"==================Start:{nameof(_deviceDbService.FetchDeviceInfo)}======================");
-                await _deviceDbService.FetchDeviceInfo();
-                Debug.WriteLine($"==================Finish:{nameof(_deviceDbService.FetchDeviceInfo)}======================");
-                ///////////////////////////////////////////////////////////////////
-                ///                   Camera Device
-                ///////////////////////////////////////////////////////////////////
-                await _deviceDbService.FetchCameraPreset(isFinished: true);
-                await _deviceDbService.FetchCameraProfile(isFinished: true);
-                Debug.WriteLine($"==================Start:{nameof(_deviceDbService.FetchCameraDevice)}======================");
-                await _deviceDbService.FetchCameraDevice(isFinished: false);
-                Debug.WriteLine($"==================Finish:{nameof(_deviceDbService.FetchCameraDevice)}======================");
-
-                ///////////////////////////////////////////////////////////////////
-                ///                   CONTROLLER Device
-                ///////////////////////////////////////////////////////////////////
-                
-                Debug.WriteLine($"==================Start:{nameof(_deviceDbService.FetchControllerDevice)}======================");
-                await _deviceDbService.FetchControllerDevice(isFinished: true);
-                Debug.WriteLine($"==================Finish:{nameof(_deviceDbService.FetchControllerDevice)}======================");
-
-                ///////////////////////////////////////////////////////////////////
-                ///                   Sensor Device
-                ///////////////////////////////////////////////////////////////////
-                Debug.WriteLine($"==================Start:{nameof(_deviceDbService.FetchSensorDevice)}======================");
-                await _deviceDbService.FetchSensorDevice(isFinished: true);
-                Debug.WriteLine($"==================Finish:{nameof(_deviceDbService.FetchSensorDevice)}======================");
-
-                var matchResult = await _deviceDbService.MatchDeviceInfo();
-
-                if (!matchResult)
-                {
-                    await _deviceDbService.DeleteDeviceInfo();
-                }
-                
-                ///////////////////////////////////////////////////////////////////
-                ///                   Mapping Info
-                ///////////////////////////////////////////////////////////////////
-                Debug.WriteLine($"==================Start:{nameof(_deviceDbService.FetchMappingInfo)}======================");
-                await _deviceDbService.FetchMappingInfo(tcs:tcs);
-                Debug.WriteLine($"==================Finish:{nameof(_deviceDbService.FetchMappingInfo)}======================");
-                if (tcs.Task.Result)
-                {
-                    Debug.WriteLine($"{nameof(MappingInfoModel)}를 정상적으로 불러왔다.");
-                }
-                else
-                {
-                    Debug.WriteLine($"{nameof(MappingInfoModel)}가 존재하지 않는다.");
-                }
-
-                ///////////////////////////////////////////////////////////////////
-                ///                   Camera Mapping
-                ///////////////////////////////////////////////////////////////////
-                Debug.WriteLine($"==================Start:{nameof(_deviceDbService.FetchCameraMapping)}======================");
-                await _deviceDbService.FetchCameraMapping(isFinished: true);
-                Debug.WriteLine($"==================Finish:{nameof(_deviceDbService.FetchCameraMapping)}======================");
-
-                matchResult = await _deviceDbService.MatchMappingInfo();
-                if (!matchResult)
-                {
-                    await _deviceDbService.DeleteMappingInfo();
-                }
-
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Raised Exception for Task to insert DB data in {nameof(FetchAsync)}: " + ex.Message);
-            }
-        }
         #endregion
         #region - IHanldes -
         #endregion

@@ -24,7 +24,8 @@ namespace Ironwall.Libraries.Device.UI.ViewModels
 
         public SensorDeviceViewModel(ISensorDeviceModel model) : base(model)
         {
-            Controller = ViewModelFactory.Build<ControllerDeviceViewModel>(model.Controller);
+            //Controller = ViewModelFactory.Build<ControllerDeviceViewModel>(model.Controller);
+            Controller = new ControllerDeviceViewModel(model.Controller);
         }
         #endregion
         #region - Implementation of Interface -

@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Interop.D3DImageEx.h"
 #include <stdexcept>
+#include <limits>
 
 namespace System {
 	namespace Windows {
