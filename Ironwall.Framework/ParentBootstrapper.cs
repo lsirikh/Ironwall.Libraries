@@ -54,8 +54,13 @@ namespace Ironwall.Framework
                                         .Select(s => s.Value))
                 {
                     _log.Info($"@@@@Starting Service Instance({service.GetType()})", true);
-                    //await Task.Delay(500);
-                    await service.ExecuteAsync(token).ConfigureAwait(false);
+                    //await service.ExecuteAsync(token);
+                   
+                    // 백그라운드 스레드에서 실행 강제
+                    await Task.Run(async () =>
+                    {
+                        await service.ExecuteAsync(token).ConfigureAwait(false);
+                    });
                 }
 
                 await Task.Delay(3000);
@@ -65,11 +70,16 @@ namespace Ironwall.Framework
                                         .Select(s => s.Value))
                 {
                     _log.Info($"####Starting Provider Instance({service.GetType()})", true);
-                    DispatcherService.Invoke((System.Action)(async () =>
+                    //DispatcherService.Invoke((System.Action)(async () =>
+                    //{
+                    //    await service.Initialize(token);
+
+                    //}));
+
+                    await DispatcherService.BeginInvoke(async () =>
                     {
                         await service.Initialize(token).ConfigureAwait(false);
-
-                    }));
+                    });
                 }
 
                 StartPrograme();
@@ -89,7 +99,6 @@ namespace Ironwall.Framework
                 await service.ExecuteAsync(token).ConfigureAwait(false);
             }
         }
-        
 
         public virtual void Stop()
         {

@@ -20,9 +20,7 @@ using System.Timers;
 
 namespace Ironwall.Libraries.RTSP.Services
 {
-    public class PtzService
-        //: CameraTaskTimer, IService
-        : IService
+    public class PtzService : IService
     {
         #region - Ctors -
         public PtzService()

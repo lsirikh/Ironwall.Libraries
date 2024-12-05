@@ -11,14 +11,14 @@ using System.Threading.Tasks;
 
 namespace Ironwall.Framework.Services
 {
-    abstract class IccsService : TaskService, IIccsService
+    public abstract class IccsService : TaskService, IIccsService
     {
         #region - Ctors -
-        IccsService()
+        public IccsService()
         {
         }
 
-        IccsService(IMessageService messageService)
+        public IccsService(IMessageService messageService)
         {
             MessageService = messageService;
         }
@@ -64,9 +64,9 @@ namespace Ironwall.Framework.Services
                 Debug.WriteLine(ex.Message);
             }
         }
-        
 
-        async void MessageParser(string channel, string message)
+
+        public async void MessageParser(string channel, string message)
         {
             try
             {

@@ -8,24 +8,29 @@ namespace Ironwall.Libraries.Enums
 {
     public enum EnumDeviceType
     {
-        NONE,
-        Controller,
-        Multi,
-        Fence,
-        Underground,
-        Contact,
-        PIR,
-        IoController,
-        Laser,
+        NONE, //0
+        Controller, //1
+        Multi, //2
+        Fence, //3
+        Underground, //4
+        Contact, //5
+        PIR, //6
+        IoController, //7
+        Laser, //8
 
-        Cable,
-        IpCamera,
+        Cable, //9
+        IpCamera, //10
 
-        IpSpeaker,
-        Radar,
-        OpticalCable,
+        SmartSensor, //11
+        SmartCompound, //12
 
-        Fence_Line,
+        IpSpeaker, //13
+        Radar, //14
+        OpticalCable, //15
+
+        Fence_Line, //16
+
+        
     }
     
 }
