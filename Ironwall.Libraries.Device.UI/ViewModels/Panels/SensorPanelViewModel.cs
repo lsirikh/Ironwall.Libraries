@@ -3,6 +3,7 @@ using Ironwall.Libraries.Device.UI.Providers;
 using System.Threading.Tasks;
 using System.Threading;
 using Caliburn.Micro;
+using Ironwall.Libraries.Base.Services;
 
 namespace Ironwall.Libraries.Device.UI.ViewModels.Panels
 {
@@ -19,8 +20,9 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Panels
     {
 
         #region - Ctors -
-        public SensorPanelViewModel(IEventAggregator eventAggregator)
-            : base(eventAggregator)
+        public SensorPanelViewModel(IEventAggregator eventAggregator
+                                    , ILogService log)
+                                    : base(eventAggregator, log)
         {
         }
         #endregion
@@ -32,8 +34,6 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Panels
             await base.OnActivateAsync(cancellationToken);
 
             _ = DataInitialize(cancellationToken);
-
-            await Task.Delay(1000);
         }
 
         protected override async Task OnDeactivateAsync(bool close, CancellationToken cancellationToken)

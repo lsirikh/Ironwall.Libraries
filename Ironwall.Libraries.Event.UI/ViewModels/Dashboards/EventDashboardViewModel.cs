@@ -27,12 +27,12 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Dashboards
     public class EventDashboardViewModel : ConductorOneViewModel
     {
         #region - Ctors -
-        public EventDashboardViewModel(ILogService log
-                                    , IEventAggregator eventAggregator
+        public EventDashboardViewModel(IEventAggregator eventAggregator
+                                    , ILogService log
                                     , DetectionPanelViewModel detectionPanelViewModel
                                     , MalfunctionPanelViewModel malfunctionPanelViewModel
                                     , ActionPanelViewModel actionPanelViewModel
-                                    ) : base(eventAggregator)
+                                    ) : base(eventAggregator, log)
         {
             _log = log;
             DetectionPanelViewModel = detectionPanelViewModel;
@@ -45,7 +45,6 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Dashboards
         #region - Overrides -
         protected override async Task OnActivateAsync(CancellationToken cancellationToken)
         {
-
             //await ActivateItemAsync(DetectionPanelViewModel);
             await base.OnActivateAsync(cancellationToken);
         }
@@ -83,7 +82,7 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Dashboards
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Raised Exception in {nameof(OnActiveTab)} : {ex.Message}");
+                _log.Error($"Raised Exception in {nameof(OnActiveTab)} : {ex.Message}");
             }
 
         }

@@ -126,172 +126,196 @@
 		</Grid>
 		<Grid Height ="300"
 			  Grid.Row="1">
+			<!-- ProgressBar section -->
 			<ProgressBar Width="50"
-						Height="50"
-						Margin="16"
-						Visibility="{Binding IsVisible, Converter={StaticResource BoolToInverseVisibleConverter}}"
-						Style="{DynamicResource MaterialDesignCircularProgressBar}"
-						IsIndeterminate="True"
-						Value="44" />
+                 Height="50"
+                 Margin="16"
+                 IsIndeterminate="True"
+                 Value="44">
+				<ProgressBar.Style>
+					<Style TargetType="ProgressBar" BasedOn="{StaticResource MaterialDesignCircularProgressBar}">
+						<!-- 기본값은 표시 안 함 -->
+						<Setter Property="Visibility" Value="Collapsed" />
+						<Style.Triggers>
+							<!-- If IsVisible == false, show ProgressBar -->
+							<DataTrigger Binding="{Binding IsVisible}" Value="False">
+								<Setter Property="Visibility" Value="Visible" />
+							</DataTrigger>
+						</Style.Triggers>
+					</Style>
+				</ProgressBar.Style>
+			</ProgressBar>
+
+			<!-- DataGrid section -->
+			<DataGrid ItemsSource="{Binding ViewModelProvider}"
+					  AlternationCount="{Binding Items.Count, RelativeSource={RelativeSource Self}}"
+					  AutoGenerateColumns="False"
+					  EnableRowVirtualization="True"
+					  CanUserSortColumns="True"
+					  CanUserReorderColumns="False"
+					  CanUserResizeColumns="True"
+					  SelectionMode="Single"
+					  SelectionUnit="FullRow"
+					  SelectedItem="{Binding SelectedItem, UpdateSourceTrigger=PropertyChanged}"
+					  CanUserAddRows="False"
+					  ScrollViewer.CanContentScroll="True"
+					  ScrollViewer.VerticalScrollBarVisibility="Auto"
+					  ScrollViewer.HorizontalScrollBarVisibility="Visible">
+				<DataGrid.Style>
+					<Style TargetType="DataGrid" BasedOn="{StaticResource MaterialDesignDataGrid}">
+						<!-- 기본값은 표시 안 함 -->
+						<Setter Property="Visibility" Value="Collapsed"/>
+						<Style.Triggers>
+							<!-- If IsVisible == true, show DataGrid -->
+							<DataTrigger Binding="{Binding IsVisible}" Value="True">
+								<Setter Property="Visibility" Value="Visible"/>
+							</DataTrigger>
+						</Style.Triggers>
+					</Style>
+				</DataGrid.Style>
+				<DataGrid.Columns>
+					<DataGridTemplateColumn>
+						<DataGridTemplateColumn.CellTemplate>
+							<DataTemplate>
+								<CheckBox Style="{StaticResource MaterialDesignCheckBox}"
+                              IsChecked="{Binding IsSelected, Mode=TwoWay}">
+									<cal:Message.Attach>
+										[Event Click] = [Action OnClickCheckBoxItem($source, $eventArgs)];
+									</cal:Message.Attach>
+								</CheckBox>
+							</DataTemplate>
+						</DataGridTemplateColumn.CellTemplate>
+
+						<DataGridTemplateColumn.Header>
+							<Border Padding="0 0 0 0"
+                        Margin="-2 0 0 0">
+								<CheckBox Style="{StaticResource MaterialDesignCheckBox}"
+                              IsChecked="{Binding Data.IsAllChecked, Mode=TwoWay, Source={StaticResource ViewModelProxy}}"
+                              HorizontalAlignment="Center">
+									<cal:Message.Attach>
+										[Event Click] = [Action OnClickCheckBoxColumnHeader($source, $eventArgs)];
+									</cal:Message.Attach>
+								</CheckBox>
+							</Border>
+						</DataGridTemplateColumn.Header>
+					</DataGridTemplateColumn>
+
+					<!-- Id -->
+					<DataGridTemplateColumn  Header="Id"
+                                 SortMemberPath="Id"
+                                 CanUserSort="True">
+						<DataGridTemplateColumn.HeaderStyle>
+							<Style TargetType="{x:Type DataGridColumnHeader}"
+                       BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
+								<Setter Property="HorizontalAlignment" Value="Center" />
+								<Setter Property="VerticalAlignment" Value="Center" />
+								<Setter Property="BorderThickness" Value="0"/>
+							</Style>
+						</DataGridTemplateColumn.HeaderStyle>
+						<DataGridTemplateColumn.CellTemplate>
+							<DataTemplate>
+								<TextBlock VerticalAlignment="Center"
+                               TextAlignment="Center"
+                               Text="{Binding Id, UpdateSourceTrigger=PropertyChanged}"/>
+							</DataTemplate>
+						</DataGridTemplateColumn.CellTemplate>
+					</DataGridTemplateColumn>
+
+					<!-- Group -->
+					<DataGridTextColumn Header="Group"
+                            Binding="{Binding GroupNumber}">
+						<DataGridTextColumn.HeaderStyle>
+							<Style TargetType="{x:Type DataGridColumnHeader}"
+                       BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
+								<Setter Property="HorizontalAlignment" Value="Center" />
+								<Setter Property="VerticalAlignment" Value="Center" />
+								<Setter Property="BorderThickness" Value="0"/>
+							</Style>
+						</DataGridTextColumn.HeaderStyle>
+						<DataGridTextColumn.ElementStyle>
+							<Style TargetType="{x:Type TextBlock}">
+								<Setter Property="HorizontalAlignment"
+                            Value="Center" />
+								<Setter Property="VerticalAlignment"
+                            Value="Center" />
+							</Style>
+						</DataGridTextColumn.ElementStyle>
+					</DataGridTextColumn>
+
+					<!-- Event -->
+					<DataGridTemplateColumn Header="Event"
+								SortMemberPath="Event"
+								CanUserSort="True">
+						<DataGridTemplateColumn.CellTemplate>
+							<DataTemplate>
+								<TextBlock VerticalAlignment="Center"
+							   TextAlignment="Center"
+							   Text="{Binding EventId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+							</DataTemplate>
+						</DataGridTemplateColumn.CellTemplate>
+						<DataGridTemplateColumn.CellEditingTemplate>
+							<DataTemplate>
+								<ComboBox VerticalAlignment="Center"
+							  HorizontalContentAlignment="Center"
+							  ItemsSource="{Binding EventProvider}"
+							  SelectedItem="{Binding EventId, Mode=TwoWay,  UpdateSourceTrigger=PropertyChanged}">
+									<ComboBox.ItemsPanel>
+										<ItemsPanelTemplate>
+											<VirtualizingStackPanel />
+										</ItemsPanelTemplate>
+									</ComboBox.ItemsPanel>
+									<ComboBox.ItemTemplate>
+										<DataTemplate>
+											<TextBlock Text="{Binding Id}" />
+										</DataTemplate>
+									</ComboBox.ItemTemplate>
+									<ComboBox.ItemContainerStyle>
+										<Style TargetType="{x:Type ComboBoxItem}">
+										</Style>
+									</ComboBox.ItemContainerStyle>
+								</ComboBox>
+							</DataTemplate>
+						</DataGridTemplateColumn.CellEditingTemplate>
+
+					</DataGridTemplateColumn>
+
+					<!-- Status -->
+					<DataGridTemplateColumn Header="Status"
+								SortMemberPath="Status"
+								CanUserSort="True">
+						<DataGridTemplateColumn.CellTemplate>
+							<DataTemplate>
+								<TextBlock Text="{Binding Status, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+							</DataTemplate>
+						</DataGridTemplateColumn.CellTemplate>
+						<DataGridTemplateColumn.CellEditingTemplate>
+							<DataTemplate>
+								<ComboBox VerticalAlignment="Center"
+							  ItemsSource="{Binding Source={utils:EnumBindingSource {x:Type enums:EnumTrueFalse}}}"
+							  SelectedItem="{Binding Status, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+									<ComboBox.ItemsPanel>
+										<ItemsPanelTemplate>
+											<VirtualizingStackPanel />
+										</ItemsPanelTemplate>
+									</ComboBox.ItemsPanel>
+									<ComboBox.ItemTemplate>
+										<DataTemplate>
+											<TextBlock Text="{Binding}" />
+										</DataTemplate>
+									</ComboBox.ItemTemplate>
+									<ComboBox.ItemContainerStyle>
+										<Style TargetType="{x:Type ComboBoxItem}">
+										</Style>
+									</ComboBox.ItemContainerStyle>
+								</ComboBox>
+							</DataTemplate>
+						</DataGridTemplateColumn.CellEditingTemplate>
+					</DataGridTemplateColumn>
+
+				</DataGrid.Columns>
+			</DataGrid>
 		</Grid>
-		<DataGrid Grid.Row="1"
-				  Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
-                  ItemsSource="{Binding ViewModelProvider}"
-                  AlternationCount="{Binding Items.Count, RelativeSource={RelativeSource Self}}"
-                  Style="{StaticResource MaterialDesignDataGrid }"
-                  AutoGenerateColumns="False"
-                  EnableRowVirtualization="True"
-                  CanUserSortColumns="True"
-                  CanUserReorderColumns="False"
-                  CanUserResizeColumns="True"
-                  SelectionMode="Single"
-                  SelectionUnit="FullRow"
-                  SelectedItem="{Binding SelectedItem, UpdateSourceTrigger=PropertyChanged}"
-                  CanUserAddRows="False"
-                  ScrollViewer.CanContentScroll="True"
-                  ScrollViewer.VerticalScrollBarVisibility="Auto"
-                  ScrollViewer.HorizontalScrollBarVisibility="Visible">
-			<DataGrid.Columns>
-				<DataGridTemplateColumn>
-					<DataGridTemplateColumn.CellTemplate>
-						<DataTemplate>
-							<CheckBox Style="{StaticResource MaterialDesignCheckBox}"
-                                      IsChecked="{Binding IsSelected, Mode=TwoWay}">
-								<cal:Message.Attach>
-									[Event Click] = [Action OnClickCheckBoxItem($source, $eventArgs)];
-								</cal:Message.Attach>
-							</CheckBox>
-						</DataTemplate>
-					</DataGridTemplateColumn.CellTemplate>
-
-					<DataGridTemplateColumn.Header>
-						<Border Padding="0 0 0 0"
-                                Margin="-2 0 0 0">
-							<CheckBox Style="{StaticResource MaterialDesignCheckBox}"
-                                      IsChecked="{Binding Data.IsAllChecked, Mode=TwoWay, Source={StaticResource ViewModelProxy}}"
-                                      HorizontalAlignment="Center">
-								<cal:Message.Attach>
-									[Event Click] = [Action OnClickCheckBoxColumnHeader($source, $eventArgs)];
-								</cal:Message.Attach>
-							</CheckBox>
-						</Border>
-					</DataGridTemplateColumn.Header>
-				</DataGridTemplateColumn>
-
-				<!-- Id -->
-				<DataGridTemplateColumn  Header="Id"
-                                         SortMemberPath="Id"
-                                         CanUserSort="True">
-					<DataGridTemplateColumn.HeaderStyle>
-						<Style TargetType="{x:Type DataGridColumnHeader}"
-                               BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
-							<Setter Property="HorizontalAlignment" Value="Center" />
-							<Setter Property="VerticalAlignment" Value="Center" />
-							<Setter Property="BorderThickness" Value="0"/>
-						</Style>
-					</DataGridTemplateColumn.HeaderStyle>
-					<DataGridTemplateColumn.CellTemplate>
-						<DataTemplate>
-							<TextBlock VerticalAlignment="Center"
-                                       TextAlignment="Center"
-                                       Text="{Binding Id, UpdateSourceTrigger=PropertyChanged}"/>
-						</DataTemplate>
-					</DataGridTemplateColumn.CellTemplate>
-				</DataGridTemplateColumn>
-
-				<!-- Group -->
-				<DataGridTextColumn Header="Group"
-                                    Binding="{Binding GroupNumber}">
-					<DataGridTextColumn.HeaderStyle>
-						<Style TargetType="{x:Type DataGridColumnHeader}"
-                               BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
-							<Setter Property="HorizontalAlignment" Value="Center" />
-							<Setter Property="VerticalAlignment" Value="Center" />
-							<Setter Property="BorderThickness" Value="0"/>
-						</Style>
-					</DataGridTextColumn.HeaderStyle>
-					<DataGridTextColumn.ElementStyle>
-						<Style TargetType="{x:Type TextBlock}">
-							<Setter Property="HorizontalAlignment"
-                                    Value="Center" />
-							<Setter Property="VerticalAlignment"
-                                    Value="Center" />
-						</Style>
-					</DataGridTextColumn.ElementStyle>
-				</DataGridTextColumn>
-
-				<!-- Event -->
-				<DataGridTemplateColumn Header="Event"
-										SortMemberPath="Event"
-										CanUserSort="True">
-					<DataGridTemplateColumn.CellTemplate>
-						<DataTemplate>
-							<TextBlock VerticalAlignment="Center"
-									   TextAlignment="Center"
-									   Text="{Binding EventId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-						</DataTemplate>
-					</DataGridTemplateColumn.CellTemplate>
-					<DataGridTemplateColumn.CellEditingTemplate>
-						<DataTemplate>
-							<ComboBox VerticalAlignment="Center"
-									  HorizontalContentAlignment="Center"
-									  ItemsSource="{Binding EventProvider}"
-									  SelectedItem="{Binding EventId, Mode=TwoWay,  UpdateSourceTrigger=PropertyChanged}">
-								<ComboBox.ItemsPanel>
-									<ItemsPanelTemplate>
-										<VirtualizingStackPanel />
-									</ItemsPanelTemplate>
-								</ComboBox.ItemsPanel>
-								<ComboBox.ItemTemplate>
-									<DataTemplate>
-										<TextBlock Text="{Binding Id}" />
-									</DataTemplate>
-								</ComboBox.ItemTemplate>
-								<ComboBox.ItemContainerStyle>
-									<Style TargetType="{x:Type ComboBoxItem}">
-									</Style>
-								</ComboBox.ItemContainerStyle>
-							</ComboBox>
-						</DataTemplate>
-					</DataGridTemplateColumn.CellEditingTemplate>
-
-				</DataGridTemplateColumn>
-
-				<!-- Status -->
-				<DataGridTemplateColumn Header="Status"
-										SortMemberPath="Status"
-										CanUserSort="True">
-					<DataGridTemplateColumn.CellTemplate>
-						<DataTemplate>
-							<TextBlock Text="{Binding Status, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-						</DataTemplate>
-					</DataGridTemplateColumn.CellTemplate>
-					<DataGridTemplateColumn.CellEditingTemplate>
-						<DataTemplate>
-							<ComboBox VerticalAlignment="Center"
-									  ItemsSource="{Binding Source={utils:EnumBindingSource {x:Type enums:EnumTrueFalse}}}"
-									  SelectedItem="{Binding Status, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-								<ComboBox.ItemsPanel>
-									<ItemsPanelTemplate>
-										<VirtualizingStackPanel />
-									</ItemsPanelTemplate>
-								</ComboBox.ItemsPanel>
-								<ComboBox.ItemTemplate>
-									<DataTemplate>
-										<TextBlock Text="{Binding}" />
-									</DataTemplate>
-								</ComboBox.ItemTemplate>
-								<ComboBox.ItemContainerStyle>
-									<Style TargetType="{x:Type ComboBoxItem}">
-									</Style>
-								</ComboBox.ItemContainerStyle>
-							</ComboBox>
-						</DataTemplate>
-					</DataGridTemplateColumn.CellEditingTemplate>
-				</DataGridTemplateColumn>
-				
-			</DataGrid.Columns>
-		</DataGrid>
+		
 		<StackPanel Grid.Row="2"
                     VerticalAlignment="Center"
                     Margin="10"

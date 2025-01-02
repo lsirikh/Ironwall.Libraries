@@ -25,10 +25,15 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Setups
 
         #region - Ctors -
         public CameraSetupViewModel(IEventAggregator eventAggregator
-                                    , ILogService logService
-                                    ):base(eventAggregator)
+                                    , ILogService log
+                                    , CameraMappingSetupViewModel cameraMappingSetupViewModel
+                                    , CameraDeviceSetupViewModel cameraDeviceSetupViewModel
+                                    , CameraPresetSetupViewModel cameraPresetSetupViewModel
+                                    ) :base(eventAggregator, log)
         {
-            _log = logService;
+            CameraMappingSetupViewModel = cameraMappingSetupViewModel;
+            CameraDeviceSetupViewModel = cameraDeviceSetupViewModel;
+            CameraPresetSetupViewModel = cameraPresetSetupViewModel;
         }
         #endregion
         #region - Implementation of Interface -
@@ -36,23 +41,12 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Setups
         #region - Overrides -
         protected override async Task OnActivateAsync(CancellationToken cancellationToken)
         {
-            CameraMappingSetupViewModel = IoC.Get<CameraMappingSetupViewModel>();
-            CameraDeviceSetupViewModel = IoC.Get<CameraDeviceSetupViewModel>();
-            CameraPresetSetupViewModel = IoC.Get<CameraPresetSetupViewModel>();
-
-            NotifyOfPropertyChange(() => CameraMappingSetupViewModel);
-            NotifyOfPropertyChange(() => CameraDeviceSetupViewModel);
-            NotifyOfPropertyChange(() => CameraPresetSetupViewModel);
-
             await base.OnActivateAsync(cancellationToken);
-
             await CameraMappingSetupViewModel.ActivateAsync();
-            IsVisible = true;
         }
 
         protected override async Task OnDeactivateAsync(bool close, CancellationToken cancellationToken)
         {
-            IsVisible = false;
             await base.OnDeactivateAsync(close, cancellationToken);
         }
         #endregion
@@ -65,30 +59,58 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Setups
             {
                 if (!(args.Source is TabControl)) return;
 
-                if (!(args.AddedItems[0] is TabItem tapItem)) return;
+                // Check if we have a selected TabItem
+                if (args.AddedItems.Count == 0 || !(args.AddedItems[0] is TabItem tabItem))
+                    return;
 
-                var contentControl = (tapItem as ContentControl)?.Content as ContentControl;
+                // Extract the content from the selected TabItem
+                var tabContent = tabItem.Content as ContentControl;
 
+                //var contentControl = (tapItem as ContentControl)?.Content as ContentControl;
+
+                // Deactivate previous ViewModel if any
                 if (selectedViewModel != null)
                     await selectedViewModel.DeactivateAsync(true);
 
-                if (contentControl?.Content is CameraDeviceSetupView
-                    || contentControl is CameraDeviceSetupView)
+                // If tabContent is a ContentControl, use its Content; otherwise, use tabContent directly.
+                var viewContent = (tabContent is ContentControl cc) ? cc.Content : tabContent;
+
+                //if (contentControl?.Content is CameraDeviceSetupView
+                //    || contentControl is CameraDeviceSetupView)
+                //{
+                //    selectedViewModel = CameraDeviceSetupViewModel;
+                //}
+                //else if (contentControl?.Content is CameraPresetSetupView
+                //    || contentControl is CameraPresetSetupView)
+                //{
+                //    selectedViewModel = CameraPresetSetupViewModel;
+                //}
+                //else if (contentControl?.Content is CameraMappingSetupView
+                //    || contentControl is CameraMappingSetupView)
+                //{
+                //    selectedViewModel = CameraMappingSetupViewModel;
+                //}
+
+                if (viewContent is CameraDeviceSetupView)
                 {
                     selectedViewModel = CameraDeviceSetupViewModel;
                 }
-                else if (contentControl?.Content is CameraPresetSetupView
-                    || contentControl is CameraPresetSetupView)
+                else if (viewContent is CameraPresetSetupView)
                 {
                     selectedViewModel = CameraPresetSetupViewModel;
                 }
-                else if (contentControl?.Content is CameraMappingSetupView
-                    || contentControl is CameraMappingSetupView)
+                else if (viewContent is CameraMappingSetupView)
                 {
                     selectedViewModel = CameraMappingSetupViewModel;
                 }
+                else 
+                {
+                    selectedViewModel = null;
+                }
 
-                await selectedViewModel.ActivateAsync();
+                // Activate the selected ViewModel if not null
+                if (selectedViewModel != null)
+                    await selectedViewModel.ActivateAsync();
             }
             catch (Exception ex)
             {

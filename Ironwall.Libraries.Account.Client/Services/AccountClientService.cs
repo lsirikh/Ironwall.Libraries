@@ -27,7 +27,7 @@ namespace Ironwall.Libraries.Account.Client.Services
         #region - Ctors -
         protected AccountClientService(ILogService log, TcpSetupModel tcpSetupModel): base(log, tcpSetupModel)
         {
-            
+            _class = typeof(AccountClientService);
         }
         #endregion
         #region - Implementation of Interface -
@@ -543,6 +543,7 @@ namespace Ironwall.Libraries.Account.Client.Services
         #region - Attributes -
         public event EventDelegate CallRefresh;
         private System.Timers.Timer SessionTimer;
+        private Type _class;
         #endregion
 
     }

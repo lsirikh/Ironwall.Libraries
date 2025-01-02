@@ -30,9 +30,8 @@ namespace Ironwall.Libraries.Tcp.Client.UI.ViewModels
                                 , IEventAggregator eventAggregator
                                 , TcpClientSetupModel tcpClientSetupModel
                                 , ClientStatusViewModel clientStatusViewModel
-                                ) : base(eventAggregator)
+                                ) : base(eventAggregator, log)
         {
-            _log = log;
             _tcpClientSetupModel = tcpClientSetupModel;
 
             ClientStatusViewModel = clientStatusViewModel;
@@ -72,12 +71,12 @@ namespace Ironwall.Libraries.Tcp.Client.UI.ViewModels
             }
             catch (TaskCanceledException ex)
             {
-                Debug.WriteLine(ex.Message);
+                _log.Error(ex.Message, _class);
                 await _eventAggregator.PublishOnUIThreadAsync(new ClosePopupMessageModel());
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.Message);
+                _log.Error(ex.Message, _class);
             }
 
         }
@@ -99,12 +98,12 @@ namespace Ironwall.Libraries.Tcp.Client.UI.ViewModels
             }
             catch (TaskCanceledException ex)
             {
-                Debug.WriteLine(ex.Message);
+                _log.Error(ex.Message, _class);
                 await _eventAggregator.PublishOnUIThreadAsync(new ClosePopupMessageModel());
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.Message);
+                _log.Error(ex.Message, _class);
             }
 
 
@@ -330,7 +329,6 @@ namespace Ironwall.Libraries.Tcp.Client.UI.ViewModels
         private string _serverClassC;
         private string _serverClassD;
         private bool _isEnable;
-        private ILogService _log;
         private TcpClientSetupModel _tcpClientSetupModel;
         public ClientStatusViewModel ClientStatusViewModel { get; private set; }
         #endregion

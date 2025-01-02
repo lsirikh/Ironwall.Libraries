@@ -79,7 +79,7 @@ namespace Ironwall.Libraries.Map.UI.ViewModels.Symbols
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception in {nameof(AlarmTask)}({nameof(ObjectShapeViewModel)}) : {ex.Message}");
+                    _log.Error($"Raised Exception in {nameof(AlarmTask)}({nameof(ObjectShapeViewModel)}) : {ex.Message}");
                 }
                 
             }, _cts.Token);
@@ -110,7 +110,7 @@ namespace Ironwall.Libraries.Map.UI.ViewModels.Symbols
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception in {nameof(MalfunctionTask)}({nameof(ObjectShapeViewModel)}) : {ex.Message}");
+                    _log.Error($"Raised Exception in {nameof(MalfunctionTask)}({nameof(ObjectShapeViewModel)}) : {ex.Message}");
                 }
 
             }, _cts.Token);
@@ -124,7 +124,7 @@ namespace Ironwall.Libraries.Map.UI.ViewModels.Symbols
             if (_cts != null && !_cts.IsCancellationRequested)
             {
                 _cts.Cancel();
-                Debug.WriteLine($"Fault Task was cancelled!");
+                _log.Info($"Fault Task was cancelled!");
             }
             return Task.CompletedTask;
         }

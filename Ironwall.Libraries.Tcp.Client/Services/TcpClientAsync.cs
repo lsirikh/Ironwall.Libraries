@@ -43,7 +43,7 @@ namespace Ironwall.Libraries.Tcp.Client.Services
 			}
 			catch (Exception ex)
 			{
-				Debug.WriteLine($"Raised Exception in InitSocket : {ex.Message}");
+				Debug.WriteLine($"Raised Exception in InitSocket : {ex.Message}", typeof(TcpClient));
 			}
 		}
 
@@ -98,7 +98,7 @@ namespace Ironwall.Libraries.Tcp.Client.Services
 			}
 			catch (SocketException ex)
 			{
-				Debug.WriteLine($"Raised SocketException Exception in Receive_Completed : {ex.Message}");
+				Debug.WriteLine($"Raised SocketException Exception in Receive_Completed : {ex.Message}", typeof(TcpClient));
 			}
 			
 		}
@@ -141,7 +141,7 @@ namespace Ironwall.Libraries.Tcp.Client.Services
 				}
 				catch (Exception ex)
 				{
-					Debug.WriteLine($"Raised Exception in SendRequest : {ex.Message}");
+					Debug.WriteLine($"Raised Exception in SendRequest : {ex.Message}", typeof(TcpClient));
 				}
 			});
 		}

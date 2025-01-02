@@ -134,7 +134,6 @@ namespace Ironwall.Libraries.Device.UI.ViewModels
         private SensorDeviceViewModel _sensor;
         private CameraPresetViewModel _firstPreset;
         private CameraPresetViewModel _secondPreset;
-        private ILogService _log;
         #endregion
     }
 }

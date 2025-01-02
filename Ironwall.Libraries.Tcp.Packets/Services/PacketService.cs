@@ -11,6 +11,7 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Threading;
 using Ironwall.Libraries.Enums;
+using Ironwall.Libraries.Base.Services;
 
 namespace Ironwall.Libraries.Tcp.Packets.Services
 {
@@ -34,6 +35,17 @@ namespace Ironwall.Libraries.Tcp.Packets.Services
 
             PackQueue = new Dictionary<string, PacketCollectionClass<PacketClass>>();
             _syncLock = new object();
+        }
+
+        public PacketService(ILogService log) : this()
+        {
+            //_currentDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            //_dir = _currentDirectory + "/SendFolder";
+
+            //PackQueue = new Dictionary<string, PacketCollectionClass<PacketClass>>();
+            //_syncLock = new object();
+
+            _log = log;
         }
         #endregion
         #region - Implementation of Interface -
@@ -87,7 +99,7 @@ namespace Ironwall.Libraries.Tcp.Packets.Services
                                                                       // BodyLength = PacketClass.BODY_SIZE,
                     };
 
-                    Debug.WriteLine($"[{packet.CurrentSequence}/{packet.TotalSequence}]{bytes.Length - PacketClass.BODY_SIZE * i} > {PacketClass.BODY_SIZE}");
+                    _log.Info($"[{packet.CurrentSequence}/{packet.TotalSequence}]{bytes.Length - PacketClass.BODY_SIZE * i} > {PacketClass.BODY_SIZE}");
                     packet.BodyLength = PacketClass.BODY_SIZE;
                     Buffer.BlockCopy(bytes, PacketClass.BODY_SIZE * i, packet.Body, 0, PacketClass.BODY_SIZE);
 
@@ -103,7 +115,7 @@ namespace Ironwall.Libraries.Tcp.Packets.Services
                     DataType = (byte)EnumPacketType.LONG_MESSAGE, // Lager Message
                 };
 
-                Debug.WriteLine($"[{packet.CurrentSequence}/{packet.TotalSequence}]{bytes.Length - PacketClass.BODY_SIZE * num} < {PacketClass.BODY_SIZE}");
+                _log.Info($"[{packet.CurrentSequence}/{packet.TotalSequence}]{bytes.Length - PacketClass.BODY_SIZE * num} < {PacketClass.BODY_SIZE}");
                 packet.BodyLength = (ushort)(bytes.Length - PacketClass.BODY_SIZE * num);
                 Buffer.BlockCopy(bytes, PacketClass.BODY_SIZE * num, packet.Body, 0, packet.BodyLength);
 
@@ -136,86 +148,62 @@ namespace Ironwall.Libraries.Tcp.Packets.Services
 
             FileInfo fileInfo = new FileInfo(file);
 
-            if (fileInfo.Exists)
+            if (!fileInfo.Exists) throw new FileNotFoundException($"File not found: {file}");
+
+            _log.Info($"=============================================================");
+            _log.Info($"파일 위치: {fileInfo.FullName}");
+            _log.Info($"파일 정보: {fileInfo.Name}({fileInfo.Length})");
+            _log.Info($"=============================================================");
+
+            var rand = new Random();
+            ushort id = (ushort)rand.Next(MAX_NUM);
+
+            using (FileStream fileStream = new FileStream(fileInfo.FullName, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, true))
             {
-                Debug.WriteLine($"=============================================================");
-                Debug.WriteLine($"파일 위치: {fileInfo.FullName}");
-                Debug.WriteLine($"파일 정보: {fileInfo.Name}({fileInfo.Length})");
-                Debug.WriteLine($"=============================================================");
 
-                var rand = new Random();
-                ushort id = (ushort)rand.Next(MAX_NUM);
 
-                using (FileStream fileStream = new FileStream(fileInfo.FullName, FileMode.Open, FileAccess.Read))
+                int bytesRead;
+                long totalBytesRead = 0L;
+                long remainingBytes = 0L;
+
+                /// 1. Body에 할당할 버퍼를 잡는다.
+                /// 2. PacketClass에 할당할 MetaData(Header) 정보를 셋업한다.
+                /// 3. PacketClass 총 몇 묶음 나오는지 계산한다.
+                /// 4. 나누고 나머지가 있으면 num + 1을 해준다.
+                /// 5. 순환문을 돌면서 아래와 같은 프로세스를 처리한다.
+                ///     5-1. 파일 스트림으로 PacketClass.BODY_SIZE 만큼 읽는다.
+                ///     5-2. 읽어들인 데이터를 
+
+
+
+                ushort num = (ushort)(fileStream.Length / PacketClass.BODY_SIZE);
+                var remain = (fileStream.Length % PacketClass.BODY_SIZE);
+
+
+                /// if (remain > 0)
+                ///     num++;
+
+                var packet = new PacketClass();
+
+                if (num > 0)
                 {
-
-
-                    int bytesRead;
-                    long totalBytesRead = 0L;
-                    long remainingBytes = 0L;
-
-                    /// 1. Body에 할당할 버퍼를 잡는다.
-                    /// 2. PacketClass에 할당할 MetaData(Header) 정보를 셋업한다.
-                    /// 3. PacketClass 총 몇 묶음 나오는지 계산한다.
-                    /// 4. 나누고 나머지가 있으면 num + 1을 해준다.
-                    /// 5. 순환문을 돌면서 아래와 같은 프로세스를 처리한다.
-                    ///     5-1. 파일 스트림으로 PacketClass.BODY_SIZE 만큼 읽는다.
-                    ///     5-2. 읽어들인 데이터를 
-
-
-
-                    ushort num = (ushort)(fileStream.Length / PacketClass.BODY_SIZE);
-                    var remain = (fileStream.Length % PacketClass.BODY_SIZE);
-
-
-                    /// if (remain > 0)
-                    ///     num++;
-
-                    var packet = new PacketClass();
-
-                    if (num > 0)
+                    for (int i = 0; i < num; i++)
                     {
-                        for (int i = 0; i < num; i++)
-                        {
-                            byte[] buffer = new byte[PacketClass.BODY_SIZE];
-                            bytesRead = fileStream.Read(buffer, 0, buffer.Length);
+                        byte[] buffer = new byte[PacketClass.BODY_SIZE];
+                        bytesRead = fileStream.Read(buffer, 0, buffer.Length);
 
-
-                            packet = new PacketClass()
-                            {
-                                Id = id,
-                                CurrentSequence = (ushort)i,
-                                TotalSequence = num,
-                                DataType = (byte)type,
-                                FileName = Path.GetFileNameWithoutExtension(fileInfo.FullName),
-                                FileExtension = Path.GetExtension(fileInfo.FullName),
-
-                                BodyLength = PacketClass.BODY_SIZE,
-                                Body = buffer,
-                            };
-
-                            packet.CreateCRC();
-                            packets.Add(packet);
-
-                            totalBytesRead += bytesRead;
-                            remainingBytes = fileStream.Length - totalBytesRead;
-                            Debug.WriteLine($"[PREPARING]남아있는 바이트 수: {remainingBytes} Byte({i}/{num})");
-                        }
-
-                        byte[] remainBuffer = new byte[remainingBytes];
-                        bytesRead = fileStream.Read(remainBuffer, 0, (int)remainingBytes);
 
                         packet = new PacketClass()
                         {
                             Id = id,
-                            CurrentSequence = (ushort)num,
+                            CurrentSequence = (ushort)i,
                             TotalSequence = num,
-                            DataType = (byte)type, // Lager Message
+                            DataType = (byte)type,
                             FileName = Path.GetFileNameWithoutExtension(fileInfo.FullName),
                             FileExtension = Path.GetExtension(fileInfo.FullName),
 
-                            BodyLength = (ushort)remainingBytes,
-                            Body = remainBuffer,
+                            BodyLength = PacketClass.BODY_SIZE,
+                            Body = buffer,
                         };
 
                         packet.CreateCRC();
@@ -223,28 +211,52 @@ namespace Ironwall.Libraries.Tcp.Packets.Services
 
                         totalBytesRead += bytesRead;
                         remainingBytes = fileStream.Length - totalBytesRead;
-                        Debug.WriteLine($"[PREPARING]남아있는 바이트 수: {remainingBytes} Byte({num}/{num})");
+                        _log.Info($"[PREPARING]남아있는 바이트 수: {remainingBytes} Byte({i}/{num})");
                     }
-                    else
+
+                    byte[] remainBuffer = new byte[remainingBytes];
+                    bytesRead = fileStream.Read(remainBuffer, 0, (int)remainingBytes);
+
+                    packet = new PacketClass()
                     {
-                        byte[] buffer = new byte[fileStream.Length];
-                        bytesRead = fileStream.Read(buffer, 0, buffer.Length);
+                        Id = id,
+                        CurrentSequence = (ushort)num,
+                        TotalSequence = num,
+                        DataType = (byte)type, // Lager Message
+                        FileName = Path.GetFileNameWithoutExtension(fileInfo.FullName),
+                        FileExtension = Path.GetExtension(fileInfo.FullName),
 
-                        packet = new PacketClass
-                        {
-                            Id = 1,
-                            CurrentSequence = 0,
-                            TotalSequence = 0,
-                            DataType = (byte)type, //Short Message
-                            BodyLength = (ushort)fileStream.Length,
-                            Body = buffer,
-                        };
+                        BodyLength = (ushort)remainingBytes,
+                        Body = remainBuffer,
+                    };
 
-                        packet.CreateCRC();
-                        packets.Add(packet);
-                    }
+                    packet.CreateCRC();
+                    packets.Add(packet);
+
+                    totalBytesRead += bytesRead;
+                    remainingBytes = fileStream.Length - totalBytesRead;
+                    _log.Info($"[PREPARING]남아있는 바이트 수: {remainingBytes} Byte({num}/{num})");
+                }
+                else
+                {
+                    byte[] buffer = new byte[fileStream.Length];
+                    bytesRead = fileStream.Read(buffer, 0, buffer.Length);
+
+                    packet = new PacketClass
+                    {
+                        Id = 1,
+                        CurrentSequence = 0,
+                        TotalSequence = 0,
+                        DataType = (byte)type, //Short Message
+                        BodyLength = (ushort)fileStream.Length,
+                        Body = buffer,
+                    };
+
+                    packet.CreateCRC();
+                    packets.Add(packet);
                 }
             }
+
             return packets;
         }
 
@@ -253,33 +265,78 @@ namespace Ironwall.Libraries.Tcp.Packets.Services
             var packet = new PacketClass(receivedMsg);
             ushort receivedCRC = CRC16.ComputeChecksum(receivedMsg, 0, PacketClass.TOTAL_SIZE - PacketClass.CRC_SIZE);
 
-            if (packet.CRC == receivedCRC)
-                return packet;
-            else
+            if (packet.CRC != receivedCRC)
                 throw new Exception($"packet CRC({packet.CRC}) is not the same as Received Message(byte array)\'s({receivedCRC}).");
+
+            return packet;
         }
 
-        public Task SendPacketProcess(string sendMsg, EnumPacketType type, Socket socket)
+        public async Task SendPacketProcess(string sendMsg, EnumPacketType type, Socket socket)
         {
-            return Task.Run(() =>
+            try
             {
-                try
-                {
-                    lock (_syncLock)
-                    {
-                        switch (type)
-                        {
-                            case EnumPacketType.NONE:
-                                break;
-                            case EnumPacketType.SHORT_MESSAGE:
-                                {
-                                    //Short Message Without Status Event
-                                    var packList = CreateMessagePacket(sendMsg, type);
-                                    var arratItem = packList.FirstOrDefault()?.ToArray();
+                await Task.Yield(); // CPU 잠금 방지
 
-                                    SendStarted?.Invoke(null, EnumTcpCommunication.MSG_PACKET_SEND_BEGINNING);
-                                    if (arratItem != null)
+                lock (_syncLock)
+                {
+                    switch (type)
+                    {
+                        case EnumPacketType.NONE:
+                            break;
+                        case EnumPacketType.SHORT_MESSAGE:
+                            {
+                                //Short Message Without Status Event
+                                var packList = CreateMessagePacket(sendMsg, type);
+                                var arratItem = packList.FirstOrDefault()?.ToArray();
+
+                                SendStarted?.Invoke(null, EnumTcpCommunication.MSG_PACKET_SEND_BEGINNING);
+                                if (arratItem != null)
+                                {
+                                    SocketAsyncEventArgs socketEventArgs = new SocketAsyncEventArgs
                                     {
+                                        RemoteEndPoint = socket.RemoteEndPoint,
+                                        UserToken = null,
+                                        AcceptSocket = null
+                                    };
+
+                                    socketEventArgs.SetBuffer(arratItem, 0, arratItem.Length);
+
+                                    socketEventArgs.Completed += (sender, e) =>
+                                    {
+                                        if (e.SocketError != SocketError.Success)
+                                        {
+                                            _log.Info($"Failed to send data: {e.SocketError}");
+                                        }
+                                        else
+                                        {
+                                            SendCompleted?.Invoke(null, EnumTcpCommunication.MSG_PACKET_SEND_COMPLETE);
+                                        }
+                                    };
+
+                                    // Client로 메시지 전송(비동기식)
+                                    if (!socket.SendAsync(socketEventArgs))
+                                    {
+                                        Sending?.Invoke(0, 0, EnumTcpCommunication.MSG_PACKET_SENDING);
+                                    }
+                                    //socket?.Send(arratItem);
+                                }
+                            }
+                            break;
+                        case EnumPacketType.LONG_MESSAGE:
+                            {
+                                var packList = CreateMessagePacket(sendMsg, type);
+                                if (packList.Count > 1)
+                                {
+                                    List<byte[]> byteList = new List<byte[]>();
+                                    long transferByte = 0L;
+                                    SendStarted?.Invoke(null, EnumTcpCommunication.MSG_PACKET_SEND_BEGINNING);
+                                    foreach (var item in packList)
+                                    {
+                                        transferByte += item.BodyLength;
+                                        var arratItem = item.ToArray();
+                                        byteList.Add(arratItem);
+
+
                                         SocketAsyncEventArgs socketEventArgs = new SocketAsyncEventArgs
                                         {
                                             RemoteEndPoint = socket.RemoteEndPoint,
@@ -293,212 +350,158 @@ namespace Ironwall.Libraries.Tcp.Packets.Services
                                         {
                                             if (e.SocketError != SocketError.Success)
                                             {
-                                                Debug.WriteLine($"Failed to send data: {e.SocketError}");
+                                                _log.Info($"Failed to send data: {e.SocketError}");
                                             }
                                             else
                                             {
-                                                SendCompleted?.Invoke(null, EnumTcpCommunication.MSG_PACKET_SEND_COMPLETE);
+                                                Sending?.Invoke(item.CurrentSequence, item.TotalSequence, EnumTcpCommunication.MSG_PACKET_SENDING, $"{item.FileName}{item.FileExtension}");
+                                                //Debug.WriteLine($"{EnumPacketType.LONG_MESSAGE} was sent completely.");
                                             }
                                         };
 
                                         // Client로 메시지 전송(비동기식)
-                                        if (!socket.SendAsync(socketEventArgs))
-                                        {
-                                            Sending?.Invoke(0, 0, EnumTcpCommunication.MSG_PACKET_SENDING);
-                                        }
+                                        socket.SendAsync(socketEventArgs);
+
+                                        Thread.Sleep(PACKET_SENDING_DELAY);
+
                                         //socket?.Send(arratItem);
+                                        //Sending?.Invoke(item.CurrentSequence, item.TotalSequence, EnumTcpCommunication.MSG_PACKET_SENDING, $"{item.FileName}{item.FileExtension}");
+                                        //await Task.Delay(PACKET_SENDING_DELAY);
                                     }
+                                    SendCompleted?.Invoke(null, EnumTcpCommunication.MSG_PACKET_SEND_COMPLETE);
                                 }
-                                break;
-                            case EnumPacketType.LONG_MESSAGE:
+                            }
+                            break;
+                        case EnumPacketType.FILE:
+                        case EnumPacketType.MAP:
+                        case EnumPacketType.PROFILE:
+                        case EnumPacketType.VIDEO:
+                            {
+                                var packList = CreateFilePacket(sendMsg, type);
+                                if (packList.Count > 1)
                                 {
-                                    var packList = CreateMessagePacket(sendMsg, type);
-                                    if (packList.Count > 1)
+                                    var fileName = (new FileInfo(sendMsg)).Name;
+                                    List<byte[]> byteList = new List<byte[]>();
+                                    long transferByte = 0L;
+
+                                    SendStarted?.Invoke(fileName, EnumTcpCommunication.FILE_PACKET_SEND_BEGINNING);
+                                    foreach (var item in packList)
                                     {
-                                        List<byte[]> byteList = new List<byte[]>();
-                                        long transferByte = 0L;
-                                        SendStarted?.Invoke(null, EnumTcpCommunication.MSG_PACKET_SEND_BEGINNING);
-                                        foreach (var item in packList)
+                                        transferByte += item.BodyLength;
+                                        var arratItem = item.ToArray();
+                                        byteList.Add(arratItem);
+
+
+                                        SocketAsyncEventArgs socketEventArgs = new SocketAsyncEventArgs
                                         {
-                                            transferByte += item.BodyLength;
-                                            var arratItem = item.ToArray();
-                                            byteList.Add(arratItem);
+                                            RemoteEndPoint = socket.RemoteEndPoint,
+                                            UserToken = null,
+                                            AcceptSocket = null
+                                        };
 
+                                        socketEventArgs.SetBuffer(arratItem, 0, arratItem.Length);
 
-                                            SocketAsyncEventArgs socketEventArgs = new SocketAsyncEventArgs
-                                            {
-                                                RemoteEndPoint = socket.RemoteEndPoint,
-                                                UserToken = null,
-                                                AcceptSocket = null
-                                            };
-
-                                            socketEventArgs.SetBuffer(arratItem, 0, arratItem.Length);
-
-                                            socketEventArgs.Completed += (sender, e) =>
-                                            {
-                                                if (e.SocketError != SocketError.Success)
-                                                {
-                                                    Debug.WriteLine($"Failed to send data: {e.SocketError}");
-                                                }
-                                                else
-                                                {
-                                                    Sending?.Invoke(item.CurrentSequence, item.TotalSequence, EnumTcpCommunication.MSG_PACKET_SENDING, $"{item.FileName}{item.FileExtension}");
-                                                    //Debug.WriteLine($"{EnumPacketType.LONG_MESSAGE} was sent completely.");
-                                                }
-                                            };
-
-                                            // Client로 메시지 전송(비동기식)
-                                            socket.SendAsync(socketEventArgs);
-
-                                            Thread.Sleep(PACKET_SENDING_DELAY);
-
-                                            //socket?.Send(arratItem);
-                                            //Sending?.Invoke(item.CurrentSequence, item.TotalSequence, EnumTcpCommunication.MSG_PACKET_SENDING, $"{item.FileName}{item.FileExtension}");
-                                            //await Task.Delay(PACKET_SENDING_DELAY);
-                                        }
-                                        SendCompleted?.Invoke(null, EnumTcpCommunication.MSG_PACKET_SEND_COMPLETE);
-                                    }
-                                }
-                                break;
-                            case EnumPacketType.FILE:
-                            case EnumPacketType.MAP:
-                            case EnumPacketType.PROFILE:
-                            case EnumPacketType.VIDEO:
-                                {
-                                    var packList = CreateFilePacket(sendMsg, type);
-                                    if (packList.Count > 1)
-                                    {
-                                        var fileName = (new FileInfo(sendMsg)).Name;
-                                        List<byte[]> byteList = new List<byte[]>();
-                                        long transferByte = 0L;
-
-                                        SendStarted?.Invoke(fileName, EnumTcpCommunication.FILE_PACKET_SEND_BEGINNING);
-                                        foreach (var item in packList)
+                                        socketEventArgs.Completed += (sender, e) =>
                                         {
-                                            transferByte += item.BodyLength;
-                                            var arratItem = item.ToArray();
-                                            byteList.Add(arratItem);
-
-
-                                            SocketAsyncEventArgs socketEventArgs = new SocketAsyncEventArgs
+                                            if (e.SocketError != SocketError.Success)
                                             {
-                                                RemoteEndPoint = socket.RemoteEndPoint,
-                                                UserToken = null,
-                                                AcceptSocket = null
-                                            };
-
-                                            socketEventArgs.SetBuffer(arratItem, 0, arratItem.Length);
-
-                                            socketEventArgs.Completed += (sender, e) =>
+                                                _log.Info($"Failed to send data: {e.SocketError}");
+                                            }
+                                            else
                                             {
-                                                if (e.SocketError != SocketError.Success)
-                                                {
-                                                    Debug.WriteLine($"Failed to send data: {e.SocketError}");
-                                                }
-                                                else
-                                                {
-                                                    Sending?.Invoke(item.CurrentSequence, item.TotalSequence, EnumTcpCommunication.FILE_PACKET_SENDING, $"{item.FileName}{item.FileExtension}");
-                                                    //Debug.WriteLine($"{EnumPacketType.FILE} was sent completely.");
-                                                }
-                                            };
+                                                Sending?.Invoke(item.CurrentSequence, item.TotalSequence, EnumTcpCommunication.FILE_PACKET_SENDING, $"{item.FileName}{item.FileExtension}");
+                                                //Debug.WriteLine($"{EnumPacketType.FILE} was sent completely.");
+                                            }
+                                        };
 
-                                            // Client로 메시지 전송(비동기식)
-                                            socket.SendAsync(socketEventArgs);
+                                        // Client로 메시지 전송(비동기식)
+                                        socket.SendAsync(socketEventArgs);
 
 
-                                            Thread.Sleep(PACKET_SENDING_DELAY);
-                                            //socket?.Send(arratItem);
-                                            //Sending?.Invoke(item.CurrentSequence, item.TotalSequence, EnumTcpCommunication.FILE_PACKET_SENDING, $"{item.FileName}{item.FileExtension}");
-                                            ////await Task.Delay(PACKET_SENDING_DELAY);
-                                        }
-                                        SendCompleted?.Invoke(fileName, EnumTcpCommunication.FILE_PACKET_SEND_COMPLETE);
+                                        Thread.Sleep(PACKET_SENDING_DELAY);
+                                        //socket?.Send(arratItem);
+                                        //Sending?.Invoke(item.CurrentSequence, item.TotalSequence, EnumTcpCommunication.FILE_PACKET_SENDING, $"{item.FileName}{item.FileExtension}");
+                                        ////await Task.Delay(PACKET_SENDING_DELAY);
                                     }
+                                    SendCompleted?.Invoke(fileName, EnumTcpCommunication.FILE_PACKET_SEND_COMPLETE);
                                 }
-                                break;
-                            default:
-                                break;
-                        }
+                            }
+                            break;
+                        default:
+                            break;
                     }
+                }
 
-                }
-                catch (SocketException ex)
-                {
-                    Debug.WriteLine($"Raised Exception in {nameof(SendPacketProcess)} for the reason : {ex.Message}");
-                }
-                finally
-                {
-                    GC.Collect();
-                }
-            });
+            }
+            catch (SocketException ex)
+            {
+                _log.Error($"Raised Exception in {nameof(SendPacketProcess)} for the reason : {ex.Message}");
+            }
+            finally
+            {
+                GC.Collect();
+            }
         }
 
-        public Task ReceivedPacketProcess(byte[] receivedMsg)
+        public async Task ReceivedPacketProcess(byte[] receivedMsg)
         {
-            return Task.Run(() =>
+            try
             {
-                try
+                await _semaphore.WaitAsync();
+
+                var packet = ValidateCRC(receivedMsg);
+                PacketCollectionClass<PacketClass> pCollectionClass;
+
+
+                //Packet Insert In Queue(Dictionary)
+                if (packet.TotalSequence > 0)
                 {
-                    lock (_syncLock)
+                    PackQueue.TryGetValue(packet.Id.ToString(), out pCollectionClass);
+                    if (pCollectionClass != null)
                     {
-                        //initialize output result 
+                        pCollectionClass.Add(packet);
 
-                        var packet = ValidateCRC(receivedMsg);
-                        PacketCollectionClass<PacketClass> pCollectionClass;
+                        ReceivingEvent(pCollectionClass?.Type, packet);
 
-                        //Debug.WriteLine($"[{DateTime.Now.ToString("HH:mm:ss.ffffff")}]ReceivedPacketProcess");
-                        //Debug.WriteLine($"[{DateTime.Now.ToString("HH:mm:ss.ffffff")}]Message({(EnumPacketType)(packet.DataType)}) was received.[({packet.CurrentSequence})/({packet.TotalSequence})] : {packet.CRC}");
-
-                        //Packet Insert In Queue(Dictionary)
-                        if (packet.TotalSequence > 0)
+                        if (pCollectionClass.IsFullList)
                         {
-                            PackQueue.TryGetValue(packet.Id.ToString(), out pCollectionClass);
-                            if (pCollectionClass != null)
-                            {
-                                pCollectionClass.Add(packet);
-
-                                ReceivingEvent(pCollectionClass?.Type, packet);
-
-                                if (pCollectionClass.IsFullList)
-                                {
-                                    CreateDataProcess(pCollectionClass);
-                                    PackQueue.Remove(packet.Id.ToString());
-
-                                    ReceiveCompletedEvent(pCollectionClass.Type, packet);
-                                }
-                            }
-                            else
-                            {
-                                pCollectionClass = new PacketCollectionClass<PacketClass>();
-                                pCollectionClass.Add(packet);
-                                PackQueue.Add(packet.Id.ToString(), pCollectionClass);
-
-                                ReceiveStartedEvent(pCollectionClass.Type, packet);
-                            }
-                        }
-                        else
-                        {
-                            //Short Message Without Status Event
-                            pCollectionClass = new PacketCollectionClass<PacketClass>();
-                            pCollectionClass.Add(packet);
-                            PackQueue.Add(packet.Id.ToString(), pCollectionClass);
-
-                            ReceiveCompletedEvent(pCollectionClass.Type, packet);
                             CreateDataProcess(pCollectionClass);
                             PackQueue.Remove(packet.Id.ToString());
+
+                            ReceiveCompletedEvent(pCollectionClass.Type, packet);
                         }
-                        Thread.Sleep(PACKET_RECEIVING_DELAY);
+                    }
+                    else
+                    {
+                        pCollectionClass = new PacketCollectionClass<PacketClass>();
+                        pCollectionClass.Add(packet);
+                        PackQueue.Add(packet.Id.ToString(), pCollectionClass);
+
+                        ReceiveStartedEvent(pCollectionClass.Type, packet);
                     }
                 }
-                catch (Exception ex)
+                else
                 {
-                    Debug.WriteLine($"Raised Exception in {nameof(ReceivedPacketProcess)} for the reason : {ex.Message}");
-                }
-                finally
-                {
-                    GC.Collect();
-                }
+                    //Short Message Without Status Event
+                    pCollectionClass = new PacketCollectionClass<PacketClass>();
+                    pCollectionClass.Add(packet);
+                    PackQueue.Add(packet.Id.ToString(), pCollectionClass);
 
-            });
+                    ReceiveCompletedEvent(pCollectionClass.Type, packet);
+                    CreateDataProcess(pCollectionClass);
+                    PackQueue.Remove(packet.Id.ToString());
+                }
+                Thread.Sleep(PACKET_RECEIVING_DELAY);
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"Raised Exception in {nameof(ReceivedPacketProcess)} for the reason : {ex.Message}");
+            }
+            finally
+            {
+                GC.Collect();
+                _semaphore.Release();
+            }
 
         }
 
@@ -608,6 +611,9 @@ namespace Ironwall.Libraries.Tcp.Packets.Services
                         var list = pCollectionClass.PacketList.OrderBy(entity => entity.CurrentSequence).ToList();
                         for (int i = 0; i < pCollectionClass.TotalSequence + 1; i++)
                         {
+                            if (list[i] == null)
+                                throw new Exception($"Missing packet for sequence {i}.");
+
                             Buffer.BlockCopy(list[i].Body, 0, buffer, PacketClass.BODY_SIZE * i, list[i].BodyLength);
                         }
                         var ret = Encoding.UTF8.GetString(buffer);
@@ -671,7 +677,7 @@ namespace Ironwall.Libraries.Tcp.Packets.Services
                         {
                             // 파일 쓰기
                             stream.Write(buffer, 0, buffer.Length);
-                            Debug.WriteLine($"{fileName} 만들기 생성 : {(new FileInfo(directoryInfo.FullName + "/" + fileName)).Exists}");
+                            _log.Info($"{fileName} 만들기 생성 : {(new FileInfo(directoryInfo.FullName + "/" + fileName)).Exists}");
                         }
                         catch (Exception ex)
                         {
@@ -685,7 +691,7 @@ namespace Ironwall.Libraries.Tcp.Packets.Services
                 {
                     var msg = $"Raised Exception in {nameof(FileGenerater)} for the reason : {ex.Message}";
                     ReceiveCompleted?.Invoke(msg, EnumTcpCommunication.COMMUNICATION_ERROR);
-                    Debug.WriteLine(msg);
+                    _log.Error(msg);
                     return false;
                 }
             });
@@ -704,8 +710,11 @@ namespace Ironwall.Libraries.Tcp.Packets.Services
         const int PACKET_RECEIVING_DELAY = 15;
 
         private object _syncLock;
+        private ILogService _log;
         private string _currentDirectory;
         private string _dir;
+
+        private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 
         public delegate void CompletedMessage(object ret, EnumTcpCommunication type);
         public delegate void TransferMessage(int current, int total, EnumTcpCommunication type, string msg = null);

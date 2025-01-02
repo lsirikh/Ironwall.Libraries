@@ -41,9 +41,8 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Setups
         #region - Ctors -
         public CameraDeviceSetupViewModel(IEventAggregator eventAggregator
                                         , ILogService log)
-                                        : base(eventAggregator)
+                                        : base(eventAggregator, log)
         {
-            _log = log;
             ViewModelProvider = new ObservableCollection<CameraDeviceViewModel>();
         }
 
@@ -55,7 +54,7 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Setups
         {
             await base.OnActivateAsync(cancellationToken);
 
-            _ = DataInitialize(_cancellationTokenSource.Token);
+            await DataInitialize(_cancellationTokenSource.Token).ConfigureAwait(false);
 
         }
 
@@ -117,11 +116,11 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Setups
             catch (TaskCanceledException ex)
             {
                 await _eventAggregator.PublishOnUIThreadAsync(new ClosePopupMessageModel());
-                _log.Error($"Rasied {nameof(TaskCanceledException)}({nameof(OnClickSaveButton)} in {ClassName}): {ex.Message}");
+                _log.Error($"Rasied {nameof(TaskCanceledException)}({nameof(OnClickSaveButton)} in {ClassName}): {ex.Message}", _class);
             }
             catch (Exception ex)
             {
-                _log.Error($"Rasied {nameof(Exception)}({nameof(OnClickSaveButton)} in {ClassName}): {ex.Message}");
+                _log.Error($"Rasied {nameof(Exception)}({nameof(OnClickSaveButton)} in {ClassName}): {ex.Message}", _class);
                 var explain = ex.Message;
 
                 await _eventAggregator.PublishOnUIThreadAsync(new OpenInfoPopupMessageModel
@@ -150,11 +149,11 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Setups
             catch (TaskCanceledException ex)
             {
                 await _eventAggregator.PublishOnUIThreadAsync(new ClosePopupMessageModel());
-                _log.Error($"Rasied {nameof(TaskCanceledException)}({nameof(OnClickReloadButton)} in {ClassName}): {ex.Message}");
+                _log.Error($"Rasied {nameof(TaskCanceledException)}({nameof(OnClickReloadButton)} in {ClassName}): {ex.Message}", _class);
             }
             catch (Exception ex)
             {
-                _log.Error($"Rasied {nameof(Exception)}({nameof(OnClickReloadButton)} in {ClassName}): {ex.Message}");
+                _log.Error($"Rasied {nameof(Exception)}({nameof(OnClickReloadButton)} in {ClassName}): {ex.Message}", _class);
                 var explain = ex.Message;
 
                 await _eventAggregator.PublishOnUIThreadAsync(new OpenInfoPopupMessageModel
@@ -168,12 +167,12 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Setups
         #region - Processes -
         private Task DataInitialize(CancellationToken cancellationToken = default)
         {
-            return Task.Run(async () =>
+            return Task.Run(() =>
             {
                 try
                 {
                     IsVisible = false;
-                    await Task.Delay(1000, cancellationToken);
+                    //await Task.Delay(1000, cancellationToken);
 
                     if (cancellationToken.IsCancellationRequested) new TaskCanceledException("Task was cancelled!");
                     //ViewModelProvider Setting
@@ -189,11 +188,14 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Setups
 
                     }));
                     NotifyOfPropertyChange(() => ViewModelProvider);
-                    IsVisible = true;
                 }
                 catch (TaskCanceledException ex)
                 {
-                    _log.Error($"Raised {nameof(TaskCanceledException)}({nameof(DataInitialize)}) : {ex.Message}");
+                    _log.Error($"Raised {nameof(TaskCanceledException)}({nameof(DataInitialize)}) : {ex.Message}", _class);
+                }
+                finally
+                {
+                    IsVisible = true;
                 }
                 
             });
@@ -241,7 +243,6 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Setups
         #region - Attributes -
         private ObservableCollection<string> _cameraComboList;
         private CameraViewModelProvider _provider;
-        private ILogService _log;
         #endregion
     }
 }

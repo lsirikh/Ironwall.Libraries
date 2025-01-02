@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Ironwall.Libraries.Base.Services;
 
 namespace Ironwall.Framework.ViewModels.ConductorViewModels
 {
@@ -23,10 +24,11 @@ namespace Ironwall.Framework.ViewModels.ConductorViewModels
             ClassName = this.GetType().Name.ToString();
         }
 
-        public ConductorOneViewModel(IEventAggregator eventAggregator)
+        public ConductorOneViewModel(IEventAggregator eventAggregator, ILogService log)
         {
             ClassName = this.GetType().Name.ToString();
             _eventAggregator = eventAggregator;
+            _log = log;
         }
         #endregion
 
@@ -35,7 +37,7 @@ namespace Ironwall.Framework.ViewModels.ConductorViewModels
         {
             base.OnActivateAsync(cancellationToken);
             _eventAggregator?.SubscribeOnPublishedThread(this);
-            Debug.WriteLine($"######### {ClassName} OnActivate!! #########");
+            _log.Info($"## {this.GetType()} OnActivate!! ##");
             IsVisible = true;
             return Task.CompletedTask;
         }
@@ -44,7 +46,7 @@ namespace Ironwall.Framework.ViewModels.ConductorViewModels
         {
             base.OnDeactivateAsync(close, cancellationToken);
             _eventAggregator?.Unsubscribe(this);
-            Debug.WriteLine($"######### {ClassName} OnDeactivate!! #########");
+            _log.Info($"## {this.GetType()} OnDeactivate!! ##");
             IsVisible = false;
             return Task.CompletedTask;
         }
@@ -73,15 +75,6 @@ namespace Ironwall.Framework.ViewModels.ConductorViewModels
             var viewModel = item as IBaseViewModel;
 
             IsVisible = true;
-
-            #region Deprecated Code
-            /*if (viewModel.Category == CategoryEnum.PANEL_SHELL_VM_BASE
-                || viewModel.Category == CategoryEnum.DIALOG_SHELL_VM_BASE
-                || viewModel.Category == CategoryEnum.POPUP_DIALOG_SHELL_VM_BASE)
-                IsVisible = false;
-            else
-                IsVisible = true;*/
-            #endregion
 
             return Task.CompletedTask;
         }
@@ -162,7 +155,7 @@ namespace Ironwall.Framework.ViewModels.ConductorViewModels
         private CategoryEnum _classCategory;
         private bool _isVisible;
         protected IEventAggregator _eventAggregator;
-        //private bool _animationControl;
+        protected ILogService _log;
         #endregion
     }
 }

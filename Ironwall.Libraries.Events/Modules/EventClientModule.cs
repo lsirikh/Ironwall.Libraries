@@ -37,9 +37,9 @@ namespace Ironwall.Libraries.Events.Modules
                 builder.RegisterType<MalfunctionEventProvider>().SingleInstance();
                 builder.RegisterType<ActionEventProvider>().SingleInstance();
             }
-            catch
+            catch (Exception ex) 
             {
-                throw;
+                _log.Error(ex.Message);
             }
         }
         #endregion

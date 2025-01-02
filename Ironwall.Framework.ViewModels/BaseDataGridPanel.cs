@@ -1,5 +1,6 @@
 ﻿using Caliburn.Micro;
 using Ironwall.Framework.Services;
+using Ironwall.Libraries.Base.Services;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -28,7 +29,7 @@ namespace Ironwall.Framework.ViewModels
         {
             ViewModelProvider = new ObservableCollection<T>();
         }
-        public BaseDataGridPanel(IEventAggregator eventAggregator) : base(eventAggregator)
+        public BaseDataGridPanel(IEventAggregator eventAggregator, ILogService log) : base(eventAggregator, log)
         {
             ViewModelProvider = new ObservableCollection<T>();
         }
@@ -64,7 +65,7 @@ namespace Ironwall.Framework.ViewModels
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.Message);
+                _log.Error(ex.Message, _class);
             }
             finally
             {
@@ -87,7 +88,7 @@ namespace Ironwall.Framework.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine(ex.Message);
+                    _log.Error(ex.Message, _class);
                 }
 
             }));
@@ -109,7 +110,7 @@ namespace Ironwall.Framework.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised {nameof(Exception)}({nameof(CheckSelectState)}) : {ex.Message}");
+                    _log.Error($"Raised {nameof(Exception)}({nameof(CheckSelectState)}) : {ex.Message}");
                 }
 
             }, cancellationToken);
@@ -152,20 +153,20 @@ namespace Ironwall.Framework.ViewModels
         }
         protected void ButtonAllEnable()
         {
-            Debug.WriteLine($"{ClassName}({this.GetHashCode()})의 ButtonAllEnable Start!!");
+            _log.Info($"{ClassName}({this.GetHashCode()})의 ButtonAllEnable Start!!", _class);
             IsButtonEnable = true;
             SaveButtonEnable = true;
             ReloadButtonEnable = true;
             Refresh();
-            Debug.WriteLine($"{ClassName}({this.GetHashCode()})의 ButtonAllEnable End!!");
+            _log.Info($"{ClassName}({this.GetHashCode()})의 ButtonAllEnable End!!", _class);
         }
         protected void ButtonAllDisable()
         {
-            Debug.WriteLine($"{ClassName}({this.GetHashCode()})의 ButtonAllDisable Start!!");
+            _log.Info($"{ClassName}({this.GetHashCode()})의 ButtonAllEnable Start!!", _class);
             IsButtonEnable = false;
             SaveButtonEnable = false;
             ReloadButtonEnable = false;
-            Debug.WriteLine($"{ClassName}({this.GetHashCode()})의 ButtonAllDisable End!!");
+            _log.Info($"{ClassName}({this.GetHashCode()})의 ButtonAllEnable End!!", _class);
         }
         #endregion
         #region - IHanldes -
@@ -178,7 +179,7 @@ namespace Ironwall.Framework.ViewModels
             {
                 _isVisible = value;
                 NotifyOfPropertyChange(() => IsVisible);
-                Debug.WriteLine($"{ClassName}({this.GetHashCode()})의 IsVisible:{IsVisible}!!");
+                _log.Info($"{ClassName}({this.GetHashCode()})의 IsVisible:{IsVisible}!!", _class);
             }
         }
 

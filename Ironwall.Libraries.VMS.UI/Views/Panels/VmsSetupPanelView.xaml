@@ -40,7 +40,7 @@
 				</StackPanel>
 			</TabItem.Header>
 			<!-- Content -->
-			<ContentControl  x:Name="VmsEventMappingSetupViewModel" />
+			<ContentControl x:Name="VmsEventMappingSetupViewModel" />
 		</TabItem>
 
 		<!-- VmsEventSensorSetupViewModel -->
@@ -67,7 +67,7 @@
 				</StackPanel>
 			</TabItem.Header>
 			<!-- Content -->
-			<ContentControl  x:Name="VmsSensorSetupViewModel" />
+			<ContentControl  x:Name="VmsSensorSetupViewModel"/>
 		</TabItem>
 		<!-- VmsApiSetupViewModel -->
 		
@@ -89,7 +89,7 @@
 									Width="100"
 									TextAlignment="Center"
 									TextWrapping="Wrap"
-									Text="{DynamicResource Setup_Vms_Event_Mapping}" />
+									Text="{DynamicResource Setup_Vms_Api_Setting}" />
 					</Viewbox>
 				</StackPanel>
 			</TabItem.Header>

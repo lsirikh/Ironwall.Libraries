@@ -42,13 +42,16 @@ namespace Ironwall.Libraries.Map.Common.Providers.Models
                 try
                 {
                     Clear();
-                    foreach (SymbolModel item in _provider
-                    .Where(entity => entity.TypeShape == (int)EnumShapeType.TEXT)
-                    .ToList())
+                    foreach (var item in _provider
+                                        .OfType<IObjectShapeModel>()
+                                        .Where(entity => entity.TypeShape == (int)EnumShapeType.TEXT)
+                                        .ToList())
                     {
                         isValid = true;
-                        Add(item as IObjectShapeModel);
+                        Add(item);
                     }
+
+
                 }
                 catch (Exception ex)
                 {

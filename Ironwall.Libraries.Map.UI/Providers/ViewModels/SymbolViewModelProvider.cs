@@ -67,61 +67,52 @@ namespace Ironwall.Libraries.Map.UI.Providers.ViewModels
         #region - Binding Methods -
         #endregion
         #region - Processes -
-        private Task<bool> Provider_Initialize()
+        private async Task<bool> Provider_Initialize()
         {
-            return Task.Run(async () =>
+            try
             {
-                try
+                Clear();
+                foreach (var item in _provider.OfType<ISymbolModel>().ToList())
                 {
-                    Clear();
-                    foreach (ISymbolModel item in _provider.ToList())
-                    {
-                        await AddProcess(item);
-                    }
-                    await Finished();
+                    await AddProcess(item);
                 }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"Raised Exception in {nameof(Provider_Initialize)}({ClassName}) : {ex.Message}");
-                    return false;
-                }
-                
-                return true;
-            });
+                await Finished();
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"Raised Exception in {nameof(Provider_Initialize)}({ClassName}) : {ex.Message}");
+                return false;
+            }
+
+            return true;
         }
-        private Task<bool> Provider_Insert(ISymbolModel item)
+        private async Task<bool> Provider_Insert(ISymbolModel item)
         {
-            return Task.Run(async () =>
+            try
             {
-                try
-                {
-                    await AddProcess(item, true);
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"Raised Exception in {nameof(Provider_Insert)}({ClassName}) : {ex.Message}");
-                    return false;
-                }
-                return true;
-            });
+                await AddProcess(item);
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"Raised Exception in {nameof(Provider_Insert)}({ClassName}) : {ex.Message}");
+                return false;
+            }
+            return true;
         }
 
         private Task<bool> Provider_Update(ISymbolModel item)
         {
             bool ret = false;
-            return Task.Run(() =>
+            try
             {
-                try
-                {
-                    ret = UpdateProcess(item);
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"Raised Exception in {nameof(Provider_Update)}({ClassName}) : {ex.Message}");
-                    return ret;
-                }
-                return ret;
-            });
+                ret = UpdateProcess(item);
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"Raised Exception in {nameof(Provider_Update)}({ClassName}) : {ex.Message}");
+                return Task.FromResult(false);
+            }
+            return Task.FromResult(true);
         }
 
 
@@ -142,123 +133,129 @@ namespace Ironwall.Libraries.Map.UI.Providers.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception in {nameof(Provider_Update)}({ClassName}) : {ex.Message}");
+                    _log.Error($"Raised Exception in {nameof(Provider_Update)}({ClassName}) : {ex.Message}");
                     return ret;
                 }
                 return ret;
             });
         }
 
-        private Task AddProcess(ISymbolModel item, bool isUseIndex = false)
+        private async Task AddProcess(ISymbolModel item, bool isUseIndex = false)
         {
-            return Task.Run(async () => 
+            ISymbolViewModel viewModel = null;
+            try
             {
-                ISymbolViewModel viewModel = null;
-                try
+                switch ((EnumShapeType)item.TypeShape)
                 {
-                    switch ((EnumShapeType)item.TypeShape)
-                    {
-                        case EnumShapeType.NONE:
-                            break;
-                        case EnumShapeType.TEXT:
-                            {
-                                viewModel = MapViewModelFactory.Build<TextSymbolViewModel>(item);
-                                await viewModel.ActivateAsync();
+                    case EnumShapeType.NONE:
+                        break;
+                    case EnumShapeType.TEXT:
+                        {
+                            viewModel = MapViewModelFactory.Build<TextSymbolViewModel>(item);
+                            await viewModel.ActivateAsync();
 
-                            }
-                            break;
-                        case EnumShapeType.LINE:
-                            break;
-                        case EnumShapeType.TRIANGLE:
-                            {
-                                viewModel = MapViewModelFactory.Build<TriangleShapeViewModel>(item);
-                                await viewModel.ActivateAsync();
+                        }
+                        break;
+                    case EnumShapeType.LINE:
+                        break;
+                    case EnumShapeType.TRIANGLE:
+                        {
+                            if (!(item is IShapeSymbolModel model)) return;
 
-                            }
-                            break;
-                        case EnumShapeType.RECTANGLE:
-                            {
-                                viewModel = MapViewModelFactory.Build<RectangleShapeViewModel>(item);
-                                await viewModel.ActivateAsync();
-                            }
-                            break;
-                        case EnumShapeType.POLYGON:
-                            break;
-                        case EnumShapeType.POLYLINE:
-                            break;
-                        case EnumShapeType.FENCE:
-                            {
-                                if (!(item is IObjectShapeModel model))
-                                    return;
+                            viewModel = MapViewModelFactory.Build<TriangleShapeViewModel>(model);
+                            await viewModel.ActivateAsync();
 
-                                viewModel = MapViewModelFactory.Build<FenceObjectViewModel>(item);
-                                await viewModel.ActivateAsync();
-                                //DispatcherService.Invoke((System.Action)(() =>
-                                //{
-                                //    viewModel.Points = model.Points.Clone();
-                                //}));
-                            }
-                            break;
-                        case EnumShapeType.ELLIPSE:
-                            {
-                                viewModel = MapViewModelFactory.Build<EllipseShapeViewModel>(item);
-                                await viewModel.ActivateAsync();
-                            }
-                            break;
-                        case EnumShapeType.CONTROLLER:
-                            {
-                                viewModel = MapViewModelFactory.Build<ControllerObjectViewModel>(item);
-                                await viewModel.ActivateAsync();
-                            }
-                            break;
-                        case EnumShapeType.MULTI_SNESOR:
-                            {
-                                viewModel = MapViewModelFactory.Build<MultiSensorObjectViewModel>(item);
-                                await viewModel.ActivateAsync();
-                            }
-                            break;
-                        case EnumShapeType.FENCE_SENSOR:
-                            break;
-                        case EnumShapeType.UNDERGROUND_SENSOR:
-                            break;
-                        case EnumShapeType.CONTACT_SWITCH:
-                            break;
-                        case EnumShapeType.PIR_SENSOR:
-                            break;
-                        case EnumShapeType.IO_CONTROLLER:
-                            break;
-                        case EnumShapeType.LASER_SENSOR:
-                            break;
-                        case EnumShapeType.CABLE:
-                            break;
-                        case EnumShapeType.IP_CAMERA:
-                            break;
-                        case EnumShapeType.FIXED_CAMERA:
-                            {
-                                viewModel = MapViewModelFactory.Build<FixedCameraObjectViewModel>(item);
-                                await viewModel.ActivateAsync();
-                            }
-                            break;
-                        case EnumShapeType.PTZ_CAMERA:
-                            break;
-                        case EnumShapeType.SPEEDDOM_CAMERA:
-                            break;
-                        default:
-                            break;
-                    }
+                        }
+                        break;
+                    case EnumShapeType.RECTANGLE:
+                        {
+                            if (!(item is IShapeSymbolModel model)) return;
 
-                    if (!isUseIndex)
-                        await InsertedItem(viewModel);
-                    else
-                        await InsertedItem(viewModel);
+                            viewModel = MapViewModelFactory.Build<RectangleShapeViewModel>(model);
+                            await viewModel.ActivateAsync();
+                        }
+                        break;
+                    case EnumShapeType.POLYGON:
+                        break;
+                    case EnumShapeType.POLYLINE:
+                        break;
+                    case EnumShapeType.FENCE:
+                        {
+                            if (!(item is IObjectShapeModel model)) return;
+
+                            viewModel = MapViewModelFactory.Build<FenceObjectViewModel>(model);
+                            await viewModel.ActivateAsync();
+                        }
+                        break;
+                    case EnumShapeType.ELLIPSE:
+                        {
+                            if (!(item is IShapeSymbolModel model)) return;
+
+                            viewModel = MapViewModelFactory.Build<EllipseShapeViewModel>(model);
+                            await viewModel.ActivateAsync();
+                        }
+                        break;
+                    case EnumShapeType.CONTROLLER:
+                        {
+                            if (!(item is IObjectShapeModel model)) return;
+
+                            viewModel = MapViewModelFactory.Build<ControllerObjectViewModel>(model);
+                            await viewModel.ActivateAsync();
+                        }
+                        break;
+                    case EnumShapeType.MULTI_SNESOR:
+                        {
+                            if (!(item is IObjectShapeModel model)) return;
+
+                            viewModel = MapViewModelFactory.Build<MultiSensorObjectViewModel>(model);
+                            await viewModel.ActivateAsync();
+                        }
+                        break;
+                    case EnumShapeType.FENCE_SENSOR:
+                        break;
+                    case EnumShapeType.UNDERGROUND_SENSOR:
+                        break;
+                    case EnumShapeType.CONTACT_SWITCH:
+                        break;
+                    case EnumShapeType.PIR_SENSOR:
+                        break;
+                    case EnumShapeType.IO_CONTROLLER:
+                        break;
+                    case EnumShapeType.LASER_SENSOR:
+                        break;
+                    case EnumShapeType.CABLE:
+                        break;
+                    case EnumShapeType.IP_CAMERA:
+                        break;
+                    case EnumShapeType.FIXED_CAMERA:
+                        {
+                            if (!(item is IObjectShapeModel model)) return;
+
+                            viewModel = MapViewModelFactory.Build<FixedCameraObjectViewModel>(model);
+                            await viewModel.ActivateAsync();
+                        }
+                        break;
+                    case EnumShapeType.PTZ_CAMERA:
+                        break;
+                    case EnumShapeType.SPEEDDOM_CAMERA:
+                        break;
+                    default:
+                        break;
                 }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"Raised Exception in {nameof(AddProcess)}({ClassName}) : {ex.Message}");
-                }
-            });
-            
+
+                if (viewModel == null)
+                    throw new InvalidOperationException($"Failed to create ViewModel for TypeShape {item.TypeShape}.");
+
+                if (!isUseIndex)
+                    await InsertedItem(viewModel);
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"Raised Exception in {nameof(AddProcess)}({ClassName}) : {ex.Message}");
+            }
+
         }
+
         private bool UpdateProcess(ISymbolModel item)
         {
             try
@@ -267,7 +264,6 @@ namespace Ironwall.Libraries.Map.UI.Providers.ViewModels
 
                 if (searchedItem == null)
                     throw new NullReferenceException(message: $"SymbolModel({item.Id}) was not Searched in SymbolCollection");
-
 
                 switch ((EnumShapeType)item.TypeShape)
                 {
@@ -350,11 +346,12 @@ namespace Ironwall.Libraries.Map.UI.Providers.ViewModels
                     default:
                         break;
                 }
+
                 return false;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Raised Exception in {nameof(AddProcess)}({ClassName}) : {ex.Message}");
+                _log.Error($"Raised Exception in {nameof(AddProcess)}({ClassName}) : {ex.Message}");
                 return false;
             }
         }
@@ -362,7 +359,6 @@ namespace Ironwall.Libraries.Map.UI.Providers.ViewModels
         #region - IHanldes -
         #endregion
         #region - Properties -
-
         #endregion
         #region - Attributes -
         private SymbolProvider _provider;

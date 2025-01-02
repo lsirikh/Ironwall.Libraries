@@ -1,4 +1,6 @@
-﻿using Ironwall.Framework.Services;
+﻿using Caliburn.Micro;
+using Ironwall.Framework.Services;
+using Ironwall.Libraries.Base.Services;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -12,6 +14,10 @@ namespace Ironwall.Framework.DataProviders
         : EntityCollectionProvider<T>
     {
         #region - Ctors -
+        protected BaseCommonProvider()
+        {
+            _log = IoC.Get<ILogService>();
+        }
         #endregion
         #region - Implementation of Interface -
         public virtual void Add(T item, int index)
@@ -28,7 +34,7 @@ namespace Ironwall.Framework.DataProviders
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Raised Exception in {nameof(Add)} : ", ex.Message);
+                _log.Error($"Raised Exception in {nameof(Add)} : {ex.Message}");
             }
         }
         #endregion
@@ -57,6 +63,7 @@ namespace Ironwall.Framework.DataProviders
         public delegate Task<bool> Update(T item);
         public delegate Task<bool> Insert(T item);
         public delegate Task<bool> Delete(T item);
+        protected ILogService _log;
         #endregion
     }
 }

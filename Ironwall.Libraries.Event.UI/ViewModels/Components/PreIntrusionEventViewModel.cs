@@ -86,7 +86,7 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Components
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception in {nameof(CloseDialog)} of {nameof(PreIntrusionEventViewModel)} : {ex.Message}");
+                    _log.Error($"Raised Exception in {nameof(CloseDialog)} of {nameof(PreIntrusionEventViewModel)} : {ex.Message}", _class);
                 }
             });
         }

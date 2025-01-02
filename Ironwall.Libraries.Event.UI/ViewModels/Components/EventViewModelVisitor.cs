@@ -1,6 +1,8 @@
-﻿using Ironwall.Framework.Helpers;
+﻿using Caliburn.Micro;
+using Ironwall.Framework.Helpers;
 using Ironwall.Framework.Models.Events;
 using Ironwall.Framework.Services;
+using Ironwall.Libraries.Base.Services;
 using Ironwall.Libraries.Enums;
 using Ironwall.Libraries.Event.UI.Providers.ViewModels;
 using Ironwall.Libraries.Events.Models;
@@ -17,14 +19,15 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Components
         : EventVisitor
     {
         #region - Ctors -
-        public EventViewModelVisitor(
-            PreEventProvider preEventProvider
-            //PendingEventProvider pendingEventProvider
-            , PostEventProvider postEventProvider
-            , EventSetupModel setupModel)
+        public EventViewModelVisitor(IEventAggregator eventAggregator
+                                    , ILogService log
+                                    , PreEventProvider preEventProvider
+                                    , PostEventProvider postEventProvider
+                                    , EventSetupModel setupModel)
         {
+            _eventAggregator = eventAggregator;
+            _log = log;
             PreEventProvider = preEventProvider;
-            //PendingEventProvider = pendingEventProvider;
             PostEventProvider = postEventProvider;
             EventSetupModel = setupModel;
         }
@@ -68,7 +71,7 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Components
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.Message);
+                _log.Error(ex.Message, _class);
             }
             finally
             {
@@ -109,7 +112,7 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Components
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.Message);
+                _log.Error(ex.Message, _class);
             }
             finally
             {
@@ -126,6 +129,8 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Components
         public PostEventProvider PostEventProvider { get; }
         #endregion
         #region - Attributes -
+        private IEventAggregator _eventAggregator;
+        private ILogService _log;
         #endregion
     }
 }

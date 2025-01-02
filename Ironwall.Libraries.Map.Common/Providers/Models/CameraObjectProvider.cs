@@ -44,16 +44,18 @@ namespace Ironwall.Libraries.Map.Common.Providers.Models
                 try
                 {
                     Clear();
-                    foreach (SymbolModel item in _provider
-                    .Where(entity => entity.TypeShape == (int)EnumShapeType.IP_CAMERA
-                                    || entity.TypeShape == (int)EnumShapeType.FIXED_CAMERA
-                                    || entity.TypeShape == (int)EnumShapeType.PTZ_CAMERA
-                                    || entity.TypeShape == (int)EnumShapeType.SPEEDDOM_CAMERA)
+                    foreach (var item in _provider
+                                        .OfType<IObjectShapeModel>() // 타입 필터링
+                                        .Where(entity => entity.TypeShape == (int)EnumShapeType.IP_CAMERA
+                                        || entity.TypeShape == (int)EnumShapeType.FIXED_CAMERA
+                                        || entity.TypeShape == (int)EnumShapeType.PTZ_CAMERA
+                                        || entity.TypeShape == (int)EnumShapeType.SPEEDDOM_CAMERA)
                     .ToList())
                     {
                         isValid = true;
                         Add(item);
                     }
+                    _log.Info($"{nameof(SymbolModel)}s of ({nameof(EnumShapeType.IP_CAMERA)}, {nameof(EnumShapeType.FIXED_CAMERA)}, {nameof(EnumShapeType.PTZ_CAMERA)}, {nameof(EnumShapeType.SPEEDDOM_CAMERA)})  were inserted to {nameof(CameraObjectProvider)}");
                 }
                 catch (Exception ex)
                 {

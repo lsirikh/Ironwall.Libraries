@@ -5,6 +5,7 @@ using System.Threading;
 using System.Diagnostics;
 using Ironwall.Libraries.WatchDog.UI.Models;
 using System;
+using Ironwall.Libraries.Base.Services;
 
 namespace Ironwall.Libraries.WatchDog.UI.ViewModels
 {
@@ -22,8 +23,9 @@ namespace Ironwall.Libraries.WatchDog.UI.ViewModels
 
         #region - Ctors -
         public WatchdogSetupViewModel(IEventAggregator eventAggregator
-                                     , WatchdogSetupModel setupModel)
-                                    : base(eventAggregator)
+                                    , ILogService log
+                                    , WatchdogSetupModel setupModel)
+                                    : base(eventAggregator, log)
         {
             _setupModel = setupModel;
         }

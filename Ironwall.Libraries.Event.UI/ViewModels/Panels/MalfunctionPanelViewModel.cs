@@ -38,7 +38,7 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Panels
         #region - Ctors -
         public MalfunctionPanelViewModel(IEventAggregator eventAggregator
                                         , ILogService log
-                                        ) : base(eventAggregator)
+                                        ) : base(eventAggregator, log)
         {
             _log = log;
         }
@@ -109,7 +109,7 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Panels
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised Exception in {nameof(ClickSearch)}({nameof(MalfunctionPanelViewModel)}) : " + ex.Message);
+                _log.Error($"Raised Exception in {nameof(ClickSearch)}({nameof(MalfunctionPanelViewModel)}) : " + ex.Message, _class);
             }
         }
         public bool CanClickCancel => true;
@@ -176,7 +176,6 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Panels
         #endregion
         #region - Attributes -
         private int _reported;
-        private ILogService _log;
         #endregion
     }
 }

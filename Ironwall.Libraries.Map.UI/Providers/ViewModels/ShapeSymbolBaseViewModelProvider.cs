@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Ironwall.Libraries.Map.UI.Providers.ViewModels
 {
@@ -63,95 +64,77 @@ namespace Ironwall.Libraries.Map.UI.Providers.ViewModels
         #region - Processes -
         private Task<bool> Provider_Initialize()
         {
-            return Task.Run(() =>
+            try
             {
-                try
+                Clear();
+
+                foreach (var item in _provider.OfType<IShapeSymbolModel>().ToList())
                 {
-                    Clear();
+                    if (!(SymbolHelper.IsShapeCategory(item.TypeShape))) continue;
 
-                    foreach (var item in _provider.OfType<IShapeSymbolModel>().ToList())
-                    {
-                        if (!(SymbolHelper.IsShapeCategory(item.TypeShape))) continue;
-
-                        var viewModel = MapViewModelFactory.Build<T>(item);
-                        //viewModel.ActivateAsync();
-                        Add(viewModel);
-                    }
+                    var viewModel = MapViewModelFactory.Build<T>(item);
+                    //viewModel.ActivateAsync();
+                    Add(viewModel);
                 }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"Raised Exception in {nameof(Provider_Initialize)}({ClassName}) : {ex.Message}");
-                    return false;
-                }
-
-                return true;
-            });
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"Raised Exception in {nameof(Provider_Initialize)}({ClassName}) : {ex.Message}");
+                return Task.FromResult(false);
+            }
+            return Task.FromResult(true);
         }
 
         private Task<bool> Provider_Insert(ISymbolModel item)
         {
-            return Task.Run(() =>
+            try
             {
-                try
-                {
-                    var viewModel = MapViewModelFactory.Build<T>((IShapeSymbolModel)item);
-                    Add(viewModel, 0);
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"Raised Exception in {nameof(Provider_Insert)}({ClassName}) : {ex.Message}");
-                    return false;
-                }
-
-                return true;
-
-            });
+                var viewModel = MapViewModelFactory.Build<T>((IShapeSymbolModel)item);
+                Add(viewModel, 0);
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"Raised Exception in {nameof(Provider_Insert)}({ClassName}) : {ex.Message}");
+                return Task.FromResult(false);
+            }
+            return Task.FromResult(true);
         }
         private Task<bool> Provider_Update(ISymbolModel item)
         {
-            return Task.Run(() =>
+            try
             {
-                try
-                {
-                    var viewModel = MapViewModelFactory.Build<T>((IShapeSymbolModel)item);
-                    //viewModel.ActivateAsync();
-                    var searchedItem = CollectionEntity.Where(t => t.Id == item.Id).FirstOrDefault();
+                var viewModel = MapViewModelFactory.Build<T>((IShapeSymbolModel)item);
+                //viewModel.ActivateAsync();
+                var searchedItem = CollectionEntity.Where(t => t.Id == item.Id).FirstOrDefault();
 
-                    if (searchedItem != null)
-                        searchedItem = viewModel;
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"Raised Exception in {nameof(Provider_Update)}({ClassName}) : {ex.Message}");
-                    return false;
-                }
-
-                return true;
-
-            });
+                if (searchedItem != null)
+                    searchedItem = viewModel;
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"Raised Exception in {nameof(Provider_Update)}({ClassName}) : {ex.Message}");
+                return Task.FromResult(false);
+            }
+            return Task.FromResult(true);
         }
 
         private Task<bool> Provider_Delete(ISymbolModel item)
         {
-            bool ret = false;
-            return Task.Run(() =>
+            try
             {
-                try
+                var searchedItem = CollectionEntity.Where(t => t.Id == item.Id).FirstOrDefault();
+                if (searchedItem != null)
                 {
-                    var searchedItem = CollectionEntity.Where(t => t.Id == item.Id).FirstOrDefault();
-                    if (searchedItem != null)
-                    {
-                        Remove(searchedItem);
-                    }
+                    Remove(searchedItem);
+                }
 
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"Raised Exception in {nameof(Provider_Update)}({ClassName}) : {ex.Message}");
-                    return ret;
-                }
-                return ret;
-            });
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"Raised Exception in {nameof(Provider_Update)}({ClassName}) : {ex.Message}");
+                return Task.FromResult(false);
+            }
+            return Task.FromResult(true);
         }
         #endregion
         #region - IHanldes -

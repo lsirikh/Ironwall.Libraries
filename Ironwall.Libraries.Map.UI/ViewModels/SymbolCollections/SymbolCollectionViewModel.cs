@@ -1,5 +1,6 @@
 ﻿using Caliburn.Micro;
 using Ironwall.Framework.Models.Maps.Symbols;
+using Ironwall.Libraries.Base.Services;
 using Ironwall.Libraries.Enums;
 using Ironwall.Libraries.Map.Common.Providers.Models;
 using Ironwall.Libraries.Map.UI.Models.Messages;
@@ -22,18 +23,20 @@ namespace Ironwall.Libraries.Map.UI.ViewModels.SymbolCollections
      ****************************************************************************/
 
     public class SymbolCollectionViewModel : Screen
-        ,IHandle<EditShapeMessage>
-        ,IHandle<DeleteShapeMessage>
-        ,IHandle<CopyShapeMessage>
+                                            , IHandle<EditShapeMessage>
+                                            , IHandle<DeleteShapeMessage>
+                                            , IHandle<CopyShapeMessage>
     {
         #region - Ctors -
-        public SymbolCollectionViewModel(SymbolProvider provider
-            , PointProvider pointProvider
-            , SymbolViewModelProvider symbolViewModelProvider
-            , MappedSymbolViewModelProvider mappedSymbolViewModelProvider
-            , IEventAggregator eventAggregator)
+        public SymbolCollectionViewModel(IEventAggregator eventAggregator
+                                        , ILogService log
+                                        , SymbolProvider provider
+                                        , PointProvider pointProvider
+                                        , SymbolViewModelProvider symbolViewModelProvider
+                                        , MappedSymbolViewModelProvider mappedSymbolViewModelProvider)
         {
             _eventAggregator = eventAggregator;
+            _log = log;
             SymbolProvider = provider;
             PointProvider = pointProvider;
             SymbolViewModelProvider = symbolViewModelProvider;
@@ -68,6 +71,7 @@ namespace Ironwall.Libraries.Map.UI.ViewModels.SymbolCollections
                 {
                     item.IsEditable = false;
                 }
+                _log.Info($"SymbolViewModel의 IsEditable 속성이 false로 설정되었습니다.");
             }
             else
             {
@@ -78,6 +82,7 @@ namespace Ironwall.Libraries.Map.UI.ViewModels.SymbolCollections
                         item.IsEditable = false;
                     }
                 }
+                _log.Info($"SymbolViewModel의 IsEditable 속성이 true로 설정되었습니다.");
             }
 
             return Task.CompletedTask;
@@ -85,7 +90,7 @@ namespace Ironwall.Libraries.Map.UI.ViewModels.SymbolCollections
 
         public async Task HandleAsync(DeleteShapeMessage message, CancellationToken cancellationToken)
         {
-            if(message.symbolModel == null)
+            if (message.symbolModel == null)
                 return;
 
             var model = message.symbolModel;
@@ -118,7 +123,7 @@ namespace Ironwall.Libraries.Map.UI.ViewModels.SymbolCollections
                 case EnumShapeType.PTZ_CAMERA:
                 case EnumShapeType.SPEEDDOM_CAMERA:
                     {
-                        if(!(model is ShapeSymbolModel shapeSymbol)) break;
+                        if (!(model is ShapeSymbolModel shapeSymbol)) break;
 
                         PointProvider.RemoveAll(entity => entity.PointGroup == shapeSymbol.Id);
                     }
@@ -126,8 +131,6 @@ namespace Ironwall.Libraries.Map.UI.ViewModels.SymbolCollections
                 default:
                     break;
             }
-            
-            
         }
 
         public async Task HandleAsync(CopyShapeMessage message, CancellationToken cancellationToken)
@@ -213,14 +216,22 @@ namespace Ironwall.Libraries.Map.UI.ViewModels.SymbolCollections
             }
         }
 
-        public void GenerateMappedSymbole(MapViewModel mapViewModel)
+        public void GenerateMappedSymbol(MapViewModel mapViewModel)
         {
             MappedCollectionEntity = new ObservableCollection<ISymbolViewModel>(SymbolViewModelProvider.Where(entity => entity.Map == mapViewModel.MapNumber).ToList());
             NotifyOfPropertyChange(() => MappedCollectionEntity);
         }
+
+        public async Task SetMappedSymbols(int selectedMapNumber)
+        {
+            MappedSymbolViewModelProvider.SelectedMapNumber = selectedMapNumber;
+            await Task.Delay(100);
+            await MappedSymbolViewModelProvider.Provider_Initialize();
+        }
+        public void ClearMappedSymbols() => MappedSymbolViewModelProvider.Clear();
+
         #endregion
         #region - Properties -
-        private bool _isVisible;
 
         public bool IsVisible
         {
@@ -241,6 +252,8 @@ namespace Ironwall.Libraries.Map.UI.ViewModels.SymbolCollections
         #endregion
         #region - Attributes -
         private IEventAggregator _eventAggregator;
+        private ILogService _log;
+        private bool _isVisible;
         #endregion
     }
 }

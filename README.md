@@ -386,3 +386,27 @@ protected override IEnumerable<Assembly> SelectAssemblies()
 * Version : v1.0.0  
 * Comment  
     1) 신규 구성 프로젝트 
+
+### Update Date: 2024/07/06
+* 통합 버전으로 관리
+<br>
+
+* Ironwall.Libraries.VMS.UI  
+* Version : v1.0.0  
+* Comment  
+    1) 센서웨이 VMS와 연동하기 위한 UI구성 구현    
+
+<br>
+
+* Ironwall.Libraries.VMS.Common  
+* Version : v1.0.0  
+* Comment  
+    1) 센서웨이 VMS와 연동하기 위한 서비스 및 API 메시지    
+
+### Update Date: 2024/07/06
+* 통합 버전으로 관리
+<br>
+* Version : v1.0.0  
+* Comment 
+    1) ILogService 대부분 라이브러리에 적용   
+    2) TCP 패킷 클래스 및 서비스 수정

@@ -3,6 +3,7 @@ using System;
 using System.Linq;
 using System.Diagnostics;
 using Ironwall.Framework.Models.Maps.Symbols;
+using Ironwall.Libraries.Base.Services;
 
 namespace Ironwall.Libraries.Map.Common.Providers.Models
 {

@@ -106,7 +106,7 @@ namespace Ironwall.Libraries.VMS.Common.Services
             }
             catch (Exception ex)
             {
-                _log.Error($"Task was cancelled in {nameof(BuildSchemeAsync)}: " + ex.Message);
+                _log.Error($"Task was cancelled in {nameof(BuildSchemeAsync)}: " + ex.Message, typeof(VmsDbService));
             }
         }
 
@@ -160,13 +160,13 @@ namespace Ironwall.Libraries.VMS.Common.Services
             }
             catch (TaskCanceledException ex)
             {
-                _log.Error($"Task was cancelled in {nameof(FetchVmsApiSetting)}: " + ex.Message);
+                _log.Error($"Task was cancelled in {nameof(FetchVmsApiSetting)}: " + ex.Message, typeof(VmsDbService));
                 tcs?.SetException(ex);
                 return null;
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchVmsApiSetting)}: " + ex.Message);
+                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchVmsApiSetting)}: " + ex.Message, typeof(VmsDbService));
                 tcs?.SetException(ex);
                 return null;
             }
@@ -194,7 +194,7 @@ namespace Ironwall.Libraries.VMS.Common.Services
                     entities.Add(model);
                     commitResult++;
                 };
-                _log.Info($"({commitResult}) rows was fetched in DB[{table}].", true);
+                _log.Info($"({commitResult}) rows was fetched in DB[{table}].", typeof(VmsDbService));
 
                 tcs?.SetResult(true);
                 return entities;
@@ -202,13 +202,13 @@ namespace Ironwall.Libraries.VMS.Common.Services
             }
             catch (TaskCanceledException ex)
             {
-                _log.Error($"Task was cancelled in {nameof(FetchVmsApiSettings)}: " + ex.Message);
+                _log.Error($"Task was cancelled in {nameof(FetchVmsApiSettings)}: " + ex.Message, typeof(VmsDbService));
                 tcs?.SetException(ex);
                 return null;
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchVmsApiSettings)}: " + ex.Message);
+                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchVmsApiSettings)}: " + ex.Message, typeof(VmsDbService));
                 tcs?.SetException(ex);
                 return null;
             }
@@ -244,7 +244,7 @@ namespace Ironwall.Libraries.VMS.Common.Services
                     VALUES
                     (@Id, @ApiAddress, @ApiPort, @Username, @Password)", model);
 
-                    _log.Info($"({commitResult}) rows was updated in DB[{table}] : {model}");
+                    _log.Info($"({commitResult}) rows was updated in DB[{table}] : {model}", typeof(VmsDbService));
 
                     var fetchedModel = await FetchVmsApiSetting(model);
                     if (fetchedModel == null) throw new Exception($"Fail to fetch an entity({model.ApiAddress}:{model.ApiPort}) from {table}");
@@ -254,13 +254,13 @@ namespace Ironwall.Libraries.VMS.Common.Services
                 }
                 catch (TaskCanceledException ex)
                 {
-                    _log.Error($"Task was cancelled in {nameof(SaveVmsApiSetting)}: " + ex.Message);
+                    _log.Error($"Task was cancelled in {nameof(SaveVmsApiSetting)}: " + ex.Message, typeof(VmsDbService));
                     tcs?.SetException(ex);
                     return null;
                 }
                 catch (Exception ex)
                 {
-                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(SaveVmsApiSetting)}: " + ex.Message);
+                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(SaveVmsApiSetting)}: " + ex.Message, typeof(VmsDbService));
                     tcs?.SetException(ex);
                     return null;
                 }
@@ -288,7 +288,7 @@ namespace Ironwall.Libraries.VMS.Common.Services
                     {
                         commitResult = await _conn.ExecuteAsync($@"DELETE FROM {table}");
 
-                        _log.Info($"DELETE {table} for saving new Data in DB");
+                        _log.Info($"DELETE {table} for saving new Data in DB", typeof(VmsDbService));
                         if (!(commitResult > 0))
                             throw new Exception($"Raised exception during deleting Table({table}).");
                     }
@@ -307,18 +307,18 @@ namespace Ironwall.Libraries.VMS.Common.Services
                         // 트랜잭션 커밋
                         transaction.Commit();
                     }
-                    _log.Info($"{nameof(VmsApiModel)} was inserted in DB[{table}] : {commitResult}ea");
+                    _log.Info($"{nameof(VmsApiModel)} was inserted in DB[{table}] : {commitResult}ea", typeof(VmsDbService));
 
                     tcs?.SetResult(true);
                 }
                 catch (TaskCanceledException ex)
                 {
-                    _log.Error($"Task was cancelled in {nameof(SaveVmsApiSettings)}: " + ex.Message);
+                    _log.Error($"Task was cancelled in {nameof(SaveVmsApiSettings)}: " + ex.Message, typeof(VmsDbService));
                     tcs?.SetException(ex);
                 }
                 catch (Exception ex)
                 {
-                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(SaveVmsApiSettings)}: " + ex.Message);
+                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(SaveVmsApiSettings)}: " + ex.Message, typeof(VmsDbService));
                     tcs?.SetException(ex);
                 }
             });
@@ -346,17 +346,17 @@ namespace Ironwall.Libraries.VMS.Common.Services
                                                                   password = @Password
                                                               WHERE Id = @Id", model);
 
-                    _log.Info($"({commitResult}) rows was updated in DB[{table}] : {model}", true);
+                    _log.Info($"({commitResult}) rows was updated in DB[{table}] : {model}", typeof(VmsDbService));
                     tcs?.SetResult(true);
                 }
                 catch (TaskCanceledException ex)
                 {
-                    _log.Error($"Task was cancelled in {nameof(UpdateVmsApiSetting)}: " + ex.Message, true);
+                    _log.Error($"Task was cancelled in {nameof(UpdateVmsApiSetting)}: " + ex.Message, typeof(VmsDbService));
                     tcs?.SetException(ex);
                 }
                 catch (Exception ex)
                 {
-                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(UpdateVmsApiSetting)}: " + ex.Message, true);
+                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(UpdateVmsApiSetting)}: " + ex.Message, typeof(VmsDbService));
                     tcs?.SetException(ex);
                 }
             });
@@ -382,12 +382,12 @@ namespace Ironwall.Libraries.VMS.Common.Services
                 }
                 catch (TaskCanceledException ex)
                 {
-                    _log.Error($"Task was cancelled in {nameof(DeleteVmsApiSetting)}: " + ex.Message, true);
+                    _log.Error($"Task was cancelled in {nameof(DeleteVmsApiSetting)}: " + ex.Message, typeof(VmsDbService));
                     tcs?.SetException(ex);
                 }
                 catch (Exception ex)
                 {
-                    _log.Error($"Raised Exception for Task to delete DB data in {nameof(DeleteVmsApiSetting)}: " + ex.Message, true);
+                    _log.Error($"Raised Exception for Task to delete DB data in {nameof(DeleteVmsApiSetting)}: " + ex.Message, typeof(VmsDbService));
                     tcs?.SetException(ex);
                 }
             });
@@ -421,13 +421,13 @@ namespace Ironwall.Libraries.VMS.Common.Services
             }
             catch (TaskCanceledException ex)
             {
-                _log.Error($"Task was cancelled in {nameof(FetchVmsApiMapping)}: " + ex.Message);
+                _log.Error($"Task was cancelled in {nameof(FetchVmsApiMapping)}: " + ex.Message, typeof(VmsDbService));
                 tcs?.SetException(ex);
                 return null;
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchVmsApiMapping)}: " + ex.Message);
+                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchVmsApiMapping)}: " + ex.Message, typeof(VmsDbService));
                 tcs?.SetException(ex);
                 return null;
             }
@@ -455,7 +455,7 @@ namespace Ironwall.Libraries.VMS.Common.Services
                     entities.Add(model);
                     commitResult++;
                 };
-                _log.Info($"({commitResult}) rows was fetched in DB[{table}].", true);
+                _log.Info($"({commitResult}) rows was fetched in DB[{table}].", typeof(VmsDbService));
 
                 tcs?.SetResult(true);
                 return entities;
@@ -463,13 +463,13 @@ namespace Ironwall.Libraries.VMS.Common.Services
             }
             catch (TaskCanceledException ex)
             {
-                _log.Error($"Task was cancelled in {nameof(FetchVmsApiMappings)}: " + ex.Message);
+                _log.Error($"Task was cancelled in {nameof(FetchVmsApiMappings)}: " + ex.Message, typeof(VmsDbService));
                 tcs?.SetException(ex);
                 return null;
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchVmsApiMappings)}: " + ex.Message);
+                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchVmsApiMappings)}: " + ex.Message, typeof(VmsDbService));
                 tcs?.SetException(ex);
                 return null;
             }
@@ -505,7 +505,7 @@ namespace Ironwall.Libraries.VMS.Common.Services
                     VALUES
                     (@Id, @ApiAddress, @ApiPort, @Username, @Password)", model);
 
-                    _log.Info($"({commitResult}) rows was updated in DB[{table}] : {model}");
+                    _log.Info($"({commitResult}) rows was updated in DB[{table}] : {model}", typeof(VmsDbService));
 
                     var fetchedModel = await FetchVmsApiMapping(model);
                     if (fetchedModel == null) throw new Exception($"Fail to fetch an entity({model.GroupNumber}) from {table}");
@@ -515,13 +515,13 @@ namespace Ironwall.Libraries.VMS.Common.Services
                 }
                 catch (TaskCanceledException ex)
                 {
-                    _log.Error($"Task was cancelled in {nameof(SaveVmsApiMapping)}: " + ex.Message);
+                    _log.Error($"Task was cancelled in {nameof(SaveVmsApiMapping)}: " + ex.Message, typeof(VmsDbService));
                     tcs?.SetException(ex);
                     return null;
                 }
                 catch (Exception ex)
                 {
-                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(SaveVmsApiMapping)}: " + ex.Message);
+                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(SaveVmsApiMapping)}: " + ex.Message, typeof(VmsDbService));
                     tcs?.SetException(ex);
                     return null;
                 }
@@ -549,7 +549,7 @@ namespace Ironwall.Libraries.VMS.Common.Services
                     {
                         commitResult = await _conn.ExecuteAsync($@"DELETE FROM {table}");
 
-                        _log.Info($"DELETE {table} for saving new Data in DB");
+                        _log.Info($"DELETE {table} for saving new Data in DB", typeof(VmsDbService));
                         if (!(commitResult > 0))
                             throw new Exception($"Raised exception during deleting Table({table}).");
                     }
@@ -568,18 +568,18 @@ namespace Ironwall.Libraries.VMS.Common.Services
                         // 트랜잭션 커밋
                         transaction.Commit();
                     }
-                    _log.Info($"{nameof(VmsMappingModel)} was inserted in DB[{table}] : {commitResult}ea");
+                    _log.Info($"{nameof(VmsMappingModel)} was inserted in DB[{table}] : {commitResult}ea", typeof(VmsDbService));
 
                     tcs?.SetResult(true);
                 }
                 catch (TaskCanceledException ex)
                 {
-                    _log.Error($"Task was cancelled in {nameof(SaveVmsApiMappings)}: " + ex.Message);
+                    _log.Error($"Task was cancelled in {nameof(SaveVmsApiMappings)}: " + ex.Message, typeof(VmsDbService));
                     tcs?.SetException(ex);
                 }
                 catch (Exception ex)
                 {
-                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(SaveVmsApiMappings)}: " + ex.Message);
+                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(SaveVmsApiMappings)}: " + ex.Message, typeof(VmsDbService));
                     tcs?.SetException(ex);
                 }
             });
@@ -606,17 +606,17 @@ namespace Ironwall.Libraries.VMS.Common.Services
                                                                   status = @Status
                                                               WHERE Id = @Id", model);
 
-                    _log.Info($"({commitResult}) rows was updated in DB[{table}] : {model}", true);
+                    _log.Info($"({commitResult}) rows was updated in DB[{table}] : {model}", typeof(VmsDbService));
                     tcs?.SetResult(true);
                 }
                 catch (TaskCanceledException ex)
                 {
-                    _log.Error($"Task was cancelled in {nameof(UpdateVmsApiMapping)}: " + ex.Message, true);
+                    _log.Error($"Task was cancelled in {nameof(UpdateVmsApiMapping)}: " + ex.Message, typeof(VmsDbService));
                     tcs?.SetException(ex);
                 }
                 catch (Exception ex)
                 {
-                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(UpdateVmsApiMapping)}: " + ex.Message, true);
+                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(UpdateVmsApiMapping)}: " + ex.Message, typeof(VmsDbService));
                     tcs?.SetException(ex);
                 }
             });
@@ -642,12 +642,12 @@ namespace Ironwall.Libraries.VMS.Common.Services
                 }
                 catch (TaskCanceledException ex)
                 {
-                    _log.Error($"Task was cancelled in {nameof(DeleteVmsApiMapping)}: " + ex.Message, true);
+                    _log.Error($"Task was cancelled in {nameof(DeleteVmsApiMapping)}: " + ex.Message, typeof(VmsDbService));
                     tcs?.SetException(ex);
                 }
                 catch (Exception ex)
                 {
-                    _log.Error($"Raised Exception for Task to delete DB data in {nameof(DeleteVmsApiMapping)}: " + ex.Message, true);
+                    _log.Error($"Raised Exception for Task to delete DB data in {nameof(DeleteVmsApiMapping)}: " + ex.Message, typeof(VmsDbService));
                     tcs?.SetException(ex);
                 }
             });
@@ -686,13 +686,13 @@ namespace Ironwall.Libraries.VMS.Common.Services
             }
             catch (TaskCanceledException ex)
             {
-                _log.Error($"Task was cancelled in {nameof(FetchVmsApiSensor)}: " + ex.Message);
+                _log.Error($"Task was cancelled in {nameof(FetchVmsApiSensor)}: " + ex.Message, typeof(VmsDbService));
                 tcs?.SetException(ex);
                 return null;
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchVmsApiSensor)}: " + ex.Message);
+                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchVmsApiSensor)}: " + ex.Message, typeof(VmsDbService));
                 tcs?.SetException(ex);
                 return null;
             }
@@ -722,7 +722,7 @@ namespace Ironwall.Libraries.VMS.Common.Services
                     entities.Add(new VmsSensorModel(model.Id, model.GroupNumber, device, EnumHelper.SetStatusType(model.Status)));
                     commitResult++;
                 };
-                _log.Info($"({commitResult}) rows was fetched in DB[{table}].", true);
+                _log.Info($"({commitResult}) rows was fetched in DB[{table}].", typeof(VmsDbService));
 
                 tcs?.SetResult(true);
                 return entities;
@@ -730,13 +730,13 @@ namespace Ironwall.Libraries.VMS.Common.Services
             }
             catch (TaskCanceledException ex)
             {
-                _log.Error($"Task was cancelled in {nameof(FetchVmsApiSensors)}: " + ex.Message);
+                _log.Error($"Task was cancelled in {nameof(FetchVmsApiSensors)}: " + ex.Message, typeof(VmsDbService));
                 tcs?.SetException(ex);
                 return null;
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchVmsApiSensors)}: " + ex.Message);
+                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchVmsApiSensors)}: " + ex.Message, typeof(VmsDbService));
                 tcs?.SetException(ex);
                 return null;
             }
@@ -770,7 +770,7 @@ namespace Ironwall.Libraries.VMS.Common.Services
                     VALUES
                     (@Id, @GroupNumber, @Device, @Status)", mapper);
 
-                    _log.Info($"({commitResult}) rows was updated in DB[{table}] : {model}");
+                    _log.Info($"({commitResult}) rows was updated in DB[{table}] : {model}", typeof(VmsDbService));
 
                     var fetchedModel = await FetchVmsApiSensor(model);
                     if (fetchedModel == null) throw new Exception($"Fail to fetch an entity({model.GroupNumber}) from {table}");
@@ -780,13 +780,13 @@ namespace Ironwall.Libraries.VMS.Common.Services
                 }
                 catch (TaskCanceledException ex)
                 {
-                    _log.Error($"Task was cancelled in {nameof(SaveVmsApiSensor)}: " + ex.Message);
+                    _log.Error($"Task was cancelled in {nameof(SaveVmsApiSensor)}: " + ex.Message, typeof(VmsDbService));
                     tcs?.SetException(ex);
                     return null;
                 }
                 catch (Exception ex)
                 {
-                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(SaveVmsApiSensor)}: " + ex.Message);
+                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(SaveVmsApiSensor)}: " + ex.Message, typeof(VmsDbService));
                     tcs?.SetException(ex);
                     return null;
                 }
@@ -810,7 +810,7 @@ namespace Ironwall.Libraries.VMS.Common.Services
                     {
                         commitResult = await _conn.ExecuteAsync($@"DELETE FROM {table}");
 
-                        _log.Info($"DELETE {table} for saving new Data in DB");
+                        _log.Info($"DELETE {table} for saving new Data in DB", typeof(VmsDbService));
                         if (!(commitResult > 0))
                             throw new Exception($"Raised exception during deleting Table({table}).");
                     }
@@ -832,18 +832,18 @@ namespace Ironwall.Libraries.VMS.Common.Services
                         // 트랜잭션 커밋
                         transaction.Commit();
                     }
-                    _log.Info($"{nameof(VmsSensorModel)} was inserted in DB[{table}] : {commitResult}ea");
+                    _log.Info($"{nameof(VmsSensorModel)} was inserted in DB[{table}] : {commitResult}ea", typeof(VmsDbService));
 
                     tcs?.SetResult(true);
                 }
                 catch (TaskCanceledException ex)
                 {
-                    _log.Error($"Task was cancelled in {nameof(SaveVmsApiSensors)}: " + ex.Message);
+                    _log.Error($"Task was cancelled in {nameof(SaveVmsApiSensors)}: " + ex.Message, typeof(VmsDbService));
                     tcs?.SetException(ex);
                 }
                 catch (Exception ex)
                 {
-                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(SaveVmsApiSensors)}: " + ex.Message);
+                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(SaveVmsApiSensors)}: " + ex.Message, typeof(VmsDbService));
                     tcs?.SetException(ex);
                 }
             });
@@ -867,17 +867,17 @@ namespace Ironwall.Libraries.VMS.Common.Services
                                                                   status = @Status
                                                               WHERE Id = @Id", model);
 
-                    _log.Info($"({commitResult}) rows was updated in DB[{table}] : {model}", true);
+                    _log.Info($"({commitResult}) rows was updated in DB[{table}] : {model}", typeof(VmsDbService));
                     tcs?.SetResult(true);
                 }
                 catch (TaskCanceledException ex)
                 {
-                    _log.Error($"Task was cancelled in {nameof(UpdateVmsApiSensor)}: " + ex.Message, true);
+                    _log.Error($"Task was cancelled in {nameof(UpdateVmsApiSensor)}: " + ex.Message, typeof(VmsDbService));
                     tcs?.SetException(ex);
                 }
                 catch (Exception ex)
                 {
-                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(UpdateVmsApiSensor)}: " + ex.Message, true);
+                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(UpdateVmsApiSensor)}: " + ex.Message, typeof(VmsDbService));
                     tcs?.SetException(ex);
                 }
             });
@@ -899,12 +899,12 @@ namespace Ironwall.Libraries.VMS.Common.Services
                 }
                 catch (TaskCanceledException ex)
                 {
-                    _log.Error($"Task was cancelled in {nameof(DeleteVmsApiSensor)}: " + ex.Message, true);
+                    _log.Error($"Task was cancelled in {nameof(DeleteVmsApiSensor)}: " + ex.Message, typeof(VmsDbService));
                     tcs?.SetException(ex);
                 }
                 catch (Exception ex)
                 {
-                    _log.Error($"Raised Exception for Task to delete DB data in {nameof(DeleteVmsApiSensor)}: " + ex.Message, true);
+                    _log.Error($"Raised Exception for Task to delete DB data in {nameof(DeleteVmsApiSensor)}: " + ex.Message, typeof(VmsDbService));
                     tcs?.SetException(ex);
                 }
             });
@@ -943,7 +943,7 @@ namespace Ironwall.Libraries.VMS.Common.Services
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised Exception for Task to insert DB data in {nameof(DeleteRecordOrTable)}: " + ex.Message);
+                _log.Error($"Raised Exception for Task to insert DB data in {nameof(DeleteRecordOrTable)}: " + ex.Message, typeof(VmsDbService));
             }
 
             return Task.CompletedTask;
@@ -962,7 +962,7 @@ namespace Ironwall.Libraries.VMS.Common.Services
             }
             else
             {
-                _log.Info($"No data from {table}");
+                _log.Info($"No data from {table}", typeof(VmsDbService));
             }
         }
 
@@ -982,7 +982,7 @@ namespace Ironwall.Libraries.VMS.Common.Services
             }
             else
             {
-                _log.Info($"Not Exist for Matched ID({id})");
+                _log.Info($"Not Exist for Matched ID({id})", typeof(VmsDbService));
             }
         }
         #endregion

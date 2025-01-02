@@ -9,9 +9,16 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Components
 {
     public abstract class EventVisitor
     {
+
+        protected EventVisitor()
+        {
+            _class = this.GetType();
+        }
+
         public abstract void Visit(PreIntrusionEventViewModel viewModel, ActionEventModel actionModel);
         public abstract void Visit(PreFaultEventViewModel viewModel, ActionEventModel actionModel);
-        //abstract void Visit(PostIntrusionEventViewModel viewModel);
-        //abstract void Visit(PostFaultEventViewModel viewModel);
+        
+
+        protected Type _class;
     }
 }

@@ -71,7 +71,7 @@ namespace Ironwall.Libraries.Map.UI.Providers.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception in {nameof(Provider_Initialize)}({ClassName}) : {ex.Message}");
+                    _log.Error($"Raised Exception in {nameof(Provider_Initialize)}({ClassName}) : {ex.Message}");
                     return false;
                 }
             });
@@ -88,7 +88,7 @@ namespace Ironwall.Libraries.Map.UI.Providers.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception in {nameof(Provider_Insert)}({ClassName}) : {ex.Message}");
+                    _log.Error($"Raised Exception in {nameof(Provider_Insert)}({ClassName}) : {ex.Message}");
                     return false;
                 }
 
@@ -111,7 +111,7 @@ namespace Ironwall.Libraries.Map.UI.Providers.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception in {nameof(Provider_Update)}({ClassName}) : {ex.Message}");
+                    _log.Error($"Raised Exception in {nameof(Provider_Update)}({ClassName}) : {ex.Message}");
                     return false;
                 }
                 return true;
@@ -130,7 +130,7 @@ namespace Ironwall.Libraries.Map.UI.Providers.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception in {nameof(Provider_Delete)}({ClassName}) : {ex.Message}");
+                    _log.Error($"Raised Exception in {nameof(Provider_Delete)}({ClassName}) : {ex.Message}");
                     return false;
                 }
                 return true;

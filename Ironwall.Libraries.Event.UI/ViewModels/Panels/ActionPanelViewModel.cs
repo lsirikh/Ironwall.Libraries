@@ -38,9 +38,8 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Panels
         #region - Ctors -
         public ActionPanelViewModel(ILogService log
                                     , IEventAggregator eventAggregator
-                                    ) : base(eventAggregator)
+                                    ) : base(eventAggregator, log)
         {
-            _log = log;
         }
         #endregion
         #region - Implementation of Interface -
@@ -110,7 +109,7 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Panels
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised Exception in {nameof(ClickSearch)}({nameof(ActionPanelViewModel)}) : " + ex.Message);
+                _log.Error($"Raised Exception in {nameof(ClickSearch)}({nameof(ActionPanelViewModel)}) : " + ex.Message, _class);
             }
         }
         public bool CanClickCancel => true;
@@ -157,7 +156,6 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Panels
         #endregion
         #region - Attributes -
         private ActionEventProvider _actionProvider;
-        private ILogService _log;
         #endregion
     }
 }

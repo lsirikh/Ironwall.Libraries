@@ -41,9 +41,9 @@ namespace Ironwall.Libraries.Map.UI.ViewModels.Symbols
         #region - Implementation of Interface -
         #endregion
         #region - Overrides -
-        public override void OnLoaded(object sender, SizeChangedEventArgs e)
+        public override void OnLoaded(object sender, RoutedEventArgs args)
         {
-            base.OnLoaded(sender, e);
+            base.OnLoaded(sender, args);
             Refresh();
         }
         public override void Dispose()

@@ -4,6 +4,9 @@ using log4net.Layout;
 using log4net.Repository.Hierarchy;
 using log4net;
 using System.Diagnostics;
+using System.Runtime.Remoting.Messaging;
+using System.Threading.Tasks;
+using System;
 
 namespace Ironwall.Libraries.Base.Services
 {
@@ -84,33 +87,90 @@ namespace Ironwall.Libraries.Base.Services
 #endif
         }
 
-        public void Info(string msg, bool debug = false)
+        public void Info(string msg, Type type = default, bool debug = false)
         {
-            if (debug)
-                Debug.WriteLine(msg);
-            _iLog.Info(msg);
+            if(type == null)
+                type = new StackFrame(1).GetMethod().DeclaringType;
+            Log(msg, type, Level.Info, debug);
         }
 
-        public void Warning(string msg, bool debug = false)
+        public void Warning(string msg, Type type = default, bool debug = false)
         {
-            if (debug)
-                Debug.WriteLine(msg);
-            _iLog.Warn(msg);
+            if (type == null)
+                type = new StackFrame(1).GetMethod().DeclaringType;
+            Log(msg, type, Level.Warn, debug);
         }
 
-        public void Error(string msg, bool debug = false)
+        public void Error(string msg, Type type = default, bool debug = false)
+        {
+            if (type == null)
+                type = new StackFrame(1).GetMethod().DeclaringType;
+            Log(msg, type, Level.Error, debug);
+        }
+
+        private void Log(string msg, Type type = default, Level level = default, bool debug = false)
         {
             if (debug)
                 Debug.WriteLine(msg);
-            _iLog.Error(msg);
+
+            // 호출자의 Logger를 동적으로 생성
+            var dynamicLogger = LogManager.GetLogger(type);
+            dynamicLogger.Logger.Log(type, level, msg, null);
+
+            OnLogEvent(new LogEventArgs(msg, level));
+        }
+
+        private void OnLogEvent(LogEventArgs e)
+        {
+            if (LogEvent != null)
+            {
+                foreach (var handler in LogEvent.GetInvocationList())
+                {
+                    var eventHandler = (EventHandler<LogEventArgs>)handler;
+                    Task.Run(() => eventHandler.Invoke(this, e));
+                }
+            }
+        }
+
+        private void eventData(IAsyncResult ar)
+        {
+            try
+            {
+                var del = (EventHandler<LogEventArgs>)((AsyncResult)ar).AsyncDelegate;
+                del.EndInvoke(ar); // 비동기 호출 완료 대기 및 결과 처리
+            }
+            catch (TaskCanceledException)
+            {
+                // 작업이 정상적으로 취소됨
+                // 로그 또는 추가 처리가 필요하지 않을 수 있음
+            }
+            catch (Exception ex)
+            {
+                // 다른 예외 처리
+                _iLog.Error($"Raised {nameof(Exception)} in {nameof(eventData)} of {nameof(LogService)} : {ex.Message}");
+            }
         }
         #endregion
         #region - IHanldes -
         #endregion
         #region - Properties -
+
         #endregion
         #region - Attributes -
+        public event EventHandler<LogEventArgs> LogEvent;
         private ILog _iLog;
         #endregion
+    }
+
+    public class LogEventArgs : EventArgs
+    {
+        public LogEventArgs(string message, Level level)
+        {
+            Message = message;
+            LogLevel = level;
+        }
+
+        public string Message { get; }
+        public Level LogLevel { get; }
     }
 }

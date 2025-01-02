@@ -38,10 +38,9 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Setups
         #region - Ctors -
         public CameraMappingSetupViewModel(IEventAggregator eventAggregator
                                         , ILogService log)
-                                            : base(eventAggregator)
+                                            : base(eventAggregator, log)
         {
             ViewModelProvider = new ObservableCollection<CameraMappingViewModel>();
-            _log = log;
         }
 
         #endregion
@@ -53,8 +52,8 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Setups
         {
             await base.OnActivateAsync(cancellationToken);
 
-            _ = DataInitialize(_cancellationTokenSource.Token);
-
+            //_ = DataInitialize(_cancellationTokenSource.Token);
+            await DataInitialize(_cancellationTokenSource.Token).ConfigureAwait(false);
         }
 
         protected override async Task Uninitialize()
@@ -105,11 +104,11 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Setups
             catch (TaskCanceledException ex)
             {
                 await _eventAggregator.PublishOnUIThreadAsync(new ClosePopupMessageModel());
-                _log.Error($"Rasied {nameof(TaskCanceledException)}({nameof(OnClickSaveButton)} in {ClassName}): {ex.Message}");
+                _log.Error($"Rasied {nameof(TaskCanceledException)}({nameof(OnClickSaveButton)} in {ClassName}): {ex.Message}", _class);
             }
             catch (Exception ex)
             {
-                _log.Error($"Rasied {nameof(Exception)}({nameof(OnClickSaveButton)} in {ClassName}): {ex.Message}");
+                _log.Error($"Rasied {nameof(Exception)}({nameof(OnClickSaveButton)} in {ClassName}): {ex.Message}", _class);
                 var explain = ex.Message;
 
                 await _eventAggregator.PublishOnUIThreadAsync(new OpenInfoPopupMessageModel
@@ -140,11 +139,11 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Setups
             catch (TaskCanceledException ex)
             {
                 await _eventAggregator.PublishOnUIThreadAsync(new ClosePopupMessageModel());
-                _log.Error($"Rasied {nameof(TaskCanceledException)}({nameof(OnClickReloadButton)} in {ClassName}): {ex.Message}");
+                _log.Error($"Rasied {nameof(TaskCanceledException)}({nameof(OnClickReloadButton)} in {ClassName}): {ex.Message}", _class);
             }
             catch (Exception ex)
             {
-                _log.Error($"Rasied {nameof(Exception)}({nameof(OnClickReloadButton)} in {ClassName}): {ex.Message}");
+                _log.Error($"Rasied {nameof(Exception)}({nameof(OnClickReloadButton)} in {ClassName}): {ex.Message}", _class);
                 var explain = ex.Message;
 
                 await _eventAggregator.PublishOnUIThreadAsync(new OpenInfoPopupMessageModel
@@ -160,12 +159,12 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Setups
         #region - Processes -
         private Task DataInitialize(CancellationToken cancellationToken = default)
         {
-            return Task.Run(async () =>
+            return Task.Run(() =>
             {
                 try
                 {
                     IsVisible = false;
-                    await Task.Delay(500, cancellationToken);
+                    //await Task.Delay(1000, cancellationToken);
                     
                     //ViewModelProvider Setting
                     if (cancellationToken.IsCancellationRequested) new TaskCanceledException("Task was cancelled!");
@@ -184,13 +183,14 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Setups
 
                     }));
                     NotifyOfPropertyChange(() => ViewModelProvider);
-                    
-                    await Task.Delay(500, cancellationToken);
-                    IsVisible = true;
                 }
                 catch (TaskCanceledException ex)
                 {
-                    _log.Error($"Raised {nameof(TaskCanceledException)}({nameof(DataInitialize)} in {ClassName}) : {ex.Message}");
+                    _log.Error($"Raised {nameof(TaskCanceledException)}({nameof(DataInitialize)} in {ClassName}) : {ex.Message}", _class);
+                }
+                finally
+                {
+                    IsVisible = true;
                 }
                 
             }, cancellationToken);
@@ -251,7 +251,6 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Setups
         #endregion
         #region - Attributes -
         public MappingViewModelProvider _provider;
-        private ILogService _log;
         #endregion
     }
 }

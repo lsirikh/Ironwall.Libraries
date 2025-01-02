@@ -3,6 +3,7 @@ using Ironwall.Framework.DataProviders;
 using Ironwall.Framework.Models;
 using Ironwall.Framework.Models.Accounts;
 using Ironwall.Libraries.Base.DataProviders;
+using Ironwall.Libraries.Base.Services;
 using Ironwall.Libraries.Enums;
 using System;
 using System.Collections.Generic;
@@ -19,8 +20,8 @@ namespace Ironwall.Framework.ViewModels.ConductorViewModels
         : BaseViewModel
     {
         #region - Ctors -
-        public UserBasePanelViewModel(IEventAggregator eventAggregator)
-            : base(eventAggregator)
+        public UserBasePanelViewModel(IEventAggregator eventAggregator, ILogService log)
+            : base(eventAggregator, log)
         {
             #region - Settings -
             ClassCategory = CategoryEnum.PANEL_SHELL_VM_ITEM;
@@ -30,9 +31,10 @@ namespace Ironwall.Framework.ViewModels.ConductorViewModels
 
         public UserBasePanelViewModel(
             IEventAggregator eventAggregator
+            , ILogService log
             , IUserModel model
             , ILoginSessionModel loginSessionModel
-            ) : base(eventAggregator)
+            ) : base(eventAggregator, log)
         {
             #region - Settings -
             ClassCategory = CategoryEnum.PANEL_SHELL_VM_ITEM;

@@ -43,13 +43,16 @@ namespace Ironwall.Libraries.Map.Common.Providers.Models
                 try
                 {
                     Clear();
-                    foreach (SymbolModel item in _provider
-                    .Where(entity => entity.TypeShape == (int)EnumShapeType.ELLIPSE)
-                    .ToList())
+                    foreach (var item in _provider
+                                        .OfType<IShapeSymbolModel>() // 타입 필터링
+                                        .Where(entity => entity.TypeShape == (int)EnumShapeType.ELLIPSE)
+                                        .ToList())
                     {
                         isValid = true;
-                        Add(item as IShapeSymbolModel);
+                        Add(item);
                     }
+
+                    _log.Info($"{nameof(SymbolModel)}s of {nameof(EnumShapeType.ELLIPSE)} were inserted to {nameof(EllipseShapeProvider)}");
                 }
                 catch (Exception ex)
                 {

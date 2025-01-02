@@ -48,10 +48,12 @@ namespace Ironwall.Libraries.VMS.Common.Services
             {
                 Converters = new List<JsonConverter> { new StringEnumConverter() }
             };
+
+            _class = typeof(VmsApiService);
         }
         #endregion
         #region - Implementation of Interface -
-        public async Task ExecuteAsync(CancellationToken token = default)
+        public Task ExecuteAsync(CancellationToken token = default)
         {
             try
             {
@@ -66,9 +68,9 @@ namespace Ironwall.Libraries.VMS.Common.Services
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised {nameof(Exception)} in {nameof(ExecuteAsync)} of {nameof(VmsApiService)} : {ex.Message}");
+                _log.Error($"Raised {nameof(Exception)} in {nameof(ExecuteAsync)} of {nameof(VmsApiService)} : {ex.Message}", _class);
             }
-            //return Task.CompletedTask;
+            return Task.CompletedTask;
 
         }
 
@@ -85,7 +87,7 @@ namespace Ironwall.Libraries.VMS.Common.Services
         {
             try
             {
-                _log.Info("Monitoring Server was tried to refresh Vms Api session token.");
+                _log.Info("Monitoring Server was tried to refresh Vms Api session token.", _class);
                 await ApiKeepAliveProcess();
             }
             catch (Exception)
@@ -120,7 +122,7 @@ namespace Ironwall.Libraries.VMS.Common.Services
                         var user = response.Body;
                         UpdateSessionModel(user);
 
-                        _log.Info(json);
+                        _log.Info(json, _class);
 
                         Status = EnumVmsStatus.LOGIN;
 
@@ -129,7 +131,7 @@ namespace Ironwall.Libraries.VMS.Common.Services
                     }
                     catch (Exception ex)
                     {
-                        _log.Error($"Failed to execute {nameof(ApiLoginProcess)}(Try:{processTry++}) : {ex.Message} ");
+                        _log.Error($"Failed to execute {nameof(ApiLoginProcess)}(Try:{processTry++}) : {ex.Message}", _class);
                         await Task.Delay(TIMEDELAY_MS);
                     }
                 }
@@ -158,14 +160,14 @@ namespace Ironwall.Libraries.VMS.Common.Services
                         var response = JsonConvert.DeserializeObject<LogoutUserResponse>(json, _settings);
                         if (response == null || response.Success != true) throw new Exception($"Vms Api {nameof(LogoutUserResponse)} was failed for the reason({response.Message})");
                         UpdateSessionModel(null);
-                        _log.Info(json);
+                        _log.Info(json, _class);
 
                         Status = EnumVmsStatus.LOGOUT;
                         SetTimerStop();
                     }
                     catch (Exception ex)
                     {
-                        _log.Error($"Failed to execute {nameof(ApiLogoutProcess)}(Try:{processTry++}) : {ex.Message} ");
+                        _log.Error($"Failed to execute {nameof(ApiLogoutProcess)}(Try:{processTry++}) : {ex.Message}", _class);
                         await Task.Delay(TIMEDELAY_MS);
 
                     }
@@ -195,13 +197,13 @@ namespace Ironwall.Libraries.VMS.Common.Services
                         if (response == null || response.Success != true) throw new Exception($"Vms Api KeepAlive was failed for the reason({response.Message})");
                         var user = response.Body;
                         UpdateSessionModel(user);
-                        _log.Info(json);
+                        _log.Info(json, _class);
 
                         isSuccess = true;
                     }
                     catch (Exception ex)
                     {
-                        _log.Error($"Failed to execute {nameof(ApiLogoutProcess)}(Try:{processTry++}) : {ex.Message} ");
+                        _log.Error($"Failed to execute {nameof(ApiLogoutProcess)}(Try:{processTry++}) : {ex.Message}", _class);
                         await Task.Delay(TIMEDELAY_MS);
 
                     }
@@ -236,13 +238,13 @@ namespace Ironwall.Libraries.VMS.Common.Services
                             _eventProvider.Add(item);
                         }
 
-                        _log.Info(json);
+                        _log.Info(json, _class);
 
                         isSuccess = true;
                     }
                     catch (Exception ex)
                     {
-                        _log.Error($"Failed to execute {nameof(ApiLogoutProcess)}(Try:{processTry++}) : {ex.Message} ");
+                        _log.Error($"Failed to execute {nameof(ApiLogoutProcess)}(Try:{processTry++}) : {ex.Message}", _class);
                         await Task.Delay(TIMEDELAY_MS);
 
                     }
@@ -271,13 +273,13 @@ namespace Ironwall.Libraries.VMS.Common.Services
                         var response = JsonConvert.DeserializeObject<ActEventResponse>(json, _settings);
                         if (response == null || response.Success != true) throw new Exception($"Vms Api {nameof(GetEventListResponse)} was failed for the reason({response.Message})");
 
-                        _log.Info(json);
+                        _log.Info(json, _class);
 
                         isSuccess = true;
                     }
                     catch (Exception ex)
                     {
-                        _log.Error($"Failed to execute {nameof(ApiLogoutProcess)}(Try:{processTry++}) : {ex.Message} ");
+                        _log.Error($"Failed to execute {nameof(ApiLogoutProcess)}(Try:{processTry++}) : {ex.Message}", _class);
                         await Task.Delay(TIMEDELAY_MS);
 
                     }
@@ -426,7 +428,7 @@ namespace Ironwall.Libraries.VMS.Common.Services
                 }
                 else if (response.StatusCode == HttpStatusCode.Unauthorized)
                 {
-                    _log?.Info($"Api account was not authorized![{response?.ReasonPhrase}]");
+                    _log?.Info($"Api account was not authorized![{response?.ReasonPhrase}]", _class);
                     body = await response?.Content?.ReadAsStringAsync();
 
                     tcs?.SetResult(false);
@@ -434,7 +436,7 @@ namespace Ironwall.Libraries.VMS.Common.Services
                 }
                 else if (response.StatusCode == HttpStatusCode.BadRequest)
                 {
-                    _log?.Info($"Api Connection was failure![{response?.ReasonPhrase}]");
+                    _log?.Info($"Api Connection was failure![{response?.ReasonPhrase}]", _class);
                     body = await response?.Content?.ReadAsStringAsync();
 
                     tcs?.SetResult(false);
@@ -461,12 +463,13 @@ namespace Ironwall.Libraries.VMS.Common.Services
         public EnumVmsStatus Status { get; private set; }
         #endregion
         #region - Attributes -
-        private ILogService _log;
-        private IVmsDbService _dbService;
-        private IApiService _apiService;
-        private LoginSessionModel _sessionModel;
-        private VmsEventProvider _eventProvider;
-        private JsonSerializerSettings _settings;
+        private readonly ILogService _log;
+        private readonly IVmsDbService _dbService;
+        private readonly IApiService _apiService;
+        private readonly LoginSessionModel _sessionModel;
+        private readonly VmsEventProvider _eventProvider;
+        private readonly JsonSerializerSettings _settings;
+        private readonly Type _class;
         private const int TIMEDELAY_MS = 3000;
         #endregion
 

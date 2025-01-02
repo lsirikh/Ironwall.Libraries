@@ -7,6 +7,7 @@ using System.Threading;
 using System.Windows;
 using System;
 using System.Windows.Controls;
+using Ironwall.Libraries.Base.Services;
 
 namespace Ironwall.Framework.ViewModels
 {
@@ -26,7 +27,7 @@ namespace Ironwall.Framework.ViewModels
         {
         }
 
-        public BaseDataGridViewModel(IEventAggregator eventAggregator) : base(eventAggregator)
+        public BaseDataGridViewModel(IEventAggregator eventAggregator, ILogService log) : base(eventAggregator, log)
         {
         }
         #endregion
@@ -51,7 +52,7 @@ namespace Ironwall.Framework.ViewModels
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.Message);
+                _log.Error(ex.Message, _class);
             }
             finally
             {

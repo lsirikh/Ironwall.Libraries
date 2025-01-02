@@ -42,13 +42,16 @@ namespace Ironwall.Libraries.Map.Common.Providers.Models
                 try
                 {
                     Clear();
-                    foreach (SymbolModel item in _provider
-                    .Where(entity => entity.TypeShape == (int)EnumShapeType.CONTROLLER)
-                    .ToList())
+                    foreach (var item in _provider
+                                        .OfType<IObjectShapeModel>() // 타입 필터링
+                                        .Where(entity => entity.TypeShape == (int)EnumShapeType.CONTROLLER)
+                                        .ToList())
                     {
                         isValid = true;
-                        Add(item as IObjectShapeModel);
+                        Add(item);
                     }
+
+                    _log.Info($"{nameof(SymbolModel)}s of {nameof(EnumShapeType.CONTROLLER)} were inserted to {nameof(ControllerObjectProvider)}");
                 }
                 catch (Exception ex)
                 {

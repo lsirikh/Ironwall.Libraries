@@ -20,6 +20,7 @@ using Ironwall.Framework.Helpers;
 using Ironwall.Framework.ViewModels;
 using System.Collections.ObjectModel;
 using Ironwall.Libraries.Event.UI.Models.Messages;
+using Ironwall.Libraries.Base.Services;
 
 namespace Ironwall.Libraries.Event.UI.ViewModels.Panels
 {
@@ -37,7 +38,8 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Panels
 
         #region - Ctors -
         public EventBasePanelViewModel(IEventAggregator eventAggregator
-                                    ) : base(eventAggregator)
+                                        , ILogService log)
+                                        : base(eventAggregator, log)
         {
             ViewModelProvider = new ObservableCollection<T>();
         }

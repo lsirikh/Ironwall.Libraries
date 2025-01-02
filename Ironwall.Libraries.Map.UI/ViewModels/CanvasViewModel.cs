@@ -59,14 +59,10 @@ namespace Ironwall.Libraries.Map.UI.ViewModels
         #region - Ctors -
         public CanvasViewModel(IEventAggregator eventAggregator
                                 , ILogService log
-                                //, MapDbService mapDbService
                                 , SymbolCollectionViewModel symbolCollectionViewModel
-                                ) : base(eventAggregator)
+                                ) : base(eventAggregator, log)
         {
-            _log = log;
             SymbolCollectionViewModel = symbolCollectionViewModel;
-            //MapViewModelProvider = mapViewModelProvider;
-            //MapViewModelProvider.Refresh += MapViewModelProvider_Refresh;
         }
         #endregion
         #region - Implementation of Interface -
@@ -199,7 +195,7 @@ namespace Ironwall.Libraries.Map.UI.ViewModels
                                 if (searchCount > 10)
                                     throw new Exception("SymbolViewModelProvider에서 데이터를 찾지 못했다.");
 
-                                Debug.WriteLine($"Selected ViewModel을 찾지 못했다.");
+                                _log.Info($"Selected ViewModel을 찾지 못했다.");
                                 await Task.Delay(100);
                                 searchCount++;
                             }
@@ -364,7 +360,7 @@ namespace Ironwall.Libraries.Map.UI.ViewModels
                 else
                     CurrentPoint = origContentMouseDownPoint;
 
-                Debug.WriteLine($"Current Point => ({CurrentPoint.X}, {CurrentPoint.Y})");
+                _log.Info($"Current Point => ({CurrentPoint.X}, {CurrentPoint.Y})");
             }
             //else if (mouseButtonDown == MouseButton.Right)
             //{
@@ -391,7 +387,7 @@ namespace Ironwall.Libraries.Map.UI.ViewModels
             origZoomAndPanControlMouseDownPoint = e.GetPosition(this.ZoomAndPanControl);
             origContentMouseDownPoint = e.GetPosition(_canvas);
 
-            Debug.WriteLine($"Click Point => ({origContentMouseDownPoint.X}, {origContentMouseDownPoint.Y})");
+            _log.Info($"Click Point => ({origContentMouseDownPoint.X}, {origContentMouseDownPoint.Y})");
             //ZoomAndPanControl.AnimatedZoomTo(2.0d, new Rect(origZoomAndPanControlMouseDownPoint.X, origZoomAndPanControlMouseDownPoint.Y, 600, 600));
             await GoToEventLocation(origContentMouseDownPoint);
 
@@ -466,7 +462,7 @@ namespace Ironwall.Libraries.Map.UI.ViewModels
             _scroller.Focus();
             Keyboard.Focus(_scroller);
             this.ZoomAndPanControl.CaptureMouse();
-            Debug.WriteLine("scroller_Focuse was executed!");
+            _log.Info("scroller_Focuse was executed!");
         }
 
         /// <summary>
@@ -584,11 +580,10 @@ namespace Ironwall.Libraries.Map.UI.ViewModels
         /// <returns></returns>
         private Task CloseDrawSymbolTask()
         {
+            _log.Info($"{nameof(CloseDrawSymbolTask)} was executed!");
             return Task.Run(() =>
             {
-                if ((!(SelectedSymbol is IObjectShapeModel model)
-                || (model.TypeShape != (int)EnumShapeType.FENCE)))
-                    return;
+                if ((!(SelectedSymbol is IObjectShapeModel model) || (model.TypeShape != (int)EnumShapeType.FENCE))) return;
 
                 DispatcherService.Invoke((System.Action)(async () =>
                 {
@@ -607,7 +602,7 @@ namespace Ironwall.Libraries.Map.UI.ViewModels
                                 if (searchCount > 10) 
                                     throw new Exception("SymbolViewModelProvider에서 데이터를 찾지 못했다.");
 
-                                Debug.WriteLine($"Selected ViewModel을 찾지 못했다.");
+                                _log.Info($"Selected ViewModel을 찾지 못했다.");
                                 await Task.Delay(100);
                                 searchCount++;
                             }
@@ -621,7 +616,7 @@ namespace Ironwall.Libraries.Map.UI.ViewModels
                         }
                         catch (Exception ex)
                         {
-                            Debug.WriteLine($"Rasied Exception of {nameof(CloseDrawSymbolTask)} in {nameof(CanvasViewModel)} : {ex.Message}");
+                            _log.Error($"Rasied Exception of {nameof(CloseDrawSymbolTask)} in {nameof(CanvasViewModel)} : {ex.Message}");
                         }
                     }
 
@@ -654,7 +649,7 @@ namespace Ironwall.Libraries.Map.UI.ViewModels
             finally
             {
                 NotifyOfPropertyChange(() => ContentScale);
-                Debug.WriteLine($"ZoomOut : {ContentScale}%");
+                _log.Info($"ZoomOut : {ContentScale}%");
             }
         }
 
@@ -677,7 +672,7 @@ namespace Ironwall.Libraries.Map.UI.ViewModels
             finally
             {
                 NotifyOfPropertyChange(() => ContentScale);
-                Debug.WriteLine($"ZoomIn : {ContentScale}%");
+                _log.Info($"ZoomIn : {ContentScale}%");
             }
         }
 
@@ -878,8 +873,6 @@ namespace Ironwall.Libraries.Map.UI.ViewModels
                 NotifyOfPropertyChange(() => CurrentPoint);
             }
         }
-
-        private ILogService _log;
 
         public SymbolCollectionViewModel SymbolCollectionViewModel { get; }
         public ISymbolModel SelectedSymbol { get; set; }

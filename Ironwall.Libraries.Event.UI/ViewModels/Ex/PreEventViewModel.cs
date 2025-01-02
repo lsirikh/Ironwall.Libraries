@@ -183,8 +183,6 @@ namespace Ironwall.Libraries.Event.UI.ViewModels
         #region - Attributes -
         public override event ActionEvent CallAutoEvent;
         public override event ActionEvent CallActionEvent;
-
-        private ILogService _log;
         #endregion
 
     }

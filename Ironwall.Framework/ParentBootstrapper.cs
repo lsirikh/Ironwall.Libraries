@@ -28,7 +28,7 @@ namespace Ironwall.Framework
         {
             CancellationTokenSourceHandler = new CancellationTokenSource();
             _log = new LogService();
-
+            _class = this.GetType();
             string projectName = System.Reflection.Assembly.GetEntryAssembly().GetName().Name;
             _log.Info($"############### Program{projectName} was started. ###############");
         }
@@ -53,7 +53,7 @@ namespace Ironwall.Framework
                                         .OrderBy(s => s.Metadata["Order"])
                                         .Select(s => s.Value))
                 {
-                    _log.Info($"@@@@Starting Service Instance({service.GetType()})", true);
+                    _log.Info($"@@@@Starting Service Instance({service.GetType()})@@@@");
                     //await service.ExecuteAsync(token);
                    
                     // 백그라운드 스레드에서 실행 강제
@@ -69,7 +69,7 @@ namespace Ironwall.Framework
                                         .OrderBy(s => s.Metadata["Order"])
                                         .Select(s => s.Value))
                 {
-                    _log.Info($"####Starting Provider Instance({service.GetType()})", true);
+                    _log.Info($"####Starting Provider Instance({service.GetType()})####");
                     //DispatcherService.Invoke((System.Action)(async () =>
                     //{
                     //    await service.Initialize(token);
@@ -86,7 +86,7 @@ namespace Ironwall.Framework
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised {nameof(Exception)} in {nameof(Start)} of {nameof(ParentBootstrapper<T>)} : {ex}", true);
+                _log.Error($"Raised {nameof(Exception)} in {nameof(Start)} : {ex}");
             }
             
         }
@@ -153,7 +153,7 @@ namespace Ironwall.Framework
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised {nameof(Exception)} in {nameof(OnExit)} of {nameof(ParentBootstrapper<T>)} : {ex}", true);
+                _log.Error($"Raised {nameof(Exception)} in {nameof(OnExit)} : {ex}");
             }
 
             try
@@ -167,15 +167,15 @@ namespace Ironwall.Framework
             }
             catch (ComponentNotRegisteredException ex)
             {
-                _log.Error($"Raised {nameof(ComponentNotRegisteredException)} in {nameof(OnExit)} of {nameof(ParentBootstrapper<T>)} : {ex}", true);
+                _log.Error($"Raised {nameof(ComponentNotRegisteredException)} in {nameof(OnExit)} : {ex}");
             }
             catch (ObjectDisposedException ex)
             {
-                _log.Error($"Raised {nameof(ObjectDisposedException)} in {nameof(OnExit)} of {nameof(ParentBootstrapper<T>)} : {ex}", true);
+                _log.Error($"Raised {nameof(ObjectDisposedException)} in {nameof(OnExit)} : {ex}");
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised {nameof(Exception)} in {nameof(OnExit)} of {nameof(ParentBootstrapper<T>)} : {ex}", true);
+                _log.Error($"Raised {nameof(Exception)} in {nameof(OnExit)} : {ex}");
             }
 
             try
@@ -184,14 +184,14 @@ namespace Ironwall.Framework
                                         .OrderBy(s => s.Metadata["Order"])
                                         .Select(s => s.Value))
                 {
-                    _log.Info($"@@@@Initializing Service Instance({service.GetType()})", true);
+                    _log.Info($"@@@@Uninitializing Service Instance({service.GetType()})@@@@");
                     //await Task.Delay(500);
                     service.StopAsync();
                 }
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised {nameof(Exception)} in {nameof(OnExit)} of {nameof(ParentBootstrapper<T>)} : {ex}", true);
+                _log.Error($"Raised {nameof(Exception)} in {nameof(OnExit)} of {nameof(ParentBootstrapper<T>)} : {ex}");
             }
 
             Stop();
@@ -292,13 +292,12 @@ namespace Ironwall.Framework
             get { return _container; }
         }
 
-
         /// <summary>
         /// Top level cancellation token for cancel task.
         /// </summary>
         protected CancellationTokenSource CancellationTokenSourceHandler { get; }
-
         protected ILogService _log;
+        protected Type _class;
         #endregion
     }
 }

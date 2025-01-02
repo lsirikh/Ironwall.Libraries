@@ -24,6 +24,9 @@ namespace Ironwall.Libraries.Tcp.Packets.Models
 
         public PacketClass(byte[] bytes) : base(bytes)
         {
+            if (bytes.Length < HEADER_SIZE + BodyLength || BodyLength > Body.Length)
+                throw new ArgumentException("Invalid array sizes for BlockCopy.");
+
             Buffer.BlockCopy(bytes, HEADER_SIZE, Body, 0, BodyLength);
 
             CRC = BitConverter.ToUInt16(bytes, TOTAL_SIZE - CRC_SIZE);

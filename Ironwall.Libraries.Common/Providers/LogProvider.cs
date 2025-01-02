@@ -12,8 +12,7 @@ using System.Windows.Markup;
 
 namespace Ironwall.Libraries.Common.Providers
 {
-    public class LogProvider
-        : EntityCollectionProvider<LogModel>
+    public class LogProvider: EntityCollectionProvider<LogModel>
     {
         #region - Ctors -
         #endregion

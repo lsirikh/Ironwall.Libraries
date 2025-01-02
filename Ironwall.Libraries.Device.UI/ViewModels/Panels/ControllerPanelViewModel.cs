@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using Ironwall.Libraries.Device.UI.Providers;
 using Ironwall.Libraries.Devices.Providers;
+using Ironwall.Libraries.Base.Services;
 
 namespace Ironwall.Libraries.Device.UI.ViewModels.Panels
 {
@@ -20,8 +21,9 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Panels
     {
 
         #region - Ctors -
-        public ControllerPanelViewModel(IEventAggregator eventAggregator)
-            :base(eventAggregator)
+        public ControllerPanelViewModel(IEventAggregator eventAggregator
+                                        , ILogService log)
+                                        : base(eventAggregator, log)
         {
         }
 
