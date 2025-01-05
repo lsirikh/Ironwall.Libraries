@@ -128,7 +128,6 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Setups
         #endregion
         #region - Attributes -
         BaseViewModel selectedViewModel;
-        private ILogService _log;
         #endregion
     }
 }

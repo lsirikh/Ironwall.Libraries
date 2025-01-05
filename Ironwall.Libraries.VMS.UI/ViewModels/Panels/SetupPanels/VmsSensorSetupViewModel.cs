@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Ironwall.Libraries.Enums;
+using Ironwall.Libraries.Devices.Providers;
 
 namespace Ironwall.Libraries.VMS.UI.ViewModels.Panels.SetupPanels
 {
@@ -175,17 +176,18 @@ namespace Ironwall.Libraries.VMS.UI.ViewModels.Panels.SetupPanels
         #region - Processes -
         private Task DataInitialize(CancellationToken cancellationToken = default)
         {
-            return Task.Run(() =>
+            return Task.Run(async () =>
             {
                 try
                 {
                     IsVisible = false;
-                    //await Task.Delay(500, cancellationToken);
+                    await Task.Delay(100, cancellationToken);
 
                     //ViewModelProvider Setting
                     if (cancellationToken.IsCancellationRequested) new TaskCanceledException("Task was cancelled!");
 
                     _provider = IoC.Get<VmsSensorViewModelProvider>();
+                    DeviceProvider = IoC.Get<DeviceProvider>();
 
                     DispatcherService.Invoke((System.Action)(() =>
                     {
@@ -199,7 +201,6 @@ namespace Ironwall.Libraries.VMS.UI.ViewModels.Panels.SetupPanels
                         NotifyOfPropertyChange(() => ViewModelProvider);
                     }));
 
-                    //await Task.Delay(500, cancellationToken);
                     IsVisible = true;
                 }
                 catch (TaskCanceledException ex)
@@ -225,6 +226,8 @@ namespace Ironwall.Libraries.VMS.UI.ViewModels.Panels.SetupPanels
         #endregion
         #region - Attributes -
         private VmsSensorViewModelProvider _provider;
+
+        public DeviceProvider DeviceProvider { get; private set; }
         #endregion
 
     }

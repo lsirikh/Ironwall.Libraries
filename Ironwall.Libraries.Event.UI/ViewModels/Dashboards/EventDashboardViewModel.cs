@@ -97,7 +97,6 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Dashboards
         #endregion
         #region - Attributes -
         private BaseViewModel selectedViewModel;
-        private ILogService _log;
         #endregion
     }
 }

@@ -15,7 +15,7 @@
 		<utils:EnumCameraModeToTextConverter x:Key="EnumCameraModeToTextConverter" />
 		<utils:EnumCameraTypeToValueConverter x:Key="EnumCameraTypeToValueConverter" />
 		<utils:EnumCameraTypeToTextConverter x:Key="EnumCameraTypeToTextConverter" />
-		<utils:BindingProxy x:Key="CameraDeviceProxy" Data="{Binding}" />
+		<utils:BindingProxy x:Key="ViewModelProxy" Data="{Binding}" />
 	</UserControl.Resources>
 	<Grid Height="340">
 		<Grid.RowDefinitions>
@@ -180,7 +180,7 @@
 							<Border Padding="0 0 0 0"
                         Margin="-2 0 0 0">
 								<CheckBox Style="{StaticResource MaterialDesignCheckBox}"
-                              IsChecked="{Binding Data.IsAllChecked, Mode=TwoWay, Source={StaticResource CameraDeviceProxy}}"
+                              IsChecked="{Binding Data.IsAllChecked, Mode=TwoWay, Source={StaticResource ViewModelProxy}}"
                               HorizontalAlignment="Center">
 									<cal:Message.Attach>
 										[Event Click] = [Action OnClickCheckBoxColumnHeader($source, $eventArgs)];

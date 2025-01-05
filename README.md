@@ -9,6 +9,7 @@
 ### Last Updated : 2023-05-15
 
 ### Versions
+
 * Ironwall.Framework  
 * Ironwall.Libraries.Enums  
 * Ironwall.Libraries.Utils  
@@ -35,6 +36,9 @@
 * Ironwall.Libraries.VlcRTSP  
 * Ironwall.Libraries.WatchDog  
 
+* Ironwall.Libraries.VMS.Common
+* Ironwall.Libraries.VMS.UI
+
 <hr>
 
 ### Update Date: 2023/01/20
@@ -56,6 +60,7 @@
     1) 기존의 TcpClient를 상속받는 구조를 변경하여, AccountClientService로 부터 상속을 받는 구조로 변경해야된다.   
     2) 기존의 TcpClient의 기능을 AccountClientService로 이관한다.  
     3) Session관련 Timer를 분기하여, Tcp 커넥션을 위한 타이머와 나눈다.  
+
 <hr>
 
 ### Update Date: 2023/01/25
@@ -100,6 +105,7 @@
        4)  UserProvider - UserViewModelProvider  
 
 <hr>
+
 ### Update Date: 2023/01/26
 
 * Ironwall.Framework
@@ -349,7 +355,9 @@ protected override IEnumerable<Assembly> SelectAssemblies()
     1) 신규 구성 프로젝트    
    
 ### Update Date: 2024/03/06
+
 * 통합 버전으로 관리
+
 <br>
 
 * Wpf.AxisAudio.Client.UI  
@@ -388,7 +396,9 @@ protected override IEnumerable<Assembly> SelectAssemblies()
     1) 신규 구성 프로젝트 
 
 ### Update Date: 2024/07/06
+
 * 통합 버전으로 관리
+
 <br>
 
 * Ironwall.Libraries.VMS.UI  
@@ -403,10 +413,27 @@ protected override IEnumerable<Assembly> SelectAssemblies()
 * Comment  
     1) 센서웨이 VMS와 연동하기 위한 서비스 및 API 메시지    
 
-### Update Date: 2024/07/06
+### Update Date: 2024/12/22
+
 * 통합 버전으로 관리
+
 <br>
-* Version : v1.0.0  
-* Comment 
+
+* Version : v1.0.1  
+* Comment  
     1) ILogService 대부분 라이브러리에 적용   
-    2) TCP 패킷 클래스 및 서비스 수정
+    2) TCP 패킷 클래스 및 서비스 수정  
+
+### Update Date: 2025/01/05
+
+* 통합 버전으로 관리
+
+<br>
+
+* Version : v1.0.2  
+* Comment 
+    1) ILogService 중복 선언 버그 수정   
+    2) VmsApiService 일부 기능 수정을 통한 IsAvailable 속성에 따라 동작 로직 수정  
+        (단, 아직 동작하는 일부 로직들이 있다.)  
+    3) VMS 파트의 DataGridPanel 버그 수정  
+    4) ViewModel을 DataGridPanel에 사용하는 로직에 비효율성을 검토할 필요있음  

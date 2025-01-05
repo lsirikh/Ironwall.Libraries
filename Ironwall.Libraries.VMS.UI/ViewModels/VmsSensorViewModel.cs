@@ -1,6 +1,8 @@
-﻿using Ironwall.Framework.Models.Devices;
+﻿using Caliburn.Micro;
+using Ironwall.Framework.Models.Devices;
 using Ironwall.Framework.Models.Vms;
 using Ironwall.Framework.ViewModels;
+using Ironwall.Libraries.Base.Services;
 using Ironwall.Libraries.Enums;
 using System;
 
@@ -19,7 +21,6 @@ namespace Ironwall.Libraries.VMS.UI.ViewModels
         #region - Ctors -
         public VmsSensorViewModel(IVmsSensorModel model) : base(model)
         {
-
         }
         #endregion
         #region - Implementation of Interface -

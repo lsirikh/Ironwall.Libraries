@@ -4,9 +4,10 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Ironwall.Libraries.VMS.UI.Views.Panels.SetupPanels"
-            			 xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:cal="http://www.caliburnproject.org"
+			 xmlns:enums="clr-namespace:Ironwall.Libraries.Enums;assembly=Ironwall.Libraries.Enums"
              xmlns:utils="clr-namespace:Ironwall.Libraries.Utils;assembly=Ironwall.Libraries.Utils"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
@@ -220,9 +221,9 @@
 						</DataGridTemplateColumn.CellTemplate>
 					</DataGridTemplateColumn>
 
-					<!-- ApiAddress -->
-					<DataGridTextColumn Header="ApiAddress"
-                            Binding="{Binding ApiAddress}">
+					<!-- GroupNumber -->
+					<DataGridTextColumn Header="GroupNumber"
+                            Binding="{Binding GroupNumber}">
 						<DataGridTextColumn.HeaderStyle>
 							<Style TargetType="{x:Type DataGridColumnHeader}"
                        BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
@@ -241,9 +242,9 @@
 						</DataGridTextColumn.ElementStyle>
 					</DataGridTextColumn>
 
-					<!-- ApiPort -->
-					<DataGridTextColumn Header="ApiPort"
-                            Binding="{Binding ApiPort}">
+					<!-- Device -->
+					<!--<DataGridTextColumn Header="Device"
+                            Binding="{Binding Device}">
 						<DataGridTextColumn.HeaderStyle>
 							<Style TargetType="{x:Type DataGridColumnHeader}"
                        BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
@@ -260,49 +261,78 @@
                             Value="Center" />
 							</Style>
 						</DataGridTextColumn.ElementStyle>
-					</DataGridTextColumn>
+					</DataGridTextColumn>-->
 
-					<!-- UserName -->
-					<DataGridTextColumn Header="Username"
-                            Binding="{Binding Username, UpdateSourceTrigger=PropertyChanged}">
-						<DataGridTextColumn.HeaderStyle>
-							<Style TargetType="{x:Type DataGridColumnHeader}"
-                       BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
-								<Setter Property="HorizontalAlignment" Value="Center" />
-								<Setter Property="VerticalAlignment" Value="Center" />
-								<Setter Property="BorderThickness" Value="0"/>
-							</Style>
-						</DataGridTextColumn.HeaderStyle>
-						<DataGridTextColumn.ElementStyle>
-							<Style TargetType="{x:Type TextBlock}">
-								<Setter Property="HorizontalAlignment"
-                            Value="Center" />
-								<Setter Property="VerticalAlignment"
-                            Value="Center" />
-							</Style>
-						</DataGridTextColumn.ElementStyle>
-					</DataGridTextColumn>
+					<!-- Device -->
+					<DataGridTemplateColumn Header="Device"
+											SortMemberPath="NameDevice"
+											CanUserSort="True">
+						<DataGridTemplateColumn.CellTemplate>
+							<DataTemplate>
+								<TextBlock VerticalAlignment="Center"
+										   TextAlignment="Center"
+										   Text="{Binding Device.DeviceName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+							</DataTemplate>
+						</DataGridTemplateColumn.CellTemplate>
+						<DataGridTemplateColumn.CellEditingTemplate>
+							<DataTemplate>
+								<ComboBox VerticalAlignment="Center"
+										  HorizontalContentAlignment="Center"
+										  IsEditable="False"
+										  ItemsSource="{Binding  Data.DeviceProvider, Source={StaticResource ViewModelProxy}, UpdateSourceTrigger=PropertyChanged}"
+										  SelectedItem="{Binding Device, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">			
+									<ComboBox.ItemsPanel>
+										<ItemsPanelTemplate>
+											<VirtualizingStackPanel />
+										</ItemsPanelTemplate>
+									</ComboBox.ItemsPanel>
+									<ComboBox.ItemTemplate>
+										<DataTemplate>
+											<TextBlock Text="{Binding DeviceName}" />
+										</DataTemplate>
+									</ComboBox.ItemTemplate>
+									<ComboBox.ItemContainerStyle>
+										<Style TargetType="{x:Type ComboBoxItem}" />
+									</ComboBox.ItemContainerStyle>
+								</ComboBox>
+							</DataTemplate>
+						</DataGridTemplateColumn.CellEditingTemplate>
+					</DataGridTemplateColumn>
 
-					<!-- Password -->
-					<DataGridTextColumn Header="Password"
-                            Binding="{Binding Password, UpdateSourceTrigger=PropertyChanged}">
-						<DataGridTextColumn.HeaderStyle>
-							<Style TargetType="{x:Type DataGridColumnHeader}"
-                       BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
-								<Setter Property="HorizontalAlignment" Value="Center" />
-								<Setter Property="VerticalAlignment" Value="Center" />
-								<Setter Property="BorderThickness" Value="0"/>
-							</Style>
-						</DataGridTextColumn.HeaderStyle>
-						<DataGridTextColumn.ElementStyle>
-							<Style TargetType="{x:Type TextBlock}">
-								<Setter Property="HorizontalAlignment"
-                            Value="Center" />
-								<Setter Property="VerticalAlignment"
-                            Value="Center" />
-							</Style>
-						</DataGridTextColumn.ElementStyle>
-					</DataGridTextColumn>
+					<!-- Status -->
+					<DataGridTemplateColumn Header="Status"
+						SortMemberPath="Status"
+						CanUserSort="True">
+						<DataGridTemplateColumn.CellTemplate>
+							<DataTemplate>
+								<TextBlock Text="{Binding Status, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+							</DataTemplate>
+						</DataGridTemplateColumn.CellTemplate>
+						<DataGridTemplateColumn.CellEditingTemplate>
+							<DataTemplate>
+								<ComboBox VerticalAlignment="Center"
+										  ItemsSource="{Binding Source={utils:EnumBindingSource {x:Type enums:EnumTrueFalse}}}"
+										  SelectedItem="{Binding Status, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+									<ComboBox.ItemsPanel>
+										<ItemsPanelTemplate>
+											<VirtualizingStackPanel />
+										</ItemsPanelTemplate>
+									</ComboBox.ItemsPanel>
+									<ComboBox.ItemTemplate>
+										<DataTemplate>
+											<TextBlock Text="{Binding}" />
+										</DataTemplate>
+									</ComboBox.ItemTemplate>
+									<ComboBox.ItemContainerStyle>
+										<Style TargetType="{x:Type ComboBoxItem}">
+										</Style>
+									</ComboBox.ItemContainerStyle>
+								</ComboBox>
+							</DataTemplate>
+						</DataGridTemplateColumn.CellEditingTemplate>
+					</DataGridTemplateColumn>
+
+
 				</DataGrid.Columns>
 			</DataGrid>
 		</Grid>
