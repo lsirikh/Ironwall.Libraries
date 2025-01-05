@@ -15,7 +15,7 @@
 		<utils:EnumCameraModeToTextConverter x:Key="EnumCameraModeToTextConverter" />
 		<utils:EnumCameraTypeToValueConverter x:Key="EnumCameraTypeToValueConverter" />
 		<utils:EnumCameraTypeToTextConverter x:Key="EnumCameraTypeToTextConverter" />
-		<utils:BindingProxy x:Key="CameraPresetProxy" Data="{Binding}" />
+		<utils:BindingProxy x:Key="ViewModelProxy" Data="{Binding}" />
 
 			<Style TargetType="{x:Type DataGridColumnHeader}" x:Key= "TemplateHeader"
 				   BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
@@ -177,7 +177,7 @@
 							<Border Padding="0 0 0 0"
                                     Margin="-2 0 0 0">
 								<CheckBox Style="{StaticResource MaterialDesignCheckBox}"
-                                      IsChecked="{Binding Data.IsAllChecked, Mode=TwoWay, Source={StaticResource CameraPresetProxy}}"
+                                      IsChecked="{Binding Data.IsAllChecked, Mode=TwoWay, Source={StaticResource ViewModelProxy}}"
                                       HorizontalAlignment="Center">
 									<cal:Message.Attach>
 										[Event Click] = [Action OnClickCheckBoxColumnHeader($source, $eventArgs)];
@@ -222,7 +222,7 @@
 								<ComboBox VerticalAlignment="Center"
 									  HorizontalContentAlignment="Center"
 									  IsEditable="False"
-									  ItemsSource="{Binding  Data.CameraComboList, Source={StaticResource CameraPresetProxy}, UpdateSourceTrigger=PropertyChanged}"
+									  ItemsSource="{Binding  Data.CameraComboList, Source={StaticResource ViewModelProxy}, UpdateSourceTrigger=PropertyChanged}"
 									  SelectedItem="{Binding ReferenceId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 									  >
 									<ComboBox.ItemsPanel>
@@ -287,7 +287,7 @@
 								<ComboBox VerticalAlignment="Center"
 									  HorizontalContentAlignment="Center"
 									  IsEditable="False"
-									  ItemsSource="{Binding  Data.BooleanComboList, Source={StaticResource CameraPresetProxy}, UpdateSourceTrigger=PropertyChanged}"
+									  ItemsSource="{Binding  Data.BooleanComboList, Source={StaticResource ViewModelProxy}, UpdateSourceTrigger=PropertyChanged}"
 									  SelectedItem="{Binding IsHome, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 									  >
 									<ComboBox.ItemsPanel>

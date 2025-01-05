@@ -32,7 +32,7 @@ namespace Ironwall.Libraries.VMS.Common.Modules
             _count = count;
         }
         
-        public VmsServerModule(string apiAddress, int port, string username, string password, ILogService log = default, int count = default)
+        public VmsServerModule(string apiAddress, int port, string username, string password, bool isAbailable, ILogService log = default, int count = default)
         {
             _log = log;
             _count = count;
@@ -41,6 +41,7 @@ namespace Ironwall.Libraries.VMS.Common.Modules
             _port = port;
             _userName = username;
             _password = password;
+            _isAbailable = isAbailable;
         }
 
         #endregion
@@ -49,14 +50,17 @@ namespace Ironwall.Libraries.VMS.Common.Modules
         {
             try
             {
-                builder.RegisterType<VmsSetupModel>().SingleInstance();
-                builder.RegisterModule(new ApiModule(_log, new ApiSetupModel
+                //builder.RegisterType<VmsSetupModel>().SingleInstance();
+                var apiSetupModel = new ApiSetupModel
                 {
                     IpAddress = _apiAddress,
                     Port = _port,
                     Username = _userName,
                     Password = _password,
-                }, "VmsApi"));
+                };
+                builder.RegisterModule(new ApiModule(_log, apiSetupModel, "VmsApi"));
+                builder.RegisterInstance(new VmsSetupModel(apiSetupModel, _isAbailable)).AsSelf().SingleInstance();
+
                 builder.RegisterType<LoginSessionModel>().SingleInstance();
 
                 builder.RegisterType<VmsApiProvider>().SingleInstance();
@@ -70,6 +74,7 @@ namespace Ironwall.Libraries.VMS.Common.Modules
                     .As<IVmsDbService>().As<IService>().SingleInstance().WithMetadata("Order", _count++);
 
                 builder.Register(build => new VmsApiService( _log,
+                                                            build.Resolve<VmsSetupModel>(),
                                                             build.ResolveNamed<IApiService>("VmsApi"),
                                                             build.Resolve<IVmsDbService>(),
                                                             build.Resolve<LoginSessionModel>(),
@@ -99,6 +104,7 @@ namespace Ironwall.Libraries.VMS.Common.Modules
         private int _port;
         private string _userName;
         private string _password;
+        private bool _isAbailable;
         #endregion
     }
 }

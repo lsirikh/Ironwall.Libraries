@@ -15,7 +15,7 @@
 		<utils:EnumCameraModeToTextConverter x:Key="EnumCameraModeToTextConverter" />
 		<utils:EnumCameraTypeToValueConverter x:Key="EnumCameraTypeToValueConverter" />
 		<utils:EnumCameraTypeToTextConverter x:Key="EnumCameraTypeToTextConverter" />
-		<utils:BindingProxy x:Key="CameraDeviceProxy" Data="{Binding}" />
+		<utils:BindingProxy x:Key="ViewModelProxy" Data="{Binding}" />
 	</UserControl.Resources>
 	<Grid Height="340">
 		<Grid.RowDefinitions>
@@ -163,7 +163,7 @@
 							<Border Padding="0 0 0 0"
                         Margin="-2 0 0 0">
 								<CheckBox Style="{StaticResource MaterialDesignCheckBox}"
-                              IsChecked="{Binding Data.IsAllChecked, Mode=TwoWay, Source={StaticResource CameraDeviceProxy}}"
+                              IsChecked="{Binding Data.IsAllChecked, Mode=TwoWay, Source={StaticResource ViewModelProxy}}"
                               HorizontalAlignment="Center">
 									<cal:Message.Attach>
 										[Event Click] = [Action OnClickCheckBoxColumnHeader($source, $eventArgs)];
@@ -224,7 +224,7 @@
 								<ComboBox VerticalAlignment="Center"
 							  HorizontalContentAlignment="Center"
 							  IsEditable="False"
-							  ItemsSource="{Binding  Data.SensorViewModelProvider, Source={StaticResource CameraDeviceProxy}, UpdateSourceTrigger=PropertyChanged}"
+							  ItemsSource="{Binding  Data.SensorViewModelProvider, Source={StaticResource ViewModelProxy}, UpdateSourceTrigger=PropertyChanged}"
 							  SelectedItem="{Binding Sensor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 							  >
 									<ComboBox.ItemsPanel>
@@ -276,7 +276,7 @@
 								<ComboBox VerticalAlignment="Center"
 							  HorizontalContentAlignment="Center"
 							  IsEditable="False"
-							  ItemsSource="{Binding  Data.PresetViewModelProvider, Source={StaticResource CameraDeviceProxy}, UpdateSourceTrigger=PropertyChanged}"
+							  ItemsSource="{Binding  Data.PresetViewModelProvider, Source={StaticResource ViewModelProxy}, UpdateSourceTrigger=PropertyChanged}"
 							  SelectedItem="{Binding FirstPreset, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 							  >
 									<ComboBox.ItemsPanel>
@@ -318,7 +318,7 @@
 								<ComboBox VerticalAlignment="Center"
 							  HorizontalContentAlignment="Center"
 							  IsEditable="False"
-							  ItemsSource="{Binding  Data.PresetViewModelProvider, Source={StaticResource CameraDeviceProxy}, UpdateSourceTrigger=PropertyChanged}"
+							  ItemsSource="{Binding  Data.PresetViewModelProvider, Source={StaticResource ViewModelProxy}, UpdateSourceTrigger=PropertyChanged}"
 							  SelectedItem="{Binding SecondPreset, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 							  >
 									<ComboBox.ItemsPanel>

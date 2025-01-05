@@ -3,6 +3,7 @@ using Ironwall.Framework.Models.Vms;
 using Ironwall.Libraries.Apis.Services;
 using Ironwall.Libraries.Base.Services;
 using Ironwall.Libraries.VMS.Common.Enums;
+using Ironwall.Libraries.VMS.Common.Models;
 using Ironwall.Libraries.VMS.Common.Models.Providers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -33,6 +34,7 @@ namespace Ironwall.Libraries.VMS.Common.Services
     {
         #region - Ctors -
         public VmsApiService(ILogService log
+                            , VmsSetupModel setup
                             , IApiService apiService
                             , IVmsDbService dbService
                             , LoginSessionModel sessionModel
@@ -40,6 +42,7 @@ namespace Ironwall.Libraries.VMS.Common.Services
                             )
         {
             _log = log;
+            _setup = setup;
             _dbService = dbService;
             _apiService = apiService;
             _sessionModel = sessionModel;
@@ -53,30 +56,40 @@ namespace Ironwall.Libraries.VMS.Common.Services
         }
         #endregion
         #region - Implementation of Interface -
-        public async Task ExecuteAsync(CancellationToken token = default)
+        public Task ExecuteAsync(CancellationToken token = default)
         {
             try
             {
-                //01.Login
-                InitTimer(1000 * 60 * 10);//10분마다 Tick 발생
+                if (_setup.IsAvailable)
+                {
+                    //01.Login
+                    InitTimer(1000 * 60 * 10);//10분마다 Tick 발생
 
-                // ApiLoginProcess를 백그라운드 Task로 실행
-                //_ = Task.Run(async () => await ApiLoginProcess(), token);
-
+                    // ApiLoginProcess를 백그라운드 Task로 실행
+                    _ = Task.Run(async () => await ApiLoginProcess(), token);
+                }
             }
             catch (Exception ex)
             {
                 _log.Error($"Raised {nameof(Exception)} in {nameof(ExecuteAsync)} of {nameof(VmsApiService)} : {ex.Message}", _class);
             }
-            //return Task.CompletedTask;
-
+            return Task.CompletedTask;
         }
-
-
 
         public async Task StopAsync(CancellationToken token = default)
         {
-            await ApiLogoutProcess();
+            
+            try
+            {
+                if (_setup.IsAvailable)
+                {
+                    await ApiLogoutProcess();
+                }
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"Raised {nameof(Exception)} in {nameof(StopAsync)} of {nameof(VmsApiService)} : {ex.Message}", _class);
+            }
         }
 
         #endregion
@@ -143,7 +156,6 @@ namespace Ironwall.Libraries.VMS.Common.Services
         }
 
 
-
         public async Task ApiLogoutProcess()
         {
             try
@@ -170,7 +182,6 @@ namespace Ironwall.Libraries.VMS.Common.Services
 
                     }
                 }
-
             }
             catch (Exception)
             {
@@ -201,7 +212,7 @@ namespace Ironwall.Libraries.VMS.Common.Services
                     }
                     catch (Exception ex)
                     {
-                        _log.Error($"Failed to execute {nameof(ApiLogoutProcess)}(Try:{processTry++}) : {ex.Message}", _class);
+                        _log.Error($"Failed to execute {nameof(ApiKeepAliveProcess)}(Try:{processTry++}) : {ex.Message}", _class);
                         await Task.Delay(TIMEDELAY_MS);
 
                     }
@@ -242,7 +253,7 @@ namespace Ironwall.Libraries.VMS.Common.Services
                     }
                     catch (Exception ex)
                     {
-                        _log.Error($"Failed to execute {nameof(ApiLogoutProcess)}(Try:{processTry++}) : {ex.Message}", _class);
+                        _log.Error($"Failed to execute {nameof(ApiGetEventListProcess)}(Try:{processTry++}) : {ex.Message}", _class);
                         await Task.Delay(TIMEDELAY_MS);
 
                     }
@@ -277,7 +288,7 @@ namespace Ironwall.Libraries.VMS.Common.Services
                     }
                     catch (Exception ex)
                     {
-                        _log.Error($"Failed to execute {nameof(ApiLogoutProcess)}(Try:{processTry++}) : {ex.Message}", _class);
+                        _log.Error($"Failed to execute {nameof(ApiSetActionEventProcess)}(Try:{processTry++}) : {ex.Message}", _class);
                         await Task.Delay(TIMEDELAY_MS);
 
                     }
@@ -462,6 +473,7 @@ namespace Ironwall.Libraries.VMS.Common.Services
         #endregion
         #region - Attributes -
         private readonly ILogService _log;
+        private readonly VmsSetupModel _setup;
         private readonly IVmsDbService _dbService;
         private readonly IApiService _apiService;
         private readonly LoginSessionModel _sessionModel;

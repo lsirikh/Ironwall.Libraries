@@ -139,7 +139,6 @@ namespace Ironwall.Libraries.VMS.UI.ViewModels.Panels
         #endregion
         #region - Attributes -
         private BaseViewModel selectedViewModel;
-        private ILogService _log;
         #endregion
     }
 }

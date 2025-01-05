@@ -54,14 +54,14 @@ namespace Ironwall.Libraries.Tcp.Client.UI.ViewModels
         }
         #endregion
         #region - Binding Methods -
-        public async void TcpConnectionButton()
+        public async Task TcpConnectionButton()
         {
             try
             {
                 if (_cancellationTokenSource.IsCancellationRequested)
                     _cancellationTokenSource = new CancellationTokenSource();
 
-                await _eventAggregator.PublishOnCurrentThreadAsync(new OpenProgressPopupMessageModel(), _cancellationTokenSource.Token);
+                await _eventAggregator.PublishOnUIThreadAsync(new OpenProgressPopupMessageModel(), _cancellationTokenSource.Token);
 
                 var model = MessageFactory.Build<ClientConnectionMessage>(_tcpClientSetupModel.ClientId, _tcpClientSetupModel.ServerIp, _tcpClientSetupModel.ServerPort, true);
                 await _eventAggregator.PublishOnUIThreadAsync(model, _cancellationTokenSource.Token);
@@ -81,14 +81,14 @@ namespace Ironwall.Libraries.Tcp.Client.UI.ViewModels
 
         }
 
-        public async void TcpDisconnectionButton()
+        public async Task TcpDisconnectionButton()
         {
             try
             {
                 if (_cancellationTokenSource.IsCancellationRequested)
                     _cancellationTokenSource = new CancellationTokenSource();
 
-                await _eventAggregator.PublishOnCurrentThreadAsync(new OpenProgressPopupMessageModel(), _cancellationTokenSource.Token);
+                await _eventAggregator.PublishOnUIThreadAsync(new OpenProgressPopupMessageModel(), _cancellationTokenSource.Token);
 
                 var model = MessageFactory.Build<ClientConnectionMessage>(_tcpClientSetupModel.ClientId, _tcpClientSetupModel.ServerIp, _tcpClientSetupModel.ServerPort, false);
                 await _eventAggregator.PublishOnUIThreadAsync(model, _cancellationTokenSource.Token);

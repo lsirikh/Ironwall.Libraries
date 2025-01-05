@@ -24,13 +24,11 @@ namespace Ironwall.Libraries.Device.UI.ViewModels
         #region - Ctors -
         public CameraMappingViewModel()
         {
-            _log = IoC.Get<ILogService>();
             _model = new CameraMappingModel();
         }
 
         public CameraMappingViewModel(ICameraMappingModel model) : base(model)
         {
-            _log = IoC.Get<ILogService>();
             UpdateModel(model);
         }
 
