@@ -20,7 +20,7 @@
 	<Grid Height="340">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="50" />
-			<RowDefinition Height="1*" />
+			<RowDefinition Height="auto" />
 			<RowDefinition Height="40" />
 		</Grid.RowDefinitions>
 
@@ -113,14 +113,14 @@
 			</Button>
 
 		</Grid>
-		<Grid Height ="300"
+		<Grid Height ="250"
 			  Grid.Row="1">
 			<!-- ProgressBar section -->
 			<ProgressBar Width="50"
-                 Height="50"
-                 Margin="16"
-                 IsIndeterminate="True"
-                 Value="44">
+						 Height="50"
+						 Margin="16"
+						 IsIndeterminate="True"
+						 Value="44">
 				<ProgressBar.Style>
 					<Style TargetType="ProgressBar" BasedOn="{StaticResource MaterialDesignCircularProgressBar}">
 						<!-- 기본값은 표시 안 함 -->

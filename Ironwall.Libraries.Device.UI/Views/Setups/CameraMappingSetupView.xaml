@@ -20,7 +20,7 @@
 	<Grid Height="340">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="50" />
-			<RowDefinition Height="1*" />
+			<RowDefinition Height="auto" />
 			<RowDefinition Height="40" />
 		</Grid.RowDefinitions>
 
@@ -96,7 +96,7 @@
 			</Button>
 
 		</Grid>
-		<Grid Height ="300"
+		<Grid Height ="250"
 			  Grid.Row="1">
 			<!-- ProgressBar section -->
 			<ProgressBar Width="50"
@@ -121,21 +121,22 @@
 			<!-- DataGrid section -->
 			<DataGrid ItemsSource="{Binding ViewModelProvider}"
 					  AlternationCount="{Binding Items.Count, RelativeSource={RelativeSource Self}}"
-					  AutoGenerateColumns="False"
-					  EnableRowVirtualization="True"
-					  CanUserSortColumns="True"
-					  CanUserReorderColumns="False"
-					  CanUserResizeColumns="True"
-					  SelectionMode="Single"
-					  SelectionUnit="FullRow"
 					  SelectedItem="{Binding SelectedItem, UpdateSourceTrigger=PropertyChanged}"
-					  CanUserAddRows="False"
-					  ScrollViewer.CanContentScroll="True"
-					  ScrollViewer.VerticalScrollBarVisibility="Auto"
-					  ScrollViewer.HorizontalScrollBarVisibility="Visible">
+					  ScrollViewer.CanContentScroll="True">
 				<DataGrid.Style>
 					<Style TargetType="DataGrid" BasedOn="{StaticResource MaterialDesignDataGrid}">
 						<!-- Default Value is Collapsed -->
+						<Setter Property="AutoGenerateColumns" Value="False"/>
+						<Setter Property="EnableRowVirtualization" Value="True"/>
+						<Setter Property="CanUserSortColumns" Value="True"/>
+						<Setter Property="CanUserReorderColumns" Value="False"/>
+						<Setter Property="CanUserResizeColumns" Value="True"/>
+						<Setter Property="SelectionMode" Value="Single"/>
+						<Setter Property="SelectionUnit" Value="FullRow"/>
+						<Setter Property="CanUserAddRows" Value="False"/>
+						<Setter Property="ScrollViewer.CanContentScroll" Value="True"/>
+						<Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+						<Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
 						<Setter Property="Visibility" Value="Collapsed"/>
 						<Style.Triggers>
 							<!-- If IsVisible == true, show DataGrid -->

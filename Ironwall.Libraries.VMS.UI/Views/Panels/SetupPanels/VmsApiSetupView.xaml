@@ -127,10 +127,10 @@
 			  Grid.Row="1">
 			<!-- ProgressBar section -->
 			<ProgressBar Width="50"
-                             Height="50"
-                             Margin="16"
-                             IsIndeterminate="True"
-                             Value="44">
+                        Height="50"
+                        Margin="16"
+                        IsIndeterminate="True"
+                        Value="44">
 				<ProgressBar.Style>
 					<Style TargetType="ProgressBar" BasedOn="{StaticResource MaterialDesignCircularProgressBar}">
 						<!-- Default Value is Collapsed -->

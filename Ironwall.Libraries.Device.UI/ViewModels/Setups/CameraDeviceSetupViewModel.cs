@@ -167,13 +167,12 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Setups
         #region - Processes -
         private Task DataInitialize(CancellationToken cancellationToken = default)
         {
-            return Task.Run(() =>
+            return Task.Run(async() =>
             {
                 try
                 {
                     IsVisible = false;
-                    //await Task.Delay(1000, cancellationToken);
-
+                    await Task.Delay(100);
                     if (cancellationToken.IsCancellationRequested) new TaskCanceledException("Task was cancelled!");
                     //ViewModelProvider Setting
                     _provider = IoC.Get<CameraViewModelProvider>();

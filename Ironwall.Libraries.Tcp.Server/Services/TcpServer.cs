@@ -281,30 +281,95 @@ namespace Ironwall.Libraries.Tcp.Server.Services
                 _log.Error($"Raised Exception in {nameof(CloseSocket)} : {ex.Message}");
             }
         }
+
+        //protected void Accept_Completed(object sender, SocketAsyncEventArgs e)
+        //{
+        //    try
+        //    {
+        //        var ass = e.AcceptSocket;
+
+        //        var cliUser = new TcpAcceptedClient(_log);
+
+        //        ClientActivate(cliUser);
+
+        //        cliUser.CreateSocket(e.AcceptSocket);
+
+        //        //클라이언트 리스트 등록
+        //        ClientList.Add(cliUser);
+
+        //        Socket socketServer = (Socket)sender;
+        //        e.AcceptSocket = null;
+        //        socketServer.AcceptAsync(e);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _log.Error($"Raised Exception in {nameof(Accept_Completed)} : {ex.Message}");
+        //    }
+        //}
+
         protected void Accept_Completed(object sender, SocketAsyncEventArgs e)
         {
             try
             {
-                var ass = e.AcceptSocket;
+                _log.Info($"{nameof(Accept_Completed)} was started...");
+                // Get the newly accepted socket
+                var newSocket = e.AcceptSocket;
+                var newEndPoint = newSocket?.RemoteEndPoint as IPEndPoint;
 
-                TcpAcceptedClient cliUser = InstanceFactory.Build<TcpAcceptedClient>();
+                // If endpoint is null, close the socket and return
+                if (newEndPoint == null)
+                {
+                    newSocket?.Close();
+                    return;
+                }
 
+                _log.Info($"Multiple client validation check was started...");
+
+                // Check if there is an existing client with the same IP address
+                var existingClient = ClientList.FirstOrDefault(
+                    client =>
+                    {
+                        var ep = client.Socket.RemoteEndPoint as IPEndPoint;
+                        return ep != null && ep.Address.Equals(newEndPoint.Address);
+                    }
+                );
+
+                // If there is an existing client, remove it and close its socket
+                if (existingClient != null)
+                {
+                    _log.Info($"Removed existing client with IP = {newEndPoint.Address}. [Duplicated Connection]");
+                    existingClient.CloseSocket();
+                    ClientList.Remove(existingClient);
+                }
+
+                _log.Info($"{nameof(TcpAcceptedClient)} was created...");
+                // Create and initialize a new TcpAcceptedClient instance
+                var cliUser = new TcpAcceptedClient(_log);
+
+                // Activate the client (e.g., register event handlers, set heartbeat time)
                 ClientActivate(cliUser);
+                _log.Info($"{nameof(TcpAcceptedClient)} was activated...");
 
-                cliUser.CreateSocket(e.AcceptSocket);
+                // Attach the newly accepted socket to this client
+                cliUser.CreateSocket(newSocket);
 
-                //클라이언트 리스트 등록
+                // Add the new client to the client list
                 ClientList.Add(cliUser);
 
+                // Prepare for the next client by reassigning AcceptAsync
                 Socket socketServer = (Socket)sender;
                 e.AcceptSocket = null;
                 socketServer.AcceptAsync(e);
+
+                _log.Info($"{nameof(Accept_Completed)} was finished...");
             }
             catch (Exception ex)
             {
                 _log.Error($"Raised Exception in {nameof(Accept_Completed)} : {ex.Message}");
             }
         }
+
+
         protected void AcceptedClient_Conncted(object cli)
         {
             try
@@ -318,10 +383,12 @@ namespace Ironwall.Libraries.Tcp.Server.Services
                 _log.Error($"Raised Exception in {nameof(AcceptedClient_Conncted)} : {ex.Message}");
             }
         }
+
         protected void AcceptedClient_Event(string data, IPEndPoint endPoint = null, EnumTcpCommunication type = EnumTcpCommunication.MSG_PACKET_RECEIVING)
         {
             ServerEvent?.Invoke(data, endPoint, type);
         }
+
         protected async void AcceptedClient_Disconnected(object cli)
         {
             await Task.Run(() => 
@@ -330,7 +397,7 @@ namespace Ironwall.Libraries.Tcp.Server.Services
                 {
                     TcpAcceptedClient removeCli = (TcpAcceptedClient)cli;
                     var endPoint = (IPEndPoint)removeCli?.Socket?.RemoteEndPoint;
-                    Debug.WriteLine($"EndPoint is {endPoint} in AcceptedClient_Disconnected of TcpServer");
+                    _log.Info($"Client({endPoint}) was disconnected");
                     
                     // 서버 연결 종료 이벤트 송신
                     ServerDisconnected?.Invoke(endPoint);

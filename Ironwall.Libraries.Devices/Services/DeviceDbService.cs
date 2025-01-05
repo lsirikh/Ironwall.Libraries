@@ -73,11 +73,7 @@ namespace Ironwall.Libraries.Devices.Services
         protected override async Task RunTask(CancellationToken token = default)
         {
             await BuildSchemeAsync(token);
-
             await FetchFullInstanceAsync(token);
-            
-            //await CreateEntity();
-
         }
 
         protected override Task ExitTask(CancellationToken token = default)

@@ -59,8 +59,7 @@ namespace Ironwall.Libraries.VMS.UI.ViewModels.Panels
             try
             {
                 // Check if the source is a TabControl
-                if (!(args.Source is TabControl))
-                    return;
+                if (!(args.Source is TabControl)) return;
 
                 // Check if we have a selected TabItem
                 if (args.AddedItems.Count == 0 || !(args.AddedItems[0] is TabItem tabItem))
@@ -129,7 +128,6 @@ namespace Ironwall.Libraries.VMS.UI.ViewModels.Panels
             {
                 _log.Error($"Raised Exception in {nameof(OnActiveTab)} : {ex.Message}");
             }
-
         }
         #endregion
         #region - IHanldes -

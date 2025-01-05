@@ -9,6 +9,7 @@ using Ironwall.Libraries.Tcp.Common.Defines;
 using Ironwall.Libraries.Tcp.Common.Models;
 using Ironwall.Libraries.Tcp.Packets.Models;
 using Ironwall.Libraries.Tcp.Packets.Services;
+using Ironwall.Libraries.Tcp.Packets.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System;
@@ -160,10 +161,12 @@ namespace Ironwall.Libraries.Tcp.Client.Services
 
                 if (byteArray.Length > PacketHeader.BODY_SIZE)
                 {
+                    _log.Info($"{nameof(_packetService.SendPacketProcess)}({EnumPacketType.LONG_MESSAGE}): {msg}");
                     await _packetService.SendPacketProcess(msg, Packets.Utils.EnumPacketType.LONG_MESSAGE, Socket);
                 }
                 else
                 {
+                    _log.Info($"{nameof(_packetService.SendPacketProcess)}({EnumPacketType.SHORT_MESSAGE}): {msg}");
                     await _packetService.SendPacketProcess(msg, Packets.Utils.EnumPacketType.SHORT_MESSAGE, Socket);
                 }
 
@@ -220,22 +223,19 @@ namespace Ironwall.Libraries.Tcp.Client.Services
             }
         }
 
-        public override Task SendVideoDataRequest(string file, IPEndPoint selectedIp = null)
+        public override async Task SendVideoDataRequest(string file, IPEndPoint selectedIp = null)
         {
-            return Task.Run(() =>
+            try
             {
-                try
-                {
-                    if (selectedIp != null)
-                        _remoteEP = selectedIp;
+                if (selectedIp != null)
+                    _remoteEP = selectedIp;
 
-                    _packetService.SendPacketProcess(file, Packets.Utils.EnumPacketType.VIDEO, Socket);
-                }
-                catch (Exception ex)
-                {
-                    _log.Error($"Raised Exception in {nameof(SendVideoDataRequest)} : {ex.Message}");
-                }
-            });
+                await _packetService.SendPacketProcess(file, Packets.Utils.EnumPacketType.VIDEO, Socket);
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"Raised Exception in {nameof(SendVideoDataRequest)} : {ex.Message}");
+            }
         }
 
         private void _packetService_SendStarted(object ret, EnumTcpCommunication type)
@@ -284,7 +284,7 @@ namespace Ironwall.Libraries.Tcp.Client.Services
                 Mode = 1;
 
                 //PacketService 생성
-                _packetService = new PacketService();
+                _packetService = new PacketService(_log);
                 _packetService.ReceiveStarted += PacketService_ReceiveStarted;
                 _packetService.Receiving += PacketService_Receiving;
                 _packetService.ReceiveCompleted += PacketService_ReceiveCompleted;
@@ -571,8 +571,8 @@ namespace Ironwall.Libraries.Tcp.Client.Services
                 var iPEndPoint = Socket.LocalEndPoint as IPEndPoint;
                 var requestModel = new HeartBeatRequestModel(iPEndPoint.Address.ToString(), iPEndPoint.Port);
                 var msg = JsonConvert.SerializeObject(requestModel, _settings);
-                await SendRequest(msg);
-                //HeartBeatExpireTime += TimeSpan.FromSeconds(_tcpSetupModel.HeartBeat);
+                await SendRequest(msg).ConfigureAwait(false);
+
                 return true;
             }
             catch (Exception ex)

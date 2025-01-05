@@ -53,24 +53,22 @@ namespace Ironwall.Libraries.VMS.Common.Services
         }
         #endregion
         #region - Implementation of Interface -
-        public Task ExecuteAsync(CancellationToken token = default)
+        public async Task ExecuteAsync(CancellationToken token = default)
         {
             try
             {
                 //01.Login
                 InitTimer(1000 * 60 * 10);//10분마다 Tick 발생
 
-                //await ApiLoginProcess();
-
                 // ApiLoginProcess를 백그라운드 Task로 실행
-                _ = Task.Run(async () => await ApiLoginProcess(), token);
+                //_ = Task.Run(async () => await ApiLoginProcess(), token);
 
             }
             catch (Exception ex)
             {
                 _log.Error($"Raised {nameof(Exception)} in {nameof(ExecuteAsync)} of {nameof(VmsApiService)} : {ex.Message}", _class);
             }
-            return Task.CompletedTask;
+            //return Task.CompletedTask;
 
         }
 

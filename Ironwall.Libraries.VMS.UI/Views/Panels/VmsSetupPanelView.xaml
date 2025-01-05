@@ -7,7 +7,9 @@
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
 			 xmlns:cal="http://caliburnmicro.com"
              mc:Ignorable="d" 
+			 d:Background="Gray"
              d:DesignHeight="450" d:DesignWidth="800">
+	
 	<TabControl HorizontalContentAlignment="Stretch"
 				VerticalContentAlignment="Top"
 				Background="Transparent"

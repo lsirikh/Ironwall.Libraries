@@ -52,7 +52,6 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Setups
         {
             await base.OnActivateAsync(cancellationToken);
 
-            //_ = DataInitialize(_cancellationTokenSource.Token);
             await DataInitialize(_cancellationTokenSource.Token).ConfigureAwait(false);
         }
 
@@ -159,12 +158,12 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Setups
         #region - Processes -
         private Task DataInitialize(CancellationToken cancellationToken = default)
         {
-            return Task.Run(() =>
+            return Task.Run(async() =>
             {
                 try
                 {
                     IsVisible = false;
-                    //await Task.Delay(1000, cancellationToken);
+                    await Task.Delay(100, cancellationToken);
                     
                     //ViewModelProvider Setting
                     if (cancellationToken.IsCancellationRequested) new TaskCanceledException("Task was cancelled!");
