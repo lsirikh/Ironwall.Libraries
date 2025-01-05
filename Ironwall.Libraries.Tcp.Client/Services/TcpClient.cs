@@ -9,6 +9,7 @@ using Ironwall.Libraries.Tcp.Common.Defines;
 using Ironwall.Libraries.Tcp.Common.Models;
 using Ironwall.Libraries.Tcp.Packets.Models;
 using Ironwall.Libraries.Tcp.Packets.Services;
+using Ironwall.Libraries.Tcp.Packets.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System;
@@ -19,13 +20,14 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using static Ironwall.Libraries.Tcp.Common.Defines.ITcpCommon;
 
 namespace Ironwall.Libraries.Tcp.Client.Services
 {
-    public abstract class TcpClient : TcpSocket, ITcpClient, ITcpDataModel
+    public abstract class TcpClient : TcpSocket, ITcpClient, ITcpDataModel, IDisposable
     {
         #region - Ctors -
         protected TcpClient(ILogService log, TcpSetupModel tcpSetupModel)
@@ -39,11 +41,36 @@ namespace Ironwall.Libraries.Tcp.Client.Services
                 Converters = new List<JsonConverter> { new StringEnumConverter() },
                 DateFormatString = "yyyy-MM-ddTHH:mm:ss.ff"
             };
+
+            _class = typeof(TcpClient);
         }
+        ~TcpClient()
+        {
+            Dispose(false);
+        }
+
         #endregion
         #region - Implementation of Interface -
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
 
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    // 관리되는 리소스 해제
+                    CloseSocket();
+                }
 
+                // 관리되지 않는 리소스 해제
+                _disposed = true;
+            }
+        }
         #endregion
         #region - Overrides -
         public override void InitSocket()
@@ -66,7 +93,7 @@ namespace Ironwall.Libraries.Tcp.Client.Services
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised Exception in {nameof(InitSocket)} of {nameof(TcpClient)} : {ex.Message}");
+                _log.Error($"Raised Exception in {nameof(InitSocket)} : {ex.Message}");
             }
         }
 
@@ -78,34 +105,49 @@ namespace Ironwall.Libraries.Tcp.Client.Services
                 {
                     Mode = 0;
 
+                    // 패킷 서비스 이벤트 제거
                     _packetService.Dispose();
-                    _packetService.ReceiveStarted -= _packetService_ReceiveStarted;
-                    _packetService.Receiving -= _packetService_Receiving;
+                    _packetService.ReceiveStarted -= PacketService_ReceiveStarted;
+                    _packetService.Receiving -= PacketService_Receiving;
                     _packetService.ReceiveCompleted -= PacketService_ReceiveCompleted;
                     _packetService.SendStarted -= _packetService_SendStarted;
                     _packetService.Sending -= _packetService_Sending;
                     _packetService.SendCompleted -= PacketService_SendCompleted;
 
+                    // 타이머 정리
                     DisposeTimer();
+
                     Disconnected?.Invoke();
+
+                    // 연결 관련 이벤트 제거
                     if (Socket.Connected)
                     {
-                        //Socket AsyncEvent for Disconnection
-                        SocketAsyncEventArgs disconnectEvent = new SocketAsyncEventArgs();
+                        var disconnectEvent = new SocketAsyncEventArgs();
+                        disconnectEvent.Completed -= Connect_Completed;
+                        disconnectEvent.Completed -= Recieve_Completed;
                         Socket?.DisconnectAsync(disconnectEvent);
+                    }
 
-                        //When Complete Disconnection from Remote EndPoint Call a callback function
-                        disconnectEvent.Completed += new EventHandler<SocketAsyncEventArgs>(Disconnect_Complete);
-                    }
-                    else
-                    {
-                        Disconnect_Process();
-                    }
+                    Disconnect_Process();
+
+                    //if (Socket.Connected)
+                    //{
+                    //    //Socket AsyncEvent for Disconnection
+                    //    SocketAsyncEventArgs disconnectEvent = new SocketAsyncEventArgs();
+                    //    Socket?.DisconnectAsync(disconnectEvent);
+
+                    //    //When Complete Disconnection from Remote EndPoint Call a callback function
+                    //    disconnectEvent.Completed += new EventHandler<SocketAsyncEventArgs>(Disconnect_Complete);
+                    //}
+                    //else
+                    //{
+                    //    Disconnect_Process();
+                    //}
                 }
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised Exception in {nameof(CloseSocket)} of {nameof(TcpClient)} : {ex.Message}");
+                _log.Error($"Raised Exception in {nameof(CloseSocket)} : {ex.Message}");
             }
         }
 
@@ -119,17 +161,19 @@ namespace Ironwall.Libraries.Tcp.Client.Services
 
                 if (byteArray.Length > PacketHeader.BODY_SIZE)
                 {
+                    _log.Info($"{nameof(_packetService.SendPacketProcess)}({EnumPacketType.LONG_MESSAGE}): {msg}");
                     await _packetService.SendPacketProcess(msg, Packets.Utils.EnumPacketType.LONG_MESSAGE, Socket);
                 }
                 else
                 {
+                    _log.Info($"{nameof(_packetService.SendPacketProcess)}({EnumPacketType.SHORT_MESSAGE}): {msg}");
                     await _packetService.SendPacketProcess(msg, Packets.Utils.EnumPacketType.SHORT_MESSAGE, Socket);
                 }
 
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised Exception in {nameof(SendRequest)} of {nameof(TcpClient)} : {ex.Message}");
+                _log.Error($"Raised Exception in {nameof(SendRequest)} : {ex.Message}");
             }
         }
 
@@ -145,7 +189,7 @@ namespace Ironwall.Libraries.Tcp.Client.Services
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Raised Exception in {nameof(SendFileRequest)} of {nameof(TcpClient)} : {ex.Message}");
+                _log.Error($"Raised Exception in {nameof(SendFileRequest)} : {ex.Message}");
             }
         }
 
@@ -160,7 +204,7 @@ namespace Ironwall.Libraries.Tcp.Client.Services
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised Exception in {nameof(SendMapDataRequest)} of {nameof(TcpClient)} : {ex.Message}");
+                _log.Error($"Raised Exception in {nameof(SendMapDataRequest)} : {ex.Message}");
             }
         }
 
@@ -175,26 +219,23 @@ namespace Ironwall.Libraries.Tcp.Client.Services
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised Exception in {nameof(SendProfileDataRequest)} of {nameof(TcpClient)} : {ex.Message}");
+                _log.Error($"Raised Exception in {nameof(SendProfileDataRequest)} : {ex.Message}");
             }
         }
 
-        public override Task SendVideoDataRequest(string file, IPEndPoint selectedIp = null)
+        public override async Task SendVideoDataRequest(string file, IPEndPoint selectedIp = null)
         {
-            return Task.Run(() =>
+            try
             {
-                try
-                {
-                    if (selectedIp != null)
-                        _remoteEP = selectedIp;
+                if (selectedIp != null)
+                    _remoteEP = selectedIp;
 
-                    _packetService.SendPacketProcess(file, Packets.Utils.EnumPacketType.VIDEO, Socket);
-                }
-                catch (Exception ex)
-                {
-                    _log.Error($"Raised Exception in {nameof(SendVideoDataRequest)} of {nameof(TcpClient)} : {ex.Message}");
-                }
-            });
+                await _packetService.SendPacketProcess(file, Packets.Utils.EnumPacketType.VIDEO, Socket);
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"Raised Exception in {nameof(SendVideoDataRequest)} : {ex.Message}");
+            }
         }
 
         private void _packetService_SendStarted(object ret, EnumTcpCommunication type)
@@ -228,7 +269,7 @@ namespace Ironwall.Libraries.Tcp.Client.Services
         #region - Binding Methods -
         #endregion
         #region - Processes -
-        private void CreateSocket(IPEndPoint ipep)
+        private async void CreateSocket(IPEndPoint ipep)
         {
             try
             {
@@ -243,38 +284,78 @@ namespace Ironwall.Libraries.Tcp.Client.Services
                 Mode = 1;
 
                 //PacketService 생성
-                _packetService = new PacketService();
-                _packetService.ReceiveStarted += _packetService_ReceiveStarted;
-                _packetService.Receiving += _packetService_Receiving;
+                _packetService = new PacketService(_log);
+                _packetService.ReceiveStarted += PacketService_ReceiveStarted;
+                _packetService.Receiving += PacketService_Receiving;
                 _packetService.ReceiveCompleted += PacketService_ReceiveCompleted;
                 _packetService.SendStarted += _packetService_SendStarted;
                 _packetService.Sending += _packetService_Sending;
                 _packetService.SendCompleted += PacketService_SendCompleted;
 
-                //연결요청 확인 이벤트
-                SocketAsyncEventArgs lookingEvent = new SocketAsyncEventArgs();
-
-                //이벤트 RemoteEndPoint 설정
-                lookingEvent.RemoteEndPoint = ipep;
+                // 연결요청 확인 이벤트
+                SocketAsyncEventArgs lookingEvent = new SocketAsyncEventArgs
+                {
+                    RemoteEndPoint = ipep // 서버의 IP 및 포트 설정
+                };
 
                 //연결 완료 이벤트 연결
                 lookingEvent.Completed += new EventHandler<SocketAsyncEventArgs>(Connect_Completed);
 
-                //서버 메시지 대기
-                createdSocket.ConnectAsync(lookingEvent);
+                // 타임아웃 설정 (5초)
+                var connectTask = ConnectAsyncWithTimeout(createdSocket, lookingEvent, TimeSpan.FromSeconds(5));
+                await connectTask; // 연결 시도 및 타임아웃 처리
+
+                ////서버 메시지 대기
+                //createdSocket.ConnectAsync(lookingEvent);
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised Exception in {nameof(CreateSocket)} of {nameof(TcpClient)} : {ex.Message}");
+                _log.Error($"Raised Exception in {nameof(CreateSocket)} : {ex.Message}");
             }
         }
 
-       
+        private async Task ConnectAsyncWithTimeout(Socket socket, SocketAsyncEventArgs eventArgs, TimeSpan timeout)
+        {
+            using (var cts = new CancellationTokenSource())
+            {
+                try
+                {
+                    var connectTask = Task.Factory.FromAsync(
+                        (callback, state) => socket.BeginConnect(eventArgs.RemoteEndPoint, callback, state),
+                        socket.EndConnect,
+                        null
+                    );
+
+                    var timeoutTask = Task.Delay(timeout, cts.Token);
+
+                    if (await Task.WhenAny(connectTask, timeoutTask) == connectTask)
+                    {
+                        // 연결 성공 시 타임아웃 취소
+                        cts.Cancel();
+                        await connectTask; // 작업 완료
+
+                        // 성공 시 Connect_Completed 로직 호출
+                        Connect_Completed(socket, eventArgs);
+                    }
+                    else
+                    {
+                        // 타임아웃 발생
+                        throw new TimeoutException("Socket connection timed out.");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _log.Error($"Raised Exception in {nameof(ConnectAsyncWithTimeout)} : {ex.Message}");
+                    throw; // 예외를 호출자로 전달
+                }
+            }
+        }
+
 
         private void Connect_Completed(object sender, SocketAsyncEventArgs e)
         {
             //Socket Main Error Check 
-            if (e.SocketError == System.Net.Sockets.SocketError.ConnectionRefused)
+            if (e.SocketError == SocketError.ConnectionRefused)
             {
                 _log.Info("Server Connection was Refused!");
                 TcpEvent?.Invoke("Server Connection was Refused!", null, EnumTcpCommunication.COMMUNICATION_ERROR);
@@ -293,9 +374,9 @@ namespace Ironwall.Libraries.Tcp.Client.Services
 
             try
             {
-                if (true == ((Socket)sender).Connected)
+                if (e.SocketError == SocketError.Success && sender is Socket socket && socket.Connected)
                 {
-                    Socket = e.ConnectSocket;
+                    Socket = socket; // 성공한 소켓 저장
                     var info = Socket.LocalEndPoint.ToString();
                     Mode = 2;
 
@@ -308,17 +389,19 @@ namespace Ironwall.Libraries.Tcp.Client.Services
                     //접속 완료 상태 메세지 전송
                     //TcpEvent?.Invoke($"(Notice) Successfully connected to server!", (IPEndPoint)((Socket)sender).RemoteEndPoint);
 
-                    //서버에 보낼 객체를 만든다.
-                    SocketAsyncEventArgs receiveEvent = new SocketAsyncEventArgs();
-                    //보낼 데이터를 설정하고
-                    receiveEvent.UserToken = Socket;
-                    //데이터 길이 세팅
+                    // 메시지 수신 준비
+                    var receiveEvent = new SocketAsyncEventArgs
+                    {
+                        UserToken = Socket
+                    };
                     //버퍼
                     receiveEvent.SetBuffer(new byte[PacketHeader.TOTAL_SIZE], 0, PacketHeader.TOTAL_SIZE);
                     //받음 완료 이벤트 연결
                     receiveEvent.Completed += new EventHandler<SocketAsyncEventArgs>(Recieve_Completed);
                     //받음 보냄
                     Socket.ReceiveAsync(receiveEvent);
+
+                    _log.Info("Socket connection successfully completed.");
                 }
                 else
                 {
@@ -327,7 +410,7 @@ namespace Ironwall.Libraries.Tcp.Client.Services
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised Exception in {nameof(Connect_Completed)} of {nameof(TcpClient)} : {ex.Message}");
+                _log.Error($"Raised Exception in {nameof(Connect_Completed)} : {ex.Message}");
             }
 
         }
@@ -367,7 +450,7 @@ namespace Ironwall.Libraries.Tcp.Client.Services
                 }
                 else
                 {
-                    _log.Info($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.ff")}]연결도 없고 받는 데이터도 없어서 끊김");
+                    _log.Info($"연결도 없고 받는 데이터도 없어서 끊김");
                     CloseSocket();
                 }
 
@@ -375,7 +458,7 @@ namespace Ironwall.Libraries.Tcp.Client.Services
                 {
                     // Disconnected 이벤트 알림
                     //AcceptedClientDisconnected?.Invoke(this);
-                    _log.Info($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.ff")}]연결 끊겨서 종료!!!!!!!!!!!!!!!!!");
+                    _log.Info($"연결 끊겨서 종료");
                     CloseSocket();
                 }
             }
@@ -385,13 +468,13 @@ namespace Ironwall.Libraries.Tcp.Client.Services
             }
         }
 
-        private void _packetService_ReceiveStarted(object ret, EnumTcpCommunication type)
+        private void PacketService_ReceiveStarted(object ret, EnumTcpCommunication type)
         {
             //var msg = ret?.ToString() != null ? ret.ToString() : $"수신 시작";
             TcpEvent?.Invoke(ret?.ToString(), _remoteEP, type);
         }
 
-        private void _packetService_Receiving(int current, int total, EnumTcpCommunication type, string name = null)
+        private void PacketService_Receiving(int current, int total, EnumTcpCommunication type, string name = null)
         {
             string msg;
             if (total == 0)
@@ -428,13 +511,13 @@ namespace Ironwall.Libraries.Tcp.Client.Services
         {
             Mode = 0;
 
-            _log.Info($"{nameof(TcpClient)} socket({Socket.GetHashCode()}) was disconnected in {nameof(Disconnect_Complete)}");
-            //Socket Close to finish using socket
-            Socket?.Close();
-            _log.Info($"{nameof(TcpClient)} socket({Socket.GetHashCode()}) was closed in {nameof(Disconnect_Complete)}");
-            //Socket Dispose to release resources
-            Socket?.Dispose();
-            _log.Info($"{nameof(TcpClient)} socket({Socket.GetHashCode()}) was disposed in {nameof(Disconnect_Complete)}");
+            if (Socket != null)
+            {
+                _log.Info($"Socket({Socket.GetHashCode()}) is being closed.");
+                Socket.Close();
+                Socket.Dispose();
+                _log.Info($"Socket({Socket.GetHashCode()}) was successfully disposed.");
+            }
         }
 
         public void SetServerIPEndPoint(ITcpServerModel model)
@@ -446,14 +529,12 @@ namespace Ironwall.Libraries.Tcp.Client.Services
         {
             try
             {
-                //Debug.WriteLine($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.ff")}][{nameof(ConnectionTick)}] TICK...{(HeartBeatExpireTime - DateTime.Now).Seconds}");
-                //Debug.WriteLine($"[{HeartBeatExpireTime.ToString("yyyy-MM-dd HH:mm:ss.ff")} - {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.ff")}]");
                 bool isHeartBeatSent = false;
                 if ((HeartBeatExpireTime - DateTimeHelper.GetCurrentTimeWithoutMS()) < TimeSpan.FromSeconds(10))
                 {
-                    _log.Info($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}]##############Start TCP HeartBeat!#############");
+                    _log.Info($"##############Start TCP HeartBeat!#############");
                     isHeartBeatSent = await SendHeartBeat();
-                    _log.Info($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}]#############Finish TCP HeartBeat!#############");
+                    _log.Info($"#############Finish TCP HeartBeat!#############");
                 }
             }
             catch (Exception ex)
@@ -469,7 +550,7 @@ namespace Ironwall.Libraries.Tcp.Client.Services
                 DateTime timeData;
                 DateTime.TryParse(updatedTime, out timeData);
                 HeartBeatExpireTime = timeData;
-                _log.Info($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}]Tcp client HeartBeat was update[Expired : {HeartBeatExpireTime.ToString("yyyy-MM-dd HH:mm:ss")}]");
+                _log.Info($"Tcp client HeartBeat was update[Expired : {HeartBeatExpireTime.ToString("yyyy-MM-dd HH:mm:ss")}]");
             }
             catch (Exception ex)
             {
@@ -477,31 +558,28 @@ namespace Ironwall.Libraries.Tcp.Client.Services
             }
         }
 
-        private Task<bool> SendHeartBeat()
+        private async Task<bool> SendHeartBeat()
         {
-            return Task.Run(async () =>
+            try
             {
-                try
+                if (!Socket.Connected)
                 {
-                    if (!Socket.Connected)
-                    {
-                        _log.Info($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}]Socket is connected :{Socket.Connected} in {nameof(SendHeartBeat)}");
-                        return false;
-                    }
-
-                    var iPEndPoint = Socket.LocalEndPoint as IPEndPoint;
-                    var requestModel = new HeartBeatRequestModel(iPEndPoint.Address.ToString(), iPEndPoint.Port);
-                    var msg = JsonConvert.SerializeObject(requestModel, _settings);
-                    await SendRequest(msg);
-                    //HeartBeatExpireTime += TimeSpan.FromSeconds(_tcpSetupModel.HeartBeat);
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    _log.Error($"Raised Exception in {nameof(SendHeartBeat)} : {ex.Message}");
+                    _log.Info($"Socket is connected :{Socket.Connected} in {nameof(SendHeartBeat)}");
                     return false;
                 }
-            });
+
+                var iPEndPoint = Socket.LocalEndPoint as IPEndPoint;
+                var requestModel = new HeartBeatRequestModel(iPEndPoint.Address.ToString(), iPEndPoint.Port);
+                var msg = JsonConvert.SerializeObject(requestModel, _settings);
+                await SendRequest(msg).ConfigureAwait(false);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"Raised Exception in {nameof(SendHeartBeat)} : {ex.Message}");
+                return false;
+            }
         }
 
         #endregion
@@ -524,6 +602,9 @@ namespace Ironwall.Libraries.Tcp.Client.Services
         public event TcpDisconnect_dele Disconnected;
         private object _locker;
         protected JsonSerializerSettings _settings;
+        private Type _class;
+        private bool _disposed = false;
+
         protected ILogService _log;
 
         //private bool inReceiveProcess;

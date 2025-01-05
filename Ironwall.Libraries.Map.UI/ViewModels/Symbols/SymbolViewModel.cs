@@ -15,9 +15,6 @@ namespace Ironwall.Libraries.Map.UI.ViewModels.Symbols
         Company      : Sensorway Co., Ltd.                                       
         Email        : lsirikh@naver.com                                         
      ****************************************************************************/
-
-
-
     public class SymbolViewModel : SymbolBaseViewModel<ISymbolModel>, ISymbolViewModel
     {
 
@@ -40,7 +37,7 @@ namespace Ironwall.Libraries.Map.UI.ViewModels.Symbols
             GC.Collect();
         }
 
-        public override async void OnClickSelect(object sender, RoutedEventArgs args)
+        public override async void OnClickSelect(object sender, EventArgs args)
         {
             if (!OnEditable) return;
 
@@ -48,13 +45,13 @@ namespace Ironwall.Libraries.Map.UI.ViewModels.Symbols
             await _eventAggregator.PublishOnUIThreadAsync(new EditShapeMessage(true, this));
         }
 
-        public override async void OnClickEdit(object sender, RoutedEventArgs args)
+        public override async void OnClickEdit(object sender, EventArgs args)
         {
             IsEditable = true;
             await _eventAggregator.PublishOnUIThreadAsync(new EditShapeMessage(true, this));
         }
 
-        public override async void OnClickDelete(object sender, RoutedEventArgs args)
+        public override async void OnClickDelete(object sender, EventArgs args)
         {
             IsEditable = false;
             await _eventAggregator.PublishOnUIThreadAsync(new EditShapeMessage(false, this));
@@ -62,12 +59,12 @@ namespace Ironwall.Libraries.Map.UI.ViewModels.Symbols
 
         }
 
-        public override async void OnClickCopy(object sender, RoutedEventArgs args)
+        public override async void OnClickCopy(object sender, EventArgs args)
         {
             await _eventAggregator.PublishOnUIThreadAsync(new CopyShapeMessage(_model));
         }
 
-        public override async void OnClickExit(object sender, RoutedEventArgs args)
+        public override async void OnClickExit(object sender, EventArgs args)
         {
             IsEditable = false;
             await _eventAggregator.PublishOnUIThreadAsync(new EditShapeMessage(false, this));

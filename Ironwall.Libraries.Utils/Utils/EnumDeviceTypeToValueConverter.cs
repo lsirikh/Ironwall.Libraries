@@ -80,8 +80,7 @@ namespace Ironwall.Libraries.Utils
         /// <returns>int type value</returns>
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (targetType != typeof(int))
-                return null;
+            if (targetType != typeof(int)) return null;
 
             if (value.ToString() == EnumDeviceType.NONE.ToString())
                 return (int)EnumDeviceType.NONE;

@@ -52,6 +52,7 @@ namespace Ironwall.Libraries.Devices.Services
         {
             _conn = dbConnection;
             _log = log;
+            _class = this.GetType();
 
             _setupModel = deviceSetupModel;
 
@@ -72,11 +73,7 @@ namespace Ironwall.Libraries.Devices.Services
         protected override async Task RunTask(CancellationToken token = default)
         {
             await BuildSchemeAsync(token);
-
             await FetchFullInstanceAsync(token);
-            
-            //await CreateEntity();
-
         }
 
         protected override Task ExitTask(CancellationToken token = default)
@@ -194,7 +191,7 @@ namespace Ironwall.Libraries.Devices.Services
             }
             catch (Exception ex)
             {
-                _log.Error($"Task was cancelled in {nameof(BuildSchemeAsync)}: " + ex.Message);
+                _log.Error($"Task was cancelled in {nameof(BuildSchemeAsync)}: " + ex.Message, _class);
             }
         }
 
@@ -259,7 +256,7 @@ namespace Ironwall.Libraries.Devices.Services
             }
             catch (Exception ex)
             {
-                _log.Error(ex.Message);
+                _log.Error(ex.Message, _class);
             }
         }
 
@@ -293,7 +290,7 @@ namespace Ironwall.Libraries.Devices.Services
             }
             catch (Exception ex)
             {
-                _log.Error(ex.Message);
+                _log.Error(ex.Message, _class);
             }
         }
 
@@ -331,7 +328,7 @@ namespace Ironwall.Libraries.Devices.Services
             }
             catch (Exception ex)
             {
-                _log.Error(ex.Message);
+                _log.Error(ex.Message, _class);
             }
         }
 
@@ -380,7 +377,7 @@ namespace Ironwall.Libraries.Devices.Services
             }
             catch (Exception ex)
             {
-                _log.Error(ex.Message);
+                _log.Error(ex.Message, _class);
             }
         }
 
@@ -420,7 +417,7 @@ namespace Ironwall.Libraries.Devices.Services
             }
             catch (Exception ex)
             {
-                _log.Error(ex.Message);
+                _log.Error(ex.Message, _class);
             }
         }
 
@@ -496,13 +493,13 @@ namespace Ironwall.Libraries.Devices.Services
             }
             catch (TaskCanceledException ex)
             {
-                _log.Error($"Task was cancelled in {nameof(FetchControllerDevice)}: " + ex.Message);
+                _log.Error($"Task was cancelled in {nameof(FetchControllerDevice)}: " + ex.Message, _class);
                 tcs?.SetException(ex);
                 return null;
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchControllerDevice)}: " + ex.Message);
+                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchControllerDevice)}: " + ex.Message, _class);
                 tcs?.SetException(ex);
                 return null;
             }
@@ -535,13 +532,13 @@ namespace Ironwall.Libraries.Devices.Services
             }
             catch (TaskCanceledException ex)
             {
-                _log.Error($"Task was cancelled in {nameof(FetchControllerDevice)}: " + ex.Message);
+                _log.Error($"Task was cancelled in {nameof(FetchControllerDevice)}: " + ex.Message, _class);
                 tcs?.SetException(ex);
                 return null;
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchControllerDevice)}: " + ex.Message);
+                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchControllerDevice)}: " + ex.Message, _class);
                 tcs?.SetException(ex);
                 return null;
             }
@@ -570,7 +567,7 @@ namespace Ironwall.Libraries.Devices.Services
                     entities.Add(model);
                     commitResult++;
                 };
-                _log.Info($"({commitResult}) rows was fetched in DB[{table}].", true);
+                _log.Info($"({commitResult}) rows was fetched in DB[{table}].", _class);
 
                 tcs?.SetResult(true);
                 return entities;
@@ -578,13 +575,13 @@ namespace Ironwall.Libraries.Devices.Services
             }
             catch (TaskCanceledException ex)
             {
-                _log.Error($"Task was cancelled in {nameof(FetchControllerDevices)}: " + ex.Message);
+                _log.Error($"Task was cancelled in {nameof(FetchControllerDevices)}: " + ex.Message, _class);
                 tcs?.SetException(ex);
                 return null;
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchControllerDevices)}: " + ex.Message);
+                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchControllerDevices)}: " + ex.Message, _class);
                 tcs?.SetException(ex);
                 return null;
             }
@@ -626,13 +623,13 @@ namespace Ironwall.Libraries.Devices.Services
                 }
                 catch (TaskCanceledException ex)
                 {
-                    _log.Error($"Task was cancelled in {nameof(SaveControllerDevice)}: " + ex.Message);
+                    _log.Error($"Task was cancelled in {nameof(SaveControllerDevice)}: " + ex.Message, _class);
                     tcs?.SetException(ex);
                     return null;
                 }
                 catch (Exception ex)
                 {
-                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(SaveControllerDevice)}: " + ex.Message);
+                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(SaveControllerDevice)}: " + ex.Message, _class);
                     tcs?.SetException(ex);
                     return null;
                 }
@@ -656,7 +653,7 @@ namespace Ironwall.Libraries.Devices.Services
                     {
                         commitResult = await _conn.ExecuteAsync($@"DELETE FROM {table}");
 
-                        _log.Info($"DELETE {table} for saving new Data in DB");
+                        _log.Info($"DELETE {table} for saving new Data in DB", _class);
                         if (!(commitResult > 0))
                             throw new Exception($"Raised exception during deleting Table({table}).");
                     }
@@ -681,12 +678,12 @@ namespace Ironwall.Libraries.Devices.Services
                 }
                 catch (TaskCanceledException ex)
                 {
-                    _log.Error($"Task was cancelled in {nameof(SaveControllers)}: " + ex.Message);
+                    _log.Error($"Task was cancelled in {nameof(SaveControllers)}: " + ex.Message, _class);
                     tcs?.SetException(ex);
                 }
                 catch (Exception ex)
                 {
-                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(SaveControllers)}: " + ex.Message);
+                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(SaveControllers)}: " + ex.Message, _class);
                     tcs?.SetException(ex);
                 }
             });
@@ -715,17 +712,17 @@ namespace Ironwall.Libraries.Devices.Services
                                                                   port = @Port 
                                                               WHERE Id = @Id", model);
 
-                    _log.Info($"({commitResult}) rows was updated in DB[{table}] : {model}", true);
+                    _log.Info($"({commitResult}) rows was updated in DB[{table}] : {model}", _class);
                     tcs?.SetResult(true);
                 }
                 catch (TaskCanceledException ex)
                 {
-                    _log.Error($"Task was cancelled in {nameof(UpdateControllerDevice)}: " + ex.Message, true);
+                    _log.Error($"Task was cancelled in {nameof(UpdateControllerDevice)}: " + ex.Message, _class);
                     tcs?.SetException(ex);
                 }
                 catch (Exception ex)
                 {
-                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(UpdateControllerDevice)}: " + ex.Message, true);
+                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(UpdateControllerDevice)}: " + ex.Message, _class);
                     tcs?.SetException(ex);
                 }
             });
@@ -747,12 +744,12 @@ namespace Ironwall.Libraries.Devices.Services
                 }
                 catch (TaskCanceledException ex)
                 {
-                    _log.Error($"Task was cancelled in {nameof(DeleteControllerDevice)}: " + ex.Message, true);
+                    _log.Error($"Task was cancelled in {nameof(DeleteControllerDevice)}: " + ex.Message, _class, true);
                     tcs?.SetException(ex);
                 }
                 catch (Exception ex)
                 {
-                    _log.Error($"Raised Exception for Task to delete DB data in {nameof(DeleteControllerDevice)}: " + ex.Message, true);
+                    _log.Error($"Raised Exception for Task to delete DB data in {nameof(DeleteControllerDevice)}: " + ex.Message, _class, true);
                     tcs?.SetException(ex);
                 }
             });
@@ -802,13 +799,13 @@ namespace Ironwall.Libraries.Devices.Services
             }
             catch (TaskCanceledException ex)
             {
-                _log.Error($"Task was cancelled in {nameof(FetchSensorDevice)}: " + ex.Message);
+                _log.Error($"Task was cancelled in {nameof(FetchSensorDevice)}: " + ex.Message, _class);
                 tcs?.SetException(ex);
                 return null;
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchSensorDevice)}: " + ex.Message);
+                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchSensorDevice)}: " + ex.Message, _class);
                 tcs?.SetException(ex);
                 return null;
             }
@@ -837,7 +834,7 @@ namespace Ironwall.Libraries.Devices.Services
                     entities.Add(new SensorDeviceModel(model, controller));
                     commitResult++;
                 };
-                _log.Info($"({commitResult}) rows was fetched in DB[{table}].", true);
+                _log.Info($"({commitResult}) rows was fetched in DB[{table}].", _class);
 
                 tcs?.SetResult(true);
                 return entities;
@@ -845,13 +842,13 @@ namespace Ironwall.Libraries.Devices.Services
             }
             catch (TaskCanceledException ex)
             {
-                _log.Error($"Task was cancelled in {nameof(FetchSensorDevices)}: " + ex.Message);
+                _log.Error($"Task was cancelled in {nameof(FetchSensorDevices)}: " + ex.Message, _class);
                 tcs?.SetException(ex);
                 return null;
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchSensorDevices)}: " + ex.Message);
+                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchSensorDevices)}: " + ex.Message, _class);
                 tcs?.SetException(ex);
                 return null;
             }
@@ -894,13 +891,13 @@ namespace Ironwall.Libraries.Devices.Services
                 }
                 catch (TaskCanceledException ex)
                 {
-                    _log.Error($"Task was cancelled in {nameof(SaveSensorDevice)}: " + ex.Message);
+                    _log.Error($"Task was cancelled in {nameof(SaveSensorDevice)}: " + ex.Message, _class);
                     tcs?.SetException(ex);
                     return null;
                 }
                 catch (Exception ex)
                 {
-                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(SaveSensorDevice)}: " + ex.Message);
+                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(SaveSensorDevice)}: " + ex.Message, _class);
                     tcs?.SetException(ex);
                     return null;
                 }
@@ -950,12 +947,12 @@ namespace Ironwall.Libraries.Devices.Services
                 }
                 catch (TaskCanceledException ex)
                 {
-                    _log.Error($"Task was cancelled in {nameof(SaveSensors)}: " + ex.Message);
+                    _log.Error($"Task was cancelled in {nameof(SaveSensors)}: " + ex.Message, _class);
                     tcs?.SetException(ex);
                 }
                 catch (Exception ex)
                 {
-                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(SaveSensors)}: " + ex.Message);
+                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(SaveSensors)}: " + ex.Message, _class);
                     tcs?.SetException(ex);
                 }
             });
@@ -983,17 +980,17 @@ namespace Ironwall.Libraries.Devices.Services
                                                                   controller = @Controller
                                                               WHERE Id = @Id", model);
 
-                    _log.Info($"({commitResult}) rows was updated in DB[{table}] : {model}", true);
+                    _log.Info($"({commitResult}) rows was updated in DB[{table}] : {model}", _class);
                     tcs?.SetResult(true);
                 }
                 catch (TaskCanceledException ex)
                 {
-                    _log.Error($"Task was cancelled in {nameof(UpdateSensorDevice)}: " + ex.Message, true);
+                    _log.Error($"Task was cancelled in {nameof(UpdateSensorDevice)}: " + ex.Message, _class);
                     tcs?.SetException(ex);
                 }
                 catch (Exception ex)
                 {
-                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(UpdateSensorDevice)}: " + ex.Message, true);
+                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(UpdateSensorDevice)}: " + ex.Message, _class);
                     tcs?.SetException(ex);
                 }
             });
@@ -1015,12 +1012,12 @@ namespace Ironwall.Libraries.Devices.Services
                 }
                 catch (TaskCanceledException ex)
                 {
-                    _log.Error($"Task was cancelled in {nameof(DeleteSensorDevice)}: " + ex.Message, true);
+                    _log.Error($"Task was cancelled in {nameof(DeleteSensorDevice)}: " + ex.Message, _class);
                     tcs?.SetException(ex);
                 }
                 catch (Exception ex)
                 {
-                    _log.Error($"Raised Exception for Task to delete DB data in {nameof(DeleteSensorDevice)}: " + ex.Message, true);
+                    _log.Error($"Raised Exception for Task to delete DB data in {nameof(DeleteSensorDevice)}: " + ex.Message, _class);
                     tcs?.SetException(ex);
                 }
             });
@@ -1056,13 +1053,13 @@ namespace Ironwall.Libraries.Devices.Services
             }
             catch (TaskCanceledException ex)
             {
-                _log.Error($"Task was cancelled in {nameof(FetchProfile)}: " + ex.Message);
+                _log.Error($"Task was cancelled in {nameof(FetchProfile)}: " + ex.Message, _class);
                 tcs?.SetException(ex);
                 return null;
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchProfile)}: " + ex.Message);
+                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchProfile)}: " + ex.Message, _class);
                 tcs?.SetException(ex);
                 return null;
             }
@@ -1091,7 +1088,7 @@ namespace Ironwall.Libraries.Devices.Services
                     entities.Add(model);
                     commitResult++;
                 };
-                _log.Info($"({commitResult}) rows was fetched in DB[{table}].", true);
+                _log.Info($"({commitResult}) rows was fetched in DB[{table}].", _class);
 
                 tcs?.SetResult(true);
                 return entities;
@@ -1099,13 +1096,13 @@ namespace Ironwall.Libraries.Devices.Services
             }
             catch (TaskCanceledException ex)
             {
-                _log.Error($"Task was cancelled in {nameof(FetchProfiles)}: " + ex.Message);
+                _log.Error($"Task was cancelled in {nameof(FetchProfiles)}: " + ex.Message, _class);
                 tcs?.SetException(ex);
                 return null;
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchProfiles)}: " + ex.Message);
+                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchProfiles)}: " + ex.Message, _class);
                 tcs?.SetException(ex);
                 return null;
             }
@@ -1151,13 +1148,13 @@ namespace Ironwall.Libraries.Devices.Services
                 }
                 catch (TaskCanceledException ex)
                 {
-                    _log.Error($"Task was cancelled in {nameof(SaveProfile)}: " + ex.Message);
+                    _log.Error($"Task was cancelled in {nameof(SaveProfile)}: " + ex.Message, _class);
                     tcs?.SetException(ex);
                     return null;
                 }
                 catch (Exception ex)
                 {
-                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(SaveProfile)}: " + ex.Message);
+                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(SaveProfile)}: " + ex.Message, _class);
                     tcs?.SetException(ex);
                     return null;
                 }
@@ -1210,12 +1207,12 @@ namespace Ironwall.Libraries.Devices.Services
                 }
                 catch (TaskCanceledException ex)
                 {
-                    _log.Error($"Task was cancelled in {nameof(SaveProfiles)}: " + ex.Message);
+                    _log.Error($"Task was cancelled in {nameof(SaveProfiles)}: " + ex.Message, _class);
                     tcs?.SetException(ex);
                 }
                 catch (Exception ex)
                 {
-                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(SaveProfiles)}: " + ex.Message);
+                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(SaveProfiles)}: " + ex.Message, _class);
                     tcs?.SetException(ex);
                 }
             });
@@ -1242,17 +1239,17 @@ namespace Ironwall.Libraries.Devices.Services
                                                                   profile = @Profile
                                                               WHERE Id = @Id", model);
 
-                    _log.Info($"({commitResult}) rows was updated in DB[{table}] : {model}", true);
+                    _log.Info($"({commitResult}) rows was updated in DB[{table}] : {model}", _class);
                     tcs?.SetResult(true);
                 }
                 catch (TaskCanceledException ex)
                 {
-                    _log.Error($"Task was cancelled in {nameof(UpdateProfile)}: " + ex.Message, true);
+                    _log.Error($"Task was cancelled in {nameof(UpdateProfile)}: " + ex.Message, _class);
                     tcs?.SetException(ex);
                 }
                 catch (Exception ex)
                 {
-                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(UpdateProfile)}: " + ex.Message, true);
+                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(UpdateProfile)}: " + ex.Message, _class);
                     tcs?.SetException(ex);
                 }
             });
@@ -1278,12 +1275,12 @@ namespace Ironwall.Libraries.Devices.Services
                 }
                 catch (TaskCanceledException ex)
                 {
-                    _log.Error($"Task was cancelled in {nameof(DeleteProfile)}: " + ex.Message, true);
+                    _log.Error($"Task was cancelled in {nameof(DeleteProfile)}: " + ex.Message, _class);
                     tcs?.SetException(ex);
                 }
                 catch (Exception ex)
                 {
-                    _log.Error($"Raised Exception for Task to delete DB data in {nameof(DeleteProfile)}: " + ex.Message, true);
+                    _log.Error($"Raised Exception for Task to delete DB data in {nameof(DeleteProfile)}: " + ex.Message, _class);
                     tcs?.SetException(ex);
                 }
             });
@@ -1324,13 +1321,13 @@ namespace Ironwall.Libraries.Devices.Services
             }
             catch (TaskCanceledException ex)
             {
-                _log.Error($"Task was cancelled in {nameof(FetchPreset)}: " + ex.Message);
+                _log.Error($"Task was cancelled in {nameof(FetchPreset)}: " + ex.Message, _class);
                 tcs?.SetException(ex);
                 return null;
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchPreset)}: " + ex.Message);
+                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchPreset)}: " + ex.Message, _class);
                 tcs?.SetException(ex);
                 return null;
             }
@@ -1359,20 +1356,20 @@ namespace Ironwall.Libraries.Devices.Services
                     entities.Add(model);
                     commitResult++;
                 };
-                _log.Info($"({commitResult}) rows was fetched in DB[{table}].", true);
+                _log.Info($"({commitResult}) rows was fetched in DB[{table}].", _class);
 
                 tcs?.SetResult(true);
                 return entities;
             }
             catch (TaskCanceledException ex)
             {
-                _log.Error($"Task was cancelled in {nameof(FetchPresets)}: " + ex.Message);
+                _log.Error($"Task was cancelled in {nameof(FetchPresets)}: " + ex.Message, _class);
                 tcs?.SetException(ex);
                 return null;
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchPresets)}: " + ex.Message);
+                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchPresets)}: " + ex.Message, _class);
                 tcs?.SetException(ex);
                 return null;
             }
@@ -1418,13 +1415,13 @@ namespace Ironwall.Libraries.Devices.Services
                 }
                 catch (TaskCanceledException ex)
                 {
-                    _log.Error($"Task was cancelled in {nameof(SavePreset)}: " + ex.Message);
+                    _log.Error($"Task was cancelled in {nameof(SavePreset)}: " + ex.Message, _class);
                     tcs?.SetException(ex);
                     return null;
                 }
                 catch (Exception ex)
                 {
-                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(SavePreset)}: " + ex.Message);
+                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(SavePreset)}: " + ex.Message, _class);
                     tcs?.SetException(ex);
                     return null;
                 }
@@ -1483,12 +1480,12 @@ namespace Ironwall.Libraries.Devices.Services
                 }
                 catch (TaskCanceledException ex)
                 {
-                    _log.Error($"Task was cancelled in {nameof(SavePresets)}: " + ex.Message);
+                    _log.Error($"Task was cancelled in {nameof(SavePresets)}: " + ex.Message, _class);
                     tcs?.SetException(ex);
                 }
                 catch (Exception ex)
                 {
-                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(SavePresets)}: " + ex.Message);
+                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(SavePresets)}: " + ex.Message, _class);
                     tcs?.SetException(ex);
                 }
             });
@@ -1520,17 +1517,17 @@ namespace Ironwall.Libraries.Devices.Services
                                                                   delay = @Delay
                                                               WHERE Id = @Id", model);
 
-                    _log.Info($"({commitResult}) rows was updated in DB[{table}] : {model}", true);
+                    _log.Info($"({commitResult}) rows was updated in DB[{table}] : {model}", _class);
                     tcs?.SetResult(true);
                 }
                 catch (TaskCanceledException ex)
                 {
-                    _log.Error($"Task was cancelled in {nameof(UpdatePreset)}: " + ex.Message, true);
+                    _log.Error($"Task was cancelled in {nameof(UpdatePreset)}: " + ex.Message, _class);
                     tcs?.SetException(ex);
                 }
                 catch (Exception ex)
                 {
-                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(UpdatePreset)}: " + ex.Message, true);
+                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(UpdatePreset)}: " + ex.Message, _class);
                     tcs?.SetException(ex);
                 }
             });
@@ -1556,12 +1553,12 @@ namespace Ironwall.Libraries.Devices.Services
                 }
                 catch (TaskCanceledException ex)
                 {
-                    _log.Error($"Task was cancelled in {nameof(DeletePreset)}: " + ex.Message, true);
+                    _log.Error($"Task was cancelled in {nameof(DeletePreset)}: " + ex.Message, _class, true);
                     tcs?.SetException(ex);
                 }
                 catch (Exception ex)
                 {
-                    _log.Error($"Raised Exception for Task to delete DB data in {nameof(DeletePreset)}: " + ex.Message, true);
+                    _log.Error($"Raised Exception for Task to delete DB data in {nameof(DeletePreset)}: " + ex.Message, _class, true);
                     tcs?.SetException(ex);
                 }
             });
@@ -1623,13 +1620,13 @@ namespace Ironwall.Libraries.Devices.Services
             }
             catch (TaskCanceledException ex)
             {
-                _log.Error($"Task was cancelled in {nameof(FetchCamera)}: " + ex.Message);
+                _log.Error($"Task was cancelled in {nameof(FetchCamera)}: " + ex.Message, _class);
                 tcs?.SetException(ex);
                 return null;
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchCamera)}: " + ex.Message);
+                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchCamera)}: " + ex.Message, _class);
                 tcs?.SetException(ex);
                 return null;
             }
@@ -1662,7 +1659,7 @@ namespace Ironwall.Libraries.Devices.Services
                     entities.Add(createdModel);
                     commitResult++;
                 };
-                _log.Info($"({commitResult}) rows was fetched in DB[{table}].", true);
+                _log.Info($"({commitResult}) rows was fetched in DB[{table}].", _class);
 
                 tcs?.SetResult(true);
                 return entities;
@@ -1670,13 +1667,13 @@ namespace Ironwall.Libraries.Devices.Services
             }
             catch (TaskCanceledException ex)
             {
-                _log.Error($"Task was cancelled in {nameof(FetchCameras)}: " + ex.Message);
+                _log.Error($"Task was cancelled in {nameof(FetchCameras)}: " + ex.Message, _class);
                 tcs?.SetException(ex);
                 return null;
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchCameras)}: " + ex.Message);
+                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchCameras)}: " + ex.Message, _class);
                 tcs?.SetException(ex);
                 return null;
             }
@@ -1714,7 +1711,7 @@ namespace Ironwall.Libraries.Devices.Services
                     (@Id, @DeviceGroup, @DeviceNumber, @DeviceName, @DeviceType, @Version, @Status, @IpAddress, @Port, @UserName, 
                     @Password, @Category, @DeviceModel, @RtspUri, @RtspPort, @Mode)", model);
 
-                    _log.Info($"({commitResult}) rows was updated in DB[{table}] : {model}");
+                    _log.Info($"({commitResult}) rows was updated in DB[{table}] : {model}", _class);
 
                     var fetchedModel = await FetchCamera(model);
                     if (fetchedModel == null) throw new Exception($"Fail to fetch entity({model.DeviceName}) from {table}");
@@ -1724,13 +1721,13 @@ namespace Ironwall.Libraries.Devices.Services
                 }
                 catch (TaskCanceledException ex)
                 {
-                    _log.Error($"Task was cancelled in {nameof(SaveCamera)}: " + ex.Message);
+                    _log.Error($"Task was cancelled in {nameof(SaveCamera)}: " + ex.Message, _class);
                     tcs?.SetException(ex);
                     return null;
                 }
                 catch (Exception ex)
                 {
-                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(SaveCamera)}: " + ex.Message);
+                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(SaveCamera)}: " + ex.Message, _class);
                     tcs?.SetException(ex);
                     return null;
                 }
@@ -1758,7 +1755,7 @@ namespace Ironwall.Libraries.Devices.Services
                     {
                         commitResult = await _conn.ExecuteAsync($@"DELETE FROM {table}");
 
-                        _log.Info($"DELETE {table} for saving new Data in DB");
+                        _log.Info($"DELETE {table} for saving new Data in DB", _class);
                         if (!(commitResult > 0))
                             throw new Exception($"Raised exception during deleting Table({table}).");
                     }
@@ -1785,18 +1782,18 @@ namespace Ironwall.Libraries.Devices.Services
                         // 트랜잭션 커밋
                         transaction.Commit();
                     }
-                    _log.Info($"{nameof(CameraPresetModel)} was inserted in DB[{table}] : {commitResult}ea");
+                    _log.Info($"{nameof(CameraPresetModel)} was inserted in DB[{table}] : {commitResult}ea", _class);
 
                     tcs?.SetResult(true);
                 }
                 catch (TaskCanceledException ex)
                 {
-                    _log.Error($"Task was cancelled in {nameof(SaveCameras)}: " + ex.Message);
+                    _log.Error($"Task was cancelled in {nameof(SaveCameras)}: " + ex.Message, _class);
                     tcs?.SetException(ex);
                 }
                 catch (Exception ex)
                 {
-                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(SaveCameras)}: " + ex.Message);
+                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(SaveCameras)}: " + ex.Message, _class);
                     tcs?.SetException(ex);
                 }
             });
@@ -1837,17 +1834,17 @@ namespace Ironwall.Libraries.Devices.Services
                                                                   mode = @Mode
                                                               WHERE Id = @Id", model);
 
-                    _log.Info($"({commitResult}) rows was updated in DB[{table}] : {model}", true);
+                    _log.Info($"({commitResult}) rows was updated in DB[{table}] : {model}", _class);
                     tcs?.SetResult(true);
                 }
                 catch (TaskCanceledException ex)
                 {
-                    _log.Error($"Task was cancelled in {nameof(UpdateCamera)}: " + ex.Message, true);
+                    _log.Error($"Task was cancelled in {nameof(UpdateCamera)}: " + ex.Message, _class);
                     tcs?.SetException(ex);
                 }
                 catch (Exception ex)
                 {
-                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(UpdateCamera)}: " + ex.Message, true);
+                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(UpdateCamera)}: " + ex.Message, _class);
                     tcs?.SetException(ex);
                 }
             });
@@ -1873,12 +1870,12 @@ namespace Ironwall.Libraries.Devices.Services
                 }
                 catch (TaskCanceledException ex)
                 {
-                    _log.Error($"Task was cancelled in {nameof(DeleteCamera)}: " + ex.Message, true);
+                    _log.Error($"Task was cancelled in {nameof(DeleteCamera)}: " + ex.Message, _class);
                     tcs?.SetException(ex);
                 }
                 catch (Exception ex)
                 {
-                    _log.Error($"Raised Exception for Task to delete DB data in {nameof(DeleteCamera)}: " + ex.Message, true);
+                    _log.Error($"Raised Exception for Task to delete DB data in {nameof(DeleteCamera)}: " + ex.Message, _class);
                     tcs?.SetException(ex);
                 }
             });
@@ -1916,13 +1913,13 @@ namespace Ironwall.Libraries.Devices.Services
             }
             catch (TaskCanceledException ex)
             {
-                _log.Error($"Task was cancelled in {nameof(FetchCameraMapping)}: " + ex.Message);
+                _log.Error($"Task was cancelled in {nameof(FetchCameraMapping)}: " + ex.Message, _class);
                 tcs?.SetException(ex);
                 return null;
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchCameraMapping)}: " + ex.Message);
+                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchCameraMapping)}: " + ex.Message, _class);
                 tcs?.SetException(ex);
                 return null;
             }
@@ -1953,7 +1950,7 @@ namespace Ironwall.Libraries.Devices.Services
                     entities.Add(new CameraMappingModel(model.Id, model.MappingGroup, sensor, firstPreset, secondPreset));
                     commitResult++;
                 };
-                _log.Info($"({commitResult}) rows was fetched in DB[{table}].", true);
+                _log.Info($"({commitResult}) rows was fetched in DB[{table}].", _class);
 
                 tcs?.SetResult(true);
                 return entities;
@@ -1961,13 +1958,13 @@ namespace Ironwall.Libraries.Devices.Services
             }
             catch (TaskCanceledException ex)
             {
-                _log.Error($"Task was cancelled in {nameof(FetchCameraMappings)}: " + ex.Message);
+                _log.Error($"Task was cancelled in {nameof(FetchCameraMappings)}: " + ex.Message, _class);
                 tcs?.SetException(ex);
                 return null;
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchCameraMappings)}: " + ex.Message);
+                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchCameraMappings)}: " + ex.Message, _class);
                 tcs?.SetException(ex);
                 return null;
             }
@@ -2003,7 +2000,7 @@ namespace Ironwall.Libraries.Devices.Services
                     VALUES
                     (@Id, @MappingGroup, @Sensor, @FirstPreset, @SecondPreset)", mapper);
 
-                    _log.Info($"({commitResult}) rows was updated in DB[{table}] : {model}");
+                    _log.Info($"({commitResult}) rows was updated in DB[{table}] : {model}", _class);
 
                     var fetchedModel = await FetchCameraMapping(model);
                     if (fetchedModel == null) throw new Exception($"Fail to fetch entity({model.MappingGroup}) from {table}");
@@ -2013,13 +2010,13 @@ namespace Ironwall.Libraries.Devices.Services
                 }
                 catch (TaskCanceledException ex)
                 {
-                    _log.Error($"Task was cancelled in {nameof(SaveCameraMapping)}: " + ex.Message);
+                    _log.Error($"Task was cancelled in {nameof(SaveCameraMapping)}: " + ex.Message, _class);
                     tcs?.SetException(ex);
                     return null;
                 }
                 catch (Exception ex)
                 {
-                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(SaveCameraMapping)}: " + ex.Message);
+                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(SaveCameraMapping)}: " + ex.Message, _class);
                     tcs?.SetException(ex);
                     return null;
                 }
@@ -2047,7 +2044,7 @@ namespace Ironwall.Libraries.Devices.Services
                     {
                         commitResult = await _conn.ExecuteAsync($@"DELETE FROM {table}");
 
-                        _log.Info($"DELETE {table} for saving new Data in DB");
+                        _log.Info($"DELETE {table} for saving new Data in DB", _class);
                         if (!(commitResult > 0))
                             throw new Exception($"Raised exception during deleting Table({table}).");
                     }
@@ -2077,18 +2074,18 @@ namespace Ironwall.Libraries.Devices.Services
                         // 트랜잭션 커밋
                         transaction.Commit();
                     }
-                    _log.Info($"{nameof(SaveCameraMappings)} was inserted in DB[{table}] : {commitResult}ea");
+                    _log.Info($"{nameof(SaveCameraMappings)} was inserted in DB[{table}] : {commitResult}ea", _class);
 
                     tcs?.SetResult(true);
                 }
                 catch (TaskCanceledException ex)
                 {
-                    _log.Error($"Task was cancelled in {nameof(SaveCameraMappings)}: " + ex.Message);
+                    _log.Error($"Task was cancelled in {nameof(SaveCameraMappings)}: " + ex.Message, _class);
                     tcs?.SetException(ex);
                 }
                 catch (Exception ex)
                 {
-                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(SaveCameraMappings)}: " + ex.Message);
+                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(SaveCameraMappings)}: " + ex.Message, _class);
                     tcs?.SetException(ex);
                 }
             });
@@ -2118,17 +2115,17 @@ namespace Ironwall.Libraries.Devices.Services
                                                                   version = @SecondPreset
                                                               WHERE Id = @Id", model);
 
-                    _log.Info($"({commitResult}) rows was updated in DB[{table}] : {model}", true);
+                    _log.Info($"({commitResult}) rows was updated in DB[{table}] : {model}", _class);
                     tcs?.SetResult(true);
                 }
                 catch (TaskCanceledException ex)
                 {
-                    _log.Error($"Task was cancelled in {nameof(UpdateCameraMapping)}: " + ex.Message, true);
+                    _log.Error($"Task was cancelled in {nameof(UpdateCameraMapping)}: " + ex.Message, _class);
                     tcs?.SetException(ex);
                 }
                 catch (Exception ex)
                 {
-                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(UpdateCameraMapping)}: " + ex.Message, true);
+                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(UpdateCameraMapping)}: " + ex.Message, _class);
                     tcs?.SetException(ex);
                 }
             });
@@ -2154,12 +2151,12 @@ namespace Ironwall.Libraries.Devices.Services
                 }
                 catch (TaskCanceledException ex)
                 {
-                    _log.Error($"Task was cancelled in {nameof(DeleteCameraMapping)}: " + ex.Message, true);
+                    _log.Error($"Task was cancelled in {nameof(DeleteCameraMapping)}: " + ex.Message, _class);
                     tcs?.SetException(ex);
                 }
                 catch (Exception ex)
                 {
-                    _log.Error($"Raised Exception for Task to delete DB data in {nameof(DeleteCameraMapping)}: " + ex.Message, true);
+                    _log.Error($"Raised Exception for Task to delete DB data in {nameof(DeleteCameraMapping)}: " + ex.Message, _class);
                     tcs?.SetException(ex);
                 }
             });
@@ -2189,7 +2186,7 @@ namespace Ironwall.Libraries.Devices.Services
                     commitResult = await conn.ExecuteAsync($@"DELETE FROM {table} 
                                                                 WHERE id = '{id}'");
 
-                    _log.Info($"DELETE a record in {table} for being replaced to new record in DB");
+                    _log.Info($"DELETE a record in {table} for being replaced to new record in DB", _class);
                     if (!(commitResult > 0)) throw new Exception($"Raised exception during deleting Table({table}).");
                 }
             }
@@ -2202,7 +2199,7 @@ namespace Ironwall.Libraries.Devices.Services
                 {
                     commitResult = await conn.ExecuteAsync($@"DELETE FROM {table}");
 
-                    _log.Info($"DELETE a {table} for being replaced to new Table in DB");
+                    _log.Info($"DELETE a {table} for being replaced to new Table in DB", _class);
                     if (!(commitResult > 0)) throw new Exception($"Raised exception during deleting Table({table}).");
                 }
 
@@ -2372,7 +2369,7 @@ namespace Ironwall.Libraries.Devices.Services
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised Exception for Task to insert DB data in {nameof(DeleteRecordOrTable)}: " + ex.Message);
+                _log.Error($"Raised Exception for Task to insert DB data in {nameof(DeleteRecordOrTable)}: " + ex.Message, _class);
             }
 
             return Task.CompletedTask;
@@ -2391,7 +2388,7 @@ namespace Ironwall.Libraries.Devices.Services
             }
             else
             {
-                _log.Info($"No data from {table}");
+                _log.Info($"No data from {table}", _class);
             }
         }
 
@@ -2411,7 +2408,7 @@ namespace Ironwall.Libraries.Devices.Services
             }
             else
             {
-                _log.Info($"Not Exist for Matched ID({id})");
+                _log.Info($"Not Exist for Matched ID({id})", _class);
             }
         }
 
@@ -2423,6 +2420,7 @@ namespace Ironwall.Libraries.Devices.Services
         #region - Attributes -
         private IDbConnection _conn;
         private ILogService _log;
+        private Type _class;
         private DeviceSetupModel _setupModel;
         private DeviceProvider _deviceProvider;
         private ControllerDeviceProvider _controllerProvider;

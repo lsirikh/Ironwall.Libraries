@@ -29,7 +29,7 @@ namespace Ironwall.Framework.ViewModels.ConductorViewModels
         {
             base.OnActivateAsync(cancellationToken);
             _eventAggregator?.SubscribeOnUIThread(this);
-            Debug.WriteLine($"######### {ClassName} OnActivate!! #########");
+            Debug.WriteLine($"## {ClassName} OnActivate!! ##");
 
             IsVisible = false;
             return Task.CompletedTask;
@@ -39,7 +39,7 @@ namespace Ironwall.Framework.ViewModels.ConductorViewModels
         {
             base.OnDeactivateAsync(close, cancellationToken);
             _eventAggregator?.Unsubscribe(this);
-            Debug.WriteLine($"######### {ClassName} OnDeactivate!! #########");
+            Debug.WriteLine($"## {ClassName} OnDeactivate!! ##");
             IsVisible = false;
             return Task.CompletedTask;
         }

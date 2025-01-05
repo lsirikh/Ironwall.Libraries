@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System;
 using Ironwall.Framework.Models.Maps.Symbols;
+using Ironwall.Libraries.Base.Services;
 
 namespace Ironwall.Libraries.Map.Common.Providers.Models
 {
@@ -33,7 +34,7 @@ namespace Ironwall.Libraries.Map.Common.Providers.Models
         {
             try
             {
-                Debug.WriteLine($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.ffffff")}]{nameof(Finished)}({ClassName}) was executed!!!");
+                _log.Info($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.ffffff")}]{nameof(Finished)}({ClassName}) was executed!!!");
 
                 if (Refresh == null) return false;
 
@@ -43,7 +44,7 @@ namespace Ironwall.Libraries.Map.Common.Providers.Models
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Raised Exception in {nameof(Finished)} : ", ex.Message);
+                _log.Error($"Raised {nameof(DeletedItem)} in {nameof(Finished)} : {ex.Message}");
                 return false;
             }
         }
@@ -53,7 +54,7 @@ namespace Ironwall.Libraries.Map.Common.Providers.Models
             try
             {
                 Add(item);
-                Debug.WriteLine($"[{item.Id}]{ClassName} was executed({CollectionEntity.Count()})!!!");
+                _log.Info($"[{item.Id}]nameof(InsertedItem)}}({{ClassName}}) was executed({CollectionEntity.Count()})!!!");
 
                 if (Inserted == null) return false;
 
@@ -64,7 +65,7 @@ namespace Ironwall.Libraries.Map.Common.Providers.Models
             catch (Exception ex)
             {
 
-                Debug.WriteLine($"Raised Exception in {nameof(InsertedItem)} : ", ex.Message);
+                _log.Error($"Raised {nameof(DeletedItem)} in {nameof(InsertedItem)} : {ex.Message}");
                 return false;
             }
         }
@@ -83,7 +84,7 @@ namespace Ironwall.Libraries.Map.Common.Providers.Models
             catch (Exception ex)
             {
 
-                Debug.WriteLine($"Raised Exception in {nameof(UpdatedItem)}({nameof(ISymbolModel)}) : ", ex.Message);
+                _log.Error($"Raised {nameof(DeletedItem)} in {nameof(UpdatedItem)}({nameof(ISymbolModel)})  : {ex.Message}");
                 return false;
             }
 
@@ -104,13 +105,11 @@ namespace Ironwall.Libraries.Map.Common.Providers.Models
             catch (Exception ex)
             {
 
-                Debug.WriteLine($"Raised Exception in {nameof(DeletedItem)}({nameof(ISymbolModel)}) : ", ex.Message);
+                _log.Error($"Raised {nameof(DeletedItem)} in {nameof(DeletedItem)}({nameof(ISymbolModel)})  : {ex.Message}");
                 return false;
             }
             return true;
         }
-
-
         #endregion
         #region - Binding Methods -
         #endregion

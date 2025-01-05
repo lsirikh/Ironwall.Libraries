@@ -19,7 +19,6 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Components
     public class PreFaultEventViewModel : PreEventViewModel, IEventViewModelVisitee, IPreFaultEventViewModel
     {
         #region - Ctors -
-        
         public PreFaultEventViewModel(IMalfunctionEventModel model) : base(model)
         {
             MessageType = EnumEventType.Fault;
@@ -53,7 +52,7 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Components
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.Message);
+                _log.Error(ex.Message, _class);
             }
         }
 
@@ -85,7 +84,7 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Components
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception in {nameof(CloseDialog)} of {nameof(PreFaultEventViewModel)} : {ex.Message}");
+                    _log.Error($"Raised Exception in {nameof(CloseDialog)} of {nameof(PreFaultEventViewModel)} : {ex.Message}", _class);
                 }
             });
 

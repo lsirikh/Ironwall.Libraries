@@ -8,15 +8,24 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using Ironwall.Libraries.Utils;
+using Ironwall.Libraries.Base.Services;
 
 namespace Ironwall.Framework.ViewModels
 {
-    public abstract class BaseShellViewModel
-        : Conductor<IScreen>
+    public abstract class BaseShellViewModel: Conductor<IScreen>
     {
         public BaseShellViewModel()
         {
             _eventAggregator = IoC.Get<IEventAggregator>();
+            _log = IoC.Get<ILogService>();
+            _class = this.GetType();
+            _eventAggregator.SubscribeOnPublishedThread(this);
+        }
+        protected BaseShellViewModel(IEventAggregator eventAggregator, ILogService log)
+        {
+            _eventAggregator = eventAggregator;
+            _log = log;
+            _class = this.GetType();
             _eventAggregator.SubscribeOnPublishedThread(this);
         }
 
@@ -41,33 +50,43 @@ namespace Ironwall.Framework.ViewModels
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.Message);
+                _log.Error(ex.Message);
             }
         }
         #endregion
         #region - Procedures -
         private void MaximizeWindow(Window window)
         {
-            var styleWindow = SourceChord.FluentWPF.AcrylicWindowStyle.None;
-
-            switch (isFullScreen ^= true)
+            try
             {
-                case true:
-                    window.MaximizeToCurrentMonitor();
-                    break;
+                var styleWindow = SourceChord.FluentWPF.AcrylicWindowStyle.None;
 
-                case false:
-                default:
-                    styleWindow = SourceChord.FluentWPF.AcrylicWindowStyle.Normal;
-                    window.WindowState = WindowState.Normal;
-                    break;
+                switch (isFullScreen ^= true)
+                {
+                    case true:
+                        window.MaximizeToCurrentMonitor();
+                        break;
+
+                    case false:
+                    default:
+                        styleWindow = SourceChord.FluentWPF.AcrylicWindowStyle.Normal;
+                        window.WindowState = WindowState.Normal;
+                        break;
+                }
+
+                window.SetValue(SourceChord.FluentWPF.AcrylicWindow.AcrylicWindowStyleProperty, styleWindow);
+            }
+            catch (Exception ex)
+            {
+                _log.Error(ex.Message);
             }
 
-            window.SetValue(SourceChord.FluentWPF.AcrylicWindow.AcrylicWindowStyleProperty, styleWindow);
         }
         #endregion
         #region - Properties -
         protected IEventAggregator _eventAggregator;
+        protected ILogService _log;
+        protected Type _class;
         #endregion
         #region - Attributes -
         protected bool isFullScreen = default;

@@ -56,12 +56,12 @@ namespace OnvifControl.Libraries.Onvif.Services
                     Caps = await Device.GetCapabilitiesAsync(new CapabilityCategory[] { CapabilityCategory.All });
                     if (token.IsCancellationRequested) return false;
 
-                    WriteLine("Capabilities");
-                    WriteLine("\tDevice: " + Caps?.Capabilities?.Device?.XAddr);
-                    WriteLine("\tEvents: " + Caps?.Capabilities?.Events?.XAddr);
-                    WriteLine("\tImaging: " + Caps?.Capabilities?.Imaging?.XAddr);
-                    WriteLine("\tMedia: " + Caps?.Capabilities?.Media?.XAddr);
-                    WriteLine("\tPTZ: " + Caps?.Capabilities?.PTZ?.XAddr);
+                    //WriteLine("Capabilities");
+                    //WriteLine("\tDevice: " + Caps?.Capabilities?.Device?.XAddr);
+                    //WriteLine("\tEvents: " + Caps?.Capabilities?.Events?.XAddr);
+                    //WriteLine("\tImaging: " + Caps?.Capabilities?.Imaging?.XAddr);
+                    //WriteLine("\tMedia: " + Caps?.Capabilities?.Media?.XAddr);
+                    //WriteLine("\tPTZ: " + Caps?.Capabilities?.PTZ?.XAddr);
 
                     if(Caps?.Capabilities?.Media != null)
                         Media = await OnvifClientFactory.CreateMediaClientAsync(host, username, password);

@@ -45,18 +45,21 @@ namespace Ironwall.Libraries.Tcp.Packets.Models
                     IsBlank = false;
                 }
 
-                if (PacketList.Where(entity => entity.CurrentSequence == item.CurrentSequence).Count() > 0)
-                    return;
+                lock (_syncLock)
+                {
+                    if (PacketList.Any(entity => entity.CurrentSequence == item.CurrentSequence)) return;
 
-                PacketList.Add(item);
-                MessageSize += item.BodyLength;
+                    PacketList.Add(item);
+                    MessageSize += item.BodyLength;
 
-                if (Count == item.TotalSequence + 1)
-                    IsFullList = true;
+                    if (Count == item.TotalSequence + 1)
+                        IsFullList = true;
+                }
             }
             catch (System.Exception)
             {
                 //Exception Message
+                throw ;
             }
         }
 

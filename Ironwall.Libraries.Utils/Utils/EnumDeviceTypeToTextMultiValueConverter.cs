@@ -31,25 +31,25 @@ namespace Ironwall.Libraries.Utils
                 switch (type)
                 {
                     case "CONTROLLER":
-                        return $"[{values[0].ToString()}]{EnumDeviceType.Controller.ToString()}";
+                        return $"[{values[0]}]{EnumDeviceType.Controller}";
                     case "FENCE_SENSOR":
-                        return $"[{values[0].ToString()}]{EnumDeviceType.Fence.ToString()}";
+                        return $"[{values[0]}]{EnumDeviceType.Fence}";
                     case "MULTI_SNESOR":
-                        return $"[{values[0].ToString()}]{EnumDeviceType.Multi.ToString()}";
+                        return $"[{values[0]}]{EnumDeviceType.Multi}";
                     case "PIR_SENSOR":
-                        return $"[{values[0].ToString()}]{EnumDeviceType.PIR.ToString()}";
+                        return $"[{values[0]}]{EnumDeviceType.PIR}";
                     case "UNDERGROUND_SENSOR":
-                        return $"[{values[0].ToString()}]{EnumDeviceType.Underground.ToString()}";
+                        return $"[{values[0]}]{EnumDeviceType.Underground}";
                     case "CONTACT_SWITCH":
-                        return $"[{values[0].ToString()}]{EnumDeviceType.Contact.ToString()}";
+                        return $"[{values[0]}]{EnumDeviceType.Contact}";
                     case "IO_CONTROLLER":
-                        return $"[{values[0].ToString()}]{EnumDeviceType.IoController.ToString()}";
+                        return $"[{values[0]}]{EnumDeviceType.IoController}";
                     case "LASER_SENSOR":
-                        return $"[{values[0].ToString()}]{EnumDeviceType.Laser.ToString()}";
+                        return $"[{values[0]}]{EnumDeviceType.Laser}";
                     case "CABLE":
-                        return $"[{values[0].ToString()}]{EnumDeviceType.Cable.ToString()}";
+                        return $"[{values[0]}]{EnumDeviceType.Cable}";
                     case "FIXED_CAMERA":
-                        return $"[{values[0].ToString()}]{EnumDeviceType.IpCamera.ToString()}";
+                        return $"[{values[0]}]{EnumDeviceType.IpCamera}";
                     default:
                         return values[0].ToString();
                 }

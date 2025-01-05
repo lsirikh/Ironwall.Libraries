@@ -8,24 +8,28 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Runtime.CompilerServices;
+using Ironwall.Libraries.Base.Services;
 
 namespace Ironwall.Framework.ViewModels.ConductorViewModels
 {
-    public abstract class BaseViewModel
-        : Conductor<IScreen>
-        , IHandle<CloseAllMessageModel>
-        , IBaseViewModel
+    public abstract class BaseViewModel : Conductor<IScreen>
+                                    , IHandle<CloseAllMessageModel>
+                                    , IBaseViewModel
     {
         #region - Ctors -
         public BaseViewModel()
         {
+            _log = IoC.Get<ILogService>();
             ClassName = this.GetType().Name.ToString();
+            _class = this.GetType();
         }
 
-        public BaseViewModel(IEventAggregator eventAggregator)
+        public BaseViewModel(IEventAggregator eventAggregator, ILogService log)
         {
             ClassName = this.GetType().Name.ToString();
             _eventAggregator = eventAggregator;
+            _log = log;
         }
         #endregion
         #region - Implementation of Interface -
@@ -37,7 +41,7 @@ namespace Ironwall.Framework.ViewModels.ConductorViewModels
             try
             {
                 base.OnActivateAsync(cancellationToken);
-                Debug.WriteLine($"######### {ClassName} OnActivate!! #########");
+                _log.Info($"## {ClassName} OnActivate!! ##");
                 _eventAggregator?.SubscribeOnUIThread(this);
                 _cancellationTokenSource = new CancellationTokenSource();
             }
@@ -53,7 +57,7 @@ namespace Ironwall.Framework.ViewModels.ConductorViewModels
             try
             {
                 base.OnDeactivateAsync(close, cancellationToken);
-                Debug.WriteLine($"######### {ClassName} OnDeactivate!! #########");
+                _log.Info($"## {ClassName} OnDeactivate!! ##");
                 _eventAggregator?.Unsubscribe(this);
                 if(_cancellationTokenSource != null && !_cancellationTokenSource.IsCancellationRequested)
                     _cancellationTokenSource?.Cancel();
@@ -87,6 +91,8 @@ namespace Ironwall.Framework.ViewModels.ConductorViewModels
                 NotifyOfPropertyChange(() => ClassId);
             }
         }
+
+
         public string ClassName
         {
             get { return _classTitle; }
@@ -96,6 +102,7 @@ namespace Ironwall.Framework.ViewModels.ConductorViewModels
                 NotifyOfPropertyChange(() => ClassName);
             }
         }
+
         public string ClassContent
         {
             get { return _classContent; }
@@ -123,6 +130,8 @@ namespace Ironwall.Framework.ViewModels.ConductorViewModels
         private CategoryEnum _classCategory;
         protected IEventAggregator _eventAggregator;
         protected CancellationTokenSource _cancellationTokenSource;
+        protected ILogService _log;
+        protected Type _class;
 
         public const int ACTION_TOKEN_TIMEOUT = 5000;
         #endregion

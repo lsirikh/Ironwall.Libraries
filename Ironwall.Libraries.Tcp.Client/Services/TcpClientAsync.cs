@@ -1,4 +1,5 @@
-﻿using Ironwall.Libraries.Tcp.Common.Defines;
+﻿using Ironwall.Libraries.Base.Services;
+using Ironwall.Libraries.Tcp.Common.Defines;
 using Ironwall.Libraries.Tcp.Common.Models;
 using System;
 using System.Collections.Generic;
@@ -13,14 +14,16 @@ using static Ironwall.Libraries.Tcp.Common.Defines.ITcpCommon;
 
 namespace Ironwall.Libraries.Tcp.Client.Services
 {
-	public abstract class TcpClientAsync
-		: TcpSocket
+	public abstract class TcpClientAsync : TcpSocket
 	{
 		#region - Ctors -
-		public TcpClientAsync(TcpClientSetupModel model)
+		public TcpClientAsync(TcpClientSetupModel model
+							, ILogService log)
 		{
 			SetupModel = model;
-		}
+			_log = log;
+
+        }
 		#endregion
 		#region - Implementation of Interface -
 		public override void InitSocket()
@@ -43,7 +46,7 @@ namespace Ironwall.Libraries.Tcp.Client.Services
 			}
 			catch (Exception ex)
 			{
-				Debug.WriteLine($"Raised Exception in InitSocket : {ex.Message}");
+				_log.Error($"Raised Exception in InitSocket : {ex.Message}");
 			}
 		}
 
@@ -98,7 +101,7 @@ namespace Ironwall.Libraries.Tcp.Client.Services
 			}
 			catch (SocketException ex)
 			{
-				Debug.WriteLine($"Raised SocketException Exception in Receive_Completed : {ex.Message}");
+				_log.Error($"Raised SocketException Exception in Receive_Completed : {ex.Message}");
 			}
 			
 		}
@@ -113,9 +116,7 @@ namespace Ironwall.Libraries.Tcp.Client.Services
 			{
 				Socket.Close();
 				Socket.Dispose();
-
 			}
-
 
 			Disconnected();
 		}
@@ -133,7 +134,8 @@ namespace Ironwall.Libraries.Tcp.Client.Services
 			{
 				try
 				{
-					byte[] sendData = Encoding.UTF8.GetBytes(msg);
+                    _log.Info($"SendRequest : {msg}");
+                    byte[] sendData = Encoding.UTF8.GetBytes(msg);
 					//데이터 길이 세팅
 
 					// Client로 메시지 전송(비동기식)
@@ -141,7 +143,7 @@ namespace Ironwall.Libraries.Tcp.Client.Services
 				}
 				catch (Exception ex)
 				{
-					Debug.WriteLine($"Raised Exception in SendRequest : {ex.Message}");
+					_log.Error($"Raised Exception in SendRequest : {ex.Message}");
 				}
 			});
 		}
@@ -160,11 +162,13 @@ namespace Ironwall.Libraries.Tcp.Client.Services
 		#endregion
 		#region - Properties -
 		public TcpClientSetupModel SetupModel { get; }
-		public IPEndPoint ServerIPEndPoint { get; private set; }
+
+
+        public IPEndPoint ServerIPEndPoint { get; private set; }
 		public TcpClientModel Model { get; set; }
 		#endregion
 		#region - Attributes -
-
+        private ILogService _log;
 		// 소켓 생성
 
 		// TCP 인터페이스 이벤트

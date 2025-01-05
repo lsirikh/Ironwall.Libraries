@@ -55,7 +55,7 @@ namespace Ironwall.Libraries.Events.Services
             _eventProvider = eventProvider;
 
             _deviceProvider = deviceProvider;
-
+            _class = this.GetType();
 
             TableNames = new List<string>
             {
@@ -145,7 +145,7 @@ namespace Ironwall.Libraries.Events.Services
             }
             catch (Exception ex)
             {
-                _log.Error($"Task was cancelled in {nameof(BuildSchemeAsync)}: " + ex.Message);
+                _log.Error($"Task was cancelled in {nameof(BuildSchemeAsync)}: " + ex.Message, _class);
             }
         }
 
@@ -233,13 +233,13 @@ namespace Ironwall.Libraries.Events.Services
             }
             catch (TaskCanceledException ex)
             {
-                _log.Error($"Task was cancelled in {nameof(FetchDetectionEvent)}: " + ex.Message);
+                _log.Error($"Task was cancelled in {nameof(FetchDetectionEvent)}: " + ex.Message, _class);
                 tcs?.SetException(ex);
                 return null;
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchDetectionEvent)}: " + ex.Message);
+                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchDetectionEvent)}: " + ex.Message, _class);
                 tcs?.SetException(ex);
                 return null;
             }
@@ -298,13 +298,13 @@ namespace Ironwall.Libraries.Events.Services
             }
             catch (TaskCanceledException ex)
             {
-                _log.Error($"Task was cancelled in {nameof(FetchDetectionEvent)}: " + ex.Message);
+                _log.Error($"Task was cancelled in {nameof(FetchDetectionEvent)}: " + ex.Message, _class);
                 tcs?.SetException(ex);
                 return null;
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchDetectionEvent)}: " + ex.Message);
+                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchDetectionEvent)}: " + ex.Message, _class);
                 tcs?.SetException(ex);
                 return null;
             }
@@ -344,13 +344,13 @@ namespace Ironwall.Libraries.Events.Services
             }
             catch (TaskCanceledException ex)
             {
-                _log.Error($"Task was cancelled in {nameof(FetchDetectionEvent)}: " + ex.Message);
+                _log.Error($"Task was cancelled in {nameof(FetchDetectionEvent)}: " + ex.Message, _class);
                 tcs?.SetException(ex);
                 return null;
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchDetectionEvent)}: " + ex.Message);
+                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchDetectionEvent)}: " + ex.Message, _class);
                 tcs?.SetException(ex);
                 return null;
             }
@@ -392,13 +392,13 @@ namespace Ironwall.Libraries.Events.Services
             }
             catch (TaskCanceledException ex)
             {
-                _log.Error($"Task was cancelled in {nameof(FetchDetectionEvent)}: " + ex.Message);
+                _log.Error($"Task was cancelled in {nameof(FetchDetectionEvent)}: " + ex.Message, _class);
                 tcs?.SetException(ex);
                 return null;
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised Exception for Task to fetch DB data in {nameof(FetchDetectionEvent)}: " + ex.Message);
+                _log.Error($"Raised Exception for Task to fetch DB data in {nameof(FetchDetectionEvent)}: " + ex.Message, _class);
                 tcs?.SetException(ex);
                 return null;
             }
@@ -437,7 +437,7 @@ namespace Ironwall.Libraries.Events.Services
                         VALUES
                         (@Id, @EventGroup, @Device, @MessageType, @Result, @Status, @DateTime)", mapper);
 
-                    _log.Info($"({commitResult}) rows was updated in DB[{table}] : {model}");
+                    _log.Info($"({commitResult}) rows was updated in DB[{table}] : {model}", _class);
 
                     var fetchedModel = await FetchDetectionEvent(model);
                     if (fetchedModel == null) throw new Exception($"Fail to fetch an entity({model.Id}) from {table}");
@@ -447,13 +447,13 @@ namespace Ironwall.Libraries.Events.Services
                 }
                 catch (TaskCanceledException ex)
                 {
-                    _log.Error($"Task was cancelled in {nameof(SaveDetectionEvent)}: " + ex.Message, true);
+                    _log.Error($"Task was cancelled in {nameof(SaveDetectionEvent)}: " + ex.Message, _class);
                     tcs?.SetException(ex);
                     return null;
                 }
                 catch (Exception ex)
                 {
-                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(SaveDetectionEvent)}: " + ex.Message);
+                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(SaveDetectionEvent)}: " + ex.Message, _class);
                     tcs?.SetException(ex);
                     return null;
                 }
@@ -485,17 +485,17 @@ namespace Ironwall.Libraries.Events.Services
                             , status = @Status
                             WHERE id = @Id", mapper);
 
-                    _log.Info($"({commitResult}) rows was updated in DB[{table}] : {model}");
+                    _log.Info($"({commitResult}) rows was updated in DB[{table}] : {model}", _class);
                     tcs?.SetResult(true);
                 }
                 catch (TaskCanceledException ex)
                 {
-                    _log.Error($"Task was cancelled in {nameof(UpdateDetectionEvent)}: " + ex.Message, true);
+                    _log.Error($"Task was cancelled in {nameof(UpdateDetectionEvent)}: " + ex.Message, _class);
                     tcs?.SetException(ex);
                 }
                 catch (Exception ex)
                 {
-                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(UpdateDetectionEvent)}: " + ex.Message, true);
+                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(UpdateDetectionEvent)}: " + ex.Message, _class);
                     tcs?.SetException(ex);
                 }
             });
@@ -521,12 +521,12 @@ namespace Ironwall.Libraries.Events.Services
                 }
                 catch (TaskCanceledException ex)
                 {
-                    _log.Error($"Task was cancelled in {nameof(DeleteDetectionEvent)}: " + ex.Message, true);
+                    _log.Error($"Task was cancelled in {nameof(DeleteDetectionEvent)}: " + ex.Message, _class);
                     tcs?.SetException(ex);
                 }
                 catch (Exception ex)
                 {
-                    _log.Error($"Raised Exception for Task to delete DB data in {nameof(DeleteDetectionEvent)}: " + ex.Message, true);
+                    _log.Error($"Raised Exception for Task to delete DB data in {nameof(DeleteDetectionEvent)}: " + ex.Message, _class);
                     tcs?.SetException(ex);
                 }
             });
@@ -564,13 +564,13 @@ namespace Ironwall.Libraries.Events.Services
             }
             catch (TaskCanceledException ex)
             {
-                _log.Error($"Task was cancelled in {nameof(FetchDetectionEvent)}: " + ex.Message);
+                _log.Error($"Task was cancelled in {nameof(FetchDetectionEvent)}: " + ex.Message, _class);
                 tcs?.SetException(ex);
                 return null;
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchDetectionEvent)}: " + ex.Message);
+                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchDetectionEvent)}: " + ex.Message, _class);
                 tcs?.SetException(ex);
                 return null;
             }
@@ -615,13 +615,13 @@ namespace Ironwall.Libraries.Events.Services
             }
             catch (TaskCanceledException ex)
             {
-                _log.Error($"Task was cancelled in {nameof(FetchMalfunctionEvent)}: " + ex.Message);
+                _log.Error($"Task was cancelled in {nameof(FetchMalfunctionEvent)}: " + ex.Message, _class);
                 tcs?.SetException(ex);
                 return null;
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchMalfunctionEvent)}: " + ex.Message);
+                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchMalfunctionEvent)}: " + ex.Message, _class);
                 tcs?.SetException(ex);
                 return null;
             }
@@ -663,13 +663,13 @@ namespace Ironwall.Libraries.Events.Services
             }
             catch (TaskCanceledException ex)
             {
-                _log.Error($"Task was cancelled in {nameof(FetchMalfunctionEvent)}: " + ex.Message);
+                _log.Error($"Task was cancelled in {nameof(FetchMalfunctionEvent)}: " + ex.Message, _class);
                 tcs?.SetException(ex);
                 return null;
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised Exception for Task to fetch DB data in {nameof(FetchMalfunctionEvent)}: " + ex.Message);
+                _log.Error($"Raised Exception for Task to fetch DB data in {nameof(FetchMalfunctionEvent)}: " + ex.Message, _class);
                 tcs?.SetException(ex);
                 return null;
             }
@@ -708,7 +708,7 @@ namespace Ironwall.Libraries.Events.Services
                         VALUES
                         (@Id, @EventGroup, @Device, @MessageType, @Reason, @FisrtStart, @FirstEnd, @SecondStart, @SecondEnd, @Status, @DateTime)", mapper);
 
-                    _log.Info($"({commitResult}) rows was updated in DB[{table}] : {model}");
+                    _log.Info($"({commitResult}) rows was updated in DB[{table}] : {model}", _class);
 
                     var fetchedModel = await FetchMalfunctionEvent(model);
                     if (fetchedModel == null) throw new Exception($"Fail to fetch an entity({model.Id}) from {table}");
@@ -718,13 +718,13 @@ namespace Ironwall.Libraries.Events.Services
                 }
                 catch (TaskCanceledException ex)
                 {
-                    _log.Error($"Task was cancelled in {nameof(SaveMalfunctionEvent)}: " + ex.Message, true);
+                    _log.Error($"Task was cancelled in {nameof(SaveMalfunctionEvent)}: " + ex.Message, _class);
                     tcs?.SetException(ex);
                     return null;
                 }
                 catch (Exception ex)
                 {
-                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(SaveMalfunctionEvent)}: " + ex.Message);
+                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(SaveMalfunctionEvent)}: " + ex.Message, _class);
                     tcs?.SetException(ex);
                     return null;
                 }
@@ -762,17 +762,17 @@ namespace Ironwall.Libraries.Events.Services
                             WHERE id = @Id", mapper);
 
 
-                    _log.Info($"({commitResult}) rows was updated in DB[{table}] : {model}");
+                    _log.Info($"({commitResult}) rows was updated in DB[{table}] : {model}", _class);
                     tcs?.SetResult(true);
                 }
                 catch (TaskCanceledException ex)
                 {
-                    _log.Error($"Task was cancelled in {nameof(UpdateMalfunctionEvent)}: " + ex.Message, true);
+                    _log.Error($"Task was cancelled in {nameof(UpdateMalfunctionEvent)}: " + ex.Message, _class);
                     tcs?.SetException(ex);
                 }
                 catch (Exception ex)
                 {
-                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(UpdateMalfunctionEvent)}: " + ex.Message, true);
+                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(UpdateMalfunctionEvent)}: " + ex.Message, _class);
                     tcs?.SetException(ex);
                 }
             });
@@ -798,12 +798,12 @@ namespace Ironwall.Libraries.Events.Services
                 }
                 catch (TaskCanceledException ex)
                 {
-                    _log.Error($"Task was cancelled in {nameof(DeleteMalfunctionEvent)}: " + ex.Message, true);
+                    _log.Error($"Task was cancelled in {nameof(DeleteMalfunctionEvent)}: " + ex.Message, _class);
                     tcs?.SetException(ex);
                 }
                 catch (Exception ex)
                 {
-                    _log.Error($"Raised Exception for Task to delete DB data in {nameof(DeleteMalfunctionEvent)}: " + ex.Message, true);
+                    _log.Error($"Raised Exception for Task to delete DB data in {nameof(DeleteMalfunctionEvent)}: " + ex.Message, _class);
                     tcs?.SetException(ex);
                 }
             });
@@ -851,13 +851,13 @@ namespace Ironwall.Libraries.Events.Services
             }
             catch (TaskCanceledException ex)
             {
-                _log.Error($"Task was cancelled in {nameof(FetchActionEvent)}: " + ex.Message);
+                _log.Error($"Task was cancelled in {nameof(FetchActionEvent)}: " + ex.Message, _class);
                 tcs?.SetException(ex);
                 return null;
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchActionEvent)}: " + ex.Message);
+                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchActionEvent)}: " + ex.Message, _class);
                 tcs?.SetException(ex);
                 return null;
             }
@@ -911,13 +911,13 @@ namespace Ironwall.Libraries.Events.Services
             }
             catch (TaskCanceledException ex)
             {
-                _log.Error($"Task was cancelled in {nameof(FetchActionEvent)}: " + ex.Message);
+                _log.Error($"Task was cancelled in {nameof(FetchActionEvent)}: " + ex.Message, _class);
                 tcs?.SetException(ex);
                 return null;
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised Exception for Task to fetch DB data in {nameof(FetchActionEvent)}: " + ex.Message);
+                _log.Error($"Raised Exception for Task to fetch DB data in {nameof(FetchActionEvent)}: " + ex.Message, _class);
                 tcs?.SetException(ex);
                 return null;
             }
@@ -956,7 +956,7 @@ namespace Ironwall.Libraries.Events.Services
                         VALUES
                         (@Id, @FromEventId, @Content, @User, @DateTime)", mapper);
 
-                    _log.Info($"({commitResult}) rows was updated in DB[{table}] : {model}");
+                    _log.Info($"({commitResult}) rows was updated in DB[{table}] : {model}", _class);
 
                     var fetchedModel = await FetchActionEvent(model);
                     if (fetchedModel == null) throw new Exception($"Fail to fetch an entity({model.Id}) from {table}");
@@ -966,13 +966,13 @@ namespace Ironwall.Libraries.Events.Services
                 }
                 catch (TaskCanceledException ex)
                 {
-                    _log.Error($"Task was cancelled in {nameof(SaveActionEvent)}: " + ex.Message, true);
+                    _log.Error($"Task was cancelled in {nameof(SaveActionEvent)}: " + ex.Message, _class);
                     tcs?.SetException(ex);
                     return null;
                 }
                 catch (Exception ex)
                 {
-                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(SaveActionEvent)}: " + ex.Message);
+                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(SaveActionEvent)}: " + ex.Message, _class);
                     tcs?.SetException(ex);
                     return null;
                 }
@@ -1004,17 +1004,17 @@ namespace Ironwall.Libraries.Events.Services
                             WHERE id = @Id", mapper);
 
 
-                    _log.Info($"({commitResult}) rows was updated in DB[{table}] : {model}");
+                    _log.Info($"({commitResult}) rows was updated in DB[{table}] : {model}", _class);
                     tcs?.SetResult(true);
                 }
                 catch (TaskCanceledException ex)
                 {
-                    _log.Error($"Task was cancelled in {nameof(UpdateActionEvent)}: " + ex.Message, true);
+                    _log.Error($"Task was cancelled in {nameof(UpdateActionEvent)}: " + ex.Message, _class);
                     tcs?.SetException(ex);
                 }
                 catch (Exception ex)
                 {
-                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(UpdateActionEvent)}: " + ex.Message, true);
+                    _log.Error($"Raised Exception for Task to insert DB data in {nameof(UpdateActionEvent)}: " + ex.Message, _class);
                     tcs?.SetException(ex);
                 }
             });
@@ -1040,12 +1040,12 @@ namespace Ironwall.Libraries.Events.Services
                 }
                 catch (TaskCanceledException ex)
                 {
-                    _log.Error($"Task was cancelled in {nameof(DeleteActionEvent)}: " + ex.Message, true);
+                    _log.Error($"Task was cancelled in {nameof(DeleteActionEvent)}: " + ex.Message, _class);
                     tcs?.SetException(ex);
                 }
                 catch (Exception ex)
                 {
-                    _log.Error($"Raised Exception for Task to delete DB data in {nameof(DeleteActionEvent)}: " + ex.Message, true);
+                    _log.Error($"Raised Exception for Task to delete DB data in {nameof(DeleteActionEvent)}: " + ex.Message, _class);
                     tcs?.SetException(ex);
                 }
             });
@@ -1073,7 +1073,7 @@ namespace Ironwall.Libraries.Events.Services
                     commitResult = await conn.ExecuteAsync($@"DELETE FROM {table} 
                                                                 WHERE id = '{id}'");
 
-                    _log.Info($"DELETE a record in {table} for being replaced to new record in DB");
+                    _log.Info($"DELETE a record in {table} for being replaced to new record in DB", _class);
                     if (!(commitResult > 0)) throw new Exception($"Raised exception during deleting Table({table}).");
                 }
             }
@@ -1086,7 +1086,7 @@ namespace Ironwall.Libraries.Events.Services
                 {
                     commitResult = await conn.ExecuteAsync($@"DELETE FROM {table}");
 
-                    _log.Info($"DELETE a {table} for being replaced to new Table in DB");
+                    _log.Info($"DELETE a {table} for being replaced to new Table in DB", _class);
                     if (!(commitResult > 0)) throw new Exception($"Raised exception during deleting Table({table}).");
                 }
 
@@ -1203,7 +1203,7 @@ namespace Ironwall.Libraries.Events.Services
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised Exception for Task to insert DB data in {nameof(DeleteRecordOrTable)}: " + ex.Message);
+                _log.Error($"Raised Exception for Task to insert DB data in {nameof(DeleteRecordOrTable)}: " + ex.Message, _class);
             }
 
             return Task.CompletedTask;
@@ -1222,7 +1222,7 @@ namespace Ironwall.Libraries.Events.Services
             }
             else
             {
-                _log.Info($"No data from {table}");
+                _log.Info($"No data from {table}", _class);
             }
         }
 
@@ -1242,7 +1242,7 @@ namespace Ironwall.Libraries.Events.Services
             }
             else
             {
-                _log.Info($"Not Exist for Matched ID({id})");
+                _log.Info($"Not Exist for Matched ID({id})", _class);
             }
         }
 
@@ -1264,6 +1264,7 @@ namespace Ironwall.Libraries.Events.Services
         private ConnectionEventProvider _connectionEventProvider;
         private EventProvider _eventProvider;
         private DeviceProvider _deviceProvider;
+        private Type _class;
         #endregion
     }
 }

@@ -154,17 +154,17 @@ namespace Ironwall.Libraries.Redis.Services
             }
             catch (ComponentNotRegisteredException ex)
             {
-                _log?.Error($"Raised {nameof(ComponentNotRegisteredException)} in {nameof(UnegisterSubscribers)} of {nameof(MessageService<T>)} : {ex}", true);
+                _log?.Error($"Raised {nameof(ComponentNotRegisteredException)} in {nameof(UnegisterSubscribers)} of {nameof(MessageService<T>)} : {ex}");
                 throw;
             }
             catch (ObjectDisposedException ex)
             {
-                _log?.Error($"Raised {nameof(ObjectDisposedException)} in {nameof(UnegisterSubscribers)} of {nameof(MessageService<T>)} : {ex}", true);
+                _log?.Error($"Raised {nameof(ObjectDisposedException)} in {nameof(UnegisterSubscribers)} of {nameof(MessageService<T>)} : {ex}");
                 throw;
             }
             catch (Exception ex)
             {
-                _log?.Error($"Raised {nameof(Exception)} in {nameof(UnegisterSubscribers)} of {nameof(MessageService<T>)} : {ex}", true);
+                _log?.Error($"Raised {nameof(Exception)} in {nameof(UnegisterSubscribers)} of {nameof(MessageService<T>)} : {ex}");
                 throw;
             }
         }

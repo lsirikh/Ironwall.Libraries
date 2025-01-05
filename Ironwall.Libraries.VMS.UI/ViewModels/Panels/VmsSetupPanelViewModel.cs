@@ -28,9 +28,8 @@ namespace Ironwall.Libraries.VMS.UI.ViewModels.Panels
                                     , VmsApiSetupViewModel vmsApiSetupViewModel
                                     , VmsEventMappingSetupViewModel vmsEventMappingSetupViewModel
                                     , VmsSensorSetupViewModel vmsEventSensorSetupViewModel)
-                                    :base(eventAggregator)
+                                    :base(eventAggregator, log)
         {
-            _log = log;
             VmsApiSetupViewModel = vmsApiSetupViewModel;
             VmsEventMappingSetupViewModel = vmsEventMappingSetupViewModel;
             VmsSensorSetupViewModel = vmsEventSensorSetupViewModel;
@@ -43,11 +42,12 @@ namespace Ironwall.Libraries.VMS.UI.ViewModels.Panels
         protected override async Task OnActivateAsync(CancellationToken cancellationToken)
         {
             await base.OnActivateAsync(cancellationToken);
-            await VmsApiSetupViewModel.ActivateAsync();
+            await VmsEventMappingSetupViewModel.ActivateAsync();
         }
         protected override async Task OnDeactivateAsync(bool close, CancellationToken cancellationToken)
         {
-            await VmsApiSetupViewModel.DeactivateAsync(true);
+            if (selectedViewModel != null)
+                await selectedViewModel.DeactivateAsync(true);
             await base.OnDeactivateAsync(close, cancellationToken);
         }
         #endregion
@@ -58,41 +58,76 @@ namespace Ironwall.Libraries.VMS.UI.ViewModels.Panels
         {
             try
             {
+                // Check if the source is a TabControl
                 if (!(args.Source is TabControl)) return;
 
-                if (!(args.AddedItems[0] is TabItem tapItem)) return;
+                // Check if we have a selected TabItem
+                if (args.AddedItems.Count == 0 || !(args.AddedItems[0] is TabItem tabItem))
+                    return;
 
-                var contentControl = (tapItem as ContentControl)?.Content as ContentControl;
+                // Extract the content from the selected TabItem
+                var tabContent = tabItem.Content as ContentControl;
 
+                //var contentControl = (tapItem as ContentControl)?.Content as ContentControl;
+
+                //if (selectedViewModel != null)
+                //{
+                //    await selectedViewModel.DeactivateAsync(true);
+                //}
+
+                //if (contentControl?.Content is VmsApiSetupView
+                //    || contentControl is VmsApiSetupView)
+                //{
+                //    selectedViewModel = VmsApiSetupViewModel;
+                //}
+                //else if (contentControl?.Content is VmsEventMappingSetupView
+                //    || contentControl is VmsEventMappingSetupView)
+                //{
+                //    selectedViewModel = VmsEventMappingSetupViewModel;
+                //}
+                //else if (contentControl?.Content is VmsSensorSetupView
+                //    || contentControl is VmsSensorSetupView)
+                //{
+                //    selectedViewModel = VmsSensorSetupViewModel;
+                //}
+
+                //await selectedViewModel.ActivateAsync();
+
+                // Deactivate previous ViewModel if any
                 if (selectedViewModel != null)
                 {
+                    // If a delay is needed, explain why in a comment.
+                    // await Task.Delay(500); // Remove or comment out if unnecessary
                     await selectedViewModel.DeactivateAsync(true);
-                    await Task.Delay(500);
                 }
 
-                if (contentControl?.Content is VmsApiSetupView
-                    || contentControl is VmsApiSetupView)
+                // If tabContent is a ContentControl, use its Content; otherwise, use tabContent directly.
+                var viewContent = (tabContent is ContentControl cc) ? cc.Content : tabContent;
+
+                // Map view types to corresponding ViewModels
+                // Note: If a switch expression is desired, consider the complexity.
+                if (viewContent is VmsApiSetupView)
                 {
-                    selectedViewModel = VmsApiSetupViewModel;
+                     selectedViewModel = VmsApiSetupViewModel;
                 }
-                else if (contentControl?.Content is VmsEventMappingSetupView
-                    || contentControl is VmsEventMappingSetupView)
+                else if (viewContent is VmsEventMappingSetupView)
                 {
                     selectedViewModel = VmsEventMappingSetupViewModel;
                 }
-                else if (contentControl?.Content is VmsSensorSetupView
-                    || contentControl is VmsSensorSetupView)
+                else if (viewContent is VmsSensorSetupView)
                 {
                     selectedViewModel = VmsSensorSetupViewModel;
                 }
 
-                await selectedViewModel.ActivateAsync();
+                // Activate the selected ViewModel if not null
+                if (selectedViewModel != null)
+                    await selectedViewModel.ActivateAsync();
+
             }
             catch (Exception ex)
             {
                 _log.Error($"Raised Exception in {nameof(OnActiveTab)} : {ex.Message}");
             }
-
         }
         #endregion
         #region - IHanldes -

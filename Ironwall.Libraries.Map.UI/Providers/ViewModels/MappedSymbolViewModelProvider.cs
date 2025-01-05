@@ -61,86 +61,73 @@ namespace Ironwall.Libraries.Map.UI.Providers.ViewModels
         #region - Processes -
         public Task<bool> Provider_Initialize()
         {
-            return Task.Run(() =>
+            try
             {
-                try
+                Clear();
+                foreach (var item in _provider.OfType<ISymbolViewModel>().ToList())
                 {
-                    Clear();
-                    foreach (var item in _provider.ToList())
-                    {
-                        if (item.Map != SelectedMapNumber) continue;
-                        Add(item);
-                    }
-                    Completed?.Invoke();
+                    if (item.Map != SelectedMapNumber) continue;
+                    Add(item);
                 }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"Raised Exception in {nameof(Provider_Initialize)}({ClassName}) : {ex.Message}");
-                    return false;
-                }
-                return true;
-            });
+                Completed?.Invoke();
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"Raised Exception in {nameof(Provider_Initialize)}({ClassName}) : {ex.Message}");
+                return Task.FromResult(true);
+            }
+            return Task.FromResult(false);
         }
 
         private Task<bool> Provider_Insert(ISymbolViewModel item)
         {
-            return Task.Run(() =>
+            try
             {
-                try
-                {
-                    if (item.Map != SelectedMapNumber) return false;
-                    Add(item);
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"Raised Exception in {nameof(Provider_Insert)}({ClassName}) : {ex.Message}");
-                    return false;
-                }
-                return true;
-            });
+                if (item.Map != SelectedMapNumber) return Task.FromResult(false);
+                Add(item);
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"Raised Exception in {nameof(Provider_Insert)}({ClassName}) : {ex.Message}");
+                return Task.FromResult(true);
+            }
+            return Task.FromResult(false);
         }
 
         private Task<bool> Provider_Update(ISymbolViewModel item)
         {
-            return Task.Run(() => 
+            try
             {
-                try
-                {
-                    if (item.Map != SelectedMapNumber) return false;
-                    
-                    var searchedItem = CollectionEntity.Where(t => t.Id == item.Id).FirstOrDefault();
+                if (item.Map != SelectedMapNumber) return Task.FromResult(false);
 
-                    if (searchedItem != null)
-                        searchedItem = item;
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"Raised Exception in {nameof(Provider_Update)}({ClassName}) : {ex.Message}");
-                    return false;
-                }
-                return true;
-            });
+                var searchedItem = CollectionEntity.Where(t => t.Id == item.Id).FirstOrDefault();
+
+                if (searchedItem != null)
+                    searchedItem = item;
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"Raised Exception in {nameof(Provider_Update)}({ClassName}) : {ex.Message}");
+                return Task.FromResult(true);
+            }
+            return Task.FromResult(false);
         }
         private Task<bool> Provider_Delete(ISymbolViewModel item)
         {
-            return Task.Run(() =>
+            try
             {
-                try
+                var searchedItem = CollectionEntity.Where(t => t.Id == item.Id).FirstOrDefault();
+                if (searchedItem != null)
                 {
-                    var searchedItem = CollectionEntity.Where(t => t.Id == item.Id).FirstOrDefault();
-                    if (searchedItem != null)
-                    {
-                        Remove(searchedItem);
-                    }
-
+                    Remove(searchedItem);
                 }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"Raised Exception in {nameof(Provider_Delete)}({ClassName}) : {ex.Message}");
-                    return true;
-                }
-                return false;
-            });
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"Raised Exception in {nameof(Provider_Delete)}({ClassName}) : {ex.Message}");
+                return Task.FromResult(true);
+            }
+            return Task.FromResult(false);
         }
         #endregion
         #region - IHanldes -

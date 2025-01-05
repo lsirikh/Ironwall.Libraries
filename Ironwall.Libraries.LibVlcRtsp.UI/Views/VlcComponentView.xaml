@@ -5,9 +5,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Ironwall.Libraries.LibVlcRtsp.UI.Views"
 			 xmlns:uc="clr-namespace:LibVLCSharp.WPF;assembly=LibVLCSharp.WPF"
+			 xmlns:util="clr-namespace:Ironwall.Libraries.Utils;assembly=Ironwall.Libraries.Utils"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+	<UserControl.Resources>
+		<util:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+	</UserControl.Resources>
     <Grid>
-		<uc:VideoView MediaPlayer="{Binding MediaPlayer}" />
+		<uc:VideoView Visibility="{Binding Visibility, Converter={StaticResource BooleanToVisibilityConverter}}" MediaPlayer="{Binding MediaPlayer}" />
 	</Grid>
 </UserControl>

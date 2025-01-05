@@ -34,9 +34,8 @@ namespace Ironwall.Libraries.VMS.UI.ViewModels.Panels.SetupPanels
         #region - Ctors -
         public VmsEventMappingSetupViewModel(ILogService log
                                             , IEventAggregator eventAggregator)
-                                            : base(eventAggregator)
+                                            : base(eventAggregator, log)
         {
-            _log = log;
             ViewModelProvider = new ObservableCollection<VmsMappingViewModel>();
             VmsEvents = new ObservableCollection<IEventModel>();
         }
@@ -47,8 +46,9 @@ namespace Ironwall.Libraries.VMS.UI.ViewModels.Panels.SetupPanels
         protected override async Task OnActivateAsync(CancellationToken cancellationToken)
         {
             await base.OnActivateAsync(cancellationToken);
+            await DataInitialize(_cancellationTokenSource.Token).ConfigureAwait(false);
             await _eventAggregator.PublishOnUIThreadAsync(new RequestApiEventListMessage());
-            _ = DataInitialize(_cancellationTokenSource.Token);
+            //_ = DataInitialize(_cancellationTokenSource.Token);
         }
 
         protected override async Task Uninitialize()
@@ -73,7 +73,7 @@ namespace Ironwall.Libraries.VMS.UI.ViewModels.Panels.SetupPanels
             }
             catch (Exception ex)
             {
-                _log.Error($"Rasied {nameof(Exception)}({nameof(OnClickDeleteButton)} in {ClassName}): {ex.Message}");
+                _log.Error($"Rasied {nameof(Exception)}({nameof(OnClickDeleteButton)} in {ClassName}): {ex.Message}", _class);
 
             }
         }
@@ -94,7 +94,7 @@ namespace Ironwall.Libraries.VMS.UI.ViewModels.Panels.SetupPanels
             }
             catch (Exception ex)
             {
-                _log.Error($"Rasied {nameof(Exception)}({nameof(OnClickInsertButton)} in {ClassName}): {ex.Message}");
+                _log.Error($"Rasied {nameof(Exception)}({nameof(OnClickInsertButton)} in {ClassName}): {ex.Message}", _class);
             }
         }
 
@@ -121,11 +121,11 @@ namespace Ironwall.Libraries.VMS.UI.ViewModels.Panels.SetupPanels
             catch (TaskCanceledException ex)
             {
                 await _eventAggregator.PublishOnUIThreadAsync(new ClosePopupMessageModel());
-                _log.Error($"Rasied {nameof(TaskCanceledException)}({nameof(OnClickSaveButton)} in {ClassName}): {ex.Message}");
+                _log.Error($"Rasied {nameof(TaskCanceledException)}({nameof(OnClickSaveButton)} in {ClassName}): {ex.Message}", _class);
             }
             catch (Exception ex)
             {
-                _log.Error($"Rasied {nameof(Exception)}({nameof(OnClickSaveButton)} in {ClassName}): {ex.Message}");
+                _log.Error($"Rasied {nameof(Exception)}({nameof(OnClickSaveButton)} in {ClassName}): {ex.Message}", _class);
                 var explain = ex.Message;
 
                 await _eventAggregator.PublishOnUIThreadAsync(new OpenInfoPopupMessageModel
@@ -156,11 +156,11 @@ namespace Ironwall.Libraries.VMS.UI.ViewModels.Panels.SetupPanels
             catch (TaskCanceledException ex)
             {
                 await _eventAggregator.PublishOnUIThreadAsync(new ClosePopupMessageModel());
-                _log.Error($"Rasied {nameof(TaskCanceledException)}({nameof(OnClickReloadButton)} in {ClassName}): {ex.Message}");
+                _log.Error($"Rasied {nameof(TaskCanceledException)}({nameof(OnClickReloadButton)} in {ClassName}): {ex.Message}", _class);
             }
             catch (Exception ex)
             {
-                _log.Error($"Rasied {nameof(Exception)}({nameof(OnClickReloadButton)} in {ClassName}): {ex.Message}");
+                _log.Error($"Rasied {nameof(Exception)}({nameof(OnClickReloadButton)} in {ClassName}): {ex.Message}", _class);
                 var explain = ex.Message;
 
                 await _eventAggregator.PublishOnUIThreadAsync(new OpenInfoPopupMessageModel
@@ -177,11 +177,12 @@ namespace Ironwall.Libraries.VMS.UI.ViewModels.Panels.SetupPanels
         #region - Processes -
         private Task DataInitialize(CancellationToken cancellationToken = default)
         {
-            return Task.Run(async () =>
+            return Task.Run(() =>
             {
                 try
                 {
                     IsVisible = false;
+                    //await Task.Delay(500, cancellationToken);
 
                     //ViewModelProvider Setting
                     if (cancellationToken.IsCancellationRequested) new TaskCanceledException("Task was cancelled!");
@@ -195,16 +196,14 @@ namespace Ironwall.Libraries.VMS.UI.ViewModels.Panels.SetupPanels
                         {
                             ViewModelProvider.Add(item);
                         }
-
+                        NotifyOfPropertyChange(() => ViewModelProvider);
                     }));
-                    NotifyOfPropertyChange(() => ViewModelProvider);
 
-                    await Task.Delay(500, cancellationToken);
                     IsVisible = true;
                 }
                 catch (TaskCanceledException ex)
                 {
-                    _log.Error($"Raised {nameof(TaskCanceledException)}({nameof(DataInitialize)}) : {ex.Message}");
+                    _log.Error($"Raised {nameof(TaskCanceledException)}({nameof(DataInitialize)}) : {ex.Message}", _class);
                 }
             });
         }
@@ -246,7 +245,6 @@ namespace Ironwall.Libraries.VMS.UI.ViewModels.Panels.SetupPanels
         public ObservableCollection<IEventModel> VmsEvents { get; private set; }
         #endregion
         #region - Attributes -
-        private ILogService _log;
         private VmsMappingViewModelProvider _provider;
         #endregion
 

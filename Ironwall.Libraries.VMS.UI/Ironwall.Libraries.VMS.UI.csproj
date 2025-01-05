@@ -82,8 +82,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Ironwall.Libraries.VMS.Common\Exts\Dotnet.OnvifSolution.Base.dll</HintPath>
     </Reference>
-    <Reference Include="MaterialDesignColors, Version=2.1.4.0, Culture=neutral, PublicKeyToken=df2a72020bd7962a, processorArchitecture=MSIL">
-      <HintPath>..\..\Ironwall.Monitoring.Client\packages\MaterialDesignColors.2.1.4\lib\net462\MaterialDesignColors.dll</HintPath>
+    <Reference Include="MaterialDesignColors, Version=3.0.0.0, Culture=neutral, PublicKeyToken=df2a72020bd7962a, processorArchitecture=MSIL">
+      <HintPath>..\..\Ironwall.Monitoring.Client\packages\MaterialDesignColors.3.0.0\lib\net462\MaterialDesignColors.dll</HintPath>
     </Reference>
     <Reference Include="MaterialDesignThemes.Wpf, Version=4.9.0.0, Culture=neutral, PublicKeyToken=df2a72020bd7962a, processorArchitecture=MSIL">
       <HintPath>..\..\Ironwall.Monitoring.Client\packages\MaterialDesignThemes.4.9.0\lib\net462\MaterialDesignThemes.Wpf.dll</HintPath>

@@ -30,6 +30,7 @@ using Ironwall.Libraries.Tcp.Server.Models;
 using Ironwall.Libraries.Base.DataProviders;
 using Ironwall.Framework.ViewModels;
 using Ironwall.Libraries.Base.Services;
+using Newtonsoft.Json.Converters;
 
 namespace Ironwall.Libraries.Account.Server.Services
 {
@@ -69,6 +70,11 @@ namespace Ironwall.Libraries.Account.Server.Services
             TimeTags = new Dictionary<string, object>();
 
             _locker = new ();
+            _settings = new JsonSerializerSettings
+            {
+                Converters = new List<JsonConverter> { new StringEnumConverter() },
+                DateFormatString = "yyyy-MM-ddTHH:mm:ss.ff"
+            };
         }
         #endregion
         #region - Implementation of Interface -
@@ -756,7 +762,7 @@ namespace Ironwall.Libraries.Account.Server.Services
                     //Insert data
                     var loginResponseModel = ResponseFactory.Build<LoginResponseModel>(success, msg, loginResponseResultModel);
                     //Send Response message(data)
-                    SendRequest(JsonConvert.SerializeObject(loginResponseModel), endPoint);
+                    SendRequest(JsonConvert.SerializeObject(loginResponseModel, _settings), endPoint);
                 }
                 catch (Exception ex)
                 {
@@ -776,7 +782,7 @@ namespace Ironwall.Libraries.Account.Server.Services
                     //Insert data
                     keepAliveResponseModel.Insert(success, msg, timeExpired);
                     //Send Response message(data)
-                    await SendRequest(JsonConvert.SerializeObject(keepAliveResponseModel), endPoint);
+                    await SendRequest(JsonConvert.SerializeObject(keepAliveResponseModel, _settings), endPoint);
                 }
                 catch (JsonReaderException)
                 {
@@ -800,7 +806,7 @@ namespace Ironwall.Libraries.Account.Server.Services
                     //Insert data
                     //logoutResponseModel.Insert(success, msg);
                     //Send Response message(data)
-                    await SendRequest(JsonConvert.SerializeObject(logoutResponseModel), endPoint);
+                    await SendRequest(JsonConvert.SerializeObject(logoutResponseModel, _settings), endPoint);
                 }
                 catch (Exception ex)
                 {
@@ -817,7 +823,7 @@ namespace Ironwall.Libraries.Account.Server.Services
                 try
                 {
                     var responseModel = ResponseFactory.Build<AccountIdCheckResponseModel>(success, msg);
-                    await SendRequest(JsonConvert.SerializeObject(responseModel), endPoint);
+                    await SendRequest(JsonConvert.SerializeObject(responseModel, _settings), endPoint);
                 }
                 catch (Exception ex)
                 {
@@ -855,14 +861,14 @@ namespace Ironwall.Libraries.Account.Server.Services
                         var responseModel = InstanceFactory.Build<AccountRegisterResponseModel>();
                         responseModel.Insert(success, msg, detailModel);
                         //Send Response message(data)
-                        await SendRequest(JsonConvert.SerializeObject(responseModel), endPoint);
+                        await SendRequest(JsonConvert.SerializeObject(responseModel, _settings), endPoint);
                     }
                     else
                     {
                         var responseModel = InstanceFactory.Build<AccountRegisterResponseModel>();
                         responseModel.Insert(success, msg, null);
                         //Send Response message(data)
-                        await SendRequest(JsonConvert.SerializeObject(responseModel), endPoint);
+                        await SendRequest(JsonConvert.SerializeObject(responseModel, _settings), endPoint);
                     }
                 }
                 catch (Exception ex)
@@ -901,14 +907,14 @@ namespace Ironwall.Libraries.Account.Server.Services
                         var responseModel = InstanceFactory.Build<AccountEditResponseModel>();
                         responseModel.Insert(success, msg, detailModel);
                         //Send Response message(data)
-                        await SendRequest(JsonConvert.SerializeObject(responseModel), endPoint);
+                        await SendRequest(JsonConvert.SerializeObject(responseModel, _settings), endPoint);
                     }
                     else
                     {
                         var responseModel = InstanceFactory.Build<AccountEditResponseModel>();
                         responseModel.Insert(success, msg, null);
                         //Send Response message(data)
-                        await SendRequest(JsonConvert.SerializeObject(responseModel), endPoint);
+                        await SendRequest(JsonConvert.SerializeObject(responseModel, _settings), endPoint);
                     }
                 }
                 catch (Exception ex)
@@ -925,7 +931,7 @@ namespace Ironwall.Libraries.Account.Server.Services
                 try
                 {
                     var responseModel = ResponseFactory.Build<AccountDeleteResponseModel>(success, msg);
-                    await SendRequest(JsonConvert.SerializeObject(responseModel), endPoint);
+                    await SendRequest(JsonConvert.SerializeObject(responseModel, _settings), endPoint);
                 }
                 catch (Exception ex)
                 {
@@ -941,7 +947,7 @@ namespace Ironwall.Libraries.Account.Server.Services
                 try
                 {
                     var responseModel = ResponseFactory.Build<AccountDeleteAllResponseModel>(success, msg, deletedAccounts);
-                    await SendRequest(JsonConvert.SerializeObject(responseModel), endPoint);
+                    await SendRequest(JsonConvert.SerializeObject(responseModel, _settings), endPoint);
                 }
                 catch (Exception ex)
                 {
@@ -963,14 +969,14 @@ namespace Ironwall.Libraries.Account.Server.Services
                         var responseModel = InstanceFactory.Build<AccountInfoResponseModel>();
                         responseModel.Insert(success, msg, detailModel);
                         //Send Response message(data)
-                        await SendRequest(JsonConvert.SerializeObject(responseModel), endPoint);
+                        await SendRequest(JsonConvert.SerializeObject(responseModel, _settings), endPoint);
                     }
                     else
                     {
                         var responseModel = InstanceFactory.Build<AccountInfoResponseModel>();
                         responseModel.Insert(success, msg, null);
                         //Send Response message(data)
-                        await SendRequest(JsonConvert.SerializeObject(responseModel), endPoint);
+                        await SendRequest(JsonConvert.SerializeObject(responseModel, _settings), endPoint);
                     }
                 }
                 catch (Exception ex)
@@ -995,7 +1001,7 @@ namespace Ironwall.Libraries.Account.Server.Services
 
                     var responseModel = ResponseFactory.Build<AccountAllResponseModel>(success, msg, userList);
 
-                    await SendRequest(JsonConvert.SerializeObject(responseModel), endPoint);
+                    await SendRequest(JsonConvert.SerializeObject(responseModel, _settings), endPoint);
 
                 }
                 catch (Exception ex)
@@ -1373,6 +1379,7 @@ namespace Ironwall.Libraries.Account.Server.Services
         public event ITcpCommon.TcpLogout_dele ClientLogout;
         private System.Timers.Timer SessionTimer;
         private object _locker;
+        protected JsonSerializerSettings _settings;
         #endregion
     }
 }

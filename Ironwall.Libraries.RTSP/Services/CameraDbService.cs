@@ -54,14 +54,50 @@ namespace Ironwall.Libraries.RTSP.Services
                     var sql = @$"DELETE FROM {table}";
                     commitResult = conn.Execute(sql);
 
-                    //DB 레코드 INSERT
+                    ////DB 레코드 INSERT
+                    //foreach (var item in DeviceProvider)
+                    //{
+                    //    commitResult = conn.Execute(@$"INSERT INTO {table} 
+                    //                (id, name, typedevice, ipaddress, port, username, password, firmwareversion, hardwareid, devicemodel, serialnumber, manufacturer, profile, uri, type, hostname, rtspuri, rtspport, mac, mode, used) VALUES (@Id, @Name, @TypeDevice, @IpAddress, @Port, @UserName, @Password, @FirmwareVersion, @HardwareId, @DeviceModel, @SerialNumber, @Manufacturer, @Profile, @Uri, @Type, @HostName, @RtspUri, @RtspPort, @Mac, @Mode, 1)", item);
+
+                    //    commitCount += commitResult;
+                    //}
+
                     foreach (var item in DeviceProvider.CollectionEntity)
                     {
+                        var parameters = new
+                        {
+                            Id = item.Id,
+                            Name = item.Name,
+                            Typedevice = item.TypeDevice,
+                            IpAddress = item.IpAddress,
+                            Port = item.Port,
+                            UserName = item.UserName,
+                            Password = item.Password,
+                            FirmwareVersion = item.FirmwareVersion,
+                            HardwareId = item.HardwareId,
+                            DeviceModel = item.DeviceModel,
+                            SerialNumber = item.SerialNumber,
+                            Manufacturer = item.Manufacturer,
+                            Profile = item.Profile,
+                            Uri = item.Uri,
+                            Type = item.Type,
+                            HostName = item.HostName,
+                            RtspUri = item.RtspUri,
+                            RtspPort = item.RtspPort,
+                            Mac = item.Mac,
+                            Mode = item.Mode
+                        };
+
                         commitResult = conn.Execute(@$"INSERT INTO {table} 
-                                    (id, name, typedevice, ipaddress, port, username, password, firmwareversion, hardwareid, devicemodel, serialnumber, manufacturer, profile, uri, type, hostname, rtspuri, rtspport, mac, mode, used) VALUES (@Id, @Name, @Typedevice, @IpAddress, @Port, @UserName, @Password, @FirmwareVersion, @HardwareId, @DeviceModel, @SerialNumber, @Manufacturer, @Profile, @Uri, @Type, @HostName, @RtspUri, @RtspPort, @Mac, @Mode, 1)", item);
+                        (id, name, typedevice, ipaddress, port, username, password, firmwareversion, hardwareid, devicemodel, serialnumber, manufacturer, profile, uri, type, hostname, rtspuri, rtspport, mac, mode, used) 
+                        VALUES 
+                        (@Id, @Name, @Typedevice, @IpAddress, @Port, @UserName, @Password, @FirmwareVersion, @HardwareId, @DeviceModel, @SerialNumber, @Manufacturer, @Profile, @Uri, @Type, @HostName, @RtspUri, @RtspPort, @Mac, @Mode, 1)",
+                                    parameters);
 
                         commitCount += commitResult;
                     }
+
                     Debug.WriteLine($"({commitCount}) rows was updated in DB[{table}]");
                 }
                 catch (Exception ex)

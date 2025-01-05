@@ -7,6 +7,9 @@ using System;
 using System.IO;
 using System.Diagnostics;
 using Ironwall.Libraries.LibVlcRtsp.UI.Modules;
+using Ironwall.Libraries.Base.Services;
+using Ironwall.Libraries.LibVlcRtsp.UI.Factories;
+using System.Windows;
 
 namespace Ironwall.Libraries.LibVlcRtsp.UI.ViewModels
 {
@@ -23,51 +26,55 @@ namespace Ironwall.Libraries.LibVlcRtsp.UI.ViewModels
     {
 
         #region - Ctors -
-        public VlcComponentViewModel(VlcMediaPlayer vlcMediaPlayer)
-        {
-            #region Deprecated
-            //Core.Initialize();
-            ////_libVLC = new LibVLC("--verbose=2");
-            //_libVLC = new LibVLC();
-            ////var options = new string[]
-            ////            {
-            ////                "--network-caching=250"
-            ////                ,"--sout-qsv-software"
-            ////                , "--sout-mux-caching=300"
-            ////                //, "--network-synchronisation"
-            ////                , "--directx-use-sysmem"
-            ////                //, $"{VlcControl.ActualWidth}x{VlcControl.ActualHeight}"
-            ////            };
-            //_mediaPlayer = new MediaPlayer(_libVLC);
-            //_mediaPlayer.NetworkCaching = 100;
-            //_mediaPlayer.FileCaching = 300;
-            #endregion
+        //public VlcComponentViewModel(VlcMediaPlayer vlcMediaPlayer)
+        //{
+        //    _log = IoC.Get<ILogService>();
+        //    _mediaPlayer = vlcMediaPlayer ?? throw new ArgumentNullException(nameof(vlcMediaPlayer));
+        //    _mediaPlayer.NetworkCaching = 200;
+        //    _mediaPlayer.FileCaching = 300;
+        //}
 
-            //_mediaPlayer = IoC.Get<VlcMediaPlayer>();
-            _mediaPlayer = vlcMediaPlayer;
-            _mediaPlayer.NetworkCaching = 200;
-            _mediaPlayer.FileCaching = 300;
+        public VlcComponentViewModel(VlcMediaPlayerFactory factory)
+        {
+            _factory = factory;
+            _log = IoC.Get<ILogService>();
         }
         #endregion
         #region - Implementation of Interface -
         #endregion
         #region - Overrides -
-        //protected override Task OnActivateAsync(CancellationToken cancellationToken)
-        //{
-        //    return base.OnActivateAsync(cancellationToken);
-        //}
-
-        protected override Task OnDeactivateAsync(bool close, CancellationToken cancellationToken)
+        protected override async Task OnActivateAsync(CancellationToken cancellationToken)
         {
-            _mediaPlayer?.Stop();
-            //_mediaPlayer?.Dispose();
-            _media?.Dispose();
-            return base.OnDeactivateAsync(close, cancellationToken);
+            Visibility = false;
+            _mediaPlayer = await _factory.CreateAsync();
+            _log.Info("MediaPlayer initialized.");
+            await base.OnActivateAsync(cancellationToken);
+            Visibility = true;
         }
+        protected override async Task OnDeactivateAsync(bool close, CancellationToken cancellationToken)
+        {
+            try
+            {
+                MediaPlayer?.Stop();
+                MediaPlayer?.Dispose();
+                _media?.Dispose();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error in {nameof(OnDeactivateAsync)}: {ex.Message}");
+            }
+            finally
+            {
+                await base.OnDeactivateAsync(close, cancellationToken).ConfigureAwait(false);
+            }
+        }
+
         #endregion
         #region - Binding Methods -
         #endregion
         #region - Processes -
+
+        
         private string GetDirectory()
         {
             string directoryPath = null;
@@ -85,68 +92,117 @@ namespace Ironwall.Libraries.LibVlcRtsp.UI.ViewModels
 
 
         // 재생 메서드
-        public Task Play(string rtspUrl, string deviceName = default, bool isRecording = false, int eventId = default, CancellationToken token = default)
-        {
-            return Task.Run(() =>
-            {
-                try
-                {
-                    if (!MediaPlayer.IsPlaying)
-                    {
-                        #region Other Options
-                        //var options = new[]
-                        //{
-                        //    // 녹화 설정
-                        //    $":sout=#duplicate{{dst=display,dst=transcode{{vcodec=h264,vb=800,acodec=mp4a,ab=128,channels=2,samplerate=44100}}:std{{access=file,mux=mp4,dst={destination}}}}}",
-                        //    ":sout-keep"
-                        //};
-                        #endregion
-                        string[] options = null;
-                        if (isRecording)
-                        {
-                            var destination = Path.Combine(GetDirectory(), $"[{eventId}]{deviceName}.mp4");
-                            options = new[]
-                            {
-                                $":sout=#duplicate{{" +
-                                // Display RTSP설정
-                                $"dst=display" +
-                                // RTSP 영상 녹화 설정
-                                $",dst=std{{access=file,mux=mp4,dst={destination}}}" +
-                                // RTSP 스트리밍 설정
-                                //$",dst=rtp{{sdp=rtsp://127.0.0.1:554/}}" +
-                                $"}}", ":sout-keep"
-                            };
-                        }
-                        else
-                        {
-                            options = new[]
-                            {
-                                $":sout=#duplicate{{" +
-                                // Display RTSP설정
-                                $"dst=display" +
-                                // RTSP 영상 녹화 설정
-                                //$",dst=std{{access=file,mux=mp4,dst={destination}}}" +
-                                // RTSP 스트리밍 설정
-                                //$",dst=rtp{{sdp=rtsp://127.0.0.1:554/}}" +
-                                $"}}",
-                                ":sout-keep"
-                            };
-                        }
-                        if (token.IsCancellationRequested) throw new TaskCanceledException();
-                        _media = new Media(_mediaPlayer.LibVLC, new Uri(rtspUrl), options);
+        //public Task Play(string rtspUrl, string deviceName = default, bool isRecording = false, int eventId = default, CancellationToken token = default)
+        //{
+        //    return Task.Run(() =>
+        //    {
+        //        try
+        //        {
+        //            if (!MediaPlayer.IsPlaying)
+        //            {
+        //                #region Other Options
+        //                //var options = new[]
+        //                //{
+        //                //    // 녹화 설정
+        //                //    $":sout=#duplicate{{dst=display,dst=transcode{{vcodec=h264,vb=800,acodec=mp4a,ab=128,channels=2,samplerate=44100}}:std{{access=file,mux=mp4,dst={destination}}}}}",
+        //                //    ":sout-keep"
+        //                //};
+        //                #endregion
+        //                string[] options = null;
+        //                if (isRecording)
+        //                {
+        //                    var destination = Path.Combine(GetDirectory(), $"[{eventId}]{deviceName}.mp4");
+        //                    options = new[]
+        //                    {
+        //                        $":sout=#duplicate{{" +
+        //                        // Display RTSP설정
+        //                        $"dst=display" +
+        //                        // RTSP 영상 녹화 설정
+        //                        $",dst=std{{access=file,mux=mp4,dst={destination}}}" +
+        //                        // RTSP 스트리밍 설정
+        //                        //$",dst=rtp{{sdp=rtsp://127.0.0.1:554/}}" +
+        //                        $"}}", ":sout-keep"
+        //                    };
+        //                }
+        //                else
+        //                {
+        //                    options = new[]
+        //                    {
+        //                        $":sout=#duplicate{{" +
+        //                        // Display RTSP설정
+        //                        $"dst=display" +
+        //                        // RTSP 영상 녹화 설정
+        //                        //$",dst=std{{access=file,mux=mp4,dst={destination}}}" +
+        //                        // RTSP 스트리밍 설정
+        //                        //$",dst=rtp{{sdp=rtsp://127.0.0.1:554/}}" +
+        //                        $"}}",
+        //                        ":sout-keep"
+        //                    };
+        //                }
+        //                if (token.IsCancellationRequested) throw new TaskCanceledException();
+        //                _media = new Media(_mediaPlayer.LibVLC, new Uri(rtspUrl), options);
 
-                        MediaPlayer.Play(_media);
-                    }
-                }
-                catch (TaskCanceledException ex)
+        //                MediaPlayer.Play(_media);
+        //            }
+        //        }
+        //        catch (TaskCanceledException ex)
+        //        {
+        //            Debug.WriteLine($"Raised {nameof(TaskCanceledException)} in {nameof(Play)} : {ex.Message}");
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            Debug.WriteLine($"Raised {nameof(Exception)} in {nameof(Play)} : {ex.Message}");
+        //        }
+        //    }, token);
+        //}
+
+        private string[] GenerateMediaOptions(string deviceName, int eventId, bool isRecording)
+        {
+            if (isRecording)
+            {
+                var destination = Path.Combine(GetDirectory(), $"[{eventId}]{deviceName}.mp4");
+                return new[]
                 {
-                    Debug.WriteLine($"Raised {nameof(TaskCanceledException)} in {nameof(Play)} : {ex.Message}");
-                }
-                catch (Exception ex)
+                    $":sout=#duplicate{{dst=display,dst=std{{access=file,mux=mp4,dst={destination}}}}}",
+                    ":sout-keep"
+                };
+            }
+            return new[]
+            {
+                $":sout=#duplicate{{dst=display}}",
+                ":sout-keep"
+            };
+        }
+
+        public Task Play(string rtspUrl, string deviceName = default, bool isRecording = false, int eventId = default, CancellationToken cancellationToken = default)
+        {
+            if (MediaPlayer.IsPlaying) return Task.CompletedTask;
+
+            try
+            {
+                var options = GenerateMediaOptions(deviceName, eventId, isRecording);
+                _media = new Media(_mediaPlayer.LibVLC, new Uri(rtspUrl), options);
+
+                if (cancellationToken.IsCancellationRequested)
                 {
-                    Debug.WriteLine($"Raised {nameof(Exception)} in {nameof(Play)} : {ex.Message}");
+                    throw new TaskCanceledException();
                 }
-            }, token);
+
+                if (!MediaPlayer.Play(_media))
+                {
+                    _log.Error($"Failed to start playback for URL: {rtspUrl}");
+                }
+            }
+            catch (TaskCanceledException)
+            {
+                _log.Error("Playback task was canceled.");
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"Error during playback: {ex.Message}");
+            }
+
+            return Task.CompletedTask;
         }
 
         // 정지 메서드
@@ -161,7 +217,7 @@ namespace Ironwall.Libraries.LibVlcRtsp.UI.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Raised Exception in {nameof(Stop)} : {ex.Message}");
+                    _log.Error($"Raised Exception in {nameof(Stop)} : {ex.Message}");
                 }
             });
 
@@ -194,11 +250,21 @@ namespace Ironwall.Libraries.LibVlcRtsp.UI.ViewModels
             }
         }
 
+
+        public bool Visibility
+        {
+            get { return _visibility; }
+            set { _visibility = value; NotifyOfPropertyChange(nameof(Visibility)); }
+        }
+
         #endregion
         #region - Attributes -
         private VlcMediaPlayer _mediaPlayer;
-        private Media _media;
         private string _name;
+        private bool _visibility;
+        private Media _media;
+        private VlcMediaPlayerFactory _factory;
+        private ILogService _log;
         #endregion
     }
 }

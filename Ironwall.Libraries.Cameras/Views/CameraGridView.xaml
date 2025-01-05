@@ -19,10 +19,8 @@
         <utils:EnumCameraTypeToTextConverter x:Key="EnumVcaDeviceTypeToTextConverter" />
         <utils:EnumCameraStatusToTextConverter x:Key="EnumVcaStatusTypeToTextConverter" />
         <utils:EnumCameraStatusToValueConverter x:Key="EnumVcaStatusTypeToValueConverter" />
-        <utils:BindingProxy x:Key="VcaCameraProxy"
-                            Data="{Binding}" />
-        <CollectionViewSource x:Key="CameraComboSource"
-                              Source="{Binding CameraComboProvider}" />
+        <utils:BindingProxy x:Key="VcaCameraProxy" Data="{Binding}" />
+        <CollectionViewSource x:Key="CameraComboSource" Source="{Binding CameraComboProvider}" />
     </UserControl.Resources>
     <Grid Height="390">
         <Grid.RowDefinitions>

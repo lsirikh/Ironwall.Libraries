@@ -17,9 +17,9 @@ namespace Ironwall.Libraries.Common.Models
         public override string ToString()
         {
             if (Code != null)
-                return $"[{CreatedTime}][{Type}][{Code}]{Message}";
+                return $"[{CreatedTime}][{Level}][{Code}]{Message}";
             else
-                return $"[{CreatedTime}][{Type}]{Message}";
+                return $"[{CreatedTime}][{Level}]{Message}";
 
         }
         #endregion
@@ -30,19 +30,21 @@ namespace Ironwall.Libraries.Common.Models
         {
             Message = msg;
             Code = code;
-            Type = EnumLogType.INFO;
+            Level = EnumLogType.INFO;
         }
+
         public void Warning(string msg, string code = default)
         {
             Message = msg;
             Code = code;
-            Type = EnumLogType.WARNING;
+            Level = EnumLogType.WARNING;
         }
+
         public void Error(string msg, string code = default)
         {
             Message = msg;
             Code = code;
-            Type = EnumLogType.ERROR;
+            Level = EnumLogType.ERROR;
         }
         #endregion
         #region - IHanldes -
@@ -50,17 +52,14 @@ namespace Ironwall.Libraries.Common.Models
         #region - Properties -
         public string Code { get; set; } = "000";
 
-        //DateTime CreatedTime { get; set; } = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.ff");
         public string CreatedTime { get; set; } = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.ff");
 
-        public EnumLogType Type { get; set; }
+        public EnumLogType Level { get; set; }
 
         public string Message { get; set; }
         #endregion
         #region - Attributes -
         #endregion
-        
     }
-
     
 }

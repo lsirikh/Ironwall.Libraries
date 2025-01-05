@@ -20,6 +20,7 @@ using Ironwall.Libraries.Devices.Providers.Models;
 using Ironwall.Libraries.Device.UI.Messages;
 using System.Windows.Documents;
 using System.Collections.Generic;
+using Ironwall.Libraries.Base.Services;
 
 namespace Ironwall.Libraries.Device.UI.ViewModels.Dialogs
 {
@@ -36,8 +37,9 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Dialogs
     {
 
         #region - Ctors -
-        public MappingInsertDialogViewModel(IEventAggregator eventAggregator) 
-            : base(eventAggregator)
+        public MappingInsertDialogViewModel(IEventAggregator eventAggregator
+                                            , ILogService log) 
+                                            : base(eventAggregator, log)
         {
 
         }
@@ -94,7 +96,7 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Dialogs
                 }
                 catch (NullReferenceException ex)
                 {
-                    Debug.WriteLine($"Rasied {nameof(NullReferenceException)}({nameof(ClickOkAsync)}): {ex.Message}");
+                    _log.Error($"Rasied {nameof(NullReferenceException)}({nameof(ClickOkAsync)}): {ex.Message}", _class);
                     var explain = ex.Message;
 
                     await _eventAggregator.PublishOnUIThreadAsync(new OpenInfoPopupMessageModel
@@ -104,7 +106,7 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Dialogs
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Rasied {nameof(Exception)}({nameof(ClickOkAsync)}): {ex.Message}");
+                    _log.Error($"Rasied {nameof(Exception)}({nameof(ClickOkAsync)}): {ex.Message}", _class);
                     var explain = ex.Message;
 
                     await _eventAggregator.PublishOnUIThreadAsync(new OpenInfoPopupMessageModel

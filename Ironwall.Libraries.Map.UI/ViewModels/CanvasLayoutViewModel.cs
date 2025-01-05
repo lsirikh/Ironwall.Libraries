@@ -63,9 +63,8 @@ namespace Ironwall.Libraries.Map.UI.ViewModels
                                     , CanvasOverlayViewModel canvasOverlayViewModel
                                     , MapStatusViewModel mapStatusViewModel
                                     , SymbolPropertyPanelViewModel symbolPropertyPanelViewModel)
-            :base(eventAggregator)
+            :base(eventAggregator, log)
         {
-            _log = log;
 
             CanvasViewModel = canvasViewModel;
             CanvasOverlayViewModel = canvasOverlayViewModel;
@@ -83,22 +82,19 @@ namespace Ironwall.Libraries.Map.UI.ViewModels
             _mapProvider = mapProvider;
         }
 
-        private Task<bool> MapViewModelProvider_Refresh()
+        private async Task<bool> MapViewModelProvider_Refresh()
         {
-            return Task.Run(async () =>
+            try
             {
-                try
-                {
-                    await Task.Delay(100);
-                    await ClearMapTask();
-                    await SetSelectedMap();
-                    return true;
-                }
-                catch (Exception)
-                {
-                    return false;
-                }
-            });
+                //Minimap의 matching을 위해서 필요함
+                await Task.Delay(1000);
+                await SetSelectedMap();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
         #endregion
         #region - Implementation of Interface -
@@ -111,12 +107,10 @@ namespace Ironwall.Libraries.Map.UI.ViewModels
             await CanvasOverlayViewModel.ActivateAsync();
             await MapStatusViewModel.ActivateAsync();
             await SymbolPropertyPanelViewModel.ActivateAsync();
-
             _symbolCollectionViewModel.MappedSymbolViewModelProvider.Completed += MappedSymbolViewModelProvider_Completed;
+            _symbolCollectionViewModel.IsVisible = false;
             await base.OnActivateAsync(cancellationToken);
         }
-
-        
 
         protected override async Task OnDeactivateAsync(bool close, CancellationToken cancellationToken)
         {
@@ -127,77 +121,75 @@ namespace Ironwall.Libraries.Map.UI.ViewModels
             await SymbolPropertyPanelViewModel.DeactivateAsync(true);
             
             _symbolCollectionViewModel.MappedSymbolViewModelProvider.Completed -= MappedSymbolViewModelProvider_Completed;
+            _symbolCollectionViewModel.IsVisible = false;
             await base.OnDeactivateAsync(close, cancellationToken);
         }
         #endregion
         #region - Binding Methods -
         #endregion
         #region - Processes -
-        public void OnClickLoadMap(object sender, RoutedEventArgs e)
+        public async void OnClickLoadMap(object sender, RoutedEventArgs e)
         {
             if (!((sender as Button).DataContext is MapViewModel viewModel))
                 return;
-
-            SetSelectedMap(viewModel);
+            await SetSelectedMap(viewModel);
         }
 
-        private Task SetSelectedMap(IMapViewModel viewModel = default)
+        private async Task SetSelectedMap(IMapViewModel viewModel = default)
         {
-
-            return Task.Run(() => 
+            try
             {
-                try
+                await ClearMapTask();
+
+                if (viewModel == null)
+                    viewModel = MapViewModelProvider.OrderBy(entity => entity.MapNumber).FirstOrDefault();
+                if (CanvasViewModel.SelectedMapViewModel == viewModel) return;
+
+
+                await DispatcherService.BeginInvoke((System.Action)(async () =>
                 {
-                    if (viewModel == null)
-                        viewModel = MapViewModelProvider.OrderBy(entity => entity.MapNumber).FirstOrDefault();
-                    if (CanvasViewModel.SelectedMapViewModel == viewModel) return;
-                    
-                    DispatcherService.Invoke((System.Action)(async () =>
+                    _symbolCollectionViewModel.IsVisible = false;
+                    _symbolCollectionViewModel.ClearMappedSymbols();
+
+
+                    ///UI 쓰레드에 의해 점유중인 자원에 대해선 자원에 
+                    ///수정을 가할 때 UI 쓰레드의 Dispatcher에 작업을 위임해야 한다. 
+                    CanvasViewModel.SelectedMapViewModel = viewModel;
+                    if (CanvasViewModel.SelectedMapViewModel != null)
                     {
-                        _symbolCollectionViewModel.IsVisible = false;
-                        _symbolCollectionViewModel.MappedSymbolViewModelProvider.Clear();
+                        CanvasViewModel.SelectedMapViewModel.IsSelected = true;
+                        CanvasViewModel.ContentWidth = CanvasViewModel.SelectedMapViewModel.Width;
+                        CanvasViewModel.ContentHeight = CanvasViewModel.SelectedMapViewModel.Height;
+                        CanvasViewModel.IsVisible = true;
+                    }
 
+                    CanvasOverlayViewModel.OverlayMapViewModel = viewModel;
+                    if (CanvasOverlayViewModel.OverlayMapViewModel != null)
+                    {
+                        CanvasOverlayViewModel.Width = CanvasViewModel.SelectedMapViewModel.Width;
+                        CanvasOverlayViewModel.Height = CanvasViewModel.SelectedMapViewModel.Height;
+                        CanvasOverlayViewModel.IsVisible = true;
+                    }
 
-                        ///UI 쓰레드에 의해 점유중인 자원에 대해선 자원에 
-                        ///수정을 가할 때 UI 쓰레드의 Dispatcher에 작업을 위임해야 한다. 
-                        CanvasViewModel.SelectedMapViewModel = viewModel;
-                        if (CanvasViewModel.SelectedMapViewModel != null)
-                        {
-                            CanvasViewModel.SelectedMapViewModel.IsSelected = true;
-                            CanvasViewModel.ContentWidth = CanvasViewModel.SelectedMapViewModel.Width;
-                            CanvasViewModel.ContentHeight = CanvasViewModel.SelectedMapViewModel.Height;
-                            CanvasViewModel.IsVisible = true;
-                        }
+                    if (!CanvasOverlayViewModel.IsActive)
+                        await CanvasOverlayViewModel.ActivateAsync();
 
-                        CanvasOverlayViewModel.OverlayMapViewModel = viewModel;
-                        if (CanvasOverlayViewModel.OverlayMapViewModel != null)
-                        {
-                            CanvasOverlayViewModel.Width = CanvasViewModel.SelectedMapViewModel.Width;
-                            CanvasOverlayViewModel.Height = CanvasViewModel.SelectedMapViewModel.Height;
-                            CanvasOverlayViewModel.IsVisible = true;
-                        }
+                    await _symbolCollectionViewModel.SetMappedSymbols(viewModel.MapNumber);
 
-                        if (!CanvasOverlayViewModel.IsActive)
-                            await CanvasOverlayViewModel.ActivateAsync();
+                }));
 
-                        _symbolCollectionViewModel.MappedSymbolViewModelProvider.SelectedMapNumber = viewModel.MapNumber;
-                        await _symbolCollectionViewModel.MappedSymbolViewModelProvider.Provider_Initialize();
+                _log.Info($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.ff")}]{nameof(SetSelectedMap)} was finished!");
 
-                    }));
-
-                    _log.Info($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.ff")}]{nameof(SetSelectedMap)} was finished!");
-
-                }
-                catch (Exception)
-                {
-                    throw;
-                }
-            });
-            
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
-        private void MappedSymbolViewModelProvider_Completed()
+        private async void MappedSymbolViewModelProvider_Completed()
         {
+            await Task.Delay(500);
             _symbolCollectionViewModel.IsVisible = true;
         }
 
@@ -674,11 +666,10 @@ namespace Ironwall.Libraries.Map.UI.ViewModels
             
         }
 
-        public Task HandleAsync(EventMapChangeMessage message, CancellationToken cancellationToken)
+        public async Task HandleAsync(EventMapChangeMessage message, CancellationToken cancellationToken)
         {
             var map = MapViewModelProvider.Where(entity => entity.MapNumber == message.MapNumber).FirstOrDefault() as MapViewModel;
-            SetSelectedMap(map);
-            return Task.CompletedTask;
+            await SetSelectedMap(map);
         }
 
 
@@ -705,7 +696,6 @@ namespace Ironwall.Libraries.Map.UI.ViewModels
                 ToggleButtonHandler("Controller", value);
             }
         }
-
         
 
         private bool _isOnAddMultisensor;
@@ -809,12 +799,15 @@ namespace Ironwall.Libraries.Map.UI.ViewModels
             }
         }
 
-        
+        //Map status panel for settings.
         public MapStatusViewModel MapStatusViewModel { get; }
+        //Symbol status panel for settings.
         public SymbolPropertyPanelViewModel SymbolPropertyPanelViewModel { get; }
+        //MapViewModelProvider Proivdes CanvasLayoutViewModel as map files.
         public MapViewModelProvider MapViewModelProvider { get; }
-
+        //Canvas Content and map symbols
         public CanvasViewModel CanvasViewModel { get; }
+        //Minimap Overlay
         public CanvasOverlayViewModel CanvasOverlayViewModel { get; }
         #endregion
         #region - Attributes -
@@ -824,7 +817,6 @@ namespace Ironwall.Libraries.Map.UI.ViewModels
         private PointProvider _pointProvider;
         private MapDbService _mapDbService;
         private MapProvider _mapProvider;
-        private ILogService _log;
 
         public const double WIDTH = 80;
         public const double HEIGHT = 60;

@@ -1,5 +1,6 @@
 ﻿using Caliburn.Micro;
 using Ironwall.Framework.Models.Maps.Symbols;
+using System;
 using System.Windows;
 
 namespace Ironwall.Libraries.Map.UI.ViewModels.Symbols
@@ -8,9 +9,14 @@ namespace Ironwall.Libraries.Map.UI.ViewModels.Symbols
     {
         void UpdateModel(T model);
         void Dispose();
-        void OnClickEdit(object sender, RoutedEventArgs args);
-        void OnClickExit(object sender, RoutedEventArgs args);
-        void OnClickDelete(object sender, RoutedEventArgs args);
+        void OnLoaded(object sender, RoutedEventArgs args);
+        void OnClickSelect(object sender, EventArgs args);
+        void OnClickCopy(object sender, EventArgs args);
+        void OnClickEdit(object sender, EventArgs args);
+        void OnClickExit(object sender, EventArgs args);
+        void OnClickDelete(object sender, EventArgs args);
+
+
         int Id { get; set; }
         double X { get; set; }
         double Y { get; set; }

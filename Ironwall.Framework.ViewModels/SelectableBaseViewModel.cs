@@ -1,5 +1,6 @@
 ﻿using Caliburn.Micro;
 using Ironwall.Framework.ViewModels.ConductorViewModels;
+using Ironwall.Libraries.Base.Services;
 
 namespace Ironwall.Framework.ViewModels
 {
@@ -21,7 +22,7 @@ namespace Ironwall.Framework.ViewModels
 
         }
 
-        public SelectableBaseViewModel(IEventAggregator eventAggregator) : base(eventAggregator)
+        public SelectableBaseViewModel(IEventAggregator eventAggregator, ILogService log) : base(eventAggregator, log)
         {
 
         }

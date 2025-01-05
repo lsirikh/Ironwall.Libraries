@@ -34,55 +34,51 @@ namespace Ironwall.Libraries.Map.Common.Providers.Models
         #region - Binding Methods -
         #endregion
         #region - Processes -
-        private Task<bool> Provider_Initialize()
+        private async Task<bool> Provider_Initialize()
         {
-            return Task.Run(async () =>
+            var isValid = false;
+            try
             {
-                var isValid = false;
-                try
+                Clear();
+                foreach (SymbolModel item in _provider
+                                    .OfType<IObjectShapeModel>() // 타입 필터링
+                                    .Where(entity => entity.TypeShape == (int)EnumShapeType.FENCE)
+                                    .ToList())
                 {
-                    Clear();
-                    foreach (SymbolModel item in _provider
-                    .Where(entity => entity.TypeShape == (int)EnumShapeType.FENCE)
-                    .ToList())
-                    {
-                        isValid = true;
-                        Add(item as IObjectShapeModel);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"Raised Exception in {nameof(Provider_Initialize)}({ClassName}) : {ex.Message}");
-                    return false;
+                    isValid = true;
+                    Add(item as IObjectShapeModel);
                 }
 
-                if (isValid)
-                    return await Finished();
-                else
-                    return false;
-            });
+                _log.Info($"{nameof(SymbolModel)}s of {nameof(EnumShapeType.FENCE)} were inserted to {nameof(FenceObjectProvider)}");
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"Raised Exception in {nameof(Provider_Initialize)}({ClassName}) : {ex.Message}");
+                return false;
+            }
+
+            if (isValid)
+                return await Finished();
+            else
+                return false;
         }
 
         private Task<bool> Proivder_Insert(ISymbolModel item)
         {
             bool ret = false;
-            return Task.Run(() =>
+            try
             {
-                try
+                if (item.TypeShape == (int)EnumShapeType.FENCE)
                 {
-                    if (item.TypeShape == (int)EnumShapeType.FENCE)
-                    {
-                        Debug.WriteLine($"[{item.Id}]{ClassName} was executed({CollectionEntity.Count()})!!!");
-                        Add(item);
-                    }
+                    _log.Info($"[{item.Id}]{ClassName} was executed({CollectionEntity.Count()})!!!");
+                    Add(item);
                 }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"Raised Exception in {nameof(Proivder_Insert)}({ClassName}) : {ex.Message}");
-                    return ret;
-                }
-                return ret;
-            });
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"Raised Exception in {nameof(Proivder_Insert)}({ClassName}) : {ex.Message}");
+            }
+            return Task.FromResult(ret);
         }
         #endregion
         #region - IHanldes -

@@ -3,6 +3,7 @@ using Ironwall.Libraries.Device.UI.Providers;
 using System.Threading.Tasks;
 using System.Threading;
 using Caliburn.Micro;
+using Ironwall.Libraries.Base.Services;
 
 namespace Ironwall.Libraries.Device.UI.ViewModels.Panels
 {
@@ -18,8 +19,9 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Panels
     public class CameraPanelViewModel : BaseViewModel
     {
         #region - Ctors -
-        public CameraPanelViewModel(IEventAggregator eventAggregator)
-            : base(eventAggregator)
+        public CameraPanelViewModel(IEventAggregator eventAggregator
+                                    , ILogService log)
+                                    : base(eventAggregator, log)
         {
 
         }

@@ -5,6 +5,7 @@ using Ironwall.Framework.Models.Devices;
 using Ironwall.Framework.Models.Events;
 using Ironwall.Framework.Models.Messages;
 using Ironwall.Framework.ViewModels;
+using Ironwall.Libraries.Base.Services;
 using Ironwall.Libraries.Enums;
 using Ironwall.Libraries.Event.UI.Models.Messages;
 using Ironwall.Libraries.Event.UI.Providers.ViewModels;
@@ -31,12 +32,13 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Panels
         #region - Ctors -
         public PreEventListPanelViewModel(
             IEventAggregator eventAggregator
+            , ILogService log
             , ActionEventProvider actionEventProvdier
             , PreEventProvider preEventProvider
             , PendingEventProvider pendingEventProvider
             , PostEventProvider postEventProvider
             , EventSetupModel eventSetupModel)
-            : base(eventAggregator, eventSetupModel)
+            : base(eventAggregator, log, eventSetupModel)
         {
             ActionEventProvider = actionEventProvdier;
 
@@ -115,7 +117,7 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Panels
                     {
                         if (item.Id == model.FromEvent.Id)
                         {
-                            var visitor = new EventViewModelVisitor(PreEventProvider, PostEventProvider, _eventSetupModel);
+                            var visitor = new EventViewModelVisitor(_eventAggregator, _log, PreEventProvider, PostEventProvider, _eventSetupModel);
                             //item.Id = message.Model.Body.Id;
 
                             var actionModel = ActionEventProvider.Where(t => t.Id == model.Id).FirstOrDefault() as ActionEventModel;

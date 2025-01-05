@@ -5,6 +5,7 @@ using System;
 using System.Threading.Tasks;
 using System.Threading;
 using System.Windows;
+using Ironwall.Libraries.Base.Services;
 
 namespace Ironwall.Libraries.Event.UI.ViewModels
 {
@@ -21,10 +22,11 @@ namespace Ironwall.Libraries.Event.UI.ViewModels
         #region - Ctors -
         protected ExBaseEventViewModel()
         {
-
+            _class = this.GetType();
         }
-        public ExBaseEventViewModel(T model)
+        public ExBaseEventViewModel(T model) : base()
         {
+            _log = IoC.Get<ILogService>();
             _eventAggregator = IoC.Get<IEventAggregator>();
             _model = model;
         }
@@ -78,10 +80,13 @@ namespace Ironwall.Libraries.Event.UI.ViewModels
             }
         }
 
+
         #endregion
         #region - Attributes -
         protected IEventAggregator _eventAggregator;
         protected T _model;
+        protected ILogService _log;
+        protected Type _class;
         #endregion
     }
 }

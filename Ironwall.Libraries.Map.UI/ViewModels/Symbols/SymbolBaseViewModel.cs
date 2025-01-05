@@ -4,6 +4,8 @@ using System.Threading;
 using System.Windows;
 using Ironwall.Libraries.Enums;
 using Ironwall.Framework.Models.Maps.Symbols;
+using Ironwall.Libraries.Base.Services;
+using System;
 
 namespace Ironwall.Libraries.Map.UI.ViewModels.Symbols
 {
@@ -16,8 +18,7 @@ namespace Ironwall.Libraries.Map.UI.ViewModels.Symbols
         Email        : lsirikh@naver.com                                         
      ****************************************************************************/
 
-    public abstract class SymbolBaseViewModel<T> : Screen, ISymbolBaseViewModel<T>
-        where T: ISymbolModel
+    public abstract class SymbolBaseViewModel<T> : Screen, ISymbolBaseViewModel<T> where T: ISymbolModel
     {
 
         #region - Ctors -
@@ -28,6 +29,7 @@ namespace Ironwall.Libraries.Map.UI.ViewModels.Symbols
         public SymbolBaseViewModel(T model)
         {
             _eventAggregator = IoC.Get<IEventAggregator>();
+            _log = IoC.Get<ILogService>();
             _model = model;
 
             
@@ -42,21 +44,24 @@ namespace Ironwall.Libraries.Map.UI.ViewModels.Symbols
         #endregion
         #region - Overrides -
         public abstract void Dispose();
-        public virtual void OnLoaded(object sender, SizeChangedEventArgs e) { }
-        public abstract void OnClickSelect(object sender, RoutedEventArgs args);
-        public abstract void OnClickEdit(object sender, RoutedEventArgs args);
-        public abstract void OnClickExit(object sender, RoutedEventArgs args);
-        public abstract void OnClickCopy(object sender, RoutedEventArgs args);
-        public abstract void OnClickDelete(object sender, RoutedEventArgs args);
+        public virtual void OnLoaded(object sender, RoutedEventArgs args) { }
+        public abstract void OnClickSelect(object sender, EventArgs args);
+        public abstract void OnClickEdit(object sender, EventArgs args);
+        public abstract void OnClickExit(object sender, EventArgs args);
+        public abstract void OnClickCopy(object sender, EventArgs args);
+        public abstract void OnClickDelete(object sender, EventArgs args);
         protected override Task OnActivateAsync(CancellationToken cancellationToken)
         {
             _eventAggregator?.SubscribeOnUIThread(this);
+            _log.Info($"## {this.GetType()} was activated ##");
             return base.OnActivateAsync(cancellationToken);
         }
 
         protected override Task OnDeactivateAsync(bool close, CancellationToken cancellationToken)
         {
             _eventAggregator?.Unsubscribe(this);
+            Dispose();
+            _log.Info($"## {this.GetType()} was deactivated ##");
             return base.OnDeactivateAsync(close, cancellationToken);
         }
         #endregion
@@ -247,6 +252,7 @@ namespace Ironwall.Libraries.Map.UI.ViewModels.Symbols
         #endregion
         #region - Attributes -
         protected IEventAggregator _eventAggregator;
+        protected ILogService _log;
         protected T _model;
 
         private bool _isEditable;

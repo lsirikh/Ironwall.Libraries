@@ -345,8 +345,8 @@ namespace Ironwall.Libraries.Server.Services
             //01. Check model
             //02. Fetch original event from DB
             //03. Check original event was updated from EnumTrueFalse.False to EnumTrueFalse.True
-            //04.Update original event from DB
-            //05.Save new action event
+            //04. Update original event from DB
+            //05. Save new action event
             //06. Send ActionResponse 
             //07. Send Message to UI Log
 

@@ -37,12 +37,12 @@ namespace Ironwall.Framework.ViewModels
                 if (data.GetType() == item.GetType())
                 {
                     await data.ActivateAsync();
-                    //_eventAggregator.SubscribeOnUIThread(data);
+                    _eventAggregator.SubscribeOnPublishedThread(data);
                 }
                 else
                 {
                     await data.DeactivateAsync(true);
-                    //_eventAggregator.Unsubscribe(data);
+                    _eventAggregator.Unsubscribe(data);
                 }
             }
         }

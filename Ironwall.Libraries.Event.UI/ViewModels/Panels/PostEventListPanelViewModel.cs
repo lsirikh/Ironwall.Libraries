@@ -1,5 +1,6 @@
 ﻿using Caliburn.Micro;
 using Ironwall.Framework.Models.Messages;
+using Ironwall.Libraries.Base.Services;
 using Ironwall.Libraries.Event.UI.Providers.ViewModels;
 using Ironwall.Libraries.Events.Models;
 using System;
@@ -18,9 +19,10 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Panels
         #region - Ctors -
         public PostEventListPanelViewModel(
              IEventAggregator eventAggregator
+            , ILogService log
             , PostEventProvider postEventProvider
             , EventSetupModel eventSetupModel)
-            : base(eventAggregator, eventSetupModel)
+            : base(eventAggregator, log, eventSetupModel)
         {
             PostEventProvider = postEventProvider;
             CollectionEventViewModel = PostEventProvider.CollectionEntity;

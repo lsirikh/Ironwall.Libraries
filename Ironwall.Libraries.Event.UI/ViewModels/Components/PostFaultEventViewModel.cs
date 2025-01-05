@@ -57,6 +57,7 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Components
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
+                _log.Error(ex.Message, _class);
             }
         }
         #endregion

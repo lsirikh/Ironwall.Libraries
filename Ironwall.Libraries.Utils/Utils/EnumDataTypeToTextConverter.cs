@@ -33,23 +33,23 @@ namespace Ironwall.Libraries.Utils
                 switch (type)
                 {
                     case "Map":
-                        return $"[{values[0].ToString()}]{EnumDataType.Map.ToString()}";
+                        return $"[{values[0]}]{EnumDataType.Map}";
                     case "CONTROLLER":
-                        return $"[{values[0].ToString()}]{EnumDataType.Controller.ToString()}";
+                        return $"[{values[0]}]{EnumDataType.Controller}";
                     case "Sensor":
-                        return $"[{values[0].ToString()}]{EnumDataType.Sensor.ToString()}";
+                        return $"[{values[0]}]{EnumDataType.Sensor}";
                     //그룹 라인
                     case "GroupSymbol":
-                        return $"[{values[0].ToString()}]{EnumDataType.GroupSymbol.ToString()}";
+                        return $"[{values[0]}]{EnumDataType.GroupSymbol}";
                     //그룹 라벨
                     case "Group":
-                        return $"[{values[0].ToString()}]{EnumDataType.Group.ToString()}";
+                        return $"[{values[0]}]{EnumDataType.Group}";
                     //카메라 이미지
                     case "Camera":
-                        return $"[{values[0].ToString()}]{EnumDataType.Camera.ToString()}";
+                        return $"[{values[0]}]{EnumDataType.Camera}";
                     //카메라 라벨
                     case "CameraLabel":
-                        return $"[{values[0].ToString()}]{EnumDataType.CameraLabel.ToString()}";
+                        return $"[{values[0]}]{EnumDataType.CameraLabel}";
                     default:
                         return values[0].ToString();
                 }

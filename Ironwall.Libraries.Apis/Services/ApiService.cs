@@ -33,6 +33,7 @@ namespace Ironwall.Libraries.Apis.Services
         {
             _log = log;
             _setupModel = setupModel;
+            _class = this.GetType();
         }
         #endregion
         #region - Implementation of Interface -
@@ -100,7 +101,7 @@ namespace Ironwall.Libraries.Apis.Services
                 }
                 catch (Exception ex)
                 {
-                    _log?.Error($"Raised {nameof(Exception)} in {nameof(GetRequest)} of {nameof(ApiService)} : {ex}", true);
+                    _log?.Error($"Raised {nameof(Exception)} in {nameof(GetRequest)} of {nameof(ApiService)} : {ex}", _class, true);
                     return null;
                 }
             });
@@ -194,7 +195,7 @@ namespace Ironwall.Libraries.Apis.Services
                 }
                 catch (Exception ex)
                 {
-                    _log?.Error($"Raised {nameof(Exception)} in {nameof(DeleteRequest)} of {nameof(ApiService)} : {ex}", true);
+                    _log?.Error($"Raised {nameof(Exception)} in {nameof(DeleteRequest)} of {nameof(ApiService)} : {ex}", _class, true);
                     return null;
                 }
             });
@@ -246,7 +247,7 @@ namespace Ironwall.Libraries.Apis.Services
                 }
                 catch (Exception ex)
                 {
-                    _log?.Error($"Raised {nameof(Exception)} in {nameof(PatchRequest)} of {nameof(ApiService)} : {ex}", true);
+                    _log?.Error($"Raised {nameof(Exception)} in {nameof(PatchRequest)} of {nameof(ApiService)} : {ex}", _class, true);
                     return null;
                 }
             });
@@ -294,7 +295,7 @@ namespace Ironwall.Libraries.Apis.Services
                 }
                 catch (Exception ex)
                 {
-                    _log?.Error($"Raised {nameof(Exception)} in {nameof(PutRequest)} of {nameof(ApiService)} : {ex}", true);
+                    _log?.Error($"Raised {nameof(Exception)} in {nameof(PutRequest)} of {nameof(ApiService)} : {ex}", _class, true);
                     return null;
                 }
             });
@@ -307,6 +308,7 @@ namespace Ironwall.Libraries.Apis.Services
         #region - Attributes -
         private ILogService _log;
         private ApiSetupModel _setupModel;
+        private Type _class;
         private const int TIMEOUT = 10;
         #endregion
     }

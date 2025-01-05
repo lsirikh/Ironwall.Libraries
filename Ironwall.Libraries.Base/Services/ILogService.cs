@@ -1,9 +1,13 @@
-﻿namespace Ironwall.Libraries.Base.Services
+﻿using System;
+
+namespace Ironwall.Libraries.Base.Services
 {
     public interface ILogService
     {
-        public void Error(string msg, bool debug = true);
-        public void Info(string msg, bool debug = true);
-        public void Warning(string msg, bool debug = true);
+        void Error(string msg, Type type = default, bool debug = true);
+        void Info(string msg, Type type = default, bool debug = true);
+        void Warning(string msg, Type type=default, bool debug = true);
+
+        event EventHandler<LogEventArgs> LogEvent;
     }
 }

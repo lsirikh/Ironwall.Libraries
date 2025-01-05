@@ -3,6 +3,7 @@ using Ironwall.Framework.Models.Devices;
 using Ironwall.Framework.Services;
 using Ironwall.Framework.ViewModels.ConductorViewModels;
 using Ironwall.Framework.ViewModels.Devices;
+using Ironwall.Libraries.Base.Services;
 using Ironwall.Libraries.Device.UI.Providers;
 using Ironwall.Libraries.Device.UI.ViewModels.Panels;
 using Ironwall.Libraries.Device.UI.Views.Panels;
@@ -23,12 +24,12 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Dashboards
     {
         #region - Ctors -
         public DeviceDashBoardViewModel(IEventAggregator eventAggregator
+                                        , ILogService log
                                         , DeviceProvider deviceProvider
                                         , ControllerViewModelProvider controllerViewModelProvider
                                         , SensorViewModelProvider sensorViewModelProvider
-                                        , CameraViewModelProvider camearViewModelProvider
-                                        
-            ) : base(eventAggregator)
+                                        , CameraViewModelProvider camearViewModelProvider) 
+                                        : base(eventAggregator, log)
         {
             _deviceProvider = deviceProvider;
             _controllerViewModelProvider = controllerViewModelProvider;
@@ -98,7 +99,7 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Dashboards
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Raised Exception in {nameof(OnActiveTab)} : {ex.Message}");
+                _log.Error($"Raised Exception in {nameof(OnActiveTab)} : {ex.Message}");
             }
 
         }

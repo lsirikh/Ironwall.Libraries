@@ -1,5 +1,6 @@
 ﻿using Caliburn.Micro;
 using Ironwall.Framework.ViewModels.ConductorViewModels;
+using Ironwall.Libraries.Base.Services;
 using Ironwall.Libraries.Map.UI.Models.Messages;
 using Ironwall.Libraries.Map.UI.ViewModels.Properties;
 using Ironwall.Libraries.Map.UI.ViewModels.Symbols;
@@ -24,8 +25,9 @@ namespace Ironwall.Libraries.Map.UI.ViewModels.Panels
 
         #region - Ctors -
         public SymbolPropertyPanelViewModel(IEventAggregator eventAggregator
+                                            , ILogService log
                                             , SymbolPropertyViewModel symbolPropertyViewModel)
-                                            : base(eventAggregator)
+                                            : base(eventAggregator, log)
         {
             SymbolPropertyViewModel = symbolPropertyViewModel;
         }
@@ -65,7 +67,7 @@ namespace Ironwall.Libraries.Map.UI.ViewModels.Panels
                 SymbolPropertyViewModel.Refresh();
                 IsOnEditable = false;
             }
-            Debug.WriteLine($"{SymbolPropertyViewModel.Model.Id}가 PropertyViewModel을 {IsOnEditable} 하였습니다.");
+            _log.Info($"{SymbolPropertyViewModel.Model.Id}가 PropertyViewModel을 {IsOnEditable} 하였습니다.", _class);
 
 
             return Task.CompletedTask;

@@ -43,11 +43,11 @@ namespace Ironwall.Libraries.Event.UI.ViewModels
             catch (OperationCanceledException ex)
             {
                 await TaskFinal();
-                Debug.WriteLine($"Raised OperationCanceledException in {nameof(ExecuteAsync)} of {nameof(EventTimerViewModel)}: {ex.Message}");
+                _log.Error($"Raised OperationCanceledException in {nameof(ExecuteAsync)} of {nameof(EventTimerViewModel)}: {ex.Message}", _class);
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Raised Exception in {nameof(ExecuteAsync)} of {nameof(EventTimerViewModel)}: {ex.Message}");
+                _log.Error($"Raised Exception in {nameof(ExecuteAsync)} of {nameof(EventTimerViewModel)}: {ex.Message}", _class);
             }
         }
 
@@ -65,7 +65,7 @@ namespace Ironwall.Libraries.Event.UI.ViewModels
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"[EventTimerViewModel][Cancel]{ex.Message}");
+                _log.Error($"[EventTimerViewModel][Cancel]{ex.Message}", _class);
             }
         }
 

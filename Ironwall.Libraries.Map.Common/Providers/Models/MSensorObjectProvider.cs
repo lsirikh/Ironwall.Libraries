@@ -25,6 +25,7 @@ namespace Ironwall.Libraries.Map.Common.Providers.Models
             ClassName = nameof(MultiSensorObjectProvider);
             _provider.Refresh += Provider_Initialize;
             _provider.Inserted += Proivder_Insert;
+
         }
         #endregion
         #region - Implementation of Interface -
@@ -42,13 +43,15 @@ namespace Ironwall.Libraries.Map.Common.Providers.Models
                 try
                 {
                     Clear();
-                    foreach (SymbolModel item in _provider
-                    .Where(entity => entity.TypeShape == (int)EnumShapeType.MULTI_SNESOR)
-                    .ToList())
+                    foreach (var item in _provider
+                                        .OfType<IObjectShapeModel>() // 타입 필터링
+                                        .Where(entity => entity.TypeShape == (int)EnumShapeType.MULTI_SNESOR)
+                                        .ToList())
                     {
                         isValid = true;
-                        Add(item as IObjectShapeModel);
+                        Add(item);
                     }
+                    _log.Info($"{nameof(SymbolModel)}s of {nameof(EnumShapeType.MULTI_SNESOR)} were inserted to {nameof(MultiSensorObjectProvider)}" );
                 }
                 catch (Exception ex)
                 {

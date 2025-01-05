@@ -483,61 +483,54 @@ namespace Ironwall.Libraries.Client.Services
         }
 
        
-        public Task<bool> DeviceDataRequest(IDeviceDataRequestModel request)
+        public async Task<bool> DeviceDataRequest(IDeviceDataRequestModel request)
         {
-            return Task.Run(async () =>
+            try
             {
-                try
-                {
-                    var json = JsonConvert.SerializeObject(request, _settings);
-                    await SendRequest(json);
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    _log.Error($"Raised Exception in {nameof(DeviceDataRequest)} of {nameof(ClientService)} : {ex.Message}");
-                    return false;
-                }
-            });
+                var json = JsonConvert.SerializeObject(request, _settings);
+                await SendRequest(json).ConfigureAwait(false);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"Raised Exception in {nameof(DeviceDataRequest)} of {nameof(ClientService)} : {ex.Message}");
+                return false;
+            }
         }
 
         public Task<bool> DeviceDataResponse(IDeviceDataResponseModel response)
         {
-            return Task.Run(() =>
+            try
             {
-                try
+                if (!response.Success) return Task.FromResult(false);
+
+                _logProvider.AddInfo($"The Server responsed to DeviceDataRequest with Data(Controller : {response.Sensors.Count}, Sensor : {response.Controllers.Count}, Body : {response.Cameras.Count}).");
+
+                _deviceProvider.Clear();
+
+                foreach (var item in response.Controllers)
                 {
-                    if (!response.Success)
-                        return false;
-
-                    _logProvider.AddInfo($"The Server responsed to DeviceDataRequest with Data(Controller : {response.Sensors.Count}, Sensor : {response.Controllers.Count}, Body : {response.Cameras.Count}).");
-
-                    _deviceProvider.Clear();
-
-                    foreach (var item in response.Controllers)
-                    {
-                        _deviceProvider.Add(item);
-                    }
-
-                    foreach (var item in response.Sensors)
-                    {
-                        _deviceProvider.Add(item);
-                    }
-
-                    foreach (var item in response.Cameras)
-                    {
-                        _deviceProvider.Add(item);
-                    }
-                    
-
-                    return true;
+                    _deviceProvider.Add(item);
                 }
-                catch (Exception ex)
+
+                foreach (var item in response.Sensors)
                 {
-                    _log.Error($"Raised Exception in {nameof(DeviceDataResponse)} of {nameof(ClientService)} : {ex.Message}");
-                    return false;
+                    _deviceProvider.Add(item);
                 }
-            });
+
+                foreach (var item in response.Cameras)
+                {
+                    _deviceProvider.Add(item);
+                }
+
+
+                return Task.FromResult(true);
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"Raised Exception in {nameof(DeviceDataResponse)} of {nameof(ClientService)} : {ex.Message}");
+                return Task.FromResult(false);
+            }
         }
 
 

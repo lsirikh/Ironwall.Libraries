@@ -43,9 +43,8 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Panels
         #region - Ctors -
         public DetectionPanelViewModel(ILogService log
                                     , IEventAggregator eventAggregator
-                                    ) : base(eventAggregator)
+                                    ) : base(eventAggregator, log)
         {
-            _log = log;
         }
         #endregion
         #region - Implementation of Interface -
@@ -115,7 +114,7 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Panels
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised Exception in {nameof(ClickSearch)}({nameof(DetectionPanelViewModel)}) : " + ex.Message);
+                _log.Error($"Raised Exception in {nameof(ClickSearch)}({nameof(DetectionPanelViewModel)}) : " + ex.Message, _class);
             }
 
         }
@@ -179,7 +178,6 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Panels
         #endregion
         #region - Attributes -
         private int _reported;
-        private ILogService _log;
         #endregion
     }
 }

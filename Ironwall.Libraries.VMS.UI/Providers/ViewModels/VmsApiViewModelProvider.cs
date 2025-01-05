@@ -112,7 +112,7 @@ namespace Ironwall.Libraries.VMS.UI.Providers.ViewModels
                 case NotifyCollectionChangedAction.Reset:
                     // The whole list is refreshed
                     CollectionEntity.Clear();
-                    foreach (VmsApiModel newItem in _provider.ToList())
+                    foreach (var newItem in _provider.OfType<VmsApiModel>().ToList())
                     {
                         var viewModel = new VmsApiViewModel(newItem);
                         await viewModel.ActivateAsync();

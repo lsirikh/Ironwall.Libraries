@@ -67,6 +67,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Factories\VlcMediaPlayerFactory.cs" />
     <Compile Include="Modules\IVlcMediaPlayer.cs" />
     <Compile Include="Modules\MediaPlayerModule.cs" />
     <Compile Include="Modules\VlcMediaPlayer.cs" />
@@ -105,7 +106,7 @@
       <Version>7.0.0</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf">
-      <Version>1.1.19</Version>
+      <Version>1.1.135</Version>
     </PackageReference>
     <PackageReference Include="System.Buffers">
       <Version>4.5.1</Version>
@@ -137,6 +138,14 @@
       <Project>{7da0d9f1-e2f8-4c6e-91b2-43deebd3c3fe}</Project>
       <Name>Ironwall.Framework.ViewModels</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Ironwall.Libraries.Base\Ironwall.Libraries.Base.csproj">
+      <Project>{9d2531fc-7a97-478b-9303-9b0a3d223551}</Project>
+      <Name>Ironwall.Libraries.Base</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ironwall.Libraries.Utils\Ironwall.Libraries.Utils.csproj">
+      <Project>{14220279-9b26-4383-bf1e-a0da31726758}</Project>
+      <Name>Ironwall.Libraries.Utils</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\Ironwall.Monitoring.Client\packages\VideoLAN.LibVLC.Windows.3.0.18\build\VideoLAN.LibVLC.Windows.targets" Condition="Exists('..\..\Ironwall.Monitoring.Client\packages\VideoLAN.LibVLC.Windows.3.0.18\build\VideoLAN.LibVLC.Windows.targets')" />
@@ -148,10 +157,12 @@
   </Target>
   <PropertyGroup>
     <PostBuildEvent>if "$(Platform)" == "x64" (
-     xcopy "$(TargetDir)libvlc\win-x64\*.*" "$(SolutionDir)libvlc\win-x64\" /Y /E /C /F
-     
- ) else (
-     xcopy "$(TargetDir)libvlc\win-x86\*.*" "$(SolutionDir)libvlc\win-x86\" /Y /E /C /F
- )</PostBuildEvent>
+    xcopy "$(ProjectDir)libvlc\win-x64\*.*" "$(TargetDir)libvlc\win-x64\" /Y /E /C /F
+    if errorlevel 1 exit /b 0
+) else (
+    xcopy "$(ProjectDir)libvlc\win-x86\*.*" "$(TargetDir)libvlc\win-x86\" /Y /E /C /F
+    if errorlevel 1 exit /b 0
+)
+</PostBuildEvent>
   </PropertyGroup>
 </Project>

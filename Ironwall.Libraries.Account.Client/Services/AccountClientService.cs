@@ -25,12 +25,20 @@ namespace Ironwall.Libraries.Account.Client.Services
     public abstract class AccountClientService : TcpClient, IAccountClientService
     {
         #region - Ctors -
+        /// <summary>
+        /// Initializes the AccountClientService with logging and TCP setup model.
+        /// </summary>
         protected AccountClientService(ILogService log, TcpSetupModel tcpSetupModel): base(log, tcpSetupModel)
         {
-            
+            _class = typeof(AccountClientService);
         }
         #endregion
         #region - Implementation of Interface -
+        /// <summary>
+        /// Periodically checks the session's validity and sends a keep-alive request if needed.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private async void SessionTick(object sender, ElapsedEventArgs e)
         {
             try
@@ -42,7 +50,7 @@ namespace Ironwall.Libraries.Account.Client.Services
                     var requestModel = RequestFactory.Build<KeepAliveRequestModel>(LoginSessionModel.Token);
                     var msg = JsonConvert.SerializeObject(requestModel, _settings);
 
-                    await SendRequest(msg);
+                    await SendRequest(msg).ConfigureAwait(false);
                 }
             }
             catch (Exception ex)
@@ -54,47 +62,49 @@ namespace Ironwall.Libraries.Account.Client.Services
             }
         }
 
-        public Task LoginRequest(ILoginRequestModel requestModel)
+        /// <summary>
+        /// Sends a login request to the server.
+        /// </summary>
+        /// <param name="requestModel"></param>
+        /// <returns></returns>
+        public async Task LoginRequest(ILoginRequestModel requestModel)
         {
-            return Task.Run(async () =>
+            try
             {
-                try
-                {
-                    var msg = JsonConvert.SerializeObject(requestModel, _settings);
-                    await SendRequest(msg);
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    _log.Error($"Raised Exception in {nameof(LoginRequest)} : {ex.Message}");
-                    return false;
-                }
-            });
+                var msg = JsonConvert.SerializeObject(requestModel, _settings);
+                await SendRequest(msg).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"Raised Exception in {nameof(LoginRequest)} : {ex.Message}");
+            }
         }
 
+        /// <summary>
+        /// Handles the login response from the server.
+        /// </summary>
+        /// <param name="response"></param>
+        /// <param name="endPoint"></param>
+        /// <returns></returns>
         public Task<bool> LoginResponse(ILoginResponseModel response, IPEndPoint endPoint)
         {
-            return Task.Run(() =>
+            try
             {
-                try
-                {
-                    if (!response.Success)
-                        return false;
+                if (!response.Success) return Task.FromResult(false);
 
-                    SessionTimeOut = (int)response?.Results?.SessionTimeOut;
-                    UserModel = ModelFactory.Build<UserModel>(response.Results.Details);
-                    LoginSessionModel = ModelFactory.Build<LoginSessionModel>(response.Results);
-                    InitSessionTimer();
-                    SetSessionTimerStart();
-                    CallRefresh?.Invoke();
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    _log.Error($"Raised Exception in Login : {ex.Message}");
-                    return false;
-                }
-            });
+                SessionTimeOut = (int)response?.Results?.SessionTimeOut;
+                UserModel = ModelFactory.Build<UserModel>(response.Results.Details);
+                LoginSessionModel = ModelFactory.Build<LoginSessionModel>(response.Results);
+                InitSessionTimer();
+                SetSessionTimerStart();
+                CallRefresh?.Invoke();
+                return Task.FromResult(true);
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"Raised Exception in Login : {ex.Message}");
+                return Task.FromResult(false);
+            }
         }
 
         public Task CheckIdRequest(IAccountIdCheckRequestModel requestModel)
@@ -135,209 +145,174 @@ namespace Ironwall.Libraries.Account.Client.Services
             });
         }
 
-        public Task KeepAliveRequest(IKeepAliveRequestModel requestModel)
+        /// <summary>
+        /// Sends a keep-alive request to the server.
+        /// </summary>
+        /// <param name="requestModel"></param>
+        /// <returns></returns>
+        public async Task KeepAliveRequest(IKeepAliveRequestModel requestModel)
         {
-            return Task.Run(async () =>
+            try
             {
-                try
-                {
-                    if (LoginSessionModel == null)
-                        return false;
+                if (LoginSessionModel == null) return;
 
-                    var msg = JsonConvert.SerializeObject(requestModel, _settings);
-                    await SendRequest(msg);
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    _log.Error($"Raised Exception in {nameof(KeepAliveRequest)} : {ex.Message}");
-                    return false;
-                }
-            });
+                var msg = JsonConvert.SerializeObject(requestModel, _settings);
+                await SendRequest(msg).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"Raised Exception in {nameof(KeepAliveRequest)} : {ex.Message}");
+            }
         }
 
+        /// <summary>
+        /// Handles the keep-alive response from the server.
+        /// </summary>
+        /// <param name="response"></param>
+        /// <param name="endPoint"></param>
+        /// <returns></returns>
         public Task<bool> KeepAliveResponse(IKeepAliveResponseModel response, IPEndPoint endPoint)
         {
-            return Task.Run(() =>
+            try
             {
-                try
-                {
-                    if (LoginSessionModel == null)
-                        return false;
+                if (LoginSessionModel == null) return Task.FromResult(false);
 
-                    if (response == null || !response.Success)
-                    {
-                        SetSessionTimerStop();
-                        InitSessionTimer();
-                        CallRefresh?.Invoke();
-                        return false;
-                    }
-
-                    LoginSessionModel.TimeExpired = response.TimeExpired;
-                    return true;
-                }
-                catch (Exception ex)
+                if (response == null || !response.Success)
                 {
-                    _log.Error($"Raised Exception in {nameof(KeepAliveResponse)} : {ex.Message}");
-                    return false;
+                    SetSessionTimerStop();
+                    InitSessionTimer();
+                    CallRefresh?.Invoke();
+                    return Task.FromResult(false);
                 }
-            });
+
+                LoginSessionModel.TimeExpired = response.TimeExpired;
+                return Task.FromResult(true);
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"Raised Exception in {nameof(KeepAliveResponse)} : {ex.Message}");
+                return Task.FromResult(false);
+            }
         }
 
-        public Task LogoutRequest(ILogoutRequestModel requestModel)
+        public async Task LogoutRequest(ILogoutRequestModel requestModel)
         {
-            return Task.Run(async () =>
+            try
             {
-                try
-                {
-                    if (LoginSessionModel == null)
-                        return false;
+                if (LoginSessionModel == null) return;
 
-                    var msg = JsonConvert.SerializeObject(requestModel, _settings);
-                    await SendRequest(msg);
+                var msg = JsonConvert.SerializeObject(requestModel, _settings);
+                await SendRequest(msg).ConfigureAwait(false);
 
-                    CallRefresh?.Invoke();
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    _log.Error($"Raised Exception in {nameof(LogoutRequest)} : {ex.Message}");
-                    return false;
-                }
-            });
+                CallRefresh?.Invoke();
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"Raised Exception in {nameof(LogoutRequest)} : {ex.Message}");
+            }
         }
 
         public Task<bool> LogoutResponse(ILogoutResponseModel response, IPEndPoint endPoint)
         {
-            return Task.Run(() =>
+            try
             {
-                try
-                {
-                    if (LoginSessionModel == null)
-                        return false;
+                if (LoginSessionModel == null) return Task.FromResult(false);
 
-                    if (!response.Success)
-                        return false;
+                if (!response.Success) return Task.FromResult(false);
 
-                    UserModel = null;
-                    LoginSessionModel = null;
-                    SetSessionTimerStop();
-                    InitSessionTimer();
-                    CallRefresh?.Invoke();
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    _log.Error($"Raised Exception in Login : {ex.Message}");
-                    return false;
-                }
-            });
+                UserModel = null;
+                LoginSessionModel = null;
+                SetSessionTimerStop();
+                InitSessionTimer();
+                CallRefresh?.Invoke();
+                return Task.FromResult(true);
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"Raised Exception in Login : {ex.Message}");
+                return Task.FromResult(false);
+            }
         }
 
-        public Task RegisterRequest(IAccountRegisterRequestModel requestModel)
+        public async Task RegisterRequest(IAccountRegisterRequestModel requestModel)
         {
-            return Task.Run(async () =>
+            try
             {
-                try
-                {
-                    //if (LoginSessionModel == null)
-                    //    return false;
+                //if (LoginSessionModel == null)
+                //    return false;
 
-                    var msg = JsonConvert.SerializeObject(requestModel, _settings);
-                    await SendRequest(msg);
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    _log.Error($"Raised Exception in {nameof(RegisterRequest)} : {ex.Message}");
-                    return false;
-                }
-            });
+                var msg = JsonConvert.SerializeObject(requestModel, _settings);
+                await SendRequest(msg).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"Raised Exception in {nameof(RegisterRequest)} : {ex.Message}");
+            }
         }
 
         public Task<bool> RegisterResponse(IAccountRegisterResponseModel response, IPEndPoint endPoint)
         {
-            return Task.Run(() =>
+            try
             {
-                try
-                {
-                    if (!response.Success)
-                        return false;
+                if (!response.Success) return Task.FromResult(false);
 
-
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    _log.Error($"Raised Exception in RegisterResponse : {ex.Message}");
-                    return false;
-                }
-            });
+                return Task.FromResult(true);
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"Raised Exception in RegisterResponse : {ex.Message}");
+                return Task.FromResult(false);
+            }
         }
 
-        public Task AccountAllRequest(IAccountAllRequestModel requestModel)
+        public async Task AccountAllRequest(IAccountAllRequestModel requestModel)
         {
-            return Task.Run(async () =>
+            try
             {
-                try
-                {
-                    if (LoginSessionModel == null)
-                        return false;
+                if (LoginSessionModel == null) return;
 
-                    var msg = JsonConvert.SerializeObject(requestModel, _settings);
-                    await SendRequest(msg);
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    _log.Error($"Raised Exception in {nameof(AccountAllRequest)} : {ex.Message}");
-                    return false;
-                }
-            });
+                var msg = JsonConvert.SerializeObject(requestModel, _settings);
+                await SendRequest(msg);
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"Raised Exception in {nameof(AccountAllRequest)} : {ex.Message}");
+            }
         }
 
         public Task<bool> AccountAllResponse(IAccountAllResponseModel response, IPEndPoint endPoint)
         {
-            return Task.Run(() =>
+            try
             {
-                try
-                {
-                    if (LoginSessionModel == null)
-                        return false;
+                if (LoginSessionModel == null)
+                    return Task.FromResult(false);
 
-                    if (!response.Success)
-                        return false;
+                if (!response.Success)
+                    return Task.FromResult(false);
 
-                    
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    _log.Error($"Raised Exception in RegisterResponse : {ex.Message}");
-                    return false;
-                }
-            });
+
+                return Task.FromResult(true);
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"Raised Exception in RegisterResponse : {ex.Message}");
+                return Task.FromResult(false);
+            }
         }
 
-        public Task AccountInfoRequest(IAccountInfoRequestModel requestModel)
+        public async Task AccountInfoRequest(IAccountInfoRequestModel requestModel)
         {
-            return Task.Run(async () =>
+            try
             {
-                try
-                {
-                    if (LoginSessionModel == null)
-                        return false;
+                if (LoginSessionModel == null) return;
 
-                    var msg = JsonConvert.SerializeObject(requestModel, _settings);
-                    await SendRequest(msg);
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    _log.Error($"Raised Exception in {nameof(AccountInfoRequest)} : {ex.Message}");
-                    return false;
-                }
-            });
+                var msg = JsonConvert.SerializeObject(requestModel, _settings);
+                await SendRequest(msg).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"Raised Exception in {nameof(AccountInfoRequest)} : {ex.Message}");
+            }
         }
 
         public Task<bool> AccountInfoResponse(IAccountInfoResponseModel response, IPEndPoint endPoint)
@@ -543,6 +518,7 @@ namespace Ironwall.Libraries.Account.Client.Services
         #region - Attributes -
         public event EventDelegate CallRefresh;
         private System.Timers.Timer SessionTimer;
+        private Type _class;
         #endregion
 
     }

@@ -47,7 +47,6 @@ namespace Ironwall.Framework.ViewModels
         {
         }
         #endregion 
-
         #region - Properties -
         public int Id
         {
@@ -217,7 +216,6 @@ namespace Ironwall.Framework.ViewModels
             }
         }
         #endregion
-
         #region - Attributes -
         protected IEntityModel entityModel;
         protected static SemaphoreSlim semaphoreSlim;

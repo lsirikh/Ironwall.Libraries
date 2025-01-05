@@ -83,8 +83,8 @@
 				<Polyline Grid.Row="0"
 						  IsHitTestVisible="{Binding IsEditable, Converter={StaticResource InvertBooleanConverter}}"
 						  StrokeThickness="{Binding ShapeStrokeThick}"
-						  StrokeEndLineCap="Triangle"
-						  StrokeStartLineCap="Triangle"
+						  StrokeEndLineCap="Round"
+						  StrokeStartLineCap="Round"
 						  Points="{Binding Points, UpdateSourceTrigger=PropertyChanged}">
 
 					<!--<Polyline.Stroke>
