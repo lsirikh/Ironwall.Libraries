@@ -437,3 +437,15 @@ protected override IEnumerable<Assembly> SelectAssemblies()
         (단, 아직 동작하는 일부 로직들이 있다.)  
     3) VMS 파트의 DataGridPanel 버그 수정  
     4) ViewModel을 DataGridPanel에 사용하는 로직에 비효율성을 검토할 필요있음  
+
+### Update Date: 2025/01/09
+
+* 통합 버전으로 관리
+
+<br>
+
+* Version : v1.0.3  
+* Comment 
+    1) CamearPanelViewModel, ConrtollerPanelViewModel, SensorPanelViewModel DataInitialize를 async 하게 구현하고 ConfigureAwait(false)로 설정
+        과도한 Task.Run 지양  
+    2) 

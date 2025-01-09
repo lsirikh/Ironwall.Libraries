@@ -45,8 +45,17 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Dashboards
         #region - Overrides -
         protected override async Task OnActivateAsync(CancellationToken cancellationToken)
         {
-            //await ActivateItemAsync(DetectionPanelViewModel);
+            SelectedIndex = 0; // 첫 탭(Detection) 강제 선택
             await base.OnActivateAsync(cancellationToken);
+
+            selectedViewModel = DetectionPanelViewModel;
+            await selectedViewModel.ActivateAsync();
+        }
+        protected override async Task OnDeactivateAsync(bool close, CancellationToken cancellationToken)
+        {
+            await base.OnDeactivateAsync(close, cancellationToken);
+            await selectedViewModel.DeactivateAsync(true);
+            selectedViewModel = null;
         }
         #endregion
         #region - Binding Methods -
@@ -58,44 +67,70 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Dashboards
             {
                 if (!(args.Source is TabControl)) return;
 
-                if (!(args.AddedItems[0] is TabItem tapItem)) return;
+                // Check if we have a selected TabItem
+                if (args.AddedItems.Count == 0 || !(args.AddedItems[0] is TabItem tabItem))
+                    return;
 
-                var contentControl = (tapItem as ContentControl)?.Content as ContentControl;
+                // Extract the content from the selected TabItem
+                var tabContent = tabItem.Content as ContentControl;
+                //var contentControl = (tapItem as ContentControl)?.Content as ContentControl;
 
+                // Deactivate previous ViewModel if any
                 if (selectedViewModel != null)
                     await selectedViewModel.DeactivateAsync(true);
 
-                if (contentControl?.Content is DetectionPanelView)
+                // If tabContent is a ContentControl, use its Content; otherwise, use tabContent directly.
+                var viewContent = (tabContent is ContentControl cc) ? cc.Content : tabContent;
+
+                ///PREPARING_TIME_MS는 기존의 ViewModel과 View를 바인딩하고, 유연하게 View를 불러오는 시간적 여유를 
+                ///제공하므로써, UI/UX의 경험을 보다 우수하게 만들 수 있다. OnActiveTab에서 제어하지 않고, 
+                ///각 ViewModel에서 제어를 하게 되면 여러가지 타이밍적 에러에 의해서 버그가 발생하고 해결하기 어려운 과제로 만들게 된다.
+                await Task.Delay(PREPARING_TIME_MS);
+
+                if (viewContent is DetectionPanelView)
                 {
+                    await ActivateItemAsync(DetectionPanelViewModel);
                     selectedViewModel = DetectionPanelViewModel;
                 }
-                else if (contentControl?.Content is MalfunctionPanelView)
+                else if (viewContent is MalfunctionPanelView)
                 {
+                    await ActivateItemAsync(MalfunctionPanelViewModel);
                     selectedViewModel = MalfunctionPanelViewModel;
                 }
-                else if (contentControl?.Content is ActionPanelView)
+                else if (viewContent is ActionPanelView)
                 {
+                    await ActivateItemAsync(ActionPanelViewModel);
                     selectedViewModel = ActionPanelViewModel;
                 }
-
-                await selectedViewModel.ActivateAsync();
+                else
+                {
+                    selectedViewModel = null;
+                }
             }
             catch (Exception ex)
             {
                 _log.Error($"Raised Exception in {nameof(OnActiveTab)} : {ex.Message}");
             }
-
         }
         #endregion
         #region - IHanldes -
         #endregion
         #region - Properties -
+        public int SelectedIndex
+        {
+            get { return _selectedIndex; }
+            set { _selectedIndex = value; NotifyOfPropertyChange(() => SelectedIndex); }
+        }
+
+
         public DetectionPanelViewModel DetectionPanelViewModel { get; set; }
         public MalfunctionPanelViewModel MalfunctionPanelViewModel { get; set; }
         public ActionPanelViewModel ActionPanelViewModel { get; set; }
 
         #endregion
         #region - Attributes -
+        const int PREPARING_TIME_MS = 200;
+        private int _selectedIndex;
         private BaseViewModel selectedViewModel;
         #endregion
     }

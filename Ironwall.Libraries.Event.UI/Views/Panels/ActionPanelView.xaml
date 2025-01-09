@@ -20,8 +20,7 @@
 		<utils:EnumDeviceTypeToAllowedDeviceConverter x:Key="EnumDeviceTypeToAllowedDeviceConverter"/>
 	</UserControl.Resources>
 
-	<StackPanel Orientation="Vertical"
-					Margin="15 0 10 0">
+	<Grid Margin="15 0 10 0">
 		<md:TransitioningContent>
 			<md:TransitioningContent.OpeningEffects>
 				<md:TransitionEffect Kind="FadeIn"
@@ -33,9 +32,8 @@
 			<Grid Grid.Row="0">
 				<Grid.RowDefinitions>
 					<RowDefinition Height="30" />
-					<RowDefinition Height="Auto"/>
 					<RowDefinition Height="50"/>
-					<RowDefinition Height="*" MinHeight="300"/>
+					<RowDefinition Height="*"/>
 					<RowDefinition Height="30" />
 				</Grid.RowDefinitions>
 				<TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}"
@@ -46,7 +44,7 @@
 										FontSize="15"
 										Text="Action Event"/>
 
-				<Grid Grid.Row="2" Margin="5">
+				<Grid Grid.Row="1" Margin="5">
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition Width="1.5*"/>
 						<ColumnDefinition Width="5*"/>
@@ -113,7 +111,7 @@
 
 
 				<!-- Action DataGrid -->
-				<Grid Grid.Row ="3"
+				<Grid Grid.Row ="2"
 					  Height ="320">
 					<ProgressBar Width="50"
 								 Height="50"
@@ -124,8 +122,7 @@
 								 Value="44" />
 				</Grid>
 
-				<DataGrid Grid.Row="3"
-						  Height ="320"
+				<DataGrid Grid.Row="2"
 						  Style="{StaticResource MaterialDesignDataGrid}"
 						  CanUserAddRows="False"
 						  AutoGenerateColumns="False"
@@ -176,7 +173,7 @@
 				</DataGrid>
 
 				<!-- Status -->
-				<Grid Grid.Row="4">
+				<Grid Grid.Row="3">
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition Width="1.5*"/>
 						<ColumnDefinition Width="1*"/>
@@ -205,6 +202,6 @@
 			</Grid>
 
 		</md:TransitioningContent>
-	</StackPanel>
+	</Grid>
 </UserControl>
 

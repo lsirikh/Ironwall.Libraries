@@ -75,22 +75,6 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Setups
                 // If tabContent is a ContentControl, use its Content; otherwise, use tabContent directly.
                 var viewContent = (tabContent is ContentControl cc) ? cc.Content : tabContent;
 
-                //if (contentControl?.Content is CameraDeviceSetupView
-                //    || contentControl is CameraDeviceSetupView)
-                //{
-                //    selectedViewModel = CameraDeviceSetupViewModel;
-                //}
-                //else if (contentControl?.Content is CameraPresetSetupView
-                //    || contentControl is CameraPresetSetupView)
-                //{
-                //    selectedViewModel = CameraPresetSetupViewModel;
-                //}
-                //else if (contentControl?.Content is CameraMappingSetupView
-                //    || contentControl is CameraMappingSetupView)
-                //{
-                //    selectedViewModel = CameraMappingSetupViewModel;
-                //}
-
                 if (viewContent is CameraDeviceSetupView)
                 {
                     selectedViewModel = CameraDeviceSetupViewModel;

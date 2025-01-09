@@ -23,6 +23,7 @@
 					VerticalContentAlignment="Top"
 					Background="Transparent"
 					Style="{StaticResource MaterialDesignNavigationRailTabControl}"
+					SelectedIndex="{Binding SelectedIndex}"
 					cal:Message.Attach="[Event SelectionChanged] = [Action OnActiveTab($source, $eventArgs)]"
 					TabStripPlacement="Top"
 					>

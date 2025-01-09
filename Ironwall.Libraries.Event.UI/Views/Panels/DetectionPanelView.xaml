@@ -21,8 +21,7 @@
 	</UserControl.Resources>
 
 
-	<StackPanel Orientation="Vertical"
-					Margin="15 0 10 0">
+	<Grid Margin="15 0 10 0">
 		<md:TransitioningContent>
 			<md:TransitioningContent.OpeningEffects>
 				<md:TransitionEffect Kind="FadeIn"
@@ -31,12 +30,12 @@
 										 Duration="0:0:0.5" />
 			</md:TransitioningContent.OpeningEffects>
 			<!-- Detection Section -->
-			<Grid Grid.Row="0">
+			<Grid HorizontalAlignment="Stretch"
+				 VerticalAlignment="Stretch">
 				<Grid.RowDefinitions>
 					<RowDefinition Height="30" />
-					<RowDefinition Height="Auto"/>
 					<RowDefinition Height="50"/>
-					<RowDefinition Height="*" MinHeight="340"/>
+					<RowDefinition Height="*"/>
 					<RowDefinition Height="30" />
 				</Grid.RowDefinitions>
 				<TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}"
@@ -46,7 +45,7 @@
 										FontWeight="Bold"
 										FontSize="15"
 										Text="Detection Event"/>
-				<Grid Grid.Row="2" Margin="5">
+				<Grid Grid.Row="1" Margin="5">
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition Width="1.5*"/>
 						<ColumnDefinition Width="5*"/>
@@ -112,8 +111,9 @@
 				</Grid>
 
 				<!-- Detection DataGrid-->
-				<Grid Grid.Row ="3"
-					  Height ="320">
+				<Grid Grid.Row ="2"
+					  HorizontalAlignment="Stretch"
+					  VerticalAlignment="Stretch">
 					<ProgressBar Width="50"
 								 Height="50"
 								 Margin="16"
@@ -122,11 +122,12 @@
 								 IsIndeterminate="True"
 								 Value="44" />
 				</Grid>
-				<DataGrid Grid.Row="3" 
-						  Height="320"
+				<DataGrid Grid.Row="2" 
 						  CanUserAddRows="False"
 						  AutoGenerateColumns="False"
 						  Background="#88000000"
+						  HorizontalAlignment="Stretch"
+						  VerticalAlignment="Stretch"
 						  EnableRowVirtualization="True"
 						  EnableColumnVirtualization="True"
 						  ScrollViewer.VerticalScrollBarVisibility="Auto"
@@ -197,7 +198,7 @@
 				</DataGrid>
 
 				<!-- Status -->
-				<Grid Grid.Row="4">
+				<Grid Grid.Row="3">
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition Width="1.5*"/>
 						<ColumnDefinition Width="1*"/>
@@ -253,5 +254,5 @@
 			</Grid>
 
 		</md:TransitioningContent>
-	</StackPanel>
+	</Grid>
 </UserControl>
