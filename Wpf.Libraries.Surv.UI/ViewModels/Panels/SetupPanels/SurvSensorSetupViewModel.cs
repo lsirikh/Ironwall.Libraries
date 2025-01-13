@@ -39,9 +39,8 @@ namespace Wpf.Libraries.Surv.UI.ViewModels.Panels.SetupPanels
                                         , SurvDbService dbService
                                         , SurvSensorViewModelProvider viewModelProvider
                                         , SurvSensorModelProvider survSensorModelProvider)
-                                        : base(eventAggregator)
+                                        : base(eventAggregator, log)
         {
-            _log = log;
             _dbService = dbService;
             _provider = survSensorModelProvider;
             _apiService = apiService;
@@ -220,7 +219,6 @@ namespace Wpf.Libraries.Surv.UI.ViewModels.Panels.SetupPanels
         #region - Properties -
         #endregion
         #region - Attributes -
-        private ILogService _log;
         private SurvDbService _dbService;
         private SurvSensorModelProvider _provider;
         private SurvApiService _apiService;

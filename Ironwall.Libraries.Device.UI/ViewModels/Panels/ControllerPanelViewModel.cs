@@ -19,7 +19,6 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Panels
 
     public class ControllerPanelViewModel : BaseViewModel
     {
-
         #region - Ctors -
         public ControllerPanelViewModel(IEventAggregator eventAggregator
                                         , ILogService log)
@@ -35,9 +34,8 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Panels
         {
             await base.OnActivateAsync(cancellationToken);
 
-            _ = DataInitialize(cancellationToken);
+            await DataInitialize(cancellationToken).ConfigureAwait(false);
 
-            await Task.Delay(1000);
         }
 
         protected override async Task OnDeactivateAsync(bool close, CancellationToken cancellationToken)
@@ -49,15 +47,12 @@ namespace Ironwall.Libraries.Device.UI.ViewModels.Panels
         #region - Binding Methods -
         #endregion
         #region - Processes -
-        private Task DataInitialize(CancellationToken cancellationToken = default)
+        private async Task DataInitialize(CancellationToken cancellationToken = default)
         {
-            return Task.Run(async () =>
-            {
-                await Task.Delay(500);
-                ViewModelProvider = IoC.Get<ControllerViewModelProvider>();
-                NotifyOfPropertyChange(() => ViewModelProvider);
-                IsVisible = true;
-            });
+            await Task.Delay(200);
+            ViewModelProvider = IoC.Get<ControllerViewModelProvider>();
+            NotifyOfPropertyChange(() => ViewModelProvider);
+            IsVisible = true;
         }
         #endregion
         #region - IHanldes -

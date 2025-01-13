@@ -73,12 +73,12 @@ namespace Wpf.Libraries.Surv.Common.Services
             }
             catch (TaskCanceledException ex)
             {
-                _log.Error($"Task was cancelled in {nameof(FetchSurvApiModel)}: " + ex.Message, true);
+                _log.Error($"Task was cancelled in {nameof(FetchSurvApiModel)}: {ex.Message}");
                 tcs?.SetException(ex);
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchSurvApiModel)}: " + ex.Message, true);
+                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchSurvApiModel)}: {ex.Message}");
                 tcs?.SetException(ex);
             }
         }
@@ -108,17 +108,17 @@ namespace Wpf.Libraries.Surv.Common.Services
                     transaction.Commit();
                 }
 
-                _log.Info($"({commitResult}) rows was inserted in DB[{table}])", true);
+                _log.Info($"({commitResult}) rows was inserted in DB[{table}])");
                 tcs?.SetResult(true);
             }
             catch (TaskCanceledException ex)
             {
-                _log.Error($"Task was cancelled in {nameof(InsertSurvApiModel)}: " + ex.Message, true);
+                _log.Error($"Task was cancelled in {nameof(InsertSurvApiModel)}: {ex.Message}");
                 tcs?.SetException(ex);
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised Exception for Task to insert DB data in {nameof(InsertSurvApiModel)}: " + ex.Message, true);
+                _log.Error($"Raised Exception for Task to insert DB data in {nameof(InsertSurvApiModel)}: {ex.Message}");
                 tcs?.SetException(ex);
             }
         }
@@ -148,12 +148,12 @@ namespace Wpf.Libraries.Surv.Common.Services
             }
             catch (TaskCanceledException ex)
             {
-                _log.Error($"Task was cancelled in {nameof(FetchSurvEventModel)}: " + ex.Message, true);
+                _log.Error($"Task was cancelled in {nameof(FetchSurvEventModel)}: {ex.Message}");
                 tcs?.SetException(ex);
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchSurvEventModel)}: " + ex.Message, true);
+                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchSurvEventModel)}: {ex.Message}");
                 tcs?.SetException(ex);
             }
         }
@@ -183,19 +183,19 @@ namespace Wpf.Libraries.Surv.Common.Services
                     transaction.Commit();
                 }
 
-                _log.Info($"({commitResult}) rows was inserted in DB[{table}])", true);
+                _log.Info($"({commitResult}) rows was inserted in DB[{table}])");
 
                 await FetchSurvEventModel(token, tcs);
                 tcs?.SetResult(true);
             }
             catch (TaskCanceledException ex)
             {
-                _log.Error($"Task was cancelled in {nameof(InsertSurvEventModel)}: " + ex.Message, true);
+                _log.Error($"Task was cancelled in {nameof(InsertSurvEventModel)}: {ex.Message}");
                 tcs?.SetException(ex);
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised Exception for Task to insert DB data in {nameof(InsertSurvEventModel)}: " + ex.Message, true);
+                _log.Error($"Raised Exception for Task to insert DB data in {nameof(InsertSurvEventModel)}: {ex.Message}");
                 tcs?.SetException(ex);
             }
         }
@@ -225,12 +225,12 @@ namespace Wpf.Libraries.Surv.Common.Services
             }
             catch (TaskCanceledException ex)
             {
-                _log.Error($"Task was cancelled in {nameof(FetchSurvMappingModel)}: " + ex.Message, true);
+                _log.Error($"Task was cancelled in {nameof(FetchSurvMappingModel)}: {ex.Message}");
                 tcs?.SetException(ex);
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchSurvMappingModel)}: " + ex.Message, true);
+                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchSurvMappingModel)}: {ex.Message}");
                 tcs?.SetException(ex);
             }
         }
@@ -260,17 +260,17 @@ namespace Wpf.Libraries.Surv.Common.Services
                     transaction.Commit();
                 }
 
-                _log.Info($"({commitResult}) rows was inserted in DB[{table}])", true);
+                _log.Info($"({commitResult}) rows was inserted in DB[{table}])");
                 tcs?.SetResult(true);
             }
             catch (TaskCanceledException ex)
             {
-                _log.Error($"Task was cancelled in {nameof(InsertSurvMappingModel)}: " + ex.Message, true);
+                _log.Error($"Task was cancelled in {nameof(InsertSurvMappingModel)}: {ex.Message}");
                 tcs?.SetException(ex);
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised Exception for Task to insert DB data in {nameof(InsertSurvMappingModel)}: " + ex.Message, true);
+                _log.Error($"Raised Exception for Task to insert DB data in {nameof(InsertSurvMappingModel)}: {ex.Message}");
                 tcs?.SetException(ex);
             }
         }
@@ -300,12 +300,12 @@ namespace Wpf.Libraries.Surv.Common.Services
             }
             catch (TaskCanceledException ex)
             {
-                _log.Error($"Task was cancelled in {nameof(FetchSurvCameraModel)}: " + ex.Message, true);
+                _log.Error($"Task was cancelled in {nameof(FetchSurvCameraModel)}: {ex.Message}");
                 tcs?.SetException(ex);
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchSurvCameraModel)}: " + ex.Message, true);
+                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchSurvCameraModel)}: {ex.Message}");
                 tcs?.SetException(ex);
             }
         }
@@ -335,17 +335,17 @@ namespace Wpf.Libraries.Surv.Common.Services
                     transaction.Commit();
                 }
 
-                _log.Info($"({commitResult}) rows was inserted in DB[{table}])", true);
+                _log.Info($"({commitResult}) rows was inserted in DB[{table}])");
                 tcs?.SetResult(true);
             }
             catch (TaskCanceledException ex)
             {
-                _log.Error($"Task was cancelled in {nameof(InsertSurvCameraModel)}: " + ex.Message, true);
+                _log.Error($"Task was cancelled in {nameof(InsertSurvCameraModel)}: {ex.Message}");
                 tcs?.SetException(ex);
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised Exception for Task to insert DB data in {nameof(InsertSurvCameraModel)}: " + ex.Message, true);
+                _log.Error($"Raised Exception for Task to insert DB data in {nameof(InsertSurvCameraModel)}: {ex.Message}");
                 tcs?.SetException(ex);
             }
         }
@@ -375,12 +375,12 @@ namespace Wpf.Libraries.Surv.Common.Services
             }
             catch (TaskCanceledException ex)
             {
-                _log.Error($"Task was cancelled in {nameof(FetchSurvSensorModel)}: " + ex.Message, true);
+                _log.Error($"Task was cancelled in {nameof(FetchSurvSensorModel)}: {ex.Message}");
                 tcs?.SetException(ex);
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchSurvSensorModel)}: " + ex.Message, true);
+                _log.Error($"Raised Exception for Task to insert DB data in {nameof(FetchSurvSensorModel)}: {ex.Message}");
                 tcs?.SetException(ex);
             }
         }
@@ -410,17 +410,17 @@ namespace Wpf.Libraries.Surv.Common.Services
                     transaction.Commit();
                 }
 
-                _log.Info($"({commitResult}) rows was inserted in DB[{table}])", true);
+                _log.Info($"({commitResult}) rows was inserted in DB[{table}])");
                 tcs?.SetResult(true);
             }
             catch (TaskCanceledException ex)
             {
-                _log.Error($"Task was cancelled in {nameof(InsertSurvSensorModel)}: " + ex.Message, true);
+                _log.Error($"Task was cancelled in {nameof(InsertSurvSensorModel)}: {ex.Message}");
                 tcs?.SetException(ex);
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised Exception for Task to insert DB data in {nameof(InsertSurvSensorModel)}: " + ex.Message, true);
+                _log.Error($"Raised Exception for Task to insert DB data in {nameof(InsertSurvSensorModel)}: {ex.Message}");
                 tcs?.SetException(ex);
             }
         }
@@ -443,7 +443,7 @@ namespace Wpf.Libraries.Surv.Common.Services
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised Exception for Task to insert DB data in {nameof(DeleteRecordOrTable)}: " + ex.Message, true);
+                _log.Error($"Raised Exception for Task to insert DB data in {nameof(DeleteRecordOrTable)}: {ex.Message}");
             }
 
             return Task.CompletedTask;
@@ -466,7 +466,7 @@ namespace Wpf.Libraries.Surv.Common.Services
             }
             else
             {
-                _log.Error($"No data from {table}", true);
+                _log.Error($"No data from {table}");
             }
         }
 
@@ -488,7 +488,7 @@ namespace Wpf.Libraries.Surv.Common.Services
             }
             else
             {
-                _log.Error($"Not Exist for Matched ID({id})", true);
+                _log.Error($"Not Exist for Matched ID({id})");
             }
         }
         #endregion

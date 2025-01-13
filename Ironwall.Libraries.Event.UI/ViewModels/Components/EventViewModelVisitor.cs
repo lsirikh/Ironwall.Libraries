@@ -63,7 +63,6 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Components
                 {
                     viewModel.Cancel();
                     PreEventProvider?.Remove(viewModel);
-                    //PendingEventProvider?.Remove(viewModel);
                     PostEventProvider?.Add(eventViewModel);
                 }));
 

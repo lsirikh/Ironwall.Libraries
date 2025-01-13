@@ -1,6 +1,7 @@
 ﻿using Ironwall.Framework.Models.Communications.Events;
 using Ironwall.Framework.Models.Devices;
 using Ironwall.Framework.Models.Events;
+using System;
 
 namespace Ironwall.Libraries.Event.UI.ViewModels
 {
@@ -30,6 +31,8 @@ namespace Ironwall.Libraries.Event.UI.ViewModels
         public delegate void ActionEvent(IActionResponseModel actionResponseModel);
         public abstract event ActionEvent CallAutoEvent;
         public abstract event ActionEvent CallActionEvent;
+
+        public abstract event Action<PreEventViewModel> CallPreEvent;
         #endregion
     }
 }

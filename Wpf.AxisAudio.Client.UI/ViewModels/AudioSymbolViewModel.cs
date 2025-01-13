@@ -109,7 +109,7 @@ namespace Wpf.AxisAudio.Client.UI.ViewModels
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised {nameof(Exception)} in {nameof(OnClickStreaming)} of {nameof(AudioSymbolViewModel)} : {ex}", true);
+                _log.Error($"Raised {nameof(Exception)} in {nameof(OnClickStreaming)} of {nameof(AudioSymbolViewModel)} : {ex}");
             }
         }
 
@@ -157,7 +157,7 @@ namespace Wpf.AxisAudio.Client.UI.ViewModels
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised {nameof(Exception)} in {nameof(OnClickClipPlaying)} of {nameof(AudioSymbolViewModel)} : {ex}", true);
+                _log.Error($"Raised {nameof(Exception)} in {nameof(OnClickClipPlaying)} of {nameof(AudioSymbolViewModel)} : {ex}");
             }
         }
 
@@ -196,7 +196,7 @@ namespace Wpf.AxisAudio.Client.UI.ViewModels
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised {nameof(Exception)} in {nameof(OnClickPlaySetting)} of {nameof(AudioSymbolViewModel)} : {ex}", true);
+                _log.Error($"Raised {nameof(Exception)} in {nameof(OnClickPlaySetting)} of {nameof(AudioSymbolViewModel)} : {ex}");
             }
         }
         
@@ -212,7 +212,7 @@ namespace Wpf.AxisAudio.Client.UI.ViewModels
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised {nameof(Exception)} in {nameof(OnClickGroupSetting)} of {nameof(AudioSymbolViewModel)} : {ex}", true);
+                _log.Error($"Raised {nameof(Exception)} in {nameof(OnClickGroupSetting)} of {nameof(AudioSymbolViewModel)} : {ex}");
             }
         }
         #endregion

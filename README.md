@@ -437,3 +437,31 @@ protected override IEnumerable<Assembly> SelectAssemblies()
         (단, 아직 동작하는 일부 로직들이 있다.)  
     3) VMS 파트의 DataGridPanel 버그 수정  
     4) ViewModel을 DataGridPanel에 사용하는 로직에 비효율성을 검토할 필요있음  
+
+### Update Date: 2025/01/09
+
+* 통합 버전으로 관리
+
+<br>
+
+* Version : v1.0.3  
+* Comment  
+
+    1) CamearPanelViewModel, ConrtollerPanelViewModel, SensorPanelViewModel DataInitialize를 async 하게 구현하고 ConfigureAwait(false)로 설정
+    2) 과도한 Task.Run 지양  
+    
+
+### Update Date: 2025/01/12
+
+* 통합 버전으로 관리
+
+<br>
+
+* Version : v1.0.4  
+* Comment  
+
+    1) Dotnet.Streaming.UI 라이브러리 적용 및 기존 VLC 스트리밍 라이브러리 대체  
+    2) Dotnet.Streaming.UI의 Access Violation 현상을 막기 위해서 Streaming 시작 로직 분석 및 라이프 사이클에 맞도록 구현 프로그램이 죽는 현상은 최대한 막았으나 더 많은 테스트와 분석이 필요할 것으로 보임  
+    3) 프로그램이 죽을 때 예외를 Log4Net에서 캐치하도록 설정  ParentBootstrapper  
+    4) 장비 타입 추가되면서 Enum 클래스들 및 Converter에 맞도록 적용  
+    5) Axis 라이브러리 및 Surv 라이브러리에 ILogService 적용  

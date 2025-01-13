@@ -57,7 +57,7 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Panels
             EndDate = DateTimeHelper.GetCurrentTimeWithoutMS();
             EndDateDisplay = StartDate;
 
-            await EventInitialize();
+            await EventInitialize().ConfigureAwait(false);
 
         }
 

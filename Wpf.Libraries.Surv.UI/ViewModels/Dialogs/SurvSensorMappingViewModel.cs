@@ -26,9 +26,8 @@ namespace Wpf.Libraries.Surv.UI.ViewModels.Dialogs
         #region - Ctors -
         public SurvSensorMappingViewModel(ILogService log
                                         , IEventAggregator eventAggregator)
-                                        : base(eventAggregator)
+                                        : base(eventAggregator, log)
         {
-            _log = log;
         }
         #endregion
         #region - Implementation of Interface -
@@ -188,7 +187,6 @@ namespace Wpf.Libraries.Surv.UI.ViewModels.Dialogs
         public List<string> SelectedSensors { get; private set; }
         #endregion
         #region - Attributes -
-        private ILogService _log;
         private int _maximum;
         private int _tickFrequency;
         private int _itemCount;

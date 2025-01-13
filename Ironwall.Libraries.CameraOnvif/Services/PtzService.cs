@@ -55,8 +55,9 @@ namespace Ironwall.Libraries.CameraOnvif.Services
             try
             {
                 //Debug.WriteLine($"[{System.DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss")}][{nameof(GetPresetGroup)}] was executed.");
-                var selectedMapping = _mappingProvider.Where(entity => entity.Sensor.Controller.DeviceNumber == idController
-                                                                && entity.Sensor.DeviceNumber == idSensor).FirstOrDefault();
+                var selectedMapping = _mappingProvider
+                                    .Where(entity => entity.Sensor.Controller.DeviceNumber == idController
+                                                    && entity.Sensor.DeviceNumber == idSensor).FirstOrDefault();
                 return selectedMapping;
             }
             catch (Exception ex)

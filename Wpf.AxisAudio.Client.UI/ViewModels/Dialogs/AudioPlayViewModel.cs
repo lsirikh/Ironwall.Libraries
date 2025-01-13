@@ -7,6 +7,7 @@ using Wpf.AxisAudio.Client.UI.Providers.Models;
 using Wpf.AxisAudio.Client.UI.Providers.ViewModels;
 using Wpf.AxisAudio.Client.UI.Services;
 using System.Linq;
+using Ironwall.Libraries.Base.Services;
 
 namespace Wpf.AxisAudio.Client.UI.ViewModels.Dialogs
 {
@@ -24,10 +25,11 @@ namespace Wpf.AxisAudio.Client.UI.ViewModels.Dialogs
 
         #region - Ctors -
         public AudioPlayViewModel(IEventAggregator eventAggregator
+                                , ILogService log
                                 , AudioClipPlayViewModel audioClipPlayViewModel
                                 , MicStreamingViewModel micStreamingViewModel
                                 , AudioSymbolViewModelProvider audioSymbolProvider)       
-                                : base(eventAggregator)
+                                : base(eventAggregator, log)
         {
             AudioClipPlayViewModel = audioClipPlayViewModel;
             MicStreamingViewModel = micStreamingViewModel;

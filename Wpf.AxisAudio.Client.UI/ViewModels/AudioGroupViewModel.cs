@@ -30,7 +30,6 @@ namespace Wpf.AxisAudio.Client.UI.ViewModels
         public AudioGroupViewModel(IAudioGroupModel model) :base(model)
         { 
             _eventAggregator = IoC.Get<IEventAggregator>();
-            _log = IoC.Get<ILogService>();
         }
         #endregion
         #region - Implementation of Interface -
@@ -53,7 +52,7 @@ namespace Wpf.AxisAudio.Client.UI.ViewModels
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised {nameof(Exception)} in {nameof(OnClickGroupSetting)} of {nameof(AudioGroupViewModel)} : {ex}", true);
+                _log.Error($"Raised {nameof(Exception)} in {nameof(OnClickGroupSetting)} of {nameof(AudioGroupViewModel)} : {ex}");
             }
         }
         #endregion
@@ -85,7 +84,6 @@ namespace Wpf.AxisAudio.Client.UI.ViewModels
         public ObservableCollection<AudioModel> AudioModels => _model?.AudioModels;
         #endregion
         #region - Attributes -
-        private ILogService _log;
         #endregion
     }
 }

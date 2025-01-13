@@ -25,9 +25,8 @@ using System.Windows.Controls;
 
 namespace Ironwall.Libraries.Event.UI.ViewModels.Panels
 {
-    public class PreEventListPanelViewModel
-        : BaseEventListPanelViewModel
-        , IHandle<ActionReportResultMessageModel>
+    public class PreEventListPanelViewModel : BaseEventListPanelViewModel
+                                             , IHandle<ActionReportResultMessageModel>
     {
         #region - Ctors -
         public PreEventListPanelViewModel(
@@ -107,33 +106,31 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Panels
 
         public Task HandleAsync(ActionReportResultMessageModel message, CancellationToken cancellationToken)
         {
-            return Task.Run(() =>
+            //When Action Report was successfully registered, FromEvent from PreEventProvider has to be removed.
+            IActionEventModel model = message.Model.Body;
+            try
             {
-
-                IActionEventModel model = message.Model.Body;
-                try
+                foreach (var item in PreEventProvider.ToList())
                 {
-                    foreach (var item in PreEventProvider.ToList())
+                    if (item.Id == model.FromEvent.Id)
                     {
-                        if (item.Id == model.FromEvent.Id)
-                        {
-                            var visitor = new EventViewModelVisitor(_eventAggregator, _log, PreEventProvider, PostEventProvider, _eventSetupModel);
-                            //item.Id = message.Model.Body.Id;
+                        var visitor = new EventViewModelVisitor(_eventAggregator, _log, PreEventProvider, PostEventProvider, _eventSetupModel);
 
-                            var actionModel = ActionEventProvider.Where(t => t.Id == model.Id).FirstOrDefault() as ActionEventModel;
+                        var actionModel = ActionEventProvider.Where(t => t.Id == model.Id).FirstOrDefault() as ActionEventModel;
 
-                            ///Visitor 패턴에 추가 파라미터 붙이기!!!!!!!!!!!!!!!
-                            ((IEventViewModelVisitee)item).Accept(visitor, actionModel);
-                        }
+                        //PreEventProvider Remove, PostEventProvider Add
+                        ((IEventViewModelVisitee)item).Accept(visitor, actionModel);
+
+                        item.ExecuteActionEvent();
                     }
-
-
                 }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"Raised Exception in {nameof(HandleAsync)} of {nameof(ActionReportResultMessageModel)} in {nameof(PreEventListPanelViewModel)} : {ex.Message}");
-                }
-            });
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"Raised Exception in {nameof(HandleAsync)} of {nameof(ActionReportResultMessageModel)} in {nameof(PreEventListPanelViewModel)} : {ex.Message}");
+            }
+
+            return Task.CompletedTask;
 
         }
         #endregion

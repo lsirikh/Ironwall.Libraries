@@ -11,8 +11,6 @@
 			 FontFamily="{DynamicResource MaterialDesignFont}"
              mc:Ignorable="d" 
              d:DesignHeight="650" d:DesignWidth="800">
-
-
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="*" />
@@ -23,10 +21,9 @@
 					VerticalContentAlignment="Top"
 					Background="Transparent"
 					Style="{StaticResource MaterialDesignNavigationRailTabControl}"
+					SelectedIndex="{Binding SelectedIndex}"
 					cal:Message.Attach="[Event SelectionChanged] = [Action OnActiveTab($source, $eventArgs)]"
-					TabStripPlacement="Top"
-					>
-
+					TabStripPlacement="Top">
 			<!-- Detection Event -->
 			<TabItem>
 				<TabItem.Header>
@@ -38,15 +35,15 @@
 									HorizontalAlignment="Center"
 									Kind="MotionDetector" />
 						<Viewbox Stretch="UniformToFill"
-										 VerticalAlignment="Center"
-										 HorizontalAlignment="Center"
-										 Margin="0 2">
+								VerticalAlignment="Center"
+								HorizontalAlignment="Center"
+								Margin="0 2">
 							<TextBlock VerticalAlignment="Center"
-											   HorizontalAlignment="Center"
-											   Width="100"
-											   TextAlignment="Center"
-											   TextWrapping="Wrap"
-											   Text="Detection" />
+										HorizontalAlignment="Center"
+										Width="100"
+										TextAlignment="Center"
+										TextWrapping="Wrap"
+										Text="Detection" />
 						</Viewbox>
 					</StackPanel>
 				</TabItem.Header>

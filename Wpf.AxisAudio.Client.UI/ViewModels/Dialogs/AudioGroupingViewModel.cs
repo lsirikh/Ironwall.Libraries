@@ -1,5 +1,6 @@
 ﻿using Caliburn.Micro;
 using Ironwall.Framework.ViewModels.ConductorViewModels;
+using Ironwall.Libraries.Base.Services;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -31,11 +32,12 @@ namespace Wpf.AxisAudio.Client.UI.ViewModels.Dialogs
 
         #region - Ctors -
         public AudioGroupingViewModel(IEventAggregator eventAggregator
+                                        , ILogService log
                                         , AudioGroupViewModelProvider audioGroupViewModelProvider
                                         , AudioViewModelProvider audioViewModelProvider
                                         , AudioDbService audioDbService
                                         , AudioSymbolViewModelProvider audioSymbolProvider) 
-                                        : base(eventAggregator)
+                                        : base(eventAggregator, log)
         {
             AudioGroupViewModelProvider = audioGroupViewModelProvider;
             AudioViewModelProvider = audioViewModelProvider;

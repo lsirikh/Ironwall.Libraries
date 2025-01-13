@@ -31,6 +31,24 @@ namespace Ironwall.Framework
             _class = this.GetType();
             string projectName = System.Reflection.Assembly.GetEntryAssembly().GetName().Name;
             _log.Info($"############### Program{projectName} was started. ###############");
+
+            // 전역 예외 처리 추가
+            AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
+            {
+                var exception = args.ExceptionObject as Exception;
+                if (exception != null)
+                {
+                    _log.Error($"Unhandled exception: {exception.Message}");
+                    _log.Error($"Stack Trace: {exception.StackTrace}");
+                }
+            };
+
+            TaskScheduler.UnobservedTaskException += (sender, args) =>
+            {
+                _log.Error($"Unobserved task exception: {args.Exception.Message}");
+                _log.Error($"Stack Trace: {args.Exception.StackTrace}");
+                args.SetObserved(); // 예외가 전파되지 않도록 설정
+            };
         }
 
         #region - Abstracts -

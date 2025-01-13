@@ -43,13 +43,12 @@ namespace Wpf.AxisAudio.Client.UI.ViewModels.Panels.SetupPanels
                                         , AudioSymbolProvider audioSymbolProvider
                                         , AudioGroupViewModelProvider audioGroupViewModelProvider
                                         )
-                                        : base(eventAggregator) 
+                                        : base(eventAggregator, log) 
         {
             Names = new ObservableCollection<string>();
             _dbService = dbService;
             _provider = audioProvider;
             _apiService = apiService;
-            _log = log;
             _audioSymbolProvider = audioSymbolProvider;
             _audioGroupViewModelProvider = audioGroupViewModelProvider;
         }
@@ -321,7 +320,6 @@ namespace Wpf.AxisAudio.Client.UI.ViewModels.Panels.SetupPanels
         private AudioDbService _dbService;
         private AudioProvider _provider;
         private AxisApiService _apiService;
-        private ILogService _log;
         private AudioSymbolProvider _audioSymbolProvider;
         private AudioGroupViewModelProvider _audioGroupViewModelProvider;
         #endregion

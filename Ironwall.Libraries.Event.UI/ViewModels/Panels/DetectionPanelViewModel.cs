@@ -42,41 +42,47 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Panels
 
         #region - Ctors -
         public DetectionPanelViewModel(ILogService log
-                                    , IEventAggregator eventAggregator
-                                    ) : base(eventAggregator, log)
+                                        , IEventAggregator eventAggregator)
+                                        : base(eventAggregator, log)
         {
         }
         #endregion
         #region - Implementation of Interface -
         #endregion
         #region - Overrides -
-        protected override Task EventInitialize()
+        protected override async Task EventInitialize()
         {
-            return Task.Run(async () =>
+            try
             {
-                try
-                {
-                    if (_cancellationTokenSource != null)
-                        _cancellationTokenSource.Cancel();
+                IsVisible = false;
 
-                    _cancellationTokenSource = new CancellationTokenSource();
+                if (_cancellationTokenSource != null)
+                    _cancellationTokenSource.Cancel();
 
-                    IsVisible = false;
+                _cancellationTokenSource = new CancellationTokenSource();
 
-                    await _eventAggregator.PublishOnUIThreadAsync(new SearchEventMessageModel(StartDate.ToString("yyyy-MM-dd HH:mm:ss.ff"), EndDate.ToString("yyyy-MM-dd HH:mm:ss.ff"), Enums.EnumEventType.Intrusion));
+                IsVisible = false;
 
-                    await Task.Delay(ACTION_TOKEN_TIMEOUT, _cancellationTokenSource.Token);
-                    IsVisible = true;
-                }
-                catch (NotSupportedException)
-                {
-                }
-                catch (Exception)
-                {
-                    throw;
-                }
+                await _eventAggregator.PublishOnUIThreadAsync(new SearchEventMessageModel(StartDate.ToString("yyyy-MM-dd HH:mm:ss.ff"), EndDate.ToString("yyyy-MM-dd HH:mm:ss.ff"), Enums.EnumEventType.Intrusion));
 
-            });
+                await Task.Delay(ACTION_TOKEN_TIMEOUT, _cancellationTokenSource.Token);
+
+                IsVisible = true;
+            }
+            catch (NotSupportedException)
+            {
+            }
+            catch (TaskCanceledException)
+            {
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"Raised {nameof(Exception)} for {ex.Message}");
+            }
+            finally
+            {
+                IsVisible = true;
+            }
         }
 
         protected override void EventClear()
@@ -107,14 +113,16 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Panels
                 
                 IsVisible = true;
             }
-            catch (TaskCanceledException ex)
+            catch (TaskCanceledException)
             {
-                _log.Error(ex.Message);
-                IsVisible = true;
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised Exception in {nameof(ClickSearch)}({nameof(DetectionPanelViewModel)}) : " + ex.Message, _class);
+                _log.Error($"Raised {nameof(Exception)} for {ex.Message}");
+            }
+            finally
+            {
+                IsVisible = true;
             }
 
         }
@@ -144,21 +152,26 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Panels
                     _cancellationTokenSource.Cancel();
 
                 ViewModelProvider = new ObservableCollection<IDetectionEventModel>(message.Lists);
-                NotifyOfPropertyChange(()=> ViewModelProvider);
+                NotifyOfPropertyChange(() => ViewModelProvider);
 
                 Total = ViewModelProvider.Count();
                 Reported = ViewModelProvider.Where(entity => entity.Status == EnumTrueFalse.True).Count();
                 NotifyOfPropertyChange(() => UnReported);
                 IsVisible = true;
-                
-                
-                return Task.CompletedTask;
+            }
+            catch (TaskCanceledException)
+            {
             }
             catch (Exception)
             {
-
                 throw;
             }
+            finally
+            {
+                IsVisible = true;
+            }
+
+            return Task.CompletedTask;
         }
         #endregion
         #region - Properties -

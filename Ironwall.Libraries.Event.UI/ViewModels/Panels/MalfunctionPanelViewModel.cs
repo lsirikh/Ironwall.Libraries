@@ -34,45 +34,41 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Panels
     public sealed class MalfunctionPanelViewModel : EventBasePanelViewModel<IMalfunctionEventModel>
                                                 , IHandle<SearchEventListMessageModel<IMalfunctionEventModel>>
     {
-
         #region - Ctors -
         public MalfunctionPanelViewModel(IEventAggregator eventAggregator
                                         , ILogService log
                                         ) : base(eventAggregator, log)
         {
-            _log = log;
         }
         #endregion
         #region - Implementation of Interface -
         #endregion
         #region - Overrides -
-        protected override Task EventInitialize()
+        protected override async Task EventInitialize()
         {
-            return Task.Run(async () =>
+            try
             {
-                try
-                {
-                    if (_cancellationTokenSource != null)
-                        _cancellationTokenSource.Cancel();
+                IsVisible = false;
 
-                    _cancellationTokenSource = new CancellationTokenSource();
+                await _eventAggregator.PublishOnUIThreadAsync(new SearchEventMessageModel(StartDate.ToString("yyyy-MM-dd HH:mm:ss.ff"), EndDate.ToString("yyyy-MM-dd HH:mm:ss.ff"), Enums.EnumEventType.Fault));
 
-                    IsVisible = false;
-
-                    await _eventAggregator.PublishOnUIThreadAsync(new SearchEventMessageModel(StartDate.ToString("yyyy-MM-dd HH:mm:ss.ff"), EndDate.ToString("yyyy-MM-dd HH:mm:ss.ff"), Enums.EnumEventType.Fault));
-
-                    await Task.Delay(ACTION_TOKEN_TIMEOUT, _cancellationTokenSource.Token);
-                    IsVisible = true;
-                }
-                catch (NotSupportedException)
-                {
-                }
-                catch (Exception)
-                {
-                    throw;
-                }
-
-            });
+                await Task.Delay(ACTION_TOKEN_TIMEOUT, _cancellationTokenSource.Token);
+                IsVisible = true;
+            }
+            catch (NotSupportedException)
+            {
+            }
+            catch (TaskCanceledException)
+            {
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"Raised {nameof(Exception)} for {ex.Message}");
+            }
+            finally
+            {
+                IsVisible = true;
+            }
         }
         protected override void EventClear()
         {
@@ -102,14 +98,16 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Panels
 
                 IsVisible = true;
             }
-            catch (TaskCanceledException ex)
+            catch (TaskCanceledException)
             {
-                _log.Error(ex.Message);
-                IsVisible = true;
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised Exception in {nameof(ClickSearch)}({nameof(MalfunctionPanelViewModel)}) : " + ex.Message, _class);
+                _log.Error($"Raised {nameof(Exception)} for {ex.Message}");
+            }
+            finally
+            {
+                IsVisible = true;
             }
         }
         public bool CanClickCancel => true;
@@ -127,9 +125,6 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Panels
             }
 
         }
-
-       
-
         #endregion
         #region - IHanldes -
         public Task HandleAsync(SearchEventListMessageModel<IMalfunctionEventModel> message, CancellationToken cancellationToken)
@@ -146,15 +141,19 @@ namespace Ironwall.Libraries.Event.UI.ViewModels.Panels
                 Reported = ViewModelProvider.Where(entity => entity.Status == EnumTrueFalse.True).Count();
                 NotifyOfPropertyChange(() => UnReported);
                 IsVisible = true;
-
-
-                return Task.CompletedTask;
+            }
+            catch (TaskCanceledException)
+            {
             }
             catch (Exception)
             {
-
                 throw;
             }
+            finally
+            {
+                IsVisible = true;
+            }
+            return Task.CompletedTask;
         }
         #endregion
         #region - Properties -

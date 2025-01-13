@@ -1,5 +1,6 @@
 ﻿using Caliburn.Micro;
 using Ironwall.Framework.ViewModels.ConductorViewModels;
+using Ironwall.Libraries.Base.Services;
 
 namespace Wpf.Libraries.Surv.UI.ViewModels.Dialogs
 {
@@ -16,8 +17,9 @@ namespace Wpf.Libraries.Surv.UI.ViewModels.Dialogs
     {
 
         #region - Ctors -
-        public SurvCameraSetupViewModel(IEventAggregator eventAggregator)
-                                        : base(eventAggregator)
+        public SurvCameraSetupViewModel(IEventAggregator eventAggregator
+                                        , ILogService log)
+                                        : base(eventAggregator, log)
         {
         }
         #endregion

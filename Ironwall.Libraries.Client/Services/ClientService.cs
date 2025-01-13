@@ -411,8 +411,13 @@ namespace Ironwall.Libraries.Client.Services
                         return false;
 
                     if (!response.Success)
+                    {
+                        //When Action Report Process was failed, It has to check whether actionEvent was already processed.
+                        var actionEvent = _actionEventProvider.FirstOrDefault(item => item.FromEvent.Id == response.Body.FromEvent.Id);
+                        var preEvent = _preEventProvider.FirstOrDefault(item => item.Id == actionEvent.FromEvent.Id);
+                        _preEventProvider.Remove(preEvent);
                         return false;
-
+                    }
 
                     IMetaEventModel eventModel = _eventProvider.Where(e => e.Id == response.Body.FromEvent.Id).FirstOrDefault();
                     var actionModel = new ActionEventModel(response.Body);

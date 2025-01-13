@@ -337,9 +337,12 @@ namespace Ironwall.Libraries.Tcp.Server.Services
                 // If there is an existing client, remove it and close its socket
                 if (existingClient != null)
                 {
-                    _log.Info($"Removed existing client with IP = {newEndPoint.Address}. [Duplicated Connection]");
                     existingClient.CloseSocket();
                     ClientList.Remove(existingClient);
+                    _log.Info($"Removed existing client({newEndPoint.Address}:{newEndPoint.Port}) was disconnected for the reason that the new client({newEndPoint.Address}:{newEndPoint.Port}) was tried to connect the server.");
+                    //New socket which has the same Ip address will close the connection from the server
+                    newSocket?.Close();
+                    throw new Exception($"[Duplicated connection issue] New client({newEndPoint.Address}:{newEndPoint.Port}) was deleted for the connection rule violation.");
                 }
 
                 _log.Info($"{nameof(TcpAcceptedClient)} was created...");

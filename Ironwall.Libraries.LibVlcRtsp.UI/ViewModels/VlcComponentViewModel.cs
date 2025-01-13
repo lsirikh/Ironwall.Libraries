@@ -24,7 +24,6 @@ namespace Ironwall.Libraries.LibVlcRtsp.UI.ViewModels
 
     public class VlcComponentViewModel : Screen
     {
-
         #region - Ctors -
         //public VlcComponentViewModel(VlcMediaPlayer vlcMediaPlayer)
         //{
@@ -45,11 +44,20 @@ namespace Ironwall.Libraries.LibVlcRtsp.UI.ViewModels
         #region - Overrides -
         protected override async Task OnActivateAsync(CancellationToken cancellationToken)
         {
-            Visibility = false;
-            _mediaPlayer = await _factory.CreateAsync();
-            _log.Info("MediaPlayer initialized.");
-            await base.OnActivateAsync(cancellationToken);
-            Visibility = true;
+            try
+            {
+                Visibility = false;
+                _mediaPlayer = await _factory.CreateAsync();
+                _log.Info("MediaPlayer initialized.");
+                await base.OnActivateAsync(cancellationToken);
+                Visibility = true;
+
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"Raised {nameof(Exception)} was for {ex.Message}");
+            }
+            
         }
         protected override async Task OnDeactivateAsync(bool close, CancellationToken cancellationToken)
         {
@@ -239,7 +247,7 @@ namespace Ironwall.Libraries.LibVlcRtsp.UI.ViewModels
                 }
             }
         }
-
+        
         public string Name
         {
             get { return _name; }
@@ -250,13 +258,11 @@ namespace Ironwall.Libraries.LibVlcRtsp.UI.ViewModels
             }
         }
 
-
         public bool Visibility
         {
             get { return _visibility; }
             set { _visibility = value; NotifyOfPropertyChange(nameof(Visibility)); }
         }
-
         #endregion
         #region - Attributes -
         private VlcMediaPlayer _mediaPlayer;
