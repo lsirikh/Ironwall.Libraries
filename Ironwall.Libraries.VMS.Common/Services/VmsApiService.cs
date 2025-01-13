@@ -60,14 +60,11 @@ namespace Ironwall.Libraries.VMS.Common.Services
         {
             try
             {
-                if (_setup.IsAvailable)
-                {
-                    //01.Login
-                    InitTimer(1000 * 60 * 10);//10분마다 Tick 발생
+                //01.Login
+                InitTimer(1000 * 60 * 10);//10분마다 Tick 발생
 
-                    // ApiLoginProcess를 백그라운드 Task로 실행
-                    _ = Task.Run(async () => await ApiLoginProcess(), token);
-                }
+                // ApiLoginProcess를 백그라운드 Task로 실행
+                _ = Task.Run(async () => await ApiLoginProcess(), token);
             }
             catch (Exception ex)
             {
@@ -81,10 +78,8 @@ namespace Ironwall.Libraries.VMS.Common.Services
             
             try
             {
-                if (_setup.IsAvailable)
-                {
-                    await ApiLogoutProcess();
-                }
+                
+                await ApiLogoutProcess();
             }
             catch (Exception ex)
             {
@@ -116,6 +111,8 @@ namespace Ironwall.Libraries.VMS.Common.Services
         {
             try
             {
+                if (!_setup.IsAvailable) return;
+
                 int processTry = 0;
 
                 while (Status != EnumVmsStatus.LOGIN)
@@ -160,6 +157,8 @@ namespace Ironwall.Libraries.VMS.Common.Services
         {
             try
             {
+                if (!_setup.IsAvailable) return;
+
                 int processTry = 0;
 
                 while (Status != EnumVmsStatus.LOGOUT)
@@ -194,6 +193,8 @@ namespace Ironwall.Libraries.VMS.Common.Services
         {
             try
             {
+                if (!_setup.IsAvailable) return;
+
                 int processTry = 0;
                 bool isSuccess = false;
                 while (!isSuccess)
@@ -230,6 +231,8 @@ namespace Ironwall.Libraries.VMS.Common.Services
         {
             try
             {
+                if (!_setup.IsAvailable) return;
+
                 int processTry = 0;
                 bool isSuccess = false;
                 while (!isSuccess)
@@ -271,6 +274,8 @@ namespace Ironwall.Libraries.VMS.Common.Services
         {
             try
             {
+                if (!_setup.IsAvailable) return;
+
                 int processTry = 0;
                 bool isSuccess = false;
                 while (!isSuccess)

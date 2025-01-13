@@ -30,7 +30,7 @@ namespace Wpf.Libraries.Surv.UI.ViewModels.Panels
                                         , SurvEventSetupViewModel survEventSetupViewModel
                                         , SurvMappingSetupViewModel survMappingSetupViewModel
                                         , SurvSensorSetupViewModel survSensorSetupViewModel)
-                                        : base(eventAggregator)
+                                        : base(eventAggregator, log)
         {
             SurvApiSetupViewModel = survApiSetupViewModel;
             SurvEventSetupViewModel = survEventSetupViewModel;
@@ -100,7 +100,7 @@ namespace Wpf.Libraries.Surv.UI.ViewModels.Panels
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Raised Exception in {nameof(OnActiveTab)} : {ex.Message}");
+                _log.Error($"Raised Exception in {nameof(OnActiveTab)} : {ex.Message}");
             }
 
         }

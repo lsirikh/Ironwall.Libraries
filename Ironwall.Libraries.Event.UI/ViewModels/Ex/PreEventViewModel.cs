@@ -84,6 +84,8 @@ namespace Ironwall.Libraries.Event.UI.ViewModels
                         var eventModel = _model as IMalfunctionEventModel;
                         var requestModel = new ActionRequestMalfunctionModel(content, idUser, eventModel);
                         await EventAggregator.PublishOnUIThreadAsync(new ActionReportRequestMessageModel<IActionRequestMalfunctionModel>(requestModel));
+
+                        
                     }
                     break;
                 case EnumEventType.WindyMode:
@@ -92,34 +94,12 @@ namespace Ironwall.Libraries.Event.UI.ViewModels
                     break;
             }
 
-           
-
-            //_log.Info($"Id : {requestModel.Id}" +
-            //    $", Id : {requestModel.EventId}" +
-            //    $", User : {requestModel.User}" +
-            //    $", Content : {requestModel.Content}" +
-            //    $", MappingGroup : {requestModel.Group}" +
-            //    $", Command : {requestModel.Command}" +
-            //    $", Status : {requestModel.Status}" +
-            //    $", DateTime : {requestModel.DateTime}" +
-            //    $"");
-
-
-            //if(EnumLanguageHelper.GetAutoActionType(LanguageConst.KOREAN) == Contents)
-            //    CallAutoEvent?.Invoke(requestModel);
-            //else
-            //    CallActionEvent?.Invoke(requestModel);
-            
-            
-           
-
-            
             await CloseDialog();
         }
 
-        public void ExecuteActionEvent(IActionResponseModel model)
+        public void ExecuteActionEvent()
         {
-            CallActionEvent?.Invoke(model);
+            CallPreEvent?.Invoke(this);
         }
 
         protected abstract Task CloseDialog();
@@ -183,6 +163,7 @@ namespace Ironwall.Libraries.Event.UI.ViewModels
         #region - Attributes -
         public override event ActionEvent CallAutoEvent;
         public override event ActionEvent CallActionEvent;
+        public override event Action<PreEventViewModel> CallPreEvent;
         #endregion
 
     }

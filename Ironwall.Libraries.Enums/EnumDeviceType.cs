@@ -22,13 +22,15 @@ namespace Ironwall.Libraries.Enums
         IpCamera, //10
 
         SmartSensor, //11
-        SmartCompound, //12
+        SmartSensor2, //12
 
-        IpSpeaker, //13
-        Radar, //14
-        OpticalCable, //15
+        SmartCompound, //13
 
-        Fence_Line, //16
+        IpSpeaker, //14
+        Radar, //15
+        OpticalCable, //16
+
+        Fence_Line, //17
 
         
     }

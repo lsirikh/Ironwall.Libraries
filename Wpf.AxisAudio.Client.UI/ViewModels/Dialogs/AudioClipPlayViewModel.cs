@@ -1,5 +1,6 @@
 ﻿using Caliburn.Micro;
 using Ironwall.Framework.ViewModels.ConductorViewModels;
+using Ironwall.Libraries.Base.Services;
 using System;
 using System.Diagnostics;
 using System.Linq;
@@ -27,11 +28,12 @@ namespace Wpf.AxisAudio.Client.UI.ViewModels.Dialogs
 
         #region - Ctors -
         public AudioClipPlayViewModel(IEventAggregator eventAggregator
+                                    , ILogService log
                                     , AudioGroupViewModelProvider audioGroupViewModelProvider
                                     , AudioSymbolViewModelProvider audioSymbolProvider
                                     , AxisApiService axisApiService
                                     )
-                                    : base(eventAggregator)
+                                    : base(eventAggregator, log)
         {
             AudioGroupViewModelProvider = audioGroupViewModelProvider;
             _audioSymbolProvider = audioSymbolProvider;
@@ -86,7 +88,7 @@ namespace Wpf.AxisAudio.Client.UI.ViewModels.Dialogs
                     symbol.GroupSelection = true;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
                 throw;

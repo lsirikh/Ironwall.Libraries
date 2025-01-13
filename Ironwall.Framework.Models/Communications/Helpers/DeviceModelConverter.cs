@@ -40,6 +40,10 @@ namespace Ironwall.Framework.Models.Communications.Helpers
                 case EnumDeviceType.Laser:
                 case EnumDeviceType.Radar:
                 case EnumDeviceType.OpticalCable:
+                case EnumDeviceType.SmartSensor:
+                case EnumDeviceType.SmartSensor2:
+                case EnumDeviceType.SmartCompound:
+
                     device = jo.ToObject<SensorDeviceModel>();
                     break;
                 case EnumDeviceType.Cable:

@@ -37,9 +37,8 @@ namespace Wpf.AxisAudio.Client.UI.ViewModels.Panels.SetupPanels
                                         , AudioDbService dbService
                                         , AudioSensorProvider audioSensorProvider
                                         , AudioGroupViewModelProvider audioGroupViewModelProvider)
-                                        : base(eventAggregator)
+                                        : base(eventAggregator, log)
         {
-            _log = log;
             _apiService = apiService;
             _dbService = dbService;
             _provider = audioSensorProvider;
@@ -281,7 +280,6 @@ namespace Wpf.AxisAudio.Client.UI.ViewModels.Panels.SetupPanels
         #region - Properties -
         #endregion
         #region - Attributes -
-        private ILogService _log;
         private AxisApiService _apiService;
         private AudioDbService _dbService;
         private AudioSensorProvider _provider;

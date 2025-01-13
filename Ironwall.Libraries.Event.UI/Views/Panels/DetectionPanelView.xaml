@@ -18,10 +18,18 @@
 		<utils:EnumDeviceTypeToValueConverter x:Key="EnumDeivceTypeToValueConverter"/>
 		<utils:EnumDeviceTypeToTextConverter x:Key="EnumDeviceTypeToTextConverter"/>
 		<utils:EnumDeviceTypeToAllowedDeviceConverter x:Key="EnumDeviceTypeToAllowedDeviceConverter"/>
+
+		<Style TargetType="DataGridCell" BasedOn="{StaticResource MaterialDesignDataGridCell}">
+			<Setter Property="HorizontalAlignment" Value="Center"/>
+		</Style>
+
+		<Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
+			<Setter Property="HorizontalContentAlignment" Value="Center"/>
+		</Style>
 	</UserControl.Resources>
 
 
-	<Grid Margin="15 0 10 0">
+	<Grid Height="450" Margin="15 0 10 0">
 		<md:TransitioningContent>
 			<md:TransitioningContent.OpeningEffects>
 				<md:TransitionEffect Kind="FadeIn"
@@ -30,8 +38,7 @@
 										 Duration="0:0:0.5" />
 			</md:TransitioningContent.OpeningEffects>
 			<!-- Detection Section -->
-			<Grid HorizontalAlignment="Stretch"
-				 VerticalAlignment="Stretch">
+			<Grid>
 				<Grid.RowDefinitions>
 					<RowDefinition Height="30" />
 					<RowDefinition Height="50"/>
@@ -206,7 +213,7 @@
 						<ColumnDefinition Width="1*"/>
 						<ColumnDefinition Width="1.5*"/>
 						<ColumnDefinition Width="1*"/>
-						<ColumnDefinition Width="20*"/>
+						<ColumnDefinition Width="10*"/>
 					</Grid.ColumnDefinitions>
 					<TextBlock 
 							VerticalAlignment="Center"

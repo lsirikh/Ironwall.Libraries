@@ -82,14 +82,14 @@ namespace Wpf.Libraries.Surv.Common.Sdk
                               ApiModel = apimodel,
                               CameraModel = cameramodel,
                           };
-            _log.Info($"<<SurvApiService LookupTable>>", true);
+            _log.Info($"<<SurvApiService LookupTable>>");
             foreach (var item in LookupTable)
             {
                 _log.Info($"Group : {item?.MappingModel?.GroupName}" +
                     $", Api: {item?.ApiModel?.ApiAddress}:{item?.ApiModel.ApiPort}" +
                     $", Event : {item?.EventModel?.IpAddress}" +
                     $", Camera : {item?.CameraModel?.DeviceName}" +
-                    $", Sensor : {item?.SensorModel?.ControllerId}-{item?.SensorModel?.SensorId}", true);
+                    $", Sensor : {item?.SensorModel?.ControllerId}-{item?.SensorModel?.SensorId}");
             }
         }
         #endregion

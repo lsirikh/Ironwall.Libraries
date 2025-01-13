@@ -40,10 +40,9 @@ namespace Wpf.AxisAudio.Client.UI.ViewModels.Panels.SetupPanels
                                         , AudioViewModelProvider audioProvider
                                         , AudioSensorViewModelProvider audioSensorProvider
             )
-                                        : base(eventAggregator)
+                                        : base(eventAggregator, log)
         {
             _dbService = dbService;
-            _log = log;
             _apiService = apiService;
             _audioGroupProvider = audioGroupProvider;
             _audioViewModelProvider = audioProvider;
@@ -95,7 +94,7 @@ namespace Wpf.AxisAudio.Client.UI.ViewModels.Panels.SetupPanels
             }
             catch (Exception ex)
             {
-                _log.Error($"Rasied {nameof(Exception)}({nameof(OnClickDeleteButton)} in {ClassName}): {ex.Message}", true);
+                _log.Error($"Rasied {nameof(Exception)}({nameof(OnClickDeleteButton)} in {ClassName}): {ex.Message}");
             }
             finally
             {
@@ -333,7 +332,6 @@ namespace Wpf.AxisAudio.Client.UI.ViewModels.Panels.SetupPanels
         #endregion
         #region - Attributes -
         private AudioDbService _dbService;
-        private ILogService _log;
         private AxisApiService _apiService;
         private AudioGroupProvider _audioGroupProvider;
         //private AudioProvider _audioProvider;

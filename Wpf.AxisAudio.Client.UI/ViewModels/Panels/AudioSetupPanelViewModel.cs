@@ -30,12 +30,11 @@ namespace Wpf.AxisAudio.Client.UI.ViewModels.Panels
                                         , AudioGroupSetupViewModel audioGroupSetupViewModel
                                         , AudioDeviceSetupViewModel audioDeviceSetupViewModel
                                         , AudioSensorSetupViewModel audioSensorSetupViewModel)
-                                        : base(eventAggregator)
+                                        : base(eventAggregator, log)
         {
             AudioGroupSetupViewModel = audioGroupSetupViewModel;
             AudioDeviceSetupViewModel = audioDeviceSetupViewModel;
             AudioSensorSetupViewModel = audioSensorSetupViewModel;
-            _log = log;
         }
         #endregion
         #region - Implementation of Interface -
@@ -90,7 +89,7 @@ namespace Wpf.AxisAudio.Client.UI.ViewModels.Panels
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised {nameof(Exception)} in {nameof(OnActiveTab)} of {nameof(AudioSetupPanelViewModel)} : {ex}", true);
+                _log.Error($"Raised {nameof(Exception)} in {nameof(OnActiveTab)} of {nameof(AudioSetupPanelViewModel)} : {ex}");
             }
 
         }
@@ -102,7 +101,6 @@ namespace Wpf.AxisAudio.Client.UI.ViewModels.Panels
         public AudioDeviceSetupViewModel AudioDeviceSetupViewModel { get; }
         public AudioSensorSetupViewModel AudioSensorSetupViewModel { get; }
 
-        private ILogService _log;
         #endregion
         #region - Attributes -
         private BaseViewModel selectedViewModel;

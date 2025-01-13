@@ -27,6 +27,13 @@ namespace Ironwall.Libraries.Utils
         ///                    - IO_CONTROLLER
         ///                    - LASER_SENSOR
         ///                    - CABLE
+        ///                    - IP_CAMERA
+        ///                    - RADAR
+        ///                    - OPTICAL_CABLE
+        ///                    - FENCE_LINE
+        ///                    - SMART_SENSOR
+        ///                    - SMART_SENSOR2
+        ///                    - SMART_COMPOUND
         /// </summary>
         /// <param name="value">ViewModel의 Property가 활용된다.</param>
         /// <param name="targetType">Xaml로 넘어가는 데이터 변환 타입</param>
@@ -63,6 +70,24 @@ namespace Ironwall.Libraries.Utils
                     return EnumDeviceType.Cable;
                 case (int)EnumDeviceType.IpCamera:
                     return EnumDeviceType.IpCamera;
+
+                case (int)EnumDeviceType.SmartSensor:
+                    return EnumDeviceType.SmartSensor;
+                case (int)EnumDeviceType.SmartSensor2:
+                    return EnumDeviceType.SmartSensor2;
+                case (int)EnumDeviceType.SmartCompound:
+                    return EnumDeviceType.SmartCompound;
+                
+                case (int)EnumDeviceType.IpSpeaker:
+                    return EnumDeviceType.IpSpeaker;
+                case (int)EnumDeviceType.Radar:
+                    return EnumDeviceType.Radar;
+                case (int)EnumDeviceType.OpticalCable:
+                    return EnumDeviceType.OpticalCable;
+                case (int)EnumDeviceType.Fence_Line:
+                    return EnumDeviceType.Fence_Line;
+
+
                 default:
                     return EnumDeviceType.Controller;
             }
@@ -100,10 +125,29 @@ namespace Ironwall.Libraries.Utils
                 return (int)EnumDeviceType.IoController;
             else if (value.ToString() == EnumDeviceType.Laser.ToString())
                 return (int)EnumDeviceType.Laser;
+
             else if (value.ToString() == EnumDeviceType.Cable.ToString())
                 return (int)EnumDeviceType.Cable;
             else if (value.ToString() == EnumDeviceType.IpCamera.ToString())
                 return (int)EnumDeviceType.IpCamera;
+
+            else if (value.ToString() == EnumDeviceType.SmartSensor.ToString())
+                return (int)EnumDeviceType.SmartSensor;
+            else if (value.ToString() == EnumDeviceType.SmartSensor2.ToString())
+                return (int)EnumDeviceType.SmartSensor2;
+            else if (value.ToString() == EnumDeviceType.SmartCompound.ToString())
+                return (int)EnumDeviceType.SmartCompound;
+
+            else if (value.ToString() == EnumDeviceType.IpSpeaker.ToString())
+                return (int)EnumDeviceType.IpSpeaker;
+            else if (value.ToString() == EnumDeviceType.Radar.ToString())
+                return (int)EnumDeviceType.Radar;
+            else if (value.ToString() == EnumDeviceType.OpticalCable.ToString())
+                return (int)EnumDeviceType.OpticalCable;
+
+            else if (value.ToString() == EnumDeviceType.Fence_Line.ToString())
+                return (int)EnumDeviceType.Fence_Line;
+
             else
                 return null;
         }

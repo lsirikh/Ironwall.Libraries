@@ -90,7 +90,7 @@ namespace Wpf.AxisAudio.Client.UI.Services
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised {nameof(Exception)} in {nameof(ExitTask)} of {nameof(AxisApiService)} : {ex}", true);
+                _log.Error($"Raised {nameof(Exception)} in {nameof(ExitTask)} of {nameof(AxisApiService)} : {ex}");
             }
             
         }
@@ -127,22 +127,22 @@ namespace Wpf.AxisAudio.Client.UI.Services
 
 
 
-            _log.Info($"<<AxisApiService LookupTable>>", true);
+            _log.Info($"<<AxisApiService LookupTable>>");
             foreach (var item in LookupTable)
             {
-                _log.Info($"GroupModel : {item?.GroupModel?.GroupName}", true);
+                _log.Info($"GroupModel : {item?.GroupModel?.GroupName}");
                 if(item?.SensorModels != null)
                 {
                     foreach (var item1 in item?.SensorModels)
                     {
-                        _log.Info($"Sensor : {item1?.ControllerId}-{item1?.SensorId}", true);
+                        _log.Info($"Sensor : {item1?.ControllerId}-{item1?.SensorId}");
                     }
                 }
                 if(item?.AudioModels != null)
                 {
                     foreach (var item2 in item?.AudioModels)
                     {
-                        _log.Info($"Audio : {item2?.Id}-{item2?.DeviceName}", true);
+                        _log.Info($"Audio : {item2?.Id}-{item2?.DeviceName}");
                     }
                 }
                 
@@ -162,11 +162,11 @@ namespace Wpf.AxisAudio.Client.UI.Services
                                     AudioModel = audioModel,
                                     SymbolModel = symbolModel as AudioSymbolViewModel,
                                 };
-            _log.Info($"<<AxisApiService VisualLookupTable>>", true);
+            _log.Info($"<<AxisApiService VisualLookupTable>>");
             foreach (var item in VisualLookupTable)
             {
-                _log.Info($"SymbolViewModel : {item?.AudioModel?.DeviceName}", true);
-                _log.Info($"AudioViewModel : {item?.SymbolModel?.NameDevice}", true);
+                _log.Info($"SymbolViewModel : {item?.AudioModel?.DeviceName}");
+                _log.Info($"AudioViewModel : {item?.SymbolModel?.NameDevice}");
             }
         }
         /// <summary>
@@ -195,7 +195,7 @@ namespace Wpf.AxisAudio.Client.UI.Services
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised {nameof(Exception)} in {nameof(ProxyStreamingRequest)} of {nameof(AxisApiService)} : {ex}", true);
+                _log.Error($"Raised {nameof(Exception)} in {nameof(ProxyStreamingRequest)} of {nameof(AxisApiService)} : {ex}");
                 return null;
             }
         }
@@ -224,7 +224,7 @@ namespace Wpf.AxisAudio.Client.UI.Services
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised {nameof(Exception)} in {nameof(ProxyStreamingRequest)} of {nameof(AxisApiService)} : {ex}", true);
+                _log.Error($"Raised {nameof(Exception)} in {nameof(ProxyStreamingRequest)} of {nameof(AxisApiService)} : {ex}");
                 return null;
             }
         }
@@ -272,7 +272,7 @@ namespace Wpf.AxisAudio.Client.UI.Services
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised {nameof(Exception)} in {nameof(ProxyStreamingRequest)} of {nameof(AxisApiService)} : {ex}", true);
+                _log.Error($"Raised {nameof(Exception)} in {nameof(ProxyStreamingRequest)} of {nameof(AxisApiService)} : {ex}");
             }
         }
 
@@ -326,7 +326,7 @@ namespace Wpf.AxisAudio.Client.UI.Services
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised {nameof(Exception)} in {nameof(ProxyStreamingRequest)} of {nameof(AxisApiService)} : {ex}", true);
+                _log.Error($"Raised {nameof(Exception)} in {nameof(ProxyStreamingRequest)} of {nameof(AxisApiService)} : {ex}");
             }
         }
 
@@ -381,7 +381,7 @@ namespace Wpf.AxisAudio.Client.UI.Services
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised {nameof(Exception)} in {nameof(ApiParamSettingRequest)} of {nameof(AxisApiService)} : {ex}", true);
+                _log.Error($"Raised {nameof(Exception)} in {nameof(ApiParamSettingRequest)} of {nameof(AxisApiService)} : {ex}");
             }
             finally
             {
@@ -425,7 +425,7 @@ namespace Wpf.AxisAudio.Client.UI.Services
                 }
                 catch (Exception ex)
                 {
-                    _log.Error($"Raised {nameof(Exception)} in {nameof(ApiGetClipListRequest)} of {nameof(AxisApiService)} : {ex}", true);
+                    _log.Error($"Raised {nameof(Exception)} in {nameof(ApiGetClipListRequest)} of {nameof(AxisApiService)} : {ex}");
                 }
 
             });
@@ -450,7 +450,7 @@ namespace Wpf.AxisAudio.Client.UI.Services
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised {nameof(Exception)} in {nameof(ApiPlayClipRequest)} of {nameof(AxisApiService)} : {ex}", true);
+                _log.Error($"Raised {nameof(Exception)} in {nameof(ApiPlayClipRequest)} of {nameof(AxisApiService)} : {ex}");
             }
         }
 
@@ -479,7 +479,7 @@ namespace Wpf.AxisAudio.Client.UI.Services
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised {nameof(Exception)} in {nameof(ApiPlayClipRequest)} of {nameof(AxisApiService)} : {ex}", true);
+                _log.Error($"Raised {nameof(Exception)} in {nameof(ApiPlayClipRequest)} of {nameof(AxisApiService)} : {ex}");
             }
         }
 
@@ -496,7 +496,7 @@ namespace Wpf.AxisAudio.Client.UI.Services
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised {nameof(Exception)} in {nameof(ApiGetClipListRequest)} of {nameof(AxisApiService)} : {ex}", true);
+                _log.Error($"Raised {nameof(Exception)} in {nameof(ApiGetClipListRequest)} of {nameof(AxisApiService)} : {ex}");
             }
         }
 
@@ -515,7 +515,7 @@ namespace Wpf.AxisAudio.Client.UI.Services
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised {nameof(Exception)} in {nameof(ApiGetClipListRequest)} of {nameof(AxisApiService)} : {ex}", true);
+                _log.Error($"Raised {nameof(Exception)} in {nameof(ApiGetClipListRequest)} of {nameof(AxisApiService)} : {ex}");
             }
         }
 
@@ -534,7 +534,7 @@ namespace Wpf.AxisAudio.Client.UI.Services
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised {nameof(Exception)} in {nameof(ApiGetClipListRequest)} of {nameof(AxisApiService)} : {ex}", true);
+                _log.Error($"Raised {nameof(Exception)} in {nameof(ApiGetClipListRequest)} of {nameof(AxisApiService)} : {ex}");
                 return Task.CompletedTask;
             }
         }
@@ -573,7 +573,7 @@ namespace Wpf.AxisAudio.Client.UI.Services
                 }
                 catch (Exception ex)
                 {
-                    _log.Error($"Raised {nameof(Exception)} in {nameof(PlayClipAudio)} of {nameof(AxisApiService)} : {ex}", true);
+                    _log.Error($"Raised {nameof(Exception)} in {nameof(PlayClipAudio)} of {nameof(AxisApiService)} : {ex}");
                 }
             });
         }
@@ -607,7 +607,7 @@ namespace Wpf.AxisAudio.Client.UI.Services
                 }
                 catch (Exception ex)
                 {
-                    _log.Error($"Raised {nameof(Exception)} in {nameof(StopClipAudio)} of {nameof(AxisApiService)} : {ex}", true);
+                    _log.Error($"Raised {nameof(Exception)} in {nameof(StopClipAudio)} of {nameof(AxisApiService)} : {ex}");
                 }
             });
         }
@@ -650,32 +650,32 @@ namespace Wpf.AxisAudio.Client.UI.Services
                             }
                             else if (response.StatusCode == HttpStatusCode.Unauthorized)
                             {
-                                _log.Info($"Api account was not authorized!", true);
+                                _log.Info($"Api account was not authorized!");
                                 return null;
                             }
                             else
                             {
-                                _log.Info($"Api Connection was failure!", true);
+                                _log.Info($"Api Connection was failure!");
                                 return null;
                             }
                         }
                         catch (HttpRequestException ex)
                         {
                             // 연결 실패 또는 다른 HTTP 요청 오류 처리
-                            _log.Error($"Raised {nameof(HttpRequestException)} in {nameof(AxisGetRequest)} of {nameof(AxisApiService)} : {ex}", true);
+                            _log.Error($"Raised {nameof(HttpRequestException)} in {nameof(AxisGetRequest)} of {nameof(AxisApiService)} : {ex}");
                             return null;
                         }
                         catch (TaskCanceledException ex)
                         {
                             // 타임아웃 처리
-                            _log.Error($"Raised {nameof(TaskCanceledException)} in {nameof(AxisGetRequest)} of {nameof(AxisApiService)} : {ex}", true);
+                            _log.Error($"Raised {nameof(TaskCanceledException)} in {nameof(AxisGetRequest)} of {nameof(AxisApiService)} : {ex}");
                             return null;
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    _log.Error($"Raised {nameof(Exception)} in {nameof(AxisGetRequest)} of {nameof(AxisApiService)} : {ex}", true);
+                    _log.Error($"Raised {nameof(Exception)} in {nameof(AxisGetRequest)} of {nameof(AxisApiService)} : {ex}");
                     return null;
                 }
             });
@@ -739,7 +739,7 @@ namespace Wpf.AxisAudio.Client.UI.Services
             }
             catch (Exception ex)
             {
-                _log.Error($"Raised {nameof(Exception)} in {nameof(ParsingMedia)} of {nameof(AxisApiService)} : {ex}", true);
+                _log.Error($"Raised {nameof(Exception)} in {nameof(ParsingMedia)} of {nameof(AxisApiService)} : {ex}");
                 return null;
             }
         }
@@ -758,7 +758,7 @@ namespace Wpf.AxisAudio.Client.UI.Services
                 }
                 catch (Exception ex)
                 {
-                    _log.Error($"Raised {nameof(Exception)} in {nameof(ParsingMedia)} of {nameof(AxisApiService)} : {ex}", true);
+                    _log.Error($"Raised {nameof(Exception)} in {nameof(ParsingMedia)} of {nameof(AxisApiService)} : {ex}");
                     return null;
                 }
             });
@@ -778,11 +778,11 @@ namespace Wpf.AxisAudio.Client.UI.Services
                 catch (TaskCanceledException ex)
                 {
                     await ApiStopClipGroupRequest(lookupModel.GroupModel);
-                    _log.Info($"Task{nameof(SendEventCycle)} was cancelled : {ex.Message}", true);
+                    _log.Info($"Task{nameof(SendEventCycle)} was cancelled : {ex.Message}");
                 }
                 catch (Exception ex)
                 {
-                    _log.Error($"Raised {nameof(Exception)} in {nameof(SendEventCycle)} of {nameof(AxisApiService)} : {ex.Message}", true);
+                    _log.Error($"Raised {nameof(Exception)} in {nameof(SendEventCycle)} of {nameof(AxisApiService)} : {ex.Message}");
                 }
             });
         }
@@ -817,7 +817,7 @@ namespace Wpf.AxisAudio.Client.UI.Services
 
         private async void Tick(object sender, ElapsedEventArgs e)
         {
-            _log.Info($"Axis Audio {_intervalSecond}s 간격 주기적 모니터링 시작.", true);
+            _log.Info($"Axis Audio {_intervalSecond}s 간격 주기적 모니터링 시작.");
             await ApiParamSettingRequest(true);
         }
 

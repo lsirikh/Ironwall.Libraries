@@ -28,6 +28,15 @@
 			<Setter Property="Margin" Value="5"/>
 		</Style>
 
+		<Style TargetType="DataGridCell" BasedOn="{StaticResource MaterialDesignDataGridCell}">
+			<Setter Property="HorizontalAlignment" Value="Center"/>
+		</Style>
+
+		<Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
+			<Setter Property="HorizontalContentAlignment" Value="Center"/>
+		</Style>
+
+
 		<DataTemplate x:Key="ControllerTemplate" >
 			<Grid DataContext="{Binding Controller}">
 				<TextBlock Text="{Binding Path=DeviceNumber, Mode=TwoWay, UpdateSourceTrigger=LostFocus}">

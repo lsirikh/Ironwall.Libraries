@@ -140,11 +140,11 @@ namespace Wpf.AxisAudio.Common.Providers
                 {
                     _dbConnection.Close();
 
-                    _log.Error($"Raised {nameof(SQLiteException)} in {nameof(BuildSchemeAsync)} of {nameof(AudioDomainDataProvider)} : {ex.Message}", true);
+                    _log.Error($"Raised {nameof(SQLiteException)} in {nameof(BuildSchemeAsync)} of {nameof(AudioDomainDataProvider)} : {ex.Message}");
                 }
                 catch (Exception ex)
                 {
-                    _log.Error($"Raised {nameof(Exception)} in {nameof(BuildSchemeAsync)} of {nameof(AudioDomainDataProvider)} : {ex.Message}", true);
+                    _log.Error($"Raised {nameof(Exception)} in {nameof(BuildSchemeAsync)} of {nameof(AudioDomainDataProvider)} : {ex.Message}");
                 }
             });
             

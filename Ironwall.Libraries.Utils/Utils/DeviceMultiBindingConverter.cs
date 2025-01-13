@@ -65,6 +65,9 @@ namespace Ironwall.Libraries.Utils
                     case EnumDeviceType.PIR:
                     case EnumDeviceType.IoController:
                     case EnumDeviceType.Laser:
+                    case EnumDeviceType.SmartSensor:
+                    case EnumDeviceType.SmartSensor2:
+                    case EnumDeviceType.SmartCompound:
                         {
                             retValue = controller + "-" + sensor;
                         }
@@ -72,6 +75,14 @@ namespace Ironwall.Libraries.Utils
                     case EnumDeviceType.Cable:
                         break;
                     case EnumDeviceType.IpCamera:
+                        break;
+                    case EnumDeviceType.IpSpeaker:
+                        break;
+                    case EnumDeviceType.Radar:
+                        break;
+                    case EnumDeviceType.OpticalCable:
+                        break;
+                    case EnumDeviceType.Fence_Line:
                         break;
                     default:
                         break;

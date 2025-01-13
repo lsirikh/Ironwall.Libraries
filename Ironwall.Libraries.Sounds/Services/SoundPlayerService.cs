@@ -6,6 +6,7 @@ using System.Diagnostics;
 using Ironwall.Libraries.Sounds.Models;
 using System.Reflection;
 using System.IO;
+using Ironwall.Libraries.Base.Services;
 
 namespace Ironwall.Libraries.Sounds.Services
 {
@@ -22,9 +23,10 @@ namespace Ironwall.Libraries.Sounds.Services
     {
 
         #region - Ctors -
-        public SoundPlayerService()
+        public SoundPlayerService(ILogService log)
         {
             _object = new object();
+            _log = log;
         }
 
         #endregion
@@ -63,7 +65,7 @@ namespace Ironwall.Libraries.Sounds.Services
 
         private void PlaybackStopped(object sender, StoppedEventArgs e)
         {
-            Debug.WriteLine("Play Stopped!");
+            _log.Info("Playing effect sound was stopped!");
         }
 
         private string GetSoundFile(SoundModel model)
@@ -89,22 +91,7 @@ namespace Ironwall.Libraries.Sounds.Services
                 }
 
                 string targetFilePath = Path.Combine(folderPath, model.File);
-                //if (!File.Exists(targetFilePath))
-                //{
-                //    //using (Stream resourceStream = GetResourceStream(new Uri($"pack://application:,,,/{resourceName}")).Stream)
-                //    using (var resourceStream = assembly.GetManifestResourceStream(loc))
-                //    {
-                //        using (FileStream fileStream = new FileStream(targetFilePath, FileMode.Create))
-                //        {
-                //            resourceStream.CopyTo(fileStream);
-                //        }
-                //    }
-                //    //Debug.WriteLine($"File copied to: {targetFilePath}");
-                //}
-                //else
-                //{
-                //    //Debug.WriteLine($"File already exists at: {targetFilePath}");
-                //}
+               
 
                 return targetFilePath;
             }
@@ -197,13 +184,13 @@ namespace Ironwall.Libraries.Sounds.Services
         public async void Play(SoundModel model, int expTime = default)
         {
             if (_outputDevice == null)
-                await PlayTaskAsync(model, expTime);
+                await PlayTaskAsync(model, expTime).ConfigureAwait(false);
             else
             {
                 if (_outputDevice.PlaybackState == PlaybackState.Paused)
                     _outputDevice.Play();
                 else if (_outputDevice.PlaybackState == PlaybackState.Playing)
-                    await PlayTaskAsync(model, expTime);
+                    await PlayTaskAsync(model, expTime).ConfigureAwait(false);
                 else
                     return;
             } 
@@ -313,6 +300,7 @@ namespace Ironwall.Libraries.Sounds.Services
         private AudioFileReader _audioFileReader;
         private CancellationTokenSource _cts;
         private object _object;
+        private ILogService _log;
 
         public delegate void UpdateVolume();
         public delegate void UpdateCurrent();

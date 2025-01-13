@@ -399,15 +399,27 @@ namespace Ironwall.Libraries.Map.UI.ViewModels
             {
                 DispatcherService.Invoke((System.Action)(() =>
                 {
-                    if (!IsEventZoom)
+                    try
                     {
-                        ZoomAndPanControl.ZoomAboutPoint(1.0d, point);
-                        ZoomAndPanControl.AnimatedZoomTo(new Rect(point.X - 300, point.Y - 300, 600, 600));
-                        IsEventZoom = true;
+                        if (!IsEventZoom)
+                        {
+                            ZoomAndPanControl.ZoomAboutPoint(1.0d, point);
+                            ZoomAndPanControl.AnimatedZoomTo(new Rect(point.X - 300, point.Y - 300, 600, 600));
+                            IsEventZoom = true;
+                        }
+                        else
+                        {
+                            ZoomAndPanControl.AnimatedSnapTo(point);
+                        }
                     }
-                    else
+                    //catch (TaskCanceledException)
+                    //{
+                    //    //await OnClickSetZoom100();
+                    //    _log.Error($"GoToEventLocation was backed to Zoom 100% for TaskCanceledException");
+                    //}
+                    catch (Exception ex)
                     {
-                        ZoomAndPanControl.AnimatedSnapTo(point);
+                        _log.Error($"Raised {nameof(Exception)} was for {ex.Message}");
                     }
                 }));
             });
@@ -901,7 +913,7 @@ namespace Ironwall.Libraries.Map.UI.ViewModels
         private Point origContentMouseDownPoint;
         private MouseHandlingMode mouseHandlingMode;
         private KeyboardHandlingMode keyboardHandlingModel;
-
+        //private CancellationTokenSource zoomCts;
         public event Action<object> DrawingFinished;
 
         private int _polyCount;

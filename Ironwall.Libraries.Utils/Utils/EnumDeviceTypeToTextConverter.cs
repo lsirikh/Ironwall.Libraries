@@ -38,6 +38,12 @@ namespace Ironwall.Libraries.Utils
                     return EnumDeviceType.IoController.ToString();
                 case (int)EnumDeviceType.Laser:
                     return EnumDeviceType.Laser.ToString();
+                case (int)EnumDeviceType.SmartSensor:
+                    return EnumDeviceType.SmartSensor.ToString();
+                case (int)EnumDeviceType.SmartSensor2:
+                    return EnumDeviceType.SmartSensor2.ToString();
+                case (int)EnumDeviceType.SmartCompound:
+                    return EnumDeviceType.SmartCompound.ToString();
                 case (int)EnumDeviceType.Cable:
                     return EnumDeviceType.Cable.ToString();
                 case (int)EnumDeviceType.IpCamera:
