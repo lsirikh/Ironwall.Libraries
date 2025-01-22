@@ -125,6 +125,8 @@
     <Compile Include="Accounts\LoginUserModel.cs" />
     <Compile Include="Accounts\UserBaseModel.cs" />
     <Compile Include="Accounts\UserModel.cs" />
+    <Compile Include="Ais\INetworkSettingModel.cs" />
+    <Compile Include="Ais\NetworkSettingModel.cs" />
     <Compile Include="BaseModel.cs" />
     <Compile Include="Communications\Accounts\AccountAllRequestModel.cs" />
     <Compile Include="Communications\Accounts\AccountAllResponseModel.cs" />
@@ -168,6 +170,18 @@
     <Compile Include="Communications\Accounts\LoginResultModel.cs" />
     <Compile Include="Communications\Accounts\LogoutRequestModel.cs" />
     <Compile Include="Communications\Accounts\LogoutResponseModel.cs" />
+    <Compile Include="Communications\AIs\AiApiSettingRequestModel.cs" />
+    <Compile Include="Communications\AIs\AiApiSettingResponseModel.cs" />
+    <Compile Include="Communications\AIs\AiMessageRequestModel.cs" />
+    <Compile Include="Communications\AIs\AiMessageResponseModel.cs" />
+    <Compile Include="Communications\AIs\AiModelSettingRequestModel.cs" />
+    <Compile Include="Communications\AIs\AiModelSettingResponseModel.cs" />
+    <Compile Include="Communications\AIs\AiSessionSettingRequestModel.cs" />
+    <Compile Include="Communications\AIs\AiSessionSettingResponseModel.cs" />
+    <Compile Include="Communications\AIs\IAiApiSettingRequestModel.cs" />
+    <Compile Include="Communications\AIs\IAiApiSettingResponseModel.cs" />
+    <Compile Include="Communications\AIs\IAiMessageRequestModel.cs" />
+    <Compile Include="Communications\AIs\IAiMessageResponseModel.cs" />
     <Compile Include="Communications\BaseEventMessageModel.cs" />
     <Compile Include="Communications\BaseMessageModel.cs" />
     <Compile Include="Communications\Devices\CameraDataRequestModel.cs" />

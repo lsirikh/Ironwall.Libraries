@@ -176,5 +176,21 @@ namespace Ironwall.Libraries.Enums
 
         API_MAPPING_SAVE_REQUEST,
         API_MAPPING_SAVE_RESPONSE,
+
+        /// <summary>
+        /// AI 
+        /// </summary>
+        AI_API_SETTING_REQUEST,
+        AI_API_SETTING_RESPONSE,
+        
+        AI_SESSION_SETTING_REQUEST,
+        AI_SESSION_SETTING_RESPONSE,
+
+        AI_MODEL_SETTING_REQUEST,
+        AI_MODEL_SETTING_RESPONSE,
+
+        AI_MESSAGE_REQUEST,
+        AI_MESSAGE_RESPONSE,
+
     }
 }

@@ -37,8 +37,7 @@ namespace Ironwall.Libraries.Account.Server.Services
     public abstract class AccountServerService : TcpServer, IAccountServerService
     {
         #region - Ctors -
-        public AccountServerService(
-                                    ILogService log
+        public AccountServerService(ILogService log
                                     , AccountSetupModel accountSetupModel
                                     , TcpSetupModel tcpSetupModel
                                     , TcpServerSetupModel tcpServerSetupModel
@@ -49,8 +48,7 @@ namespace Ironwall.Libraries.Account.Server.Services
                                     , LoginUserProvider loginUserProvider
                                     , AccountDbService accountDbService
                                     , TcpUserProvider tcpUserProvider
-                                    , LogProvider logProvider 
-                                    )
+                                    , LogProvider logProvider )
                                     : base(log, tcpSetupModel, tcpServerSetupModel, logProvider)
         {
 
@@ -1013,7 +1011,7 @@ namespace Ironwall.Libraries.Account.Server.Services
         #endregion
 
         #region IPEndPoint Process
-        private IPEndPoint GetIPEndPoint(int id)
+        public IPEndPoint GetIPEndPoint(int id)
         {
             try
             {
@@ -1032,7 +1030,7 @@ namespace Ironwall.Libraries.Account.Server.Services
 
         }
 
-        private IPEndPoint GetIPEndPoint(string idUser)
+        public IPEndPoint GetIPEndPoint(string idUser)
         {
             try
             {

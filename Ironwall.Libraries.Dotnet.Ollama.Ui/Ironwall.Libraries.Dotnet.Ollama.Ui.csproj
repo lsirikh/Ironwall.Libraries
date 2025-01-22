@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Platforms>AnyCPU;x64;x86</Platforms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="8.2.0" />
+    <PackageReference Include="Caliburn.Micro" Version="4.0.230" />
+    <PackageReference Include="MahApps.Metro" Version="2.4.10" />
+    <PackageReference Include="MahApps.Metro.IconPacks" Version="5.1.0" />
+    <PackageReference Include="MaterialDesignColors" Version="5.2.1" />
+    <PackageReference Include="MaterialDesignThemes" Version="5.2.1" />
+    <PackageReference Include="OllamaSharp" Version="4.0.22" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Ironwall.Framework.ViewModels\Ironwall.Framework.ViewModels.csproj" />
+    <ProjectReference Include="..\Ironwall.Framework\Ironwall.Framework.csproj" />
+    <ProjectReference Include="..\Ironwall.Libraries.Api.Ollama\Ironwall.Libraries.Api.Ollama.csproj" />
+    <ProjectReference Include="..\Ironwall.Libraries.Base\Ironwall.Libraries.Base.csproj" />
+  </ItemGroup>
+
+</Project>

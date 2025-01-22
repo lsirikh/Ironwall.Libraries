@@ -13,8 +13,7 @@ namespace Ironwall.Libraries.Account.Common.Providers
     //{
     //}
 
-    public class SessionProvider
-        : AccountBaseProvider
+    public class SessionProvider : AccountBaseProvider
     {
         public SessionProvider()
         {

@@ -220,38 +220,6 @@ namespace Ironwall.Framework
         {
             var builder = new ContainerBuilder();
 
-            #region - Auto Register Logic? -
-            /*
-            //  register view models
-            builder.RegisterAssemblyTypes(AssemblySource.Instance.ToArray())
-              //  must be a type that ends with ViewModel
-              .Where(type => type.GroupId.EndsWith("ViewModel"))
-              //  must be in a namespace ending with ViewModels
-              .Where(type => !(string.IsNullOrWhiteSpace(type.Namespace)) && type.Namespace.EndsWith("ViewModels"))
-              //  must implement INotifyPropertyChanged (deriving from PropertyChangedBase will statisfy this)
-              //.Where(type => type.GetInterface(typeof(INotifyPropertyChanged).GroupId) != null)
-              //  registered as self
-              .AsSelf()
-              //  always create a new one
-              .InstancePerDependency();
-
-            //  register views
-            builder.RegisterAssemblyTypes(AssemblySource.Instance.ToArray())
-              //  must be a type that ends with View
-              .Where(type => type.GroupId.EndsWith("View"))
-              //  must be in a namespace that ends in Views
-              .Where(type => !(string.IsNullOrWhiteSpace(type.Namespace)) && type.Namespace.EndsWith("Views"))
-              //  registered as self
-              .AsSelf()
-              //  always create a new one
-              .InstancePerDependency();
-            */
-            #endregion
-
-            /*RegisterBaseType(builder);
-            ConfigureContainer(builder);
-            _container = builder.Build();*/
-
             RegisterBaseType(builder);
             builder.RegisterType<T>().SingleInstance();
 

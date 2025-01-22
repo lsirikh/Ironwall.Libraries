@@ -9,8 +9,7 @@ using System.Threading.Tasks;
 
 namespace Ironwall.Libraries.Account.Common.Providers.Models
 {
-    public abstract class AccountBaseProvider
-    : BaseCommonProvider<IAccountBaseModel>
+    public abstract class AccountBaseProvider : BaseCommonProvider<IAccountBaseModel>
     {
 
         #region - Ctors -

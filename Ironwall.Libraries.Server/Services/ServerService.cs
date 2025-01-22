@@ -60,71 +60,69 @@ using Ironwall.Libraries.VMS.Common.Providers.Models;
 using Ironwall.Libraries.VMS.Common.Models.Providers;
 using Sensorway.Events.Base.Models;
 using IActionEventModel = Ironwall.Framework.Models.Events.IActionEventModel;
+using Ironwall.Framework.Models.Communications.AIs;
 
 namespace Ironwall.Libraries.Server.Services
 {
     public class ServerService : AccountServerService, IServerService
     {
         #region - Ctors -
-        public ServerService(
-            ILogService log
-            , AccountSetupModel accountSetupModel
-            , TcpSetupModel tcpSetupModel
-            , TcpServerSetupModel tcpServerSetupModel
-            , SessionProvider sessionProvider
-            , TcpClientProvider tcpClientProvider
-            , LoginProvider loginProvider
-            , UserProvider userProvider
-            , LoginUserProvider loginUserProvider
-            , AccountDbService accountDbService
-            , IEventDbService eventDbService
+        public ServerService(ILogService log
+                            , AccountSetupModel accountSetupModel
+                            , TcpSetupModel tcpSetupModel
+                            , TcpServerSetupModel tcpServerSetupModel
+                            , SessionProvider sessionProvider
+                            , TcpClientProvider tcpClientProvider
+                            , LoginProvider loginProvider
+                            , UserProvider userProvider
+                            , LoginUserProvider loginUserProvider
+                            , AccountDbService accountDbService
+                            , IEventDbService eventDbService
 
-            , Events.Providers.EventProvider eventProvider
-            , DetectionEventProvider detectionEventProvider
-            , MalfunctionEventProvider malfunctionEventProvider
+                            , Events.Providers.EventProvider eventProvider
+                            , DetectionEventProvider detectionEventProvider
+                            , MalfunctionEventProvider malfunctionEventProvider
 
-            , ActionEventProvider actionEventProvider
+                            , ActionEventProvider actionEventProvider
             
-            , DeviceProvider deviceProvider
-            , ControllerDeviceProvider controllerDeviceProvider
-            , SensorDeviceProvider sensorDeviceProvider
-            , CameraDeviceProvider cameraDeviceProvider
-            , CameraPresetProvider cameraPresetProvider
-            , CameraProfileProvider cameraProfileProvider
-            , CameraOptionProvider cameraOptionProvider
-            , CameraMappingProvider cameraMappingProvider
-            , IDeviceDbService deviceDbService
+                            , DeviceProvider deviceProvider
+                            , ControllerDeviceProvider controllerDeviceProvider
+                            , SensorDeviceProvider sensorDeviceProvider
+                            , CameraDeviceProvider cameraDeviceProvider
+                            , CameraPresetProvider cameraPresetProvider
+                            , CameraProfileProvider cameraProfileProvider
+                            , CameraOptionProvider cameraOptionProvider
+                            , CameraMappingProvider cameraMappingProvider
+                            , IDeviceDbService deviceDbService
 
-            , SymbolProvider symbolProvider
-            , MapProvider mapProvider
-            , MapDbService mapDbService
-            , PointProvider pointProvider
+                            , SymbolProvider symbolProvider
+                            , MapProvider mapProvider
+                            , MapDbService mapDbService
+                            , PointProvider pointProvider
 
-            , TcpUserProvider tcpUserProvider
-            , LogProvider logProvdier
+                            , TcpUserProvider tcpUserProvider
+                            , LogProvider logProvdier
 
-            , IVmsApiService vmsApiService
-            , IVmsDbService vmsDbService
-            , VmsApiProvider vmsApiProvider
-            , VmsEventProvider vmsEventProvider
-            , VmsMappingProvider vmsMappingProvider
-            , VmsSensorProvider vmsSensorProvider
+                            , IVmsApiService vmsApiService
+                            , IVmsDbService vmsDbService
+                            , VmsApiProvider vmsApiProvider
+                            , VmsEventProvider vmsEventProvider
+                            , VmsMappingProvider vmsMappingProvider
+                            , VmsSensorProvider vmsSensorProvider
             
-            , SymbolInfoModel symbolInfoModel
-            )
-            : base
-            ( log
-            , accountSetupModel
-            , tcpSetupModel
-            , tcpServerSetupModel
-            , sessionProvider
-            , tcpClientProvider
-            , loginProvider
-            , userProvider
-            , loginUserProvider
-            , accountDbService
-            , tcpUserProvider
-            , logProvdier)
+                            , SymbolInfoModel symbolInfoModel
+                            ) : base(log
+                                    , accountSetupModel
+                                    , tcpSetupModel
+                                    , tcpServerSetupModel
+                                    , sessionProvider
+                                    , tcpClientProvider
+                                    , loginProvider
+                                    , userProvider
+                                    , loginUserProvider
+                                    , accountDbService
+                                    , tcpUserProvider
+                                    , logProvdier)
         {
 
             _eventDbService = eventDbService;
@@ -166,9 +164,8 @@ namespace Ironwall.Libraries.Server.Services
                 DateFormatString = "yyyy-MM-ddTHH:mm:ss.ff"
             };
         }
-
-
         #endregion
+        
         #region - Implementation of Interface -
         public Task UpdateHeartBeat(IHeartBeatRequestModel model, IPEndPoint endPoint)
         {
@@ -266,10 +263,10 @@ namespace Ironwall.Libraries.Server.Services
                     throw new Exception(message: "Detection data is empty.");
 
                 var tcs = new TaskCompletionSource<bool>();
-                Debug.WriteLine($"model : {model.DateTime.ToString("yyyy-MM-dd HH:mm:ss.ff")}");
+                _log.Info($"model : {model.DateTime.ToString("yyyy-MM-dd HH:mm:ss.ff")}");
                 var fetchEvent = await _eventDbService.SaveDetectionEvent(model, tcs: tcs);
                 var result = await tcs.Task;
-                Debug.WriteLine($"fetchmodel : {fetchEvent.DateTime.ToString("yyyy-MM-dd HH:mm:ss.ff")}");
+                _log.Info($"fetchmodel : {fetchEvent.DateTime.ToString("yyyy-MM-dd HH:mm:ss.ff")}");
                 if (!result) throw new Exception(message: $"Fail to execute {nameof(DetectionEventRequest)} in {nameof(ServerService)}");
 
                 try
@@ -1392,7 +1389,19 @@ namespace Ironwall.Libraries.Server.Services
             }
         }
 
+        public async Task AiMessageResponse(bool success, string msg, string idUser, string response, IPEndPoint endPoint = null)
+        {
+            try
+            {
+                var responseModel = new AiMessageResponseModel(success, msg, idUser, response);
 
+                await SendRequest(JsonConvert.SerializeObject(responseModel, settings), endPoint);
+            }
+            catch (Exception ex)
+            {
+                throw new SocketSendException($"Raised Exception in {nameof(ActionEventResponse)} while sending message : {ex.Message}", endPoint);
+            }
+        }
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion

@@ -23,8 +23,7 @@ using System.Timers;
 
 namespace Ironwall.Libraries.Tcp.Server.Services
 {
-    public abstract class TcpServer 
-        : TcpSocket, ITcpServer
+    public abstract class TcpServer : TcpSocket, ITcpServer
     {
         #region - Ctors -
         public TcpServer(

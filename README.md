@@ -465,3 +465,20 @@ protected override IEnumerable<Assembly> SelectAssemblies()
     3) 프로그램이 죽을 때 예외를 Log4Net에서 캐치하도록 설정  ParentBootstrapper  
     4) 장비 타입 추가되면서 Enum 클래스들 및 Converter에 맞도록 적용  
     5) Axis 라이브러리 및 Surv 라이브러리에 ILogService 적용  
+
+### Update Date: 2025/01/22
+
+* 통합 버전으로 관리
+
+<br>
+
+* Version : v1.1.0  
+* Comment  
+
+    1) Ironwall.Framework에 Ai 통신 관련 메시지와 EnumCmd 항목 추가.  
+    2) Ironwall.Framework에 ParentBootStrapper에 Deprecated 항목 삭제.  
+    3) 대부분의 라이브러리 Autofac, Caliburn.micro 등 최신버전 혹은 최신버전의 근처로 최신화.  
+    4) Ironwall.Libraries.Account.Server에 Service에 일부 메소드 접근자 변경.  
+    5) Ironwall.Libraries.Api.Ollama 라이브러리 추가.  
+    6) Dotnet 계열의 라이브러리는 호환이 안되서 활용안됨. Ironwall.Libraries.Dotnet.Ollama, Ironwall.Libraries.Dotnet.Ollama.Ui 사용 안됨.  
+    7) 
