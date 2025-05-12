@@ -18,12 +18,13 @@ namespace Ironwall.Libraries.Dotnet.Ollama.Ui.Modules;
 public class OllamaUiModule: Module
 {
     #region - Ctors -
-    public OllamaUiModule(ILogService? log, int count =0, string ipAddress = "192.168.202.195", int port = 11434)
+    public OllamaUiModule(ILogService? log, int count =0, string ipAddress = "192.168.202.195", int port = 11434, bool isAvailable = false)
     {
         _log = log;
         _count = count;
         _ipAddress = ipAddress;
         _port = port;
+        _isAvailable = isAvailable;
     }
     #endregion
     #region - Implementation of Interface -
@@ -34,7 +35,8 @@ public class OllamaUiModule: Module
             var setupModel = new SetupModel() 
             { 
                 IpAddress = _ipAddress, 
-                Port = _port 
+                Port = _port, 
+                IsAvailable = _isAvailable
             };
 
             builder.RegisterInstance(setupModel).AsSelf().SingleInstance();
@@ -62,5 +64,6 @@ public class OllamaUiModule: Module
     private int _count;
     private string _ipAddress;
     private int _port;
+    private bool _isAvailable;
     #endregion
 }
