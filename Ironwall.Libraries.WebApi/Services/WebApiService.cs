@@ -45,7 +45,7 @@ namespace Ironwall.Libraries.WebApi.Services
                 }
                 catch (Exception ex)
                 {
-                    _log.Error($"Raised {nameof(Exception)} in {nameof(SendDBAsync)} of {nameof(WebApiService)} [{_client.IpAddress}:{_client.Port}] : {ex}", true);
+                    _log.Error($"Raised {nameof(Exception)} in {nameof(SendDBAsync)} of {nameof(WebApiService)} [{_client.IpAddress}:{_client.Port}] : {ex}");
                 }
             });
             
@@ -65,7 +65,7 @@ namespace Ironwall.Libraries.WebApi.Services
                 }
                 catch (Exception ex)
                 {
-                    _log.Error($"Raised {nameof(Exception)} in {nameof(SendDBAsync)} of {nameof(WebApiService)} [{_client.IpAddress}:{_client.Port}] : {ex}", true);
+                    _log.Error($"Raised {nameof(Exception)} in {nameof(SendDBAsync)} of {nameof(WebApiService)} [{_client.IpAddress}:{_client.Port}] : {ex}");
                 }
             });
         }
@@ -84,7 +84,7 @@ namespace Ironwall.Libraries.WebApi.Services
                 }
                 catch (Exception ex)
                 {
-                    _log.Error($"Raised {nameof(Exception)} in {nameof(SendDBAsync)} of {nameof(WebApiService)} [{_client.IpAddress}:{_client.Port}] : {ex}", true);
+                    _log.Error($"Raised {nameof(Exception)} in {nameof(SendDBAsync)} of {nameof(WebApiService)} [{_client.IpAddress}:{_client.Port}] : {ex}");
                 }
             });
             
@@ -106,7 +106,7 @@ namespace Ironwall.Libraries.WebApi.Services
                 }
                 catch (Exception ex)
                 {
-                    _log.Error($"Raised {nameof(Exception)} in {nameof(SendDBAsync)} of {nameof(WebApiService)} : {ex}", true);
+                    _log.Error($"Raised {nameof(Exception)} in {nameof(SendDBAsync)} of {nameof(WebApiService)} : {ex}");
                 }
             });
             
@@ -128,7 +128,7 @@ namespace Ironwall.Libraries.WebApi.Services
                 }
                 catch (Exception ex)
                 {
-                    _log.Error($"Raised {nameof(Exception)} in {nameof(SendDBAsync)} of {nameof(WebApiService)} : {ex}", true);
+                    _log.Error($"Raised {nameof(Exception)} in {nameof(SendDBAsync)} of {nameof(WebApiService)} : {ex}");
                 }
             });
             

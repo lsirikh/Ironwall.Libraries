@@ -124,14 +124,12 @@ namespace Ironwall.Framework.ViewModels
         public IEventModel EventModel { get; set; }
         public CancellationTokenSource CancellationTokenSourceEvent { get; set; }
         #endregion
-
         #region - Properties -
         public string Tag { get; set; }
         public string TagFault { get; set; }
         public int TimeDiscardSec { get; set; }
         public event EventHandler EventHandlerTimer;
         #endregion
-
         #region - Attriibtes -
         #endregion
     }

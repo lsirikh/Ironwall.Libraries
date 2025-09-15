@@ -481,4 +481,53 @@ protected override IEnumerable<Assembly> SelectAssemblies()
     4) Ironwall.Libraries.Account.Server에 Service에 일부 메소드 접근자 변경.  
     5) Ironwall.Libraries.Api.Ollama 라이브러리 추가.  
     6) Dotnet 계열의 라이브러리는 호환이 안되서 활용안됨. Ironwall.Libraries.Dotnet.Ollama, Ironwall.Libraries.Dotnet.Ollama.Ui 사용 안됨.  
-    7) 
+
+
+### Update Date: 2025/09/15
+
+* 통합 버전으로 관리
+    1) VLC 비디오 팝업 메모리 누수 해결 작업 내역
+        *수정 파일
+           - VlcComponentViewModel.cs
+           - VlcComponentView.xaml.cs
+           - PopupVideoDialogBase.cs
+           - PopupVideoDialogViewModel.cs
+           - ShellViewModel.cs
+
+    2) 주요 작업
+        *VlcComponentViewModel
+            - IDisposable 패턴 구현
+            - _isDisposed 플래그 추가
+            - VLC 초기화 옵션 추가 (캐싱 200ms, 하드웨어 가속)
+            - OnDeactivateAsync에서 close 파라미터 활용
+            - 리소스 정리 로직 추가 (DisposeAsync 메서드)
+
+        *VlcComponentView
+            - 코드비하인드 초기화 로직 제거
+            - 모든 로직 ViewModel로 이동
+
+        *PopupVideoDialogBase
+            - IDisposable 구현
+            - Timer 안전 처리 (lock, null 체크)
+            - Window Closed 이벤트 처리
+            - CancellationTokenSource 추가
+
+        *PopupVideoDialogViewModel
+        _videoCts 추가 (비디오 작업 취소용)
+            - 비동기 비디오 시작/중지
+            - 리소스 정리 순서 정립
+        
+        *PopupDoubleVideoDialogViewModel
+            - 개선 및 적용 필요
+
+    3) 성능 개선
+
+        RTSP 캐싱: 300ms → 150-200ms
+        GC 수행: close=true일 때만
+        팝업 인스턴스 재사용
+
+    4) 메모리 관리
+
+        이벤트 핸들러 명시적 해제
+        VlcControl.Dispose() 호출
+        public VlcControl 속성 제거

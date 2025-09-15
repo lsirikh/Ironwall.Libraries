@@ -16,9 +16,9 @@ namespace Ironwall.Framework.Services
         #region - Ctors -
         public IccsService()
         {
+            _log = IoC.Get<ILogService>();
         }
-
-        public IccsService(IMessageService messageService)
+        public IccsService(IMessageService messageService): this()
         {
             MessageService = messageService;
         }
@@ -202,6 +202,8 @@ namespace Ironwall.Framework.Services
         #endregion
         #region - Properties -
         private IMessageService MessageService { get; }
+
+        private ILogService _log;
         #endregion
     }
 }

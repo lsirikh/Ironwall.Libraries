@@ -64,8 +64,6 @@ namespace Ironwall.Framework.Services
 
                 throw;
             }
-            //Subscriber.Subscribe(NameChannel).OnMessage((message) =>
-            //        Channel1EventHandler?.Invoke(this, message));
         }
         #endregion
 
