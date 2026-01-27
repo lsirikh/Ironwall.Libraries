@@ -90,8 +90,8 @@ namespace Ironwall.Libraries.RTSP.ViewModels
                     var credential = new NetworkCredential(UserId, Password);
 
                     var connectionParameters = !string.IsNullOrEmpty(deviceUri.UserInfo) ? new ConnectionParameters(deviceUri) :
-                        new ConnectionParameters(deviceUri, credential);
-
+                            new ConnectionParameters(deviceUri, credential);
+                    
                     connectionParameters.RtpTransport = RtpTransportProtocol.UDP;
                     connectionParameters.CancelTimeout = TimeSpan.FromSeconds(1);
 
